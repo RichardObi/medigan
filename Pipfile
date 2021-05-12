@@ -1,0 +1,16 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+numpy = "*"
+torch = "==1.7.0"
+torchvision = "==0.8.1"
+opencv-python = "==4.5.1.48"
+pyyaml = "*"
+
+[requires]
+python_version = "3.8.5"
+
+[dev-packages]
