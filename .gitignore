@@ -128,5 +128,5 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-# IDE
+# IDE (Pycharm)
 .idea
