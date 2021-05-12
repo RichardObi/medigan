@@ -1,7 +1,7 @@
 # GANtoolbox
 GAN Toolbox
 
-example for running a model in the toolbox:
+clone this repository, cd into /GANtoolbox and generate synthetic images using the following commands:
 
 `pip install pipenv`
 
