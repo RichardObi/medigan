@@ -137,6 +137,3 @@ def get_model_url(model_name):
 device = torch.device(
     "cuda" if torch.cuda.is_available() else "cpu"
 )
-#generate_GAN_images("DCGAN", device, 120, 20,"generated_with_DCGAN")
-
-#get_model_url("DCGAN")
