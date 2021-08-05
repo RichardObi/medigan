@@ -1,0 +1,8 @@
+README.md
+setup.py
+medigan/medigan.py
+medigan/medigan.egg-info/PKG-INFO
+medigan/medigan.egg-info/SOURCES.txt
+medigan/medigan.egg-info/dependency_links.txt
+medigan/medigan.egg-info/requires.txt
+medigan/medigan.egg-info/top_level.txt
