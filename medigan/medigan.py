@@ -70,12 +70,13 @@ def decompress_files(file_link):
         
         
 def generate_dataset(model_name,number_samples,output):
+    # TODO Move packages to zenodo..
     decompress_files(orch_packages("packages","https://noussair.com/ub/packages.zip"))
-    orch_file = orch_module_url("global","https://zenodo.org/record/5077840/files/orch.json?download=1",".json");
+    orch_file = orch_module_url("global","https://raw.githubusercontent.com/RichardObi/medigan-models/main/global.json",".json");
+    # orch_file = orch_module_url("global","https://zenodo.org/record/5077840/files/orch.json?download=1",".json");
     with open(orch_file) as f:
         models_lists = json.load(f)
-   
-         
+
     if model_name in models_lists:
         print("model is available")
         module_list = models_lists[model_name]["dependencies"]
@@ -88,7 +89,7 @@ def generate_dataset(model_name,number_samples,output):
         print("checking dependencies availability")
         try:
             pkg_resources.require(module_list)
-            print ("all dependencies are avaialble")
+            print ("all dependencies are available")
         except:
             print("Missing dependencies")
        
