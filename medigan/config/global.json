@@ -1,0 +1,244 @@
+{
+	"2d29d505-9fb7-4c4d-b81f-47976e2c7dbf": {
+		"execution": {
+			"package_name": "DCGAN",
+			"package_link" : "http://localhost:8888/DCGAN.zip",
+			"model_name": "DCGAN",
+			"extension": ".pt",
+			"image_size": 128,
+			"dependencies": ["numpy", "Path", "Union", "pyyaml", "torch", "opencv-contrib-python-headless"],
+			"internal_libs": ["base_discriminator.py", "base_generator.py"],
+			"generator": {
+				"base": "dcgan_generator.py",
+				"name": "generate_GAN_images",
+				"args": {
+					"nc": 1,
+					"ndf": 64,
+					"ngf": 64,
+					"ngpu": 1,
+					"nz": 100
+				}
+			},
+			"discriminator": {
+				"base": "base_discriminator.py",
+				"name": "Discriminator",
+				"args": {
+					"nc": 1,
+					"ndf": 64,
+					"ngf": 64,
+					"ngpu": 1,
+					"nz": 100
+				}
+			}
+		},
+		"selection": {
+			"performance": {
+				"SSIM": null,
+				"MSE": null,
+				"NSME": null,
+				"PSNR": null,
+				"IS": null,
+				"FID": null,
+				"turing_test": null,
+				"downstream_task": {
+					"CLF": {
+						"trained on fake": {
+							"accuracy": null,
+							"precision": null,
+							"recall": null,
+							"f1": null,
+							"specificity": null,
+							"AUROC": null,
+							"AUPRC": null
+						},
+						"trained on real and fake": {},
+						"trained on real": {},
+						"SEG": {
+							"trained on fake": {
+								"dice": null,
+								"jaccard": null,
+								"accuracy": null,
+								"precision": null,
+								"recall": null,
+								"f1": null
+							},
+							"trained on real and fake": {},
+							"trained on real": {}
+						}
+					}
+				}
+			},
+			"use_cases": [
+				"classification",
+				"detection",
+				"in-silico trial"
+			],
+			"organ": "breast",
+			"modalities": {
+				"MMG": [
+					"full-field digital"
+				],
+				"MRI": null,
+				"CT": null
+			},
+			"vendors": [
+				"unknown"
+			],
+			"centres": [
+				"unknown"
+			],
+			"function": [
+				"noise to image"
+			],
+			"condition": [
+				null
+			],
+			"trained_on": [
+				"INbreast"
+			],
+			"augmentations": [
+				"crop and resize",
+				"horizontal flip",
+				"vertical flip"
+			],
+			"generates": [
+				"calcification_roi"
+			],
+			"pixel_height": 128,
+			"pixel_width": 128,
+			"type": "DCGAN"
+		},
+		"description": {
+			"provided_date": "12th May 2021",
+			"trained_date": "May 2021",
+			"provided_after_epoch": 300,
+			"privacy_preservation": null,
+			"dataset_type": "public",
+			"license": null,
+			"version": "0.0.1",
+			"publication": null,
+			"comments": "kernel size=6 used in discriminator"
+		}
+	},
+	"8f933c5e-72fc-461a-a5cb-73cbe65af6fc": {
+		"execution": {
+			"package_name": "MALIGN_DCGAN",
+			"package_link" : "http://localhost:8888/MALIGN_DCGAN.zip",
+			"model_name": "malign_mass_gen",
+			"extension": "",
+			"image_size": 128,
+			"dependencies": ["numpy", "torch", "opencv-contrib-python-headless"],
+			"internal_libs": ["base_discriminator.py", "base_generator.py"],
+			"generator": {
+				"base": "dcgan_generator.py",
+				"name": "generate_GAN_images",
+				"args": {
+					"nc": 1,
+					"ndf": 64,
+					"ngf": 64,
+					"ngpu": 1,
+					"nz": 100
+				}
+			},
+			"discriminator": {
+				"base": "base_discriminator.py",
+				"name": "Discriminator",
+				"args": {
+					"nc": 1,
+					"ndf": 64,
+					"ngf": 64,
+					"ngpu": 1,
+					"nz": 100
+				}
+			}
+		},
+		"selection": {
+			"performance": {
+				"SSIM": null,
+				"MSE": null,
+				"NSME": null,
+				"PSNR": null,
+				"IS": null,
+				"FID": null,
+				"turing_test": null,
+				"downstream_task": {
+					"CLF": {
+						"trained on fake": {
+							"accuracy": null,
+							"precision": null,
+							"recall": null,
+							"f1": null,
+							"specificity": null,
+							"AUROC": null,
+							"AUPRC": null
+						},
+						"trained on real and fake": {},
+						"trained on real": {},
+						"SEG": {
+							"trained on fake": {
+								"dice": null,
+								"jaccard": null,
+								"accuracy": null,
+								"precision": null,
+								"recall": null,
+								"f1": null
+							},
+							"trained on real and fake": {},
+							"trained on real": {}
+						}
+					}
+				}
+			},
+			"use_cases": [
+				"classification",
+				"detection",
+				"in-silico trial"
+			],
+			"organ": "breast",
+			"modalities": {
+				"MMG": [
+					"full-field digital"
+				],
+				"MRI": null,
+				"CT": null
+			},
+			"vendors": [
+				"unknown"
+			],
+			"centres": [
+				"unknown"
+			],
+			"function": [
+				"noise to image"
+			],
+			"condition": [
+				null
+			],
+			"trained_on": [
+				"INbreast"
+			],
+			"augmentations": [
+				"crop and resize",
+				"horizontal flip",
+				"vertical flip"
+			],
+			"generates": [
+				"calcification_roi"
+			],
+			"pixel_height": 128,
+			"pixel_width": 128,
+			"type": "DCGAN"
+		},
+		"description": {
+			"provided_date": "12th May 2021",
+			"trained_date": "May 2021",
+			"provided_after_epoch": 300,
+			"privacy_preservation": null,
+			"dataset_type": "public",
+			"license": null,
+			"version": "0.0.1",
+			"publication": null,
+			"comments": "kernel size=6 used in discriminator"
+		}
+	}
+}

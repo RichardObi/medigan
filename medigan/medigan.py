@@ -1,121 +1,87 @@
-from pathlib import Path
-from typing import Union
-import yaml
-import numpy as np
-import cv2
-import os
-import requests
-from urllib.request import Request, urlopen
-import json
-import pkg_resources
-from pkg_resources import DistributionNotFound, VersionConflict
-import importlib
-import zipfile
+# -*- coding: utf-8 -*-
+# ! /usr/bin/env python
+"""
+@author: Richard Osuala, Noussair Lazrak
+BCN-AIM Lab 2021
+Contact: richard.osuala@ub.edu
+"""
+
+# Import python native libs
+
+# from pathlib import Path
+
+# Import pypi libs
+
+# Import library internal modules
+from config_manager import ConfigManager
+from constants import CONFIG_FILE_KEY_EXECUTION, MODEL_ID, EXECUTOR
+from model_executor import ModelExecutor
+from model_selector import ModelSelector
 
 
-        
-def get_the_model_url(model_name,url,extension):
-    model_path = Path(f"my_models/{model_name}{extension}")
-    if not os.path.exists("my_models/"):
-        os.makedirs("my_models/")
-    try:
-        models_abs_path = model_path.resolve(strict=True)
-    except FileNotFoundError:
-        try:
-            print(f"Downloading {model_name}....")
-            r = requests.get(url, allow_redirects=True)
-            open(f'my_models/{model_name}{extension}', 'wb').write(r.content)
-        except:
-            print("can't download this model...")
-    return model_path
+class Medigan():
+    """Medigan main class."""
 
+    def __init__(
+            self, initialize_all_models: bool = False,
+    ):
+        self.config_manager = ConfigManager()
+        self.model_selector = ModelSelector()
+        self.model_executors = []
+        if initialize_all_models:
+            self.add_all_model_executors()
 
-def orch_module_url(file_name,url,extension):
-    file_path = Path(f"config/{file_name}{extension}")
-    if not os.path.exists("config/"):
-        os.makedirs("config/")
-    try:
-        file_abs_path = file_path.resolve(strict=True)
-    except FileNotFoundError:
-        try:
-            print(f"Downloading {file_name}....")
-            r = requests.get(url, allow_redirects=True)
-            open(f'config/{file_name}{extension}', 'wb').write(r.content)
-        except:
-            print("can't download this file...")
-    return file_path
-                  
+    def add_all_model_executors(self):
+        for model_id in self.config_manager.model_ids:
+            self.add_model_executor(model_id=model_id,
+                                    execution_config=self.config_manager.get_config_by_id(model_id=model_id,
+                                                                                          config_key=CONFIG_FILE_KEY_EXECUTION))
 
-def orch_packages(file_name,url):
-    file_path = Path(f"packages/{file_name}.zip")
-    if not os.path.exists("packages/"):
-        os.makedirs("packages/")
-    try:
-        file_abs_path = file_path.resolve(strict=True)
-    except FileNotFoundError:
-        try:
-            print(f"Downloading packages at {file_name}....")
-            r = requests.get(url, allow_redirects=True)
-            open(f'packages/{file_name}.zip', 'wb').write(r.content)
-        except:
-            print("can't download this file...")
-            
-    return file_path
-        
-def decompress_files(file_link):
-    print(f"decompressing {file_link}....")
-    with zipfile.ZipFile(file_link, 'r') as zip_ref:
-        zip_ref.extractall("./")
-           
-        
-        
-def generate_dataset(model_name,number_samples,output):
-    # TODO Move packages to zenodo..
-    decompress_files(orch_packages("packages","https://noussair.com/ub/packages.zip"))
-    orch_file = orch_module_url("global","https://raw.githubusercontent.com/RichardObi/medigan-models/main/global.json",".json");
-    # orch_file = orch_module_url("global","https://zenodo.org/record/5077840/files/orch.json?download=1",".json");
-    with open(orch_file) as f:
-        models_lists = json.load(f)
+    def _add_model_executor(self, model_id: str, execution_config: object):
+        if not self.is_model_executor_already_added(model_id):
+            model_executor = ModelExecutor(model_id=model_id, execution_config=execution_config,
+                                           download_package=True)
+            model_executor_dict = {MODEL_ID: model_id, EXECUTOR: model_executor}
+            self.model_executors.append(model_executor_dict)
 
-    if model_name in models_lists:
-        print("model is available")
-        module_list = models_lists[model_name]["dependencies"]
-        module_link = models_lists[model_name]["model_link"]
-        extension = models_lists[model_name]["extension"]
-        package_name = models_lists[model_name]["package_name"]
-        full_module_name = "packages." + package_name
-        
-        print (module_link)
-        print("checking dependencies availability")
-        try:
-            pkg_resources.require(module_list)
-            print ("all dependencies are available")
-        except:
-            print("Missing dependencies")
-       
-        
-        model_file = get_the_model_url(model_name,module_link,extension)
-        generator_function = models_lists[model_name]["generator"]["name"]
-        print(f"generator file : {generator_function}")
-        print (f"Importing....{full_module_name}")
-        the_module = importlib.import_module(full_module_name)
-        print ("Successfully imported ")
-        the_module.generate_GAN_images(model_file, 120, number_samples,output)
+    def add_model_executor(self, model_id: str):
+        if not self.is_model_executor_already_added(model_id):
+            self._add_model_executor(model_id=model_id,
+                                    execution_config=self.config_manager.get_config_by_id(model_id=model_id,
+                                                                                          config_key=CONFIG_FILE_KEY_EXECUTION))
 
-        
-    else:
-        print("model not available")
-        
-def get_meta_data(model_name,dim):
-    orch_file = orch_module_url("global","https://zenodo.org/record/5077840/files/orch.json?download=1",".json");
-    with open(orch_file) as f:
-        models_lists = json.load(f)   
-         
-    if model_name in models_lists:
-        return (models_lists[model_name]["meta"])
-        
-    else:
-        print("model not available")
-        
+    def is_model_executor_already_added(self, model_id) -> bool:
+        model_executor = self.find_model_executor_by_id(model_id=model_id)
+        if model_executor is not None:
+            print(f"{model_id}: The model is already in model_executors at index position [{idx}].")
+            return True
+        return False
 
+    def find_model_executor_by_id(self, model_id: str) -> ModelExecutor:
+        for idx, model_executor_dict in enumerate(self.model_executors):
+            if model_executor_dict[MODEL_ID] == model_id:
+                return model_executor_dict[EXECUTOR]
+        return None
 
+    def generate(self, model_id: str, number_of_images: int = 30, output_path: str = None):
+        model_executor = self.find_model_executor_by_id(model_id=model_id)
+        if model_executor is None:
+            try:
+                self.add_model_executor(model_id=model_id)
+                model_executor = self.find_model_executor_by_id(model_id=model_id)
+            except Exception as e:
+                print(f"{model_id}: The model could not be added to model_executor list: {e}")
+                raise e
+        model_executor.generate(number_of_images=number_of_images, output_path=output_path)
+
+    def find_matching_models(self):
+        raise NotImplementedError
+
+    def get_model_as_dataloader(self, model_id: str):
+        raise NotImplementedError
+
+    def __len__(self):
+        raise NotImplementedError
+
+    def __getitem__(self, idx: int):
+        raise NotImplementedError

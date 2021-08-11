@@ -1,0 +1,20 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+requests = "*"
+opencv-contrib-python-headless = "*"
+torch = "*"
+pyyaml = "*"
+union = "*"
+path = "*"
+numpy = "*"
+scikit-image = "*"
+scipy = "*"
+
+[requires]
+python_version = "3.9"
+
+[dev-packages]
