@@ -131,4 +131,4 @@ dmypy.json
 # Further (custom)
 .idea/
 *.DS_Store
-medigan/output/
+src/medigan/output/
