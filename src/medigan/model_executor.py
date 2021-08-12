@@ -6,21 +6,19 @@ BCN-AIM Lab 2021
 Contact: richard.osuala@ub.edu
 """
 
+import importlib
+import time
+# Import pypi libs
+from pathlib import Path
 
 # Import python native libs
 import pkg_resources
-import importlib
-import time
-
-# Import pypi libs
-from pathlib import Path
 
 # Import library internal modules
 from constants import CONFIG_FILE_KEY_DEPENDENCIES, CONFIG_FILE_KEY_MODEL_NAME, CONFIG_FILE_KEY_MODEL_EXTENSION, \
     CONFIG_FILE_KEY_PACKAGE_NAME, CONFIG_FILE_KEY_GENERATOR, CONFIG_FILE_KEY_GENERATOR_NAME, DEFAULT_OUTPUT_FOLDER, \
     CONFIG_FILE_KEY_PACKAGE_LINK, PACKAGE_EXTENSION, CONFIG_FILE_KEY_IMAGE_SIZE
 from utils import Utils
-
 
 
 class ModelExecutor():
@@ -55,7 +53,6 @@ class ModelExecutor():
         self.package_link = self.execution_config[CONFIG_FILE_KEY_PACKAGE_LINK]
         self.generator = self.execution_config[CONFIG_FILE_KEY_GENERATOR]
         self.generator_function = self.execution_config[CONFIG_FILE_KEY_GENERATOR][CONFIG_FILE_KEY_GENERATOR_NAME]
-        self.serialised_model_file_path = f"{self.model_id}/{self.package_name}/{self.model_name}{self.model_extension}"
         self._check_package_resources()
         self._load_package()
         self._import_package_as_lib()
@@ -87,23 +84,29 @@ class ModelExecutor():
         if self.package_path.is_file() and PACKAGE_EXTENSION == '.zip':
             Utils.unzip_archive(source_path=self.package_path, target_path_as_string=self.model_id)
         else:
-            print(f"{self.model_id}: Either no file found or package already unarchived (not a zip file) in {self.package_path}. No action was taken.")
+            print(
+                f"{self.model_id}: Either no file found or package already unarchived (not a zip file) in {self.package_path}. No action was taken.")
         try:
             # Installing generative model as python library
             self.deserialized_model_as_lib = importlib.import_module(name=f"{self.model_id}.{self.package_name}")
-
-        except Exception as e:
-            print(f"{self.model_id}: Error while importing {self.package_name} from /{self.model_id}: {e}")
-            raise e
+            self.serialised_model_file_path = f"{self.model_id}/{self.package_name}/{self.model_name}{self.model_extension}"
+        except ModuleNotFoundError:
+            try:
+                # Fallback: The zip's content might have been unzipped in the model_id folder without generating the package_name subfolder.
+                self.deserialized_model_as_lib = importlib.import_module(name=f"{self.model_id}")
+                self.serialised_model_file_path = f"{self.model_id}/{self.model_name}{self.model_extension}"
+            except Exception as e:
+                print(f"{self.model_id}: Error while importing {self.package_name} from /{self.model_id}: {e}")
+                raise e
 
     def generate(self, number_of_images: int = 20, output_path: str = None):
         if output_path is None:
-            output_path = f'{DEFAULT_OUTPUT_FOLDER}/{self.model_id}/{time.time()}'
+            output_path = f'{DEFAULT_OUTPUT_FOLDER}/{self.model_id}/{time.time()}/'
             assert Utils.mkdirs(
                 path_as_string=output_path), f"{self.model_id}: The output folder was not found nor created in {output_path}."
         try:
             generate_method = getattr(self.deserialized_model_as_lib, f'{self.generator_function}')
-            generate_method (self.serialised_model_file_path, self.image_size, number_of_images, output_path)
+            generate_method(self.serialised_model_file_path, self.image_size, number_of_images, output_path)
         except Exception as e:
             print(
                 f"{self.model_id}: Error while trying to generate images with model {self.serialised_model_file_path}: {e}")
