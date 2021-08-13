@@ -7,20 +7,19 @@ Contact: richard.osuala@ub.edu
 """
 
 # Import python native libs
-
-# from pathlib import Path
+from __future__ import absolute_import
 
 # Import pypi libs
 
 # Import library internal modules
-from config_manager import ConfigManager
-from constants import CONFIG_FILE_KEY_EXECUTION, MODEL_ID, EXECUTOR
-from model_executor import ModelExecutor
-from model_selector import ModelSelector
+from .constants import CONFIG_FILE_KEY_EXECUTION, MODEL_ID, EXECUTOR
+from .config_manager import ConfigManager
+from .model_executor import ModelExecutor
+from .model_selector import ModelSelector
 
 
-class Medigan():
-    """Medigan main class."""
+class Generators():
+    """Generators is the main class of the medigan package.."""
 
     def __init__(
             self, initialize_all_models: bool = False,

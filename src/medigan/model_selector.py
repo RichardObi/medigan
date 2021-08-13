@@ -6,6 +6,7 @@ BCN-AIM Lab 2021
 Contact: richard.osuala@ub.edu
 """
 
+
 class ModelSelector():
     """ModelSelector class."""
 

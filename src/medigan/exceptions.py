@@ -7,3 +7,4 @@ Contact: richard.osuala@ub.edu
 """
 
 # TODO Add custom exceptions for improved exception handling.
+# See requests.exceptions for reference.

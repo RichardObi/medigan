@@ -6,19 +6,20 @@ BCN-AIM Lab 2021
 Contact: richard.osuala@ub.edu
 """
 
+# Import python native libs
+from __future__ import absolute_import
+import pkg_resources
 import importlib
 import time
+
 # Import pypi libs
 from pathlib import Path
 
-# Import python native libs
-import pkg_resources
-
 # Import library internal modules
-from constants import CONFIG_FILE_KEY_DEPENDENCIES, CONFIG_FILE_KEY_MODEL_NAME, CONFIG_FILE_KEY_MODEL_EXTENSION, \
+from .constants import CONFIG_FILE_KEY_DEPENDENCIES, CONFIG_FILE_KEY_MODEL_NAME, CONFIG_FILE_KEY_MODEL_EXTENSION, \
     CONFIG_FILE_KEY_PACKAGE_NAME, CONFIG_FILE_KEY_GENERATOR, CONFIG_FILE_KEY_GENERATOR_NAME, DEFAULT_OUTPUT_FOLDER, \
     CONFIG_FILE_KEY_PACKAGE_LINK, PACKAGE_EXTENSION, CONFIG_FILE_KEY_IMAGE_SIZE
-from utils import Utils
+from .utils import Utils
 
 
 class ModelExecutor():

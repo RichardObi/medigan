@@ -7,13 +7,14 @@ Contact: richard.osuala@ub.edu
 """
 
 # Import python native libs
+from __future__ import absolute_import
 
 # Import pypi libs
 from pathlib import Path
 
 # Import library internal modules
-from constants import CONFIG_FILE_NAME_AND_EXTENSION, CONFIG_FILE_URL, CONFIG_FILE_FOLDER
-from utils import Utils
+from .constants import CONFIG_FILE_NAME_AND_EXTENSION, CONFIG_FILE_URL, CONFIG_FILE_FOLDER
+from .utils import Utils
 
 
 

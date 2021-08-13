@@ -10,7 +10,6 @@ setuptools.setup(
     description="MediGAN is a Python library to implement Generative Adversarial Networks(GANs), Conditional GANs, Adversarial Auto-Encoders(AAEs), etc. This library aims to enhance data augmentation via providing/ generating training data sets for other Deep learning models.",
     long_description=long_description,      
     long_description_content_type="text/markdown",
-    packages=setuptools.find_packages(),
     url="https://github.com/RichardObi/GANtoolbox",
     project_urls={
         "Bug Tracker": "https://github.com/RichardObi/GANtoolbox/issues",
