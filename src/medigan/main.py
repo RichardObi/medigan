@@ -16,17 +16,19 @@ from .generators import Generators
 
 def main():
     generators = Generators()
-
-    # model generation tests
-    model_generation_test(generators)
-
     # quit()
 
-    # model selection tests
-    model_selection_test(generators)
+    # TEST: model generation
+    # model_generation_test(generators)
 
-    # print tests
-    print_tests(generators)
+    # TEST: model selection
+    # model_selection_test(generators)
+
+    # TEST: print
+    # print_tests(generators)
+
+    # TEST: finding the model and generation with found model
+    find_model_and_generate_test(generators)
 
 
 def model_generation_test(generators):
@@ -48,12 +50,24 @@ def print_tests(generators):
 
 
 def model_selection_test(generators):
-    values_list = ['dcgan', 'mMg', 'ClF', 'modalities', 'inbreast']
+    values_list = ['dcgan', 'mMg', 'ClF', 'modalities']
     models = generators.find_matching_models_by_values(values=values_list, target_values_operator='AND',
                                                        are_keys_also_matched=True, is_case_sensitive=False)
     print(f'THESE MODELS WERE FOUND: {models}')
     print(models[0][0])
     print(models)
 
+
+def find_model_and_generate_test(generators):
+    values_list = ['dcgan', 'mMg', 'ClF', 'modalities', 'inbreast']
+    generators.find_model_and_generate(values=values_list, target_values_operator='AND', are_keys_also_matched=True,
+                                       is_case_sensitive=False, number_of_images=5)
+    values_list = ['dcgan', 'mMg', 'ClF', 'modalities']
+    generators.find_model_and_generate(values=values_list, target_values_operator='AND', are_keys_also_matched=True,
+                                       is_case_sensitive=False, number_of_images=5)
+
+    values_list = ['dcgan', 'mMg', 'ClF', 'inbreast', 'optimam']
+    generators.find_model_and_generate(values=values_list, target_values_operator='AND', are_keys_also_matched=True,
+                                       is_case_sensitive=False, number_of_images=5)
 
 if __name__ == "__main__": main()

@@ -38,6 +38,28 @@ class Generators():
                                                                   are_keys_also_matched=are_keys_also_matched,
                                                                   is_case_sensitive=is_case_sensitive)
 
+    def find_model_and_generate(self, values: list, target_values_operator: str = 'AND',
+                                are_keys_also_matched: bool = False, is_case_sensitive: bool = False,
+                                number_of_images: int = 30, output_path: str = None):
+        matching_models: list = self.model_selector.find_matching_models_by_values(values=values,
+                                                                                   target_values_operator=target_values_operator,
+                                                                                   are_keys_also_matched=are_keys_also_matched,
+                                                                                   is_case_sensitive=is_case_sensitive)
+        if len(matching_models) > 1:
+            print(f'For your input, there were more than 1 matching model ({len(matching_models)}). '
+                  f'Please choose either one of the model_ids for generation (see below) or further '
+                  f'specify your search value input {values}. '
+                  f'The matching models were the following: \n {matching_models}')
+        elif len(matching_models) < 1:
+            print(f'For your input, there were {len(matching_models)} matching models, while 1 is needed. '
+                  f'Please adjust your search value inputs {values} to find at least one match.')
+        else:
+            # Exactly one matching model. Let's generate with this model
+            print(f'For your input, there was {len(matching_models)} model matched. '
+                  f'This model will now be used for generation: {matching_models}')
+            matched_model_id = matching_models[0].model_id
+            self.generate(model_id=matched_model_id, number_of_images=number_of_images, output_path=output_path)
+
     def add_all_model_executors(self):
         for model_id in self.config_manager.model_ids:
             execution_config = self.config_manager.get_config_by_id(model_id=model_id,
