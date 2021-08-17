@@ -6,14 +6,14 @@ BCN-AIM Lab 2021
 Contact: richard.osuala@ub.edu
 """
 
+import json
 # Import python native libs
 import os
-import json
 import zipfile
+from pathlib import Path
 
 # Import pypi libs
 import requests
-from pathlib import Path
 
 
 class Utils():
@@ -25,7 +25,7 @@ class Utils():
         pass
 
     @staticmethod
-    def mkdirs(path_as_string: str):
+    def mkdirs(path_as_string: str) -> bool:
         if not os.path.exists(path_as_string):
             try:
                 os.makedirs(path_as_string)
@@ -51,14 +51,15 @@ class Utils():
 
     @staticmethod
     def download_file(download_link: str, path_as_string: str):
-            print(f"Now downloading file {path_as_string} from {download_link} ...")
-            try:
-                response = requests.get(download_link, allow_redirects=True)
-                open(path_as_string, 'wb').write(response.content)
-                print(f"Received response {response}: Retrieved file from {download_link} and wrote it to {path_as_string}.")
-            except Exception as e:
-                print(f"Error while downloading and storing file {path_as_string} from {download_link}: {e}")
-                raise e
+        print(f"Now downloading file {path_as_string} from {download_link} ...")
+        try:
+            response = requests.get(download_link, allow_redirects=True)
+            open(path_as_string, 'wb').write(response.content)
+            print(
+                f"Received response {response}: Retrieved file from {download_link} and wrote it to {path_as_string}.")
+        except Exception as e:
+            print(f"Error while downloading and storing file {path_as_string} from {download_link}: {e}")
+            raise e
 
     @staticmethod
     def read_in_json(path_as_string) -> dict:
@@ -79,6 +80,19 @@ class Utils():
             print(f"Error while unzipping {source_path}: {e}")
             raise e
 
+    @staticmethod
+    def dict_to_lowercase(target_dict: dict, string_conversion: bool = True) -> dict:
+        # Warning: Does not convert nested dicts in the target_dict, but rather removes them from return object.
+        if string_conversion:
+            # keys should always be strings per default. values might differ in type.
+            return dict((k.lower(), str(v).lower()) for k, v in target_dict.items())
+        else:
+            return dict((k.lower(), v.lower()) for k, v in target_dict.items())
+
+    @staticmethod
+    def list_to_lowercase(target_list: list) -> list:
+        # trade-off: String conversion for increased robustness > type failure detection
+        return [str(x).lower() for x in target_list]
 
     def __len__(self):
         raise NotImplementedError

@@ -27,9 +27,6 @@ PACKAGE_EXTENSION = ".zip"
 
 MODEL_ID = 'model_id'
 EXECUTOR = 'executor'
+SELECTION = 'selection'
 
 DEFAULT_OUTPUT_FOLDER = "output"
-
-
-
-

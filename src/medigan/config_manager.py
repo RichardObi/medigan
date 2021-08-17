@@ -8,6 +8,7 @@ Contact: richard.osuala@ub.edu
 
 # Import python native libs
 from __future__ import absolute_import
+import json
 
 # Import pypi libs
 from pathlib import Path
@@ -15,8 +16,6 @@ from pathlib import Path
 # Import library internal modules
 from .constants import CONFIG_FILE_NAME_AND_EXTENSION, CONFIG_FILE_URL, CONFIG_FILE_FOLDER
 from .utils import Utils
-
-
 
 
 class ConfigManager():
@@ -27,12 +26,11 @@ class ConfigManager():
     ):
         self.config_object = config_object
         self.model_ids = []
+        self.is_config_loaded = False
         self._load_config_file()
         self._set_model_ids()
-        # print(f"-------------")
-        # print(f"{self.config_object}")
 
-    def _load_config_file(self):
+    def _load_config_file(self) -> bool:
         if self.config_object is None:
             assert Utils.mkdirs(
                 path_as_string=CONFIG_FILE_FOLDER), f"The config folder was not found nor created in {CONFIG_FILE_FOLDER}."
@@ -42,22 +40,24 @@ class ConfigManager():
                 raise FileNotFoundError(
                     f"The config file {CONFIG_FILE_NAME_AND_EXTENSION} was not found in {config_file_path} nor downloaded from {CONFIG_FILE_URL}.")
             self.config_object = Utils.read_in_json(path_as_string=config_file_path)
+            self.is_config_loaded = True
 
     def _set_model_ids(self):
         self.model_ids = [config for config in self.config_object]
 
-    def print_model_config(self, model_id: str):
-        print(f"{self.config_object[model_id]}")
-
-    def get_config_by_id(self, model_id, config_key: str) -> object:
-        """
-
-        :rtype: object
-        """
+    def get_config_by_id(self, model_id, config_key: str = None) -> dict:
+        if config_key is None:
+            return self.config_object[model_id]
         return self.config_object[model_id][config_key]
 
     def _validate_config_file(self):
         raise NotImplementedError
+
+    def __str__(self):
+        return json.dumps(self.config_object)
+
+    def __repr__(self):
+        return f'ConfigManager(model_ids={self.model_ids}, is_config_loaded={self.is_config_loaded})'
 
     def __len__(self):
         return len(self.config_object)

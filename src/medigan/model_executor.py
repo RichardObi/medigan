@@ -8,12 +8,13 @@ Contact: richard.osuala@ub.edu
 
 # Import python native libs
 from __future__ import absolute_import
-import pkg_resources
+
 import importlib
 import time
-
 # Import pypi libs
 from pathlib import Path
+
+import pkg_resources
 
 # Import library internal modules
 from .constants import CONFIG_FILE_KEY_DEPENDENCIES, CONFIG_FILE_KEY_MODEL_NAME, CONFIG_FILE_KEY_MODEL_EXTENSION, \
@@ -34,6 +35,7 @@ class ModelExecutor():
         self.model_id = model_id
         self.execution_config = execution_config
         self.download_package = download_package
+        self.image_size = None
         self.dependencies = None
         self.model_name = None
         self.model_extension = None
@@ -118,6 +120,11 @@ class ModelExecutor():
 
     def _validate_model_config(self):
         raise NotImplementedError
+
+    def __repr__(self):
+        return f'ModelExecutor(model_id={self.model_id}, name={self.model_name}, package={self.package_name}, ' \
+               f'image_size={self.image_size}, dependencies={self.dependencies}, link={self.package_link}, ' \
+               f'path={self.serialised_model_file_path})'
 
     def __len__(self):
         raise NotImplementedError
