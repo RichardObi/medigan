@@ -11,7 +11,7 @@ from __future__ import absolute_import
 
 # Import library internal modules
 from .config_manager import ConfigManager
-from .constants import MODEL_ID, SELECTION, CONFIG_FILE_KEY_SELECTION
+from .constants import MODEL_ID, CONFIG_FILE_KEY_SELECTION, CONFIG_FILE_KEY_PERFORMANCE
 from .matched_entry import MatchedEntry
 from .model_match_candidate import ModelMatchCandidate
 from .utils import Utils
@@ -35,24 +35,39 @@ class ModelSelector():
         for model_id in self.config_manager.model_ids:
             selection_config = self.config_manager.get_config_by_id(model_id=model_id,
                                                                     config_key=CONFIG_FILE_KEY_SELECTION)
-            model_selector_dict = {MODEL_ID: model_id, SELECTION: selection_config}
+            model_selector_dict = {MODEL_ID: model_id, CONFIG_FILE_KEY_SELECTION: selection_config}
             self.model_selection_dicts.append(model_selector_dict)
 
-    def find_selection_criteria_by_id(self, model_id) -> dict:
+    def get_selection_criteria_by_id(self, model_id: str, is_model_id_removed: bool = True) -> dict:
         for idx, selection_dict in enumerate(self.model_selection_dicts):
             if selection_dict[MODEL_ID] == model_id:
-                return selection_dict[SELECTION]
+                if is_model_id_removed:
+                    return selection_dict[CONFIG_FILE_KEY_SELECTION]
+                else:
+                    return selection_dict
         return None
+
+    def get_selection_criteria_by_ids(self, model_ids: list = None, are_model_ids_removed: bool = True) -> list:
+        # Create list of models that contain a value for the metric of interest
+        selection_dict_list = []
+        for idx, selection_dict in enumerate(self.model_selection_dicts):
+            if model_ids is None or selection_dict[MODEL_ID] in model_ids:
+                # if model_ids is None, we consider all models
+                if are_model_ids_removed:
+                    selection_dict_list.append(selection_dict[CONFIG_FILE_KEY_SELECTION])
+                else:
+                    selection_dict_list.append(selection_dict)
+        return selection_dict_list
 
     def get_selection_keys(self, model_id: str = None) -> list:
         key_list = []
         if model_id is not None:
-            selection_config = self.find_selection_criteria_by_id(model_id)
+            selection_config = self.get_selection_criteria_by_id(model_id)
             for key in selection_config:
                 key_list.append(key)
         else:
             for selection_dict in self.model_selection_dicts:
-                selection_config = selection_dict[SELECTION]
+                selection_config = selection_dict[CONFIG_FILE_KEY_SELECTION]
                 for key in selection_config:
                     if key not in key_list:
                         key_list.append(key)
@@ -61,13 +76,24 @@ class ModelSelector():
     def get_selection_values_for_key(self, key: str, model_id: str = None) -> list:
         values_for_key = []
         if model_id is not None:
-            selection_config = self.find_selection_criteria_by_id(model_id)
+            selection_config = self.get_selection_criteria_by_id(model_id)
             values_for_key.append(selection_config[key])
         else:
             for selection_dict in self.model_selection_dicts:
-                selection_config = selection_dict[SELECTION]
+                selection_config = selection_dict[CONFIG_FILE_KEY_SELECTION]
                 values_for_key.append(selection_config[key])
         return values_for_key
+
+    def find_models_and_rank(self, values: list, target_values_operator: str = 'AND',
+                             are_keys_also_matched: bool = False, is_case_sensitive: bool = False,
+                             metric: str = 'SSIM', order: str = "asc") -> list:
+        matching_models = self.find_matching_models_by_values(values=values,
+                                            target_values_operator=target_values_operator,
+                                            are_keys_also_matched=are_keys_also_matched,
+                                            is_case_sensitive=is_case_sensitive)
+        matching_model_ids = [model.model_id for model in matching_models]
+        print (f"matching_model_ids: {matching_model_ids}")
+        return self.rank_models_by_performance(model_ids=matching_model_ids, metric=metric, order=order)
 
     def find_matching_models_by_values(self, values: list, target_values_operator: str = 'AND',
                                        are_keys_also_matched: bool = False, is_case_sensitive: bool = False) -> list:
@@ -78,7 +104,7 @@ class ModelSelector():
             # Removing case-sensitivity search requirement by replacing with lowercase values list
             values = Utils.list_to_lowercase(target_list=values)
         for selection_dict in self.model_selection_dicts:
-            selection_config = selection_dict[SELECTION]
+            selection_config = selection_dict[CONFIG_FILE_KEY_SELECTION]
             model_match_candidate = ModelMatchCandidate(model_id=selection_dict[MODEL_ID],
                                                         target_values_operator=target_values_operator,
                                                         is_case_sensitive=is_case_sensitive,
@@ -127,13 +153,39 @@ class ModelSelector():
                 counter += counter
         return model_match_candidate
 
+    def rank_models_by_performance(self, model_ids: list = None, metric: str = 'SSIM', order: str = "asc"):
+        model_metric_dict_list = []
+        if model_ids is not None and len(model_ids) == 0:
+            # empty model_ids list -> return empty list.
+            return model_metric_dict_list
+        # First split the metric string by "." to enable nested dict downstream performance task evaluation
+        metric_key_split = metric.split(".")
+        last_key = metric_key_split[len(metric_key_split) - 1]
+        # First, get all selection criteria for the model_ids
+        selection_dict_list = self.get_selection_criteria_by_ids(model_ids=model_ids, are_model_ids_removed=False)
+        for selection_criteria in selection_dict_list:
+            # Now, for each model, we want to get the respective value for the metric
+            try:
+                # Maybe remove the case-sensitivity for metric here.
+                metric_value = selection_criteria[CONFIG_FILE_KEY_SELECTION][CONFIG_FILE_KEY_PERFORMANCE]
+                for key in metric_key_split:
+                    metric_value = metric_value[key]
+                if metric_value is not None:
+                    # If metric value is None, the model is not added to the model_metric_dict_list
+                    # Maybe add further validation of metric_value here, e.g., needs to be float, string to float conversion, etc.
+                    model_id = selection_criteria[MODEL_ID]
+                    model_metric_dict = {MODEL_ID: model_id, last_key: metric_value}
+                    model_metric_dict_list.append(model_metric_dict)
+            except KeyError as e:
+                # The model does not have the specified keys and, hence, has not been added to the model_metric_dict_list
+                pass
+        if order == 'asc':
+            model_metric_dict_list.sort(key=lambda x: x.get(last_key))
+        else:
+            model_metric_dict_list.sort(key=lambda x: x.get(last_key), reverse=True)
+        return model_metric_dict_list
+
     def get_models_by_key_value_pair(self, key1: str, value1: str, key2: str = None, value2: str = None) -> list:
-        raise NotImplementedError
-
-    def rank_by_performance(self, model_ids: list, metric: str = 'SSIM'):
-        raise NotImplementedError
-
-    def rank_by_downstream_task_performance(self, model_ids: list, metric: str = 'f1'):
         raise NotImplementedError
 
     def __repr__(self):

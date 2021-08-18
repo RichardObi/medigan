@@ -94,6 +94,17 @@ class Utils():
         # trade-off: String conversion for increased robustness > type failure detection
         return [str(x).lower() for x in target_list]
 
+    @staticmethod
+    def order_dict_by_value(self, dict_list, key: str, order: str = "asc", sort_algorithm='bubbleSort') -> list:
+        # This function is deprecated. You may use Python List sort() with key=lambda function instead.
+        if sort_algorithm == 'bubbleSort':
+            for i in range(len(dict_list)):
+                for j in range(len(dict_list) - i - 1):
+                    if dict_list[j][key] > dict_list[j + 1][key]:
+                        # no need for a temp variable holder
+                        dict_list[j][key], dict_list[j + 1][key] = dict_list[j + 1][key], dict_list[j][key]
+        return dict_list
+
     def __len__(self):
         raise NotImplementedError
 

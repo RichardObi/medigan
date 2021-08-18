@@ -115,9 +115,6 @@ class ModelExecutor():
                 f"{self.model_id}: Error while trying to generate images with model {self.serialised_model_file_path}: {e}")
             raise e
 
-    def get_model_info(self):
-        raise NotImplementedError
-
     def _validate_model_config(self):
         raise NotImplementedError
 
