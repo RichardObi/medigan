@@ -84,15 +84,85 @@ class ModelSelector():
                 values_for_key.append(selection_config[key])
         return values_for_key
 
+    def get_models_by_key_value_pair(self, key1: str, value1: str, is_case_sensitive: bool = False) -> list:
+        model_dict_list = []
+        # First split the key string by "." to enable evaluation of keys that are in nested dicts
+        key_split = key1.split(".")
+        for selection_dicts in self.model_selection_dicts:
+            is_model_match: bool = False
+            # Now, for each model, we want to get the respective value for the key
+            try:
+                key_value = selection_dicts[CONFIG_FILE_KEY_SELECTION]
+                for key in key_split:
+                    key_value = key_value[key]
+                if key_value is not None:
+                    # If key value is None, the model is not added to the model
+                    if isinstance(key_value, dict):
+                        # If the value of the key is a dict, we cannot evaluate a dict and continue the loop.
+                        continue
+                    if isinstance(key_value, list):
+                        # If the value of the key is a list, we check if the provided value1 is in that list.
+                        # Convert list of arbitrary type to list of strings
+                        key_value = list(map(str, key_value))
+                        if not is_case_sensitive:
+                            key_value = Utils.list_to_lowercase(key_value)
+                            value1 = value1.lower()
+                        if value1 in key_value:
+                            is_model_match = True
+                    else:
+                        # If the value of the key is something else (str, float, int, etc), we check if equal to value1
+                        if (str(key_value) == str(value1)) or (
+                                not is_case_sensitive and str(key_value).lower() == str(value1).lower()):
+                            is_model_match = True
+            except KeyError as e:
+                # The model does not have the specified keys and, hence, has not been added to the model_dict_list
+                pass
+            if is_model_match:
+                model_id = selection_dicts[MODEL_ID]
+                model_dict = {MODEL_ID: model_id, key1: value1}
+                model_dict_list.append(model_dict)
+        return model_dict_list
+
+    def rank_models_by_performance(self, model_ids: list = None, metric: str = 'SSIM', order: str = "asc"):
+        model_metric_dict_list = []
+        if model_ids is not None and len(model_ids) == 0:
+            # empty model_ids list -> return empty list.
+            return model_metric_dict_list
+        # First split the metric string by "." to enable nested dict downstream performance task evaluation
+        metric_key_split = metric.split(".")
+        # First, get all selection criteria for the model_ids
+        selection_dict_list = self.get_selection_criteria_by_ids(model_ids=model_ids, are_model_ids_removed=False)
+        for selection_dict in selection_dict_list:
+            # Now, for each model, we want to get the respective value for the metric
+            try:
+                # Maybe remove the case-sensitivity for metric here.
+                metric_value = selection_dict[CONFIG_FILE_KEY_SELECTION][CONFIG_FILE_KEY_PERFORMANCE]
+                for key in metric_key_split:
+                    metric_value = metric_value[key]
+                if metric_value is not None:
+                    # If metric value is None, the model is not added to the model_metric_dict_list
+                    # Maybe add further validation of metric_value here, e.g. string to float conversion, etc.
+                    model_id = selection_dict[MODEL_ID]
+                    model_metric_dict = {MODEL_ID: model_id, metric: metric_value}
+                    model_metric_dict_list.append(model_metric_dict)
+            except KeyError as e:
+                # The model does not have the specified keys and, hence, has not been added to the model_metric_dict_list
+                pass
+        if order == 'asc':
+            model_metric_dict_list.sort(key=lambda x: x.get(metric))
+        else:
+            model_metric_dict_list.sort(key=lambda x: x.get(metric), reverse=True)
+        return model_metric_dict_list
+
     def find_models_and_rank(self, values: list, target_values_operator: str = 'AND',
                              are_keys_also_matched: bool = False, is_case_sensitive: bool = False,
                              metric: str = 'SSIM', order: str = "asc") -> list:
         matching_models = self.find_matching_models_by_values(values=values,
-                                            target_values_operator=target_values_operator,
-                                            are_keys_also_matched=are_keys_also_matched,
-                                            is_case_sensitive=is_case_sensitive)
+                                                              target_values_operator=target_values_operator,
+                                                              are_keys_also_matched=are_keys_also_matched,
+                                                              is_case_sensitive=is_case_sensitive)
         matching_model_ids = [model.model_id for model in matching_models]
-        print (f"matching_model_ids: {matching_model_ids}")
+        print(f"matching_model_ids: {matching_model_ids}")
         return self.rank_models_by_performance(model_ids=matching_model_ids, metric=metric, order=order)
 
     def find_matching_models_by_values(self, values: list, target_values_operator: str = 'AND',
@@ -129,8 +199,10 @@ class ModelSelector():
                         matched_entry = MatchedEntry(key='key', value=key, matching_element=key)
                         model_match_candidate.add_matched_entry(matched_entry=matched_entry)
                 if isinstance(search_dict, list):
+                    # if we have a list we want the counter to get index position in list
                     key_or_counter = counter
-                elif isinstance(search_dict, dict):
+                else:
+                    # if we have something else i.e. a dict, we want to get the key to get nested dict
                     key_or_counter = key
                 if isinstance(search_dict[key_or_counter], dict):
                     # The value of the key is of type dict, we thus search recursively inside that dictionary
@@ -152,41 +224,6 @@ class ModelSelector():
                         model_match_candidate.add_matched_entry(matched_entry=matched_entry)
                 counter += counter
         return model_match_candidate
-
-    def rank_models_by_performance(self, model_ids: list = None, metric: str = 'SSIM', order: str = "asc"):
-        model_metric_dict_list = []
-        if model_ids is not None and len(model_ids) == 0:
-            # empty model_ids list -> return empty list.
-            return model_metric_dict_list
-        # First split the metric string by "." to enable nested dict downstream performance task evaluation
-        metric_key_split = metric.split(".")
-        last_key = metric_key_split[len(metric_key_split) - 1]
-        # First, get all selection criteria for the model_ids
-        selection_dict_list = self.get_selection_criteria_by_ids(model_ids=model_ids, are_model_ids_removed=False)
-        for selection_criteria in selection_dict_list:
-            # Now, for each model, we want to get the respective value for the metric
-            try:
-                # Maybe remove the case-sensitivity for metric here.
-                metric_value = selection_criteria[CONFIG_FILE_KEY_SELECTION][CONFIG_FILE_KEY_PERFORMANCE]
-                for key in metric_key_split:
-                    metric_value = metric_value[key]
-                if metric_value is not None:
-                    # If metric value is None, the model is not added to the model_metric_dict_list
-                    # Maybe add further validation of metric_value here, e.g., needs to be float, string to float conversion, etc.
-                    model_id = selection_criteria[MODEL_ID]
-                    model_metric_dict = {MODEL_ID: model_id, last_key: metric_value}
-                    model_metric_dict_list.append(model_metric_dict)
-            except KeyError as e:
-                # The model does not have the specified keys and, hence, has not been added to the model_metric_dict_list
-                pass
-        if order == 'asc':
-            model_metric_dict_list.sort(key=lambda x: x.get(last_key))
-        else:
-            model_metric_dict_list.sort(key=lambda x: x.get(last_key), reverse=True)
-        return model_metric_dict_list
-
-    def get_models_by_key_value_pair(self, key1: str, value1: str, key2: str = None, value2: str = None) -> list:
-        raise NotImplementedError
 
     def __repr__(self):
         return f'ModelSelector(model_ids={self.config_manager.model_ids})'

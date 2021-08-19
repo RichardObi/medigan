@@ -47,6 +47,10 @@ class Generators():
     def get_selection_values_for_key(self, key: str, model_id: str = None) -> list:
         return self.model_selector.get_selection_keys(model_id=model_id)
 
+    def get_models_by_key_value_pair(self, key1: str, value1: str, is_case_sensitive: bool = False) -> list:
+        return self.model_selector.get_models_by_key_value_pair(key1=key1, value1=value1,
+                                                                is_case_sensitive=is_case_sensitive)
+
     def rank_models_by_performance(self, model_ids: list = None, metric: str = 'SSIM', order: str = "asc") -> list:
         return self.model_selector.rank_models_by_performance(model_ids=model_ids, metric=metric, order=order)
 

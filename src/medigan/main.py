@@ -34,10 +34,13 @@ def main():
     # rank_models_by_performance_test(generators)
 
     # TEST: find models first by search values and then rank the models by performance
-    find_and_rank_models_by_performance(generators)
+    # find_and_rank_models_by_performance(generators)
 
     # TEST: find the models, rank the models by performance, generated with highest ranked
     #find_and_rank_models_then_generate_test(generators)
+
+    # TEST: get the models by key value pair
+    get_models_by_key_value_pair(generators)
 
 def model_generation_test(generators):
     generators.generate(model_id="2d29d505-9fb7-4c4d-b81f-47976e2c7dbf", number_of_images=3)
@@ -123,6 +126,22 @@ def find_and_rank_models_then_generate_test(generators):
     print("                      ---------                      ")
     generators.find_models_rank_and_generate(values=values_list, target_values_operator='AND', are_keys_also_matched=True,
                                        is_case_sensitive=False, metric="SSIM", order="desc", number_of_images=5)
+
+def get_models_by_key_value_pair(generators):
+    key1 = "modality"
+    value1 = "Full-Field Mammography"
+    found_models = generators.get_models_by_key_value_pair(key1=key1, value1=value1, is_case_sensitive=False)
+    print(found_models)
+
+    key1 = "license"
+    value1 = "MIT"
+    found_models = generators.get_models_by_key_value_pair(key1=key1, value1=value1, is_case_sensitive=True)
+    print(found_models)
+
+    key1 = "performance.downstream_task.CLF.trained on fake.accuracy"
+    value1 = 0.999
+    found_models = generators.get_models_by_key_value_pair(key1=key1, value1=value1, is_case_sensitive=True)
+    print(found_models)
 
 
 if __name__ == "__main__": main()

@@ -21,8 +21,8 @@ class ModelMatchCandidate():
     def __init__(
             self,
             model_id: str,
-            target_values_operator: str,
             target_values: list,
+            target_values_operator: str = 'AND',
             is_case_sensitive: bool = False,
             are_keys_also_matched: bool = False,
             is_match: bool = False,
