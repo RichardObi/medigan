@@ -19,7 +19,10 @@ def main():
     # quit()
 
     # TEST: model generation
-    # model_generation_test(generators)
+    model_generation_test(generators)
+
+    # TEST: return a generate() function and test it's usage
+    # model_return_generate_function(generators)
 
     # TEST: model selection
     # model_selection_test(generators)
@@ -37,14 +40,26 @@ def main():
     # find_and_rank_models_by_performance(generators)
 
     # TEST: find the models, rank the models by performance, generated with highest ranked
-    #find_and_rank_models_then_generate_test(generators)
+    # find_and_rank_models_then_generate_test(generators)
 
     # TEST: get the models by key value pair
-    get_models_by_key_value_pair(generators)
+    # get_models_by_key_value_pair(generators)
+
 
 def model_generation_test(generators):
-    generators.generate(model_id="2d29d505-9fb7-4c4d-b81f-47976e2c7dbf", number_of_images=3)
-    generators.generate(model_id="8f933c5e-72fc-461a-a5cb-73cbe65af6fc", number_of_images=3)
+    #generators.generate(model_id="2d29d505-9fb7-4c4d-b81f-47976e2c7dbf", num_samples=3)
+    #generators.generate(model_id="8f933c5e-72fc-461a-a5cb-73cbe65af6fc", num_samples=3)
+    generators.generate(model_id="2d29d505-9fb7-4c4d-b81f-47976e2c7dbf", num_samples=3, **{"test": "this is my test"})
+
+
+def model_return_generate_function(generators):
+    gen_function = generators.get_generate_function(model_id="2d29d505-9fb7-4c4d-b81f-47976e2c7dbf", num_samples=3)
+    print("I now generate 1 !!")
+    gen_function()
+    print("I now generate 2 !!")
+    gen_function(**{"test2": "abcdefghijklmnopqrstuvwxyz"})
+    print("I now generate 3 !!")
+    # generators.generate(model_id="8f933c5e-72fc-461a-a5cb-73cbe65af6fc", num_samples=3)
 
 
 def print_tests(generators):
@@ -72,14 +87,15 @@ def model_selection_test(generators):
 def find_model_and_generate_test(generators):
     values_list = ['dcgan', 'mMg', 'ClF', 'modalities', 'inbreast']
     generators.find_model_and_generate(values=values_list, target_values_operator='AND', are_keys_also_matched=True,
-                                       is_case_sensitive=False, number_of_images=5)
+                                       is_case_sensitive=False, num_samples=5)
     values_list = ['dcgan', 'mMg', 'ClF', 'modalities']
     generators.find_model_and_generate(values=values_list, target_values_operator='AND', are_keys_also_matched=True,
-                                       is_case_sensitive=False, number_of_images=5)
+                                       is_case_sensitive=False, num_samples=5)
 
     values_list = ['dcgan', 'mMg', 'ClF', 'inbreast', 'optimam']
     generators.find_model_and_generate(values=values_list, target_values_operator='AND', are_keys_also_matched=True,
-                                       is_case_sensitive=False, number_of_images=5)
+                                       is_case_sensitive=False, num_samples=5)
+
 
 def rank_models_by_performance_test(generators):
     ranked_models = generators.rank_models_by_performance(metric="SSIM", order="asc")
@@ -90,7 +106,9 @@ def rank_models_by_performance_test(generators):
     print(ranked_models)
     print("                      ---------                      ")
 
-    ranked_models = generators.rank_models_by_performance(model_ids=["2d29d505-9fb7-4c4d-b81f-47976e2c7dbf","8f933c5e-72fc-461a-a5cb-73cbe65af6fc"], metric="SSIM", order="asc")
+    ranked_models = generators.rank_models_by_performance(
+        model_ids=["2d29d505-9fb7-4c4d-b81f-47976e2c7dbf", "8f933c5e-72fc-461a-a5cb-73cbe65af6fc"], metric="SSIM",
+        order="asc")
     print(ranked_models)
     print("                      ---------                      ")
 
@@ -98,34 +116,43 @@ def rank_models_by_performance_test(generators):
     print(ranked_models)
     print("                      ---------                      ")
 
-    ranked_models = generators.rank_models_by_performance(metric="downstream_task.CLF.trained on fake.accuracy", order="asc")
+    ranked_models = generators.rank_models_by_performance(metric="downstream_task.CLF.trained on fake.accuracy",
+                                                          order="asc")
     print(ranked_models)
+
 
 def find_and_rank_models_by_performance(generators):
-    values_list = ['dcgan', 'MMG'] # , 'inbreast']
+    values_list = ['dcgan', 'MMG']  # , 'inbreast']
     print("                      ---------                      ")
-    ranked_models = generators.find_models_and_rank(values=values_list, target_values_operator='AND', are_keys_also_matched=True,
-                                       is_case_sensitive=False, metric="SSIM", order="asc")
+    ranked_models = generators.find_models_and_rank(values=values_list, target_values_operator='AND',
+                                                    are_keys_also_matched=True,
+                                                    is_case_sensitive=False, metric="SSIM", order="asc")
     print(ranked_models)
 
     print("                      ---------                      ")
-    ranked_models = generators.find_models_and_rank(values=values_list, target_values_operator='AND', are_keys_also_matched=True,
-                                       is_case_sensitive=False, metric="SSIM", order="desc")
+    ranked_models = generators.find_models_and_rank(values=values_list, target_values_operator='AND',
+                                                    are_keys_also_matched=True,
+                                                    is_case_sensitive=False, metric="SSIM", order="desc")
     print(ranked_models)
 
     values_list = ['dcgan', 'MMG', 'inbreast']
     print("                      ---------                      ")
-    ranked_models = generators.find_models_and_rank(values=values_list, target_values_operator='AND', are_keys_also_matched=True,
-                                       is_case_sensitive=False, metric="SSIM", order="asc")
+    ranked_models = generators.find_models_and_rank(values=values_list, target_values_operator='AND',
+                                                    are_keys_also_matched=True,
+                                                    is_case_sensitive=False, metric="SSIM", order="asc")
     print(ranked_models)
 
+
 def find_and_rank_models_then_generate_test(generators):
-    values_list = ['dcgan', 'MMG'] # , 'inbreast']
-    generators.find_models_rank_and_generate(values=values_list, target_values_operator='AND', are_keys_also_matched=True,
-                                       is_case_sensitive=False, metric="SSIM", order="asc", number_of_images=5)
+    values_list = ['dcgan', 'MMG']  # , 'inbreast']
+    generators.find_models_rank_and_generate(values=values_list, target_values_operator='AND',
+                                             are_keys_also_matched=True,
+                                             is_case_sensitive=False, metric="SSIM", order="asc", num_samples=5)
     print("                      ---------                      ")
-    generators.find_models_rank_and_generate(values=values_list, target_values_operator='AND', are_keys_also_matched=True,
-                                       is_case_sensitive=False, metric="SSIM", order="desc", number_of_images=5)
+    generators.find_models_rank_and_generate(values=values_list, target_values_operator='AND',
+                                             are_keys_also_matched=True,
+                                             is_case_sensitive=False, metric="SSIM", order="desc", num_samples=5)
+
 
 def get_models_by_key_value_pair(generators):
     key1 = "modality"

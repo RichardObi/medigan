@@ -9,8 +9,8 @@ Contact: richard.osuala@ub.edu
 # Import python native libs
 from __future__ import absolute_import
 
-from .config_manager import ConfigManager
 # Import library internal modules
+from .config_manager import ConfigManager
 from .constants import CONFIG_FILE_KEY_EXECUTION, MODEL_ID
 from .model_executor import ModelExecutor
 from .model_selector import ModelSelector
@@ -73,8 +73,8 @@ class Generators():
 
     def find_models_rank_and_generate(self, values: list, target_values_operator: str = 'AND',
                                       are_keys_also_matched: bool = False, is_case_sensitive: bool = False,
-                                      metric: str = 'SSIM', order: str = "asc", number_of_images: int = 30,
-                                      output_path: str = None):
+                                      metric: str = 'SSIM', order: str = "asc", num_samples: int = 30,
+                                      output_path: str = None, **kwargs):
         ranked_models = self.model_selector.find_models_and_rank(values=values,
                                                                  target_values_operator=target_values_operator,
                                                                  are_keys_also_matched=are_keys_also_matched,
@@ -89,11 +89,12 @@ class Generators():
             print(f'For your input, there were {len(ranked_models)} models found and ranked. '
                   f'The highest ranked model will now be used for generation: {ranked_models[0]}')
             highest_ranking_model_id = ranked_models[0][MODEL_ID]
-            self.generate(model_id=highest_ranking_model_id, number_of_images=number_of_images, output_path=output_path)
+            return self.generate(model_id=highest_ranking_model_id, num_samples=num_samples, output_path=output_path,
+                                 **kwargs)
 
     def find_model_and_generate(self, values: list, target_values_operator: str = 'AND',
                                 are_keys_also_matched: bool = False, is_case_sensitive: bool = False,
-                                number_of_images: int = 30, output_path: str = None):
+                                num_samples: int = 30, output_path: str = None, **kwargs):
         matching_models: list = self.model_selector.find_matching_models_by_values(values=values,
                                                                                    target_values_operator=target_values_operator,
                                                                                    are_keys_also_matched=are_keys_also_matched,
@@ -111,7 +112,7 @@ class Generators():
             print(f'For your input, there was {len(matching_models)} model matched. '
                   f'This model will now be used for generation: {matching_models}')
             matched_model_id = matching_models[0].model_id
-            self.generate(model_id=matched_model_id, number_of_images=number_of_images, output_path=output_path)
+            return self.generate(model_id=matched_model_id, num_samples=num_samples, output_path=output_path, **kwargs)
 
     ############################ MODEL EXECUTOR METHODS ############################
 
@@ -135,8 +136,7 @@ class Generators():
             self.model_executors.append(model_executor)
 
     def is_model_executor_already_added(self, model_id) -> bool:
-        model_executor = self.find_model_executor_by_id(model_id=model_id)
-        if model_executor is None:
+        if self.find_model_executor_by_id(model_id=model_id) is None:
             print(f"{model_id}: The model has not yet been added to the model_executor list.")
             return False
         return True
@@ -147,21 +147,28 @@ class Generators():
                 return model_executor
         return None
 
-    def generate(self, model_id: str, number_of_images: int = 30, output_path: str = None):
-        model_executor = self.find_model_executor_by_id(model_id=model_id)
-        if model_executor is None:
-            try:
-                self.add_model_executor(model_id=model_id)
-                model_executor = self.find_model_executor_by_id(model_id=model_id)
-            except Exception as e:
-                print(f"{model_id}: The model could not be added to model_executor list: {e}")
-                raise e
-        model_executor.generate(number_of_images=number_of_images, output_path=output_path)
+    def get_model_executor(self, model_id: str):
+        try:
+            self.add_model_executor(model_id=model_id)  # only adds after checking that is not already added
+            return self.find_model_executor_by_id(model_id=model_id)
+        except Exception as e:
+            print(f"{model_id}: The model could not be added to model_executor list: {e}")
+            raise e
+
+    def generate(self, model_id: str, num_samples: int = 30, output_path: str = None, **kwargs):
+        model_executor = self.get_model_executor(model_id=model_id)
+        return model_executor.generate(num_samples=num_samples, output_path=output_path,
+                                       is_gen_function_returned=False, **kwargs)
+
+    def get_generate_function(self, model_id: str, num_samples: int = 30, output_path: str = None, **kwargs):
+        model_executor = self.get_model_executor(model_id=model_id)
+        return model_executor.generate(num_samples=num_samples, output_path=output_path,
+                                       is_gen_function_returned=True, **kwargs)
+
+    ############################ OTHER METHODS ############################
 
     def get_model_as_dataloader(self, model_id: str):
         raise NotImplementedError
-
-    ############################ OTHER METHODS ############################
 
     def __repr__(self):
         return f'Generators(model_ids={self.config_manager.model_ids}, model_executors={self.model_executors}, ' \
