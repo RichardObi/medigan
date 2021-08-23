@@ -3,8 +3,9 @@
 """ This module is the core component of `medigan` - a Python library for automated synthetic data generation.
 
 While being extendable to any modality and generative model, `medigan` focuses on automating medical image
-dataset synthesis using GANs.
+dataset synthesis using GANs for training deep learning models.
 
+Github: https://github.com/RichardObi/GANtoolbox/tree/v0.1
 
 Examples
 --------
