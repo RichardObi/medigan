@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 # ! /usr/bin/env python
-"""
-@author: Richard Osuala
-BCN-AIM Lab 2021
-Contact: richard.osuala@ub.edu
+""" main script used to test the functions of the medigan module.
+
+.. codeauthor:: Richard Osuala <richard.osuala@gmail.com>
+.. codeauthor:: Noussair Lazrak <lazrak.noussair@gmail.com>
 """
 
 # TODO Move this to ../tests/tests.py
@@ -48,7 +48,7 @@ def main():
 
 def model_generation_test(generators):
     #generators.generate(model_id="2d29d505-9fb7-4c4d-b81f-47976e2c7dbf", num_samples=3)
-    #generators.generate(model_id="8f933c5e-72fc-461a-a5cb-73cbe65af6fc", num_samples=3)
+    generators.generate(model_id="8f933c5e-72fc-461a-a5cb-73cbe65af6fc", num_samples=3)
     generators.generate(model_id="2d29d505-9fb7-4c4d-b81f-47976e2c7dbf", num_samples=3, **{"test": "this is my test"})
 
 

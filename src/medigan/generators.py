@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 # ! /usr/bin/env python
-"""
-@author: Richard Osuala, Noussair Lazrak
-BCN-AIM Lab 2021
-Contact: richard.osuala@ub.edu
+""" Main class providing user-library interaction functions for config management, and model selection and execution.
+
+.. codeauthor:: Richard Osuala <richard.osuala@gmail.com>
+.. codeauthor:: Noussair Lazrak <lazrak.noussair@gmail.com>
 """
 
 # Import python native libs
@@ -20,42 +20,217 @@ from .model_selector import ModelSelector
 
 
 class Generators():
-    """Generators is the main class of the medigan package.."""
+    """Generators Class"""
 
     def __init__(
-            self, initialize_all_models: bool = False,
+            self,
+            config_manager: ConfigManager = None,
+            model_selector: ModelSelector = None,
+            model_executors: list = None,
+            initialize_all_models: bool = False
     ):
-        self.config_manager = ConfigManager()
-        self.model_selector = ModelSelector(config_manager=self.config_manager)
-        self.model_executors = []
+        if config_manager is None:
+            self.config_manager = ConfigManager()
+        else:
+            self.config_manager = config_manager
+
+        if model_selector is None:
+            self.model_selector = ModelSelector(config_manager=self.config_manager)
+        else:
+            self.model_selector = model_selector
+
+        if model_executors is None:
+            self.model_executors = []
+        else:
+            self.model_executors = model_executors
+
         if initialize_all_models:
             self.add_all_model_executors()
 
     ############################ CONFIG MANAGER METHODS ############################
 
-    def get_config_by_id(self, model_id, config_key: str = None) -> dict:
+    def get_config_by_id(self, model_id: str, config_key: str = None) -> dict:
+        """ Get and return the part of the config below a config_key for a specific model_id.
+
+        The config_key parameters can be separated by a '.' (dot) to allow for retrieval of nested config keys, e.g,
+        'execution.generator.name'
+
+        This function calls an identically named function in a ConfigManager instance.
+
+        Parameters
+        ----------
+        model_id: str
+            The generative model's unique id
+        config_key: str
+            A key of interest present in the config dict
+
+        Returns
+        -------
+        dict
+            a dictionary from the part of the config file corresponding to model_id and config_key.
+        """
+
         return self.config_manager.get_config_by_id(model_id=model_id, config_key=config_key)
 
     ############################ MODEL SELECTOR METHODS ############################
 
-    def get_selection_criteria_by_id(self, model_id: str) -> dict:
+    def get_selection_criteria_by_id(self, model_id: str, is_model_id_removed: bool = True) -> dict:
+        """ Get and return the selection config dict for a specific model_id.
+
+        This function calls an identically named function in a ModelSelector instance.
+
+        Parameters
+        ----------
+        model_id: str
+            The generative model's unique id
+        is_model_id_removed: bool
+            flag to to remove the model_ids from first level of dictionary.
+
+        Returns
+        -------
+        dict
+            a dictionary corresponding to the selection config of a model
+        """
+
         return self.model_selector.get_selection_criteria_by_id(model_id=model_id)
 
-    def get_selection_values_for_key(self, key: str, model_id: str = None) -> list:
-        return self.model_selector.get_selection_values_for_key(key=key, model_id=model_id)
+    def get_selection_criteria_by_ids(self, model_ids: list = None, are_model_ids_removed: bool = True) -> list:
+        """ Get and return a list of selection config dicts for each of the specified model_ids.
+
+        This function calls an identically named function in a ModelSelector instance.
+
+        Parameters
+        ----------
+        model_ids: list
+            A list of generative models' unique ids
+        are_model_ids_removed: bool
+            flag to remove the model_ids from first level of dictionary.
+
+        Returns
+        -------
+        list
+            a list of dictionaries each corresponding to the selection config of a model
+        """
+
+        return self.model_selector.get_selection_criteria_by_ids(model_ids=model_ids,
+                                                                 are_model_ids_removed=are_model_ids_removed)
 
     def get_selection_values_for_key(self, key: str, model_id: str = None) -> list:
+        """ Get and return the value of a specified key of the selection dict in the config for a specific model_id.
+
+        The key param can contain '.' (dot) separations to allow for retrieval of nested config keys such as
+        'execution.generator.name'
+
+        This function calls an identically named function in a ModelSelector instance.
+
+        Parameters
+        ----------
+        key: str
+            The key in the selection dict
+        model_id: str
+            The generative model's unique id
+
+        Returns
+        -------
+        list
+            a list of the values that correspond to the key in the selection config of the model id.
+        """
+
+        return self.model_selector.get_selection_values_for_key(key=key, model_id=model_id)
+
+    def get_selection_keys(self, model_id: str = None) -> list:
+        """ Get and return all first level keys from the selection config dict for a specific model_id.
+
+        This function calls an identically named function in a ModelSelector instance.
+
+        Parameters
+        ----------
+        model_id: str
+            The generative model's unique id
+
+        Returns
+        -------
+        list
+            a list containing the keys as strings of the selection config of the model_id.
+        """
+
         return self.model_selector.get_selection_keys(model_id=model_id)
 
     def get_models_by_key_value_pair(self, key1: str, value1: str, is_case_sensitive: bool = False) -> list:
+        """ Get and return a list of model_id dicts that contain the specified key value pair in their selection config.
+
+        The key param can contain '.' (dot) separations to allow for retrieval of nested config keys such as
+        'execution.generator.name'
+
+        This function calls an identically named function in a ModelSelector instance.
+
+        Parameters
+        ----------
+        key1: str
+            The key in the selection dict
+        value1: str
+            The value in the selection dict that corresponds to key1
+        is_case_sensitive: bool
+            flag to evaluate keys and values with case sensitivity if set to True
+
+        Returns
+        -------
+        list
+            a list of the dictionaries each containing a models id and the found key-value pair in the models config
+        """
+
         return self.model_selector.get_models_by_key_value_pair(key1=key1, value1=value1,
                                                                 is_case_sensitive=is_case_sensitive)
 
     def rank_models_by_performance(self, model_ids: list = None, metric: str = 'SSIM', order: str = "asc") -> list:
+        """ Rank model based on a provided metric and return sorted list of model dicts.
+
+        The metric param can contain '.' (dot) separations to allow for retrieval of nested metric config keys such as
+        'downstream_task.CLF.accuracy'
+
+        This function calls an identically named function in a ModelSelector instance.
+
+        Parameters
+        ----------
+        model_ids: list
+            only evaluate the model_ids in this list. If none, evaluate all available model_ids
+        metric: str
+            The key in the selection dict that corresponds to the metric of interest
+        order: str
+            the sorting order of the ranked results. Should be either "asc" (ascending) or "desc" (descending)
+
+        Returns
+        -------
+        list
+            a list of model dictionaries containing metric and model_id, sorted by metric.
+        """
+
         return self.model_selector.rank_models_by_performance(model_ids=model_ids, metric=metric, order=order)
 
     def find_matching_models_by_values(self, values: list, target_values_operator: str = 'AND',
                                        are_keys_also_matched: bool = False, is_case_sensitive: bool = False) -> list:
+        """ Search for values (and keys) in model configs and return a list of the matching ModelMatchCandidates.
+
+        This function calls an identically named function in a ModelSelector instance.
+
+        Parameters
+        ----------
+        values: list
+            list of values used to search and find models corresponding to these values
+        target_values_operator: str
+            the operator indicating the relationship between 'values' in the evaluation of model search results.
+            Should be either "AND", "OR", or "XOR".
+        are_keys_also_matched: bool
+            flag indicating whether, apart from values, the keys in the model config should also be searchable
+        is_case_sensitive: bool
+            flag indicating whether the search for values (and) keys in the model config should be case-sensitive.
+
+        Returns
+        -------
+        list
+            a list of ModelMatchCandidates class objects each of which was successfully matched against the search values.
+        """
+
         return self.model_selector.find_matching_models_by_values(values=values,
                                                                   target_values_operator=target_values_operator,
                                                                   are_keys_also_matched=are_keys_also_matched,
@@ -64,6 +239,32 @@ class Generators():
     def find_models_and_rank(self, values: list, target_values_operator: str = 'AND',
                              are_keys_also_matched: bool = False, is_case_sensitive: bool = False,
                              metric: str = 'SSIM', order: str = "asc") -> list:
+        """ Search for values (and keys) in model configs, rank results and return sorted list of model dicts.
+
+        This function calls an identically named function in a ModelSelector instance.
+
+        Parameters
+        ----------
+        values: list
+            list of values used to search and find models corresponding to these values
+        target_values_operator: str
+            the operator indicating the relationship between 'values' in the evaluation of model search results.
+            Should be either "AND", "OR", or "XOR".
+        are_keys_also_matched: bool
+            flag indicating whether, apart from values, the keys in the model config should also be searchable
+        is_case_sensitive: bool
+            flag indicating whether the search for values (and) keys in the model config should be case-sensitive.
+        metric: str
+            The key in the selection dict that corresponds to the metric of interest
+        order: str
+            the sorting order of the ranked results. Should be either "asc" (ascending) or "desc" (descending)
+
+        Returns
+        -------
+        list
+            a list of the searched and matched model dictionaries containing metric and model_id, sorted by metric.
+        """
+
         return self.model_selector.find_models_and_rank(values=values,
                                                         target_values_operator=target_values_operator,
                                                         are_keys_also_matched=are_keys_also_matched,
@@ -74,7 +275,39 @@ class Generators():
     def find_models_rank_and_generate(self, values: list, target_values_operator: str = 'AND',
                                       are_keys_also_matched: bool = False, is_case_sensitive: bool = False,
                                       metric: str = 'SSIM', order: str = "asc", num_samples: int = 30,
-                                      output_path: str = None, **kwargs):
+                                      output_path: str = None, is_gen_function_returned: bool = False, **kwargs):
+        """ Search for values (and keys) in model configs, rank results to generate samples with highest ranked model.
+
+        Parameters
+        ----------
+        values: list
+            list of values used to search and find models corresponding to these values
+        target_values_operator: str
+            the operator indicating the relationship between 'values' in the evaluation of model search results.
+            Should be either "AND", "OR", or "XOR".
+        are_keys_also_matched: bool
+            flag indicating whether, apart from values, the keys in the model config should also be searchable
+        is_case_sensitive: bool
+            flag indicating whether the search for values (and) keys in the model config should be case-sensitive.
+        metric: str
+            The key in the selection dict that corresponds to the metric of interest
+        order: str
+            the sorting order of the ranked results. Should be either "asc" (ascending) or "desc" (descending)
+        num_samples: int
+            the number of samples that will be generated
+        output_path: str
+            the path as str to the output folder where the generated samples will be stored
+        is_gen_function_returned: bool
+            flag indicating whether, instead of generating samples, the sample generation function will be returned
+        **kwargs
+            arbitrary number of keyword arguments passed to the model's sample generation function
+
+        Returns
+        -------
+        None
+            However, if is_gen_function_returned is True, it returns the internal generate function of the model.
+        """
+
         ranked_models = self.model_selector.find_models_and_rank(values=values,
                                                                  target_values_operator=target_values_operator,
                                                                  are_keys_also_matched=are_keys_also_matched,
@@ -90,11 +323,42 @@ class Generators():
                   f'The highest ranked model will now be used for generation: {ranked_models[0]}')
             highest_ranking_model_id = ranked_models[0][MODEL_ID]
             return self.generate(model_id=highest_ranking_model_id, num_samples=num_samples, output_path=output_path,
-                                 **kwargs)
+                                 is_gen_function_returned=is_gen_function_returned, **kwargs)
 
     def find_model_and_generate(self, values: list, target_values_operator: str = 'AND',
                                 are_keys_also_matched: bool = False, is_case_sensitive: bool = False,
-                                num_samples: int = 30, output_path: str = None, **kwargs):
+                                num_samples: int = 30, output_path: str = None, is_gen_function_returned: bool = False,
+                                **kwargs):
+        """ Search for values (and keys) in model configs to generate samples with the found model.
+
+        Note that the number of found models should be ==1. Else no samples will be generated and a warning is printed.
+
+        Parameters
+        ----------
+        values: list
+            list of values used to search and find models corresponding to these values
+        target_values_operator: str
+            the operator indicating the relationship between 'values' in the evaluation of model search results.
+            Should be either "AND", "OR", or "XOR".
+        are_keys_also_matched: bool
+            flag indicating whether, apart from values, the keys in the model config should also be searchable
+        is_case_sensitive: bool
+            flag indicating whether the search for values (and) keys in the model config should be case-sensitive.
+        num_samples: int
+            the number of samples that will be generated
+        output_path: str
+            the path as str to the output folder where the generated samples will be stored
+        is_gen_function_returned: bool
+            flag indicating whether, instead of generating samples, the sample generation function will be returned
+        **kwargs
+            arbitrary number of keyword arguments passed to the model's sample generation function
+
+        Returns
+        -------
+        None
+            However, if is_gen_function_returned is True, it returns the internal generate function of the model.
+        """
+
         matching_models: list = self.model_selector.find_matching_models_by_values(values=values,
                                                                                    target_values_operator=target_values_operator,
                                                                                    are_keys_also_matched=are_keys_also_matched,
@@ -112,11 +376,18 @@ class Generators():
             print(f'For your input, there was {len(matching_models)} model matched. '
                   f'This model will now be used for generation: {matching_models}')
             matched_model_id = matching_models[0].model_id
-            return self.generate(model_id=matched_model_id, num_samples=num_samples, output_path=output_path, **kwargs)
+            return self.generate(model_id=matched_model_id, num_samples=num_samples, output_path=output_path,
+                                 is_gen_function_returned=is_gen_function_returned, **kwargs)
 
     ############################ MODEL EXECUTOR METHODS ############################
 
     def add_all_model_executors(self):
+        """ Add ModelExecutor class instances for all models available in the config.
+
+        Returns
+        -------
+        None
+        """
         for model_id in self.config_manager.model_ids:
             execution_config = self.config_manager.get_config_by_id(model_id=model_id,
                                                                     config_key=CONFIG_FILE_KEY_EXECUTION)
@@ -124,30 +395,94 @@ class Generators():
                                      execution_config=execution_config)
 
     def add_model_executor(self, model_id: str):
+        """ Add one ModelExecutor class instance corresponding to the specified model_id.
+
+        Parameters
+        ----------
+        model_id: str
+            The generative model's unique id
+
+        Returns
+        -------
+        None
+        """
         if not self.is_model_executor_already_added(model_id):
             execution_config = self.config_manager.get_config_by_id(model_id=model_id,
                                                                     config_key=CONFIG_FILE_KEY_EXECUTION)
             self._add_model_executor(model_id=model_id, execution_config=execution_config)
 
-    def _add_model_executor(self, model_id: str, execution_config: object):
+    def _add_model_executor(self, model_id: str, execution_config: dict):
+        """ Add one ModelExecutor class instance corresponding to the specified model_id and execution config.
+
+        Parameters
+        ----------
+        model_id: str
+            The generative model's unique id
+        execution_config: dict
+            The part of th config below the 'execution' key
+
+        Returns
+        -------
+        None
+        """
+
         if not self.is_model_executor_already_added(model_id):
             model_executor = ModelExecutor(model_id=model_id, execution_config=execution_config,
                                            download_package=True)
             self.model_executors.append(model_executor)
 
     def is_model_executor_already_added(self, model_id) -> bool:
+        """ Check whether the ModelExecutor instance of this model_id is already in self.model_executors list.
+
+        Parameters
+        ----------
+        model_id: str
+            The generative model's unique id
+
+        Returns
+        -------
+        bool
+            indicating whether this ModelExecutor had been already previously added to self.model_executors
+        """
+
         if self.find_model_executor_by_id(model_id=model_id) is None:
             print(f"{model_id}: The model has not yet been added to the model_executor list.")
             return False
         return True
 
     def find_model_executor_by_id(self, model_id: str) -> ModelExecutor:
+        """ Find and return the ModelExecutor instance of this model_id in the self.model_executors list.
+
+        Parameters
+        ----------
+        model_id: str
+            The generative model's unique id
+
+        Returns
+        -------
+        ModelExecutor
+            ModelExecutor class instance corresponding to the model_id
+        """
         for idx, model_executor in enumerate(self.model_executors):
             if model_executor.model_id == model_id:
                 return model_executor
         return None
 
-    def get_model_executor(self, model_id: str):
+    def get_model_executor(self, model_id: str) -> ModelExecutor:
+        """ Add and return the ModelExecutor instance of this model_id from the self.model_executors list.
+
+        Relies on self.add_model_executor and self.find_model_executor_by_id functions.
+
+        Parameters
+        ----------
+        model_id: str
+            The generative model's unique id
+
+        Returns
+        -------
+        ModelExecutor
+            ModelExecutor class instance corresponding to the model_id
+        """
         try:
             self.add_model_executor(model_id=model_id)  # only adds after checking that is not already added
             return self.find_model_executor_by_id(model_id=model_id)
@@ -155,15 +490,55 @@ class Generators():
             print(f"{model_id}: The model could not be added to model_executor list: {e}")
             raise e
 
-    def generate(self, model_id: str, num_samples: int = 30, output_path: str = None, **kwargs):
+    def generate(self, model_id: str, num_samples: int = 30, output_path: str = None,
+                 is_gen_function_returned: bool = False, **kwargs):
+        """ Generate samples with the model corresponding to the model_id or return the model's generate function.
+
+        Parameters
+        ----------
+        model_id: str
+            The generative model's unique id
+        num_samples: int
+            the number of samples that will be generated
+        output_path: str
+            the path as str to the output folder where the generated samples will be stored
+        is_gen_function_returned: bool
+            flag indicating whether, instead of generating samples, the sample generation function will be returned
+        **kwargs
+            arbitrary number of keyword arguments passed to the model's sample generation function
+
+        Returns
+        -------
+        None
+            However, if is_gen_function_returned is True, it returns the internal generate function of the model.
+        """
         model_executor = self.get_model_executor(model_id=model_id)
         return model_executor.generate(num_samples=num_samples, output_path=output_path,
-                                       is_gen_function_returned=False, **kwargs)
+                                       is_gen_function_returned=is_gen_function_returned, **kwargs)
 
     def get_generate_function(self, model_id: str, num_samples: int = 30, output_path: str = None, **kwargs):
-        model_executor = self.get_model_executor(model_id=model_id)
-        return model_executor.generate(num_samples=num_samples, output_path=output_path,
-                                       is_gen_function_returned=True, **kwargs)
+        """ Return the model's generate function.
+
+        Relies on the self.generate function.
+
+        Parameters
+        ----------
+        model_id: str
+            The generative model's unique id
+        num_samples: int
+            the number of samples that will be generated
+        output_path: str
+            the path as str to the output folder where the generated samples will be stored
+        **kwargs
+            arbitrary number of keyword arguments passed to the model's sample generation function
+
+        Returns
+        -------
+        Function
+            The internal reusable generate function of the generative model.
+        """
+        return self.generate(model_id=model_id, num_samples=num_samples, output_path=output_path,
+                             is_gen_function_returned=True, **kwargs)
 
     ############################ OTHER METHODS ############################
 

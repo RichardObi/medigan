@@ -13,6 +13,8 @@ path = "*"
 numpy = "*"
 scikit-image = "*"
 scipy = "*"
+sphinx = "*"
+sphinx-rtd-theme = "*"
 
 [requires]
 python_version = "3.9"

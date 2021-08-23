@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 # ! /usr/bin/env python
-"""
-@author: Richard Osuala
-BCN-AIM Lab 2021
-Contact: richard.osuala@ub.edu
+"""ModelMatchCandidate class that holds data to evaluate if a generative model matches against a search query.
+
+.. codeauthor:: Richard Osuala <richard.osuala@gmail.com>
+.. codeauthor:: Noussair Lazrak <lazrak.noussair@gmail.com>
 """
 
 # Import python native libs
@@ -16,7 +16,24 @@ from .matched_entry import MatchedEntry
 
 
 class ModelMatchCandidate():
-    """ ModelMatchCandidate class: A prospectively matching model given the target values as model search params."""
+    """ ModelMatchCandidate class: A prospectively matching model given the target values as model search params.
+
+    Attributes
+    ----------
+    model_id: str
+        The generative model's unique id
+    target_values: list
+        list of target values used to evaluate of a ModelMatchCandidate instance is a match
+    target_values_operator: str
+        the operator indicating the relationship between 'values' in the evaluation of ModelMatchCandidate instances.
+        Should be either "AND", "OR", or "XOR".
+    is_case_sensitive: bool
+        flag indicating whether the matching of values (and) keys should be case-sensitive
+    are_keys_also_matched: bool
+        flag indicating whether, apart from values, keys should also be matched
+    is_match: bool
+        flag indicating whether the ModelMatchCandidate instance is a match
+    """
 
     def __init__(
             self,
@@ -38,16 +55,40 @@ class ModelMatchCandidate():
         self.matched_entries = []
         self.is_match = is_match
 
-    def add_matched_entry(self, matched_entry: MatchedEntry):
+    def add_matched_entry(self, matched_entry: MatchedEntry) -> None:
+        """ Add a MatchedEntry instance to the 'matched_entries' list. """
         self.matched_entries.append(matched_entry)
 
-    def get_all_matching_elements(self):
+    def get_all_matching_elements(self) -> list:
+        """ Get the matching element from each of the MatchedEntry instances in the 'matched_entries' list.
+
+        Returns
+        -------
+        list
+            list of all matching elements (i.e. string that matched a search value) from each MatchedEntry in
+            'matched_entries'
+        """
+
         matching_elements = []
         for matched_entry in self.matched_entries:
             matching_elements.append(matched_entry.matching_element)
         return matching_elements
 
     def check_if_is_match(self) -> bool:
+        """ Evaluates whether the model represented by this instance is a match given search values and operator.
+
+        The matching element from each MatchEntry of this instance ('self.matched_entries') are retrieved. To be a
+        match, this instance ('self') needs to fulfill the requirement of the operator, which can be of value 'AND',
+        or 'OR', or 'XOR'. For example, the default 'AND' requires that each search value ('self.target_values') has at
+        least one corresponding MatchEntry, while in 'OR' only one of the search values needs to have been matched by a
+        corresponding MatchedEntry.
+
+        Returns
+        -------
+        bool
+            flag that, only if True, indicates that this instance is a match given the search values and operator.
+        """
+
         if self is not None and len(self) > 0:
             if self.target_values_operator == 'OR':
                 self.is_match = True

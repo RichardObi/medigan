@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 # ! /usr/bin/env python
-"""
-@author: Richard Osuala, Noussair Lazrak
-BCN-AIM Lab 2021
-Contact: richard.osuala@ub.edu
+"""Model executor class that downloads models, loads them as python packages, and runs their generate functions.
+
+.. codeauthor:: Richard Osuala <richard.osuala@gmail.com>
+.. codeauthor:: Noussair Lazrak <lazrak.noussair@gmail.com>
 """
 
 # Import python native libs
@@ -52,6 +52,8 @@ class ModelExecutor():
         self._setup_model_package()
 
     def _setup_model_package(self):
+        """ Use specific keys to retrieve needed model config values and load and initialize the model as package. """
+
         self.image_size = self.execution_config[CONFIG_FILE_KEY_IMAGE_SIZE]
         self.dependencies = self.execution_config[CONFIG_FILE_KEY_DEPENDENCIES]
         self.model_name = self.execution_config[CONFIG_FILE_KEY_MODEL_NAME]
@@ -68,6 +70,8 @@ class ModelExecutor():
         self._import_package_as_lib()
 
     def _check_package_resources(self):
+        """ Check if the dependencies inside the generative model's package are installed in the current setup. """
+
         print(f"{self.model_id}: Checking availability of dependencies of model: {self.dependencies}")
         try:
             pkg_resources.require(self.dependencies)
@@ -77,6 +81,8 @@ class ModelExecutor():
             raise e
 
     def _load_package(self):
+        """ Load and store the generative model's python package using the link from the model's execution config. """
+
         if self.package_path is None:
             assert Utils.mkdirs(
                 path_as_string=self.model_id), f"{self.model_id}: The model folder was not found nor created in /{self.model_id}."
@@ -89,6 +95,8 @@ class ModelExecutor():
             self.package_path = package_path
 
     def _import_package_as_lib(self):
+        """ Unzip and import the generative model's python package using importlib. """
+
         print(
             f"{self.model_id}: Now importing model package ({self.package_name}) as lib using importlib from {self.package_path}.")
         is_model_already_unpacked = Path(
@@ -115,6 +123,34 @@ class ModelExecutor():
 
     def generate(self, num_samples: int = 20, output_path: str = None, is_gen_function_returned: bool = False,
                  **kwargs):
+        """ Generate samples using the generative model or return the model's generate function.
+
+        The name amd additional parameters of the generate function of the respective generative model are retrieved
+        from the model's execution config.
+
+        Parameters
+        ----------
+        num_samples: int
+            the number of samples that will be generated
+        output_path: str
+            the path as str to the output folder where the generated samples will be stored
+        is_gen_function_returned: bool
+            flag indicating whether, instead of generating samples, the sample generation function will be returned
+        **kwargs
+            arbitrary number of keyword arguments passed to the model's sample generation function
+
+        Returns
+        -------
+        None
+            However, if is_gen_function_returned is True, it returns the internal generate function of the model.
+
+        Raises
+        ------
+        Exception
+            If the generate method of the model does not exist, cannot be called, or is called with missing params, or
+            if the sample generation inside the model package returns an exception.
+        """
+
         if output_path is None:
             output_path = f'{DEFAULT_OUTPUT_FOLDER}/{self.model_id}/{time.time()}/'
             assert Utils.mkdirs(
@@ -124,12 +160,10 @@ class ModelExecutor():
             prepared_kwargs = self._prepare_generate_method_args(model_file=self.serialised_model_file_path,
                                                                  num_samples=num_samples, output_path=output_path,
                                                                  **kwargs)
-            # return generate_method(self.serialised_model_file_path, self.image_size, num_samples, output_path)
-            # print(f"Provided generate function params: {kwargs}")
-            # print(f"All generate function params: {prepared_kwargs}")
             if is_gen_function_returned:
                 def gen(**some_other_kwargs):
                     generate_method(**prepared_kwargs, **some_other_kwargs)
+                    print(f"Default generate function params are: {prepared_kwargs}")
                 return gen
             else:
                 generate_method(**prepared_kwargs)
@@ -139,6 +173,39 @@ class ModelExecutor():
             raise e
 
     def _prepare_generate_method_args(self, model_file: str, num_samples: int, output_path: str, **kwargs):
+        """ Prepare the keyword arguments that will be passed to the models generate function.
+
+        Prepares the keyword arguments that need to be passed to the generative model's generate function to generate
+        samples. This contains the steps:
+
+            - Update keyword args dict with default values for all params from model config
+
+            - Update keyword args dict with the **args provided by user thus overwriting the previously set default
+                values for which user has provided key-value pairs.
+
+            - Checking if all mandatory 'base' values are set in model config.
+
+            - Update keyword args dict with 'base' key-value pairs, which i.e. are the param values for 'model_file',
+            'num_samples' and 'output_path', thus overwriting any previously set value for these keys.
+
+            - Returning the updated and prepared keyword args dict
+
+        Parameters
+        ----------
+        model_file : str
+            the path to the serialized weights of the generative model.
+        num_samples: int
+            the number of samples that will be generated
+        output_path: str
+            the path as str to the output folder where the generated samples will be stored
+        **kwargs
+            arbitrary number of keyword arguments passed to the model's sample generation function
+
+        Returns
+        -------
+        dict
+            kwargs as dictionary containing both user input params (prioritized) and config input params of the model
+        """
         prepared_kwargs: dict = {}
         # get keys of mandatory custom dictionary input args and assign the default value from config to values of keys
         prepared_kwargs.update(self.generate_method_args[CONFIG_FILE_KEY_GENERATE_ARGS_CUSTOM])

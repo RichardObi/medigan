@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
 # ! /usr/bin/env python
-"""
-@author: Richard Osuala
-BCN-AIM Lab 2021
-Contact: richard.osuala@ub.edu
+""" Model selection class that describes, finds, compares, and ranks generative models.
+
+.. codeauthor:: Richard Osuala <richard.osuala@gmail.com>,
 """
 
 # Import python native libs
@@ -18,7 +17,13 @@ from .utils import Utils
 
 
 class ModelSelector():
-    """ModelSelector class."""
+    """ ModelSelector class: Given a config dict, gets, searches, and ranks matching models.
+
+    Attributes
+    ----------
+    config_manager: ConfigManager
+        Provides the config dictionary, based on which models are selected and compared.
+    """
 
     def __init__(
             self,
@@ -32,6 +37,7 @@ class ModelSelector():
         self._init_model_selector_data()
 
     def _init_model_selector_data(self):
+        """ Initialize class data structure: List of dicts containing two keys each: 'model_id' and 'selection'. """
         for model_id in self.config_manager.model_ids:
             selection_config = self.config_manager.get_config_by_id(model_id=model_id,
                                                                     config_key=CONFIG_FILE_KEY_SELECTION)
@@ -39,6 +45,20 @@ class ModelSelector():
             self.model_selection_dicts.append(model_selector_dict)
 
     def get_selection_criteria_by_id(self, model_id: str, is_model_id_removed: bool = True) -> dict:
+        """ Get and return the selection config dict for a specific model_id.
+
+        Parameters
+        ----------
+        model_id: str
+            The generative model's unique id
+        is_model_id_removed: bool
+            flag to to remove the model_ids from first level of dictionary.
+
+        Returns
+        -------
+        dict
+            a dictionary corresponding to the selection config of a model
+        """
         for idx, selection_dict in enumerate(self.model_selection_dicts):
             if selection_dict[MODEL_ID] == model_id:
                 if is_model_id_removed:
@@ -48,6 +68,20 @@ class ModelSelector():
         return None
 
     def get_selection_criteria_by_ids(self, model_ids: list = None, are_model_ids_removed: bool = True) -> list:
+        """ Get and return a list of selection config dicts for each of the specified model_ids.
+
+        Parameters
+        ----------
+        model_ids: list
+            A list of generative models' unique ids
+        are_model_ids_removed: bool
+            flag to remove the model_ids from first level of dictionary.
+
+        Returns
+        -------
+        list
+            a list of dictionaries each corresponding to the selection config of a model
+        """
         # Create list of models that contain a value for the metric of interest
         selection_dict_list = []
         for idx, selection_dict in enumerate(self.model_selection_dicts):
@@ -60,6 +94,19 @@ class ModelSelector():
         return selection_dict_list
 
     def get_selection_keys(self, model_id: str = None) -> list:
+        """ Get and return all first level keys from the selection config dict for a specific model_id.
+
+        Parameters
+        ----------
+        model_id: str
+            The generative model's unique id
+
+        Returns
+        -------
+        list
+            a list containing the keys as strings of the selection config of the model_id.
+        """
+
         key_list = []
         if model_id is not None:
             selection_config = self.get_selection_criteria_by_id(model_id)
@@ -74,6 +121,24 @@ class ModelSelector():
         return key_list
 
     def get_selection_values_for_key(self, key: str, model_id: str = None) -> list:
+        """ Get and return the value of a specified key of the selection dict in the config for a specific model_id.
+
+        The key param can contain '.' (dot) separations to allow for retrieval of nested config keys such as
+        'execution.generator.name'
+
+        Parameters
+        ----------
+        key: str
+            The key in the selection dict
+        model_id: str
+            The generative model's unique id
+
+        Returns
+        -------
+        list
+            a list of the values that correspond to the key in the selection config of the model id.
+        """
+
         values_for_key = []
         if model_id is not None:
             selection_config = self.get_selection_criteria_by_id(model_id)
@@ -81,20 +146,39 @@ class ModelSelector():
         else:
             for selection_dict in self.model_selection_dicts:
                 selection_config = selection_dict[CONFIG_FILE_KEY_SELECTION]
-                values_for_key.append(selection_config[key])
+                # if applicable, split key by "." and get value in nested dict in selection_config
+                selection_config = Utils.deep_get(base_dict=selection_config, key=key)
+                values_for_key.append(selection_config)
         return values_for_key
 
     def get_models_by_key_value_pair(self, key1: str, value1: str, is_case_sensitive: bool = False) -> list:
+        """ Get and return a list of model_id dicts that contain the specified key value pair in their selection config.
+
+        The key param can contain '.' (dot) separations to allow for retrieval of nested config keys such as
+        'execution.generator.name'
+
+        Parameters
+        ----------
+        key1: str
+            The key in the selection dict
+        value1: str
+            The value in the selection dict that corresponds to key1
+        is_case_sensitive: bool
+            flag to evaluate keys and values with case sensitivity if set to True
+
+        Returns
+        -------
+        list
+            a list of the dictionaries each containing a models id and the found key-value pair in the models config
+        """
+
         model_dict_list = []
-        # First split the key string by "." to enable evaluation of keys that are in nested dicts
-        key_split = key1.split(".")
         for selection_dicts in self.model_selection_dicts:
             is_model_match: bool = False
             # Now, for each model, we want to get the respective value for the key
             try:
                 key_value = selection_dicts[CONFIG_FILE_KEY_SELECTION]
-                for key in key_split:
-                    key_value = key_value[key]
+                key_value = Utils.deep_get(base_dict=key_value, key=key1)
                 if key_value is not None:
                     # If key value is None, the model is not added to the model
                     if isinstance(key_value, dict):
@@ -123,13 +207,31 @@ class ModelSelector():
                 model_dict_list.append(model_dict)
         return model_dict_list
 
-    def rank_models_by_performance(self, model_ids: list = None, metric: str = 'SSIM', order: str = "asc"):
+    def rank_models_by_performance(self, model_ids: list = None, metric: str = 'SSIM', order: str = "asc") -> list:
+        """ Rank model based on a provided metric and return sorted list of model dicts.
+
+        The metric param can contain '.' (dot) separations to allow for retrieval of nested metric config keys such as
+        'downstream_task.CLF.accuracy'
+
+        Parameters
+        ----------
+        model_ids: list
+            only evaluate the model_ids in this list. If none, evaluate all available model_ids
+        metric: str
+            The key in the selection dict that corresponds to the metric of interest
+        order: str
+            the sorting order of the ranked results. Should be either "asc" (ascending) or "desc" (descending)
+
+        Returns
+        -------
+        list
+            a list of model dictionaries containing metric and model_id, sorted by metric.
+        """
+
         model_metric_dict_list = []
         if model_ids is not None and len(model_ids) == 0:
             # empty model_ids list -> return empty list.
             return model_metric_dict_list
-        # First split the metric string by "." to enable nested dict downstream performance task evaluation
-        metric_key_split = metric.split(".")
         # First, get all selection criteria for the model_ids
         selection_dict_list = self.get_selection_criteria_by_ids(model_ids=model_ids, are_model_ids_removed=False)
         for selection_dict in selection_dict_list:
@@ -137,8 +239,7 @@ class ModelSelector():
             try:
                 # Maybe remove the case-sensitivity for metric here.
                 metric_value = selection_dict[CONFIG_FILE_KEY_SELECTION][CONFIG_FILE_KEY_PERFORMANCE]
-                for key in metric_key_split:
-                    metric_value = metric_value[key]
+                metric_value = Utils.deep_get(base_dict=metric_value, key=metric)
                 if metric_value is not None:
                     # If metric value is None, the model is not added to the model_metric_dict_list
                     # Maybe add further validation of metric_value here, e.g. string to float conversion, etc.
@@ -157,6 +258,30 @@ class ModelSelector():
     def find_models_and_rank(self, values: list, target_values_operator: str = 'AND',
                              are_keys_also_matched: bool = False, is_case_sensitive: bool = False,
                              metric: str = 'SSIM', order: str = "asc") -> list:
+        """ Search for values (and keys) in model configs, rank results and return sorted list of model dicts.
+
+        Parameters
+        ----------
+        values: list
+            list of values used to search and find models corresponding to these values
+        target_values_operator: str
+            the operator indicating the relationship between 'values' in the evaluation of model search results.
+            Should be either "AND", "OR", or "XOR".
+        are_keys_also_matched: bool
+            flag indicating whether, apart from values, the keys in the model config should also be searchable
+        is_case_sensitive: bool
+            flag indicating whether the search for values (and) keys in the model config should be case-sensitive.
+        metric: str
+            The key in the selection dict that corresponds to the metric of interest
+        order: str
+            the sorting order of the ranked results. Should be either "asc" (ascending) or "desc" (descending)
+
+        Returns
+        -------
+        list
+            a list of the searched and matched model dictionaries containing metric and model_id, sorted by metric.
+        """
+
         matching_models = self.find_matching_models_by_values(values=values,
                                                               target_values_operator=target_values_operator,
                                                               are_keys_also_matched=are_keys_also_matched,
@@ -167,6 +292,31 @@ class ModelSelector():
 
     def find_matching_models_by_values(self, values: list, target_values_operator: str = 'AND',
                                        are_keys_also_matched: bool = False, is_case_sensitive: bool = False) -> list:
+        """ Search for values (and keys) in model configs and return a list of the matching ModelMatchCandidates.
+
+        Uses 'self.recursive_search_for_values' to recursively populate each ModelMatchCandidate with MatchEntry
+        instances. After populating, each ModelMatchCandidate is evaluated based on the provided
+        'target_values_operator' and 'values' list using 'ModelMatchCandidate.check_if_is_match'.
+
+        Parameters
+        ----------
+        values: list
+            list of values used to search and find models corresponding to these values
+        target_values_operator: str
+            the operator indicating the relationship between 'values' in the evaluation of model search results.
+            Should be either "AND", "OR", or "XOR".
+        are_keys_also_matched: bool
+            flag indicating whether, apart from values, the keys in the model config should also be searchable
+        is_case_sensitive: bool
+            flag indicating whether the search for values (and) keys in the model config should be case-sensitive.
+
+        Returns
+        -------
+        list
+            a list of ModelMatchCandidates class objects each of which was successfully matched against the search
+            values.
+        """
+
         assert values is not None and len(values) > 0, \
             f'Please specify a list of values to search for. You specified: {values}.'
         matching_models = []
@@ -180,13 +330,43 @@ class ModelSelector():
                                                         is_case_sensitive=is_case_sensitive,
                                                         target_values=values,
                                                         are_keys_also_matched=are_keys_also_matched)
-            model_match_candidate = self._recursive_search_for_values(search_dict=selection_config,
-                                                                      model_match_candidate=model_match_candidate)
+            model_match_candidate = self.recursive_search_for_values(search_dict=selection_config,
+                                                                     model_match_candidate=model_match_candidate)
             if model_match_candidate.check_if_is_match():
                 matching_models.append(model_match_candidate)
         return matching_models
 
-    def _recursive_search_for_values(self, search_dict: dict, model_match_candidate: ModelMatchCandidate):
+    def recursive_search_for_values(self, search_dict: dict, model_match_candidate: ModelMatchCandidate):
+        """ Do a recursive search to match values in the search_dict with values (and keys) in a model's config.
+
+        The provided ModelMatchCandidate instance is recursively populated with MatchedEntry instances. A MatchedEntry
+        instance contains a key-value pair found in the model's config that matches with one search term of interest.
+
+        The search terms of interest are stored in 'model_match_candidate.target_values'. The model's selection config
+        is provided in the 'search_dict'.
+
+        To traverse the search_dict, the value for each key in the search_dict is retrieved.
+
+        - If that value is of type dictionary, the function calls itself with that nested dictionary as new 'search_dict'.
+
+        - If that value is of type list, each value in the list is compared with each search term of interest in 'model_match_candidate.target_values'.
+
+        - If the value of the 'search_dict' is of another type (i.e. str), it is compared with each search term of interest in 'model_match_candidate.target_values'.
+
+        Parameters
+        ----------
+        search_dict: dict
+            contains key and values from a model's config that are matched against a set of search values.
+        model_match_candidate: ModelMatchCandidate
+            a class instance representing a model to be prepared for evaluation (populated with MatchedEntry objects),
+            as to whether it is a match given its search values (self.target_values).
+
+        Returns
+        -------
+        list
+            a ModelMatchCandidates class instance that has been populated with MatchedEntry class instances.
+        """
+
         if search_dict is not None:
             counter = 0
             for key in search_dict:
@@ -206,7 +386,7 @@ class ModelSelector():
                     key_or_counter = key
                 if isinstance(search_dict[key_or_counter], dict):
                     # The value of the key is of type dict, we thus search recursively inside that dictionary
-                    model_match_candidate = self._recursive_search_for_values(
+                    model_match_candidate = self.recursive_search_for_values(
                         search_dict=search_dict[key_or_counter], model_match_candidate=model_match_candidate)
                 elif isinstance(search_dict[key_or_counter], list):
                     for item in search_dict[key_or_counter]:

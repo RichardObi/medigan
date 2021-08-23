@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 # ! /usr/bin/env python
-"""
-@author: Richard Osuala
-BCN-AIM Lab 2021
-Contact: richard.osuala@ub.edu
+"""MatchedEntry class that represents one match of a key value pair of a model's config against a search query.
+
+.. codeauthor:: Richard Osuala <richard.osuala@gmail.com>
+.. codeauthor:: Noussair Lazrak <lazrak.noussair@gmail.com>
 """
 
 # Import python native libs
@@ -13,7 +13,17 @@ import json
 
 
 class MatchedEntry():
-    """ Match entry: key or key-value pair that was matched."""
+    """ ModelMatchCandidate class: A prospectively matching model given the target values as model search params.
+
+    Attributes
+    ----------
+    key: str
+        string that represents the matched key in model dict
+    value
+        represents the key's matched value in the model dict
+    matching_element: str
+        string that was used to match the search value
+    """
 
     def __init__(
             self,

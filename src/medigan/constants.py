@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 #! /usr/bin/env python
-"""
-@author: Richard Osuala, Noussair Lazrak
-BCN-AIM Lab 2021
-Contact: richard.osuala@ub.edu
+"""Global constants
+
+.. codeauthor:: Richard Osuala <richard.osuala@gmail.com>
+.. codeauthor:: Noussair Lazrak <lazrak.noussair@gmail.com>
 """
 
 CONFIG_FILE_URL = "https://raw.githubusercontent.com/RichardObi/medigan-models/main/global.json"
