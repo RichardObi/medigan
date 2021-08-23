@@ -70,7 +70,7 @@ Examples
 
     - `medigan` motivates the reuse of trained generative models.
 
-    - Models can be added via pull request by adding a model to the config in https://raw.githubusercontent.com/RichardObi/medigan-models/main/global.json (link stored in `medigan.constants.CONFIG_FILE_URL`).
+    - Models can be added via pull request by adding a model to the config in https://github.com/RichardObi/medigan-models (link stored in `medigan.constants.CONFIG_FILE_URL`).
 
     - Model contributors need to specify a link to their model package in the config. We recommend to host and link model packages on Zenodo. Reasons:
 
