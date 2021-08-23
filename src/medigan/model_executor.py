@@ -26,13 +26,56 @@ from .constants import CONFIG_FILE_KEY_DEPENDENCIES, CONFIG_FILE_KEY_MODEL_NAME,
 from .utils import Utils
 
 
-class ModelExecutor():
-    """ModelExecutor class."""
+class ModelExecutor:
+    """ `ModelExecutor` class: Find config links to download models, init models as python packages, run generate methods.
+
+    Parameters
+    ----------
+    model_id: str
+        The generative model's unique id
+    execution_config: dict
+        The part of the config below the 'execution' key
+    download_package: bool
+        Flag indicating, if True, that the model's package should be downloaded instead of using an existing one that
+        was downloaded previously
+
+    Attributes
+    ----------
+    model_id: str
+        The generative model's unique id
+    execution_config: dict
+        The part of the config below the 'execution' key
+    download_package: bool
+        Flag indicating, if True, that the model's package should be downloaded instead of using an existing one that
+        was downloaded previously
+    image_size: int
+        Pixel dimension of the generated samples, where images are assumed to have the same width and height
+    dependencies: list
+        List of the dependencies of a models python package.
+    model_name: str
+        Name of the generative model
+    model_extension: str
+        File extension of the generative model's weights file.
+    package_name: str
+        Name of the model's python package i.e. the name of the model's zip file and unzipped package folder
+    package_link: str
+        The link to the zipped model package. Note: Convention is to host models on Zenodo (reason: static doi content)
+    generate_method_name: str
+        The name of the model's generate method inside the model package. This method is called to generate samples.
+    generate_method_args: dict
+        The args of the model's generate method inside the model package
+    serialised_model_file_path: str
+        Path as string to the generative model's weights file
+    package_path: str
+        Path as string to the generative model's python package
+    deserialized_model_as_lib
+        The generative model's package imported as python library. Generate method inside this library can be called.
+    """
 
     def __init__(
             self,
             model_id: str,
-            execution_config: object,
+            execution_config: dict,
             download_package: bool = True,
     ):
         self.model_id = model_id
@@ -44,7 +87,7 @@ class ModelExecutor():
         self.model_extension = None
         self.package_name = None
         self.package_link = None
-        self.generate_method = None
+        self.generate_method_name = None
         self.generate_method_args = None
         self.serialised_model_file_path = None
         self.package_path = None
@@ -60,7 +103,7 @@ class ModelExecutor():
         self.model_extension = self.execution_config[CONFIG_FILE_KEY_MODEL_EXTENSION]
         self.package_name = self.execution_config[CONFIG_FILE_KEY_PACKAGE_NAME]
         self.package_link = self.execution_config[CONFIG_FILE_KEY_PACKAGE_LINK]
-        self.generate_method = self.execution_config[CONFIG_FILE_KEY_GENERATE][
+        self.generate_method_name = self.execution_config[CONFIG_FILE_KEY_GENERATE][
             CONFIG_FILE_KEY_GENERATE_NAME]
         self.generate_method_args = self.execution_config[CONFIG_FILE_KEY_GENERATE][
             CONFIG_FILE_KEY_GENERATE_ARGS]
@@ -81,7 +124,7 @@ class ModelExecutor():
             raise e
 
     def _load_package(self):
-        """ Load and store the generative model's python package using the link from the model's execution config. """
+        """ Load and store the generative model's python package using the link from the model's `execution_config`. """
 
         if self.package_path is None:
             assert Utils.mkdirs(
@@ -126,7 +169,7 @@ class ModelExecutor():
         """ Generate samples using the generative model or return the model's generate function.
 
         The name amd additional parameters of the generate function of the respective generative model are retrieved
-        from the model's execution config.
+        from the model's `execution_config`.
 
         Parameters
         ----------
@@ -142,7 +185,7 @@ class ModelExecutor():
         Returns
         -------
         None
-            However, if is_gen_function_returned is True, it returns the internal generate function of the model.
+            However, if `is_gen_function_returned` is True, it returns the internal generate function of the model.
 
         Raises
         ------
@@ -156,7 +199,7 @@ class ModelExecutor():
             assert Utils.mkdirs(
                 path_as_string=output_path), f"{self.model_id}: The output folder was not found nor created in {output_path}."
         try:
-            generate_method = getattr(self.deserialized_model_as_lib, f'{self.generate_method}')
+            generate_method = getattr(self.deserialized_model_as_lib, f'{self.generate_method_name}')
             prepared_kwargs = self._prepare_generate_method_args(model_file=self.serialised_model_file_path,
                                                                  num_samples=num_samples, output_path=output_path,
                                                                  **kwargs)
@@ -164,6 +207,7 @@ class ModelExecutor():
                 def gen(**some_other_kwargs):
                     generate_method(**prepared_kwargs, **some_other_kwargs)
                     print(f"Default generate function params are: {prepared_kwargs}")
+
                 return gen
             else:
                 generate_method(**prepared_kwargs)
@@ -180,13 +224,13 @@ class ModelExecutor():
 
             - Update keyword args dict with default values for all params from model config
 
-            - Update keyword args dict with the **args provided by user thus overwriting the previously set default
+            - Update keyword args dict with the `**args` provided by user thus overwriting the previously set default
                 values for which user has provided key-value pairs.
 
             - Checking if all mandatory 'base' values are set in model config.
 
-            - Update keyword args dict with 'base' key-value pairs, which i.e. are the param values for 'model_file',
-            'num_samples' and 'output_path', thus overwriting any previously set value for these keys.
+            - Update keyword args dict with 'base' key-value pairs, which i.e. are the param values for `model_file`,
+            `num_samples` and `output_path`, thus overwriting any previously set value for these keys.
 
             - Returning the updated and prepared keyword args dict
 
@@ -227,7 +271,7 @@ class ModelExecutor():
                 f"{self.model_id}: Warning: In this model's config, some required generate method keys ({CONFIG_FILE_KEY_GENERATE_ARGS_MODEL_FILE} "
                 f"{CONFIG_FILE_KEY_GENERATE_ARGS_NUM_SAMPLES} {CONFIG_FILE_KEY_GENERATE_ARGS_OUTPUT_PATH}) are missing. "
                 f" The model's config {self.generate_method_args}: {e}."
-                f" A value for this key will be provided nevertheless when calling the model's generate method ({self.generate_method})'. This could cause an error.")
+                f" A value for this key will be provided nevertheless when calling the model's generate method ({self.generate_method_name})'. This could cause an error.")
         # Adding the always necessary base parameters to kwargs (updated if these have been erroneously introduced in kwargs)
         prepared_kwargs.update({
             CONFIG_FILE_KEY_GENERATE_ARGS_MODEL_FILE: model_file,
@@ -239,7 +283,7 @@ class ModelExecutor():
     def __repr__(self):
         return f'ModelExecutor(model_id={self.model_id}, name={self.model_name}, package={self.package_name}, ' \
                f'image_size={self.image_size}, dependencies={self.dependencies}, link={self.package_link}, ' \
-               f'path={self.serialised_model_file_path}, generate_method={self.generate_method}, ' \
+               f'path={self.serialised_model_file_path}, generate_method={self.generate_method_name}, ' \
                f'generate_method_args={self.generate_method_args})'
 
     def __len__(self):

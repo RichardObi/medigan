@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # ! /usr/bin/env python
-""" Main class providing user-library interaction functions for config management, and model selection and execution.
+""" Base class providing user-library interaction methods for config management, and model selection and execution.
 
 .. codeauthor:: Richard Osuala <richard.osuala@gmail.com>
 .. codeauthor:: Noussair Lazrak <lazrak.noussair@gmail.com>
@@ -19,8 +19,32 @@ from .model_selector import ModelSelector
 # Import pypi libs
 
 
-class Generators():
-    """Generators Class"""
+class Generators:
+    """ `Generators` class: Contains medigan's public methods to facilitate users' automated sample generation workflows.
+
+    Parameters
+    ----------
+    config_manager: ConfigManager
+        Provides the config dictionary, based on which `model_ids` are retrieved and models are selected and executed
+    model_selector: ModelSelector
+        Provides model comparison, search, and selection based on keys/values in the selection part of the config dict
+    model_executors: list
+        List of initialized `ModelExecutor` instances that handle model package download, init, and sample generation
+    initialize_all_models: bool
+        Flag indicating, if True, that one `ModelExecutor` for each `model_id` in the config dict should be
+        initialized triggered by creation of `Generators` class instance. Note that, if False, the `Generators` class
+        will only initialize a `ModelExecutor` on the fly when need be i.e. when the generate method for the respective
+        model is called.
+
+    Attributes
+    ----------
+    config_manager: ConfigManager
+        Provides the config dictionary, based on which model_ids are retrieved and models are selected and executed
+    model_selector: ModelSelector
+        Provides model comparison, search, and selection based on keys/values in the selection part of the config dict
+    model_executors: list
+        List of initialized `ModelExecutor` instances that handle model package download, init, and sample generation
+    """
 
     def __init__(
             self,
@@ -50,12 +74,12 @@ class Generators():
     ############################ CONFIG MANAGER METHODS ############################
 
     def get_config_by_id(self, model_id: str, config_key: str = None) -> dict:
-        """ Get and return the part of the config below a config_key for a specific model_id.
+        """ Get and return the part of the config below a `config_key` for a specific `model_id`.
 
         The config_key parameters can be separated by a '.' (dot) to allow for retrieval of nested config keys, e.g,
         'execution.generator.name'
 
-        This function calls an identically named function in a ConfigManager instance.
+        This function calls an identically named function in a `ConfigManager` instance.
 
         Parameters
         ----------
@@ -67,7 +91,7 @@ class Generators():
         Returns
         -------
         dict
-            a dictionary from the part of the config file corresponding to model_id and config_key.
+            a dictionary from the part of the config file corresponding to `model_id` and `config_key`.
         """
 
         return self.config_manager.get_config_by_id(model_id=model_id, config_key=config_key)
@@ -77,7 +101,7 @@ class Generators():
     def get_selection_criteria_by_id(self, model_id: str, is_model_id_removed: bool = True) -> dict:
         """ Get and return the selection config dict for a specific model_id.
 
-        This function calls an identically named function in a ModelSelector instance.
+        This function calls an identically named function in a `ModelSelector` instance.
 
         Parameters
         ----------
@@ -97,7 +121,7 @@ class Generators():
     def get_selection_criteria_by_ids(self, model_ids: list = None, are_model_ids_removed: bool = True) -> list:
         """ Get and return a list of selection config dicts for each of the specified model_ids.
 
-        This function calls an identically named function in a ModelSelector instance.
+        This function calls an identically named function in a `ModelSelector` instance.
 
         Parameters
         ----------
@@ -121,7 +145,7 @@ class Generators():
         The key param can contain '.' (dot) separations to allow for retrieval of nested config keys such as
         'execution.generator.name'
 
-        This function calls an identically named function in a ModelSelector instance.
+        This function calls an identically named function in a `ModelSelector` instance.
 
         Parameters
         ----------
@@ -133,7 +157,7 @@ class Generators():
         Returns
         -------
         list
-            a list of the values that correspond to the key in the selection config of the model id.
+            a list of the values that correspond to the key in the selection config of the `model_id`.
         """
 
         return self.model_selector.get_selection_values_for_key(key=key, model_id=model_id)
@@ -141,7 +165,7 @@ class Generators():
     def get_selection_keys(self, model_id: str = None) -> list:
         """ Get and return all first level keys from the selection config dict for a specific model_id.
 
-        This function calls an identically named function in a ModelSelector instance.
+        This function calls an identically named function in a `ModelSelector` instance.
 
         Parameters
         ----------
@@ -151,7 +175,7 @@ class Generators():
         Returns
         -------
         list
-            a list containing the keys as strings of the selection config of the model_id.
+            a list containing the keys as strings of the selection config of the `model_id`.
         """
 
         return self.model_selector.get_selection_keys(model_id=model_id)
@@ -162,7 +186,7 @@ class Generators():
         The key param can contain '.' (dot) separations to allow for retrieval of nested config keys such as
         'execution.generator.name'
 
-        This function calls an identically named function in a ModelSelector instance.
+        This function calls an identically named function in a `ModelSelector` instance.
 
         Parameters
         ----------
@@ -188,12 +212,12 @@ class Generators():
         The metric param can contain '.' (dot) separations to allow for retrieval of nested metric config keys such as
         'downstream_task.CLF.accuracy'
 
-        This function calls an identically named function in a ModelSelector instance.
+        This function calls an identically named function in a `ModelSelector` instance.
 
         Parameters
         ----------
         model_ids: list
-            only evaluate the model_ids in this list. If none, evaluate all available model_ids
+            only evaluate the `model_ids` in this list. If none, evaluate all available `model_ids`
         metric: str
             The key in the selection dict that corresponds to the metric of interest
         order: str
@@ -202,23 +226,23 @@ class Generators():
         Returns
         -------
         list
-            a list of model dictionaries containing metric and model_id, sorted by metric.
+            a list of model dictionaries containing metric and `model_id`, sorted by metric.
         """
 
         return self.model_selector.rank_models_by_performance(model_ids=model_ids, metric=metric, order=order)
 
     def find_matching_models_by_values(self, values: list, target_values_operator: str = 'AND',
                                        are_keys_also_matched: bool = False, is_case_sensitive: bool = False) -> list:
-        """ Search for values (and keys) in model configs and return a list of the matching ModelMatchCandidates.
+        """ Search for values (and keys) in model configs and return a list of each matching `ModelMatchCandidate`.
 
-        This function calls an identically named function in a ModelSelector instance.
+        This function calls an identically named function in a `ModelSelector` instance.
 
         Parameters
         ----------
         values: list
-            list of values used to search and find models corresponding to these values
+            list of values used to search and find models corresponding to these `values`
         target_values_operator: str
-            the operator indicating the relationship between 'values' in the evaluation of model search results.
+            the operator indicating the relationship between `values` in the evaluation of model search results.
             Should be either "AND", "OR", or "XOR".
         are_keys_also_matched: bool
             flag indicating whether, apart from values, the keys in the model config should also be searchable
@@ -228,7 +252,8 @@ class Generators():
         Returns
         -------
         list
-            a list of ModelMatchCandidates class objects each of which was successfully matched against the search values.
+            a list of `ModelMatchCandidate` class instances each of which was successfully matched against the search
+            values.
         """
 
         return self.model_selector.find_matching_models_by_values(values=values,
@@ -241,14 +266,14 @@ class Generators():
                              metric: str = 'SSIM', order: str = "asc") -> list:
         """ Search for values (and keys) in model configs, rank results and return sorted list of model dicts.
 
-        This function calls an identically named function in a ModelSelector instance.
+        This function calls an identically named function in a `ModelSelector` instance.
 
         Parameters
         ----------
-        values: list
-            list of values used to search and find models corresponding to these values
+        values: list`
+            list of values used to search and find models corresponding to these `values`
         target_values_operator: str
-            the operator indicating the relationship between 'values' in the evaluation of model search results.
+            the operator indicating the relationship between `values` in the evaluation of model search results.
             Should be either "AND", "OR", or "XOR".
         are_keys_also_matched: bool
             flag indicating whether, apart from values, the keys in the model config should also be searchable
@@ -281,9 +306,9 @@ class Generators():
         Parameters
         ----------
         values: list
-            list of values used to search and find models corresponding to these values
+            list of values used to search and find models corresponding to these `values`
         target_values_operator: str
-            the operator indicating the relationship between 'values' in the evaluation of model search results.
+            the operator indicating the relationship between `values` in the evaluation of model search results.
             Should be either "AND", "OR", or "XOR".
         are_keys_also_matched: bool
             flag indicating whether, apart from values, the keys in the model config should also be searchable
@@ -305,7 +330,7 @@ class Generators():
         Returns
         -------
         None
-            However, if is_gen_function_returned is True, it returns the internal generate function of the model.
+            However, if `is_gen_function_returned` is True, it returns the internal generate function of the model.
         """
 
         ranked_models = self.model_selector.find_models_and_rank(values=values,
@@ -336,9 +361,9 @@ class Generators():
         Parameters
         ----------
         values: list
-            list of values used to search and find models corresponding to these values
+            list of values used to search and find models corresponding to these `values`
         target_values_operator: str
-            the operator indicating the relationship between 'values' in the evaluation of model search results.
+            the operator indicating the relationship between `values`  in the evaluation of model search results.
             Should be either "AND", "OR", or "XOR".
         are_keys_also_matched: bool
             flag indicating whether, apart from values, the keys in the model config should also be searchable
@@ -356,7 +381,7 @@ class Generators():
         Returns
         -------
         None
-            However, if is_gen_function_returned is True, it returns the internal generate function of the model.
+            However, if `is_gen_function_returned` is True, it returns the internal generate function of the model.
         """
 
         matching_models: list = self.model_selector.find_matching_models_by_values(values=values,
@@ -382,7 +407,7 @@ class Generators():
     ############################ MODEL EXECUTOR METHODS ############################
 
     def add_all_model_executors(self):
-        """ Add ModelExecutor class instances for all models available in the config.
+        """ Add `ModelExecutor` class instances for all models available in the config.
 
         Returns
         -------
@@ -395,7 +420,7 @@ class Generators():
                                      execution_config=execution_config)
 
     def add_model_executor(self, model_id: str):
-        """ Add one ModelExecutor class instance corresponding to the specified model_id.
+        """ Add one `ModelExecutor` class instance corresponding to the specified `model_id`.
 
         Parameters
         ----------
@@ -412,14 +437,14 @@ class Generators():
             self._add_model_executor(model_id=model_id, execution_config=execution_config)
 
     def _add_model_executor(self, model_id: str, execution_config: dict):
-        """ Add one ModelExecutor class instance corresponding to the specified model_id and execution config.
+        """ Add one `ModelExecutor` class instance corresponding to the specified `model_id` and `execution_config`.
 
         Parameters
         ----------
         model_id: str
             The generative model's unique id
         execution_config: dict
-            The part of th config below the 'execution' key
+            The part of the config below the 'execution' key
 
         Returns
         -------
@@ -432,7 +457,7 @@ class Generators():
             self.model_executors.append(model_executor)
 
     def is_model_executor_already_added(self, model_id) -> bool:
-        """ Check whether the ModelExecutor instance of this model_id is already in self.model_executors list.
+        """ Check whether the `ModelExecutor` instance of this model_id is already in `self.model_executors` list.
 
         Parameters
         ----------
@@ -442,7 +467,7 @@ class Generators():
         Returns
         -------
         bool
-            indicating whether this ModelExecutor had been already previously added to self.model_executors
+            indicating whether this `ModelExecutor` had been already previously added to `self.model_executors`
         """
 
         if self.find_model_executor_by_id(model_id=model_id) is None:
@@ -451,7 +476,7 @@ class Generators():
         return True
 
     def find_model_executor_by_id(self, model_id: str) -> ModelExecutor:
-        """ Find and return the ModelExecutor instance of this model_id in the self.model_executors list.
+        """ Find and return the `ModelExecutor` instance of this model_id in the `self.model_executors` list.
 
         Parameters
         ----------
@@ -461,7 +486,7 @@ class Generators():
         Returns
         -------
         ModelExecutor
-            ModelExecutor class instance corresponding to the model_id
+            `ModelExecutor` class instance corresponding to the `model_id`
         """
         for idx, model_executor in enumerate(self.model_executors):
             if model_executor.model_id == model_id:
@@ -469,9 +494,9 @@ class Generators():
         return None
 
     def get_model_executor(self, model_id: str) -> ModelExecutor:
-        """ Add and return the ModelExecutor instance of this model_id from the self.model_executors list.
+        """ Add and return the `ModelExecutor` instance of this model_id from the `self.model_executors` list.
 
-        Relies on self.add_model_executor and self.find_model_executor_by_id functions.
+        Relies on `self.add_model_executor` and `self.find_model_executor_by_id` functions.
 
         Parameters
         ----------
@@ -481,7 +506,7 @@ class Generators():
         Returns
         -------
         ModelExecutor
-            ModelExecutor class instance corresponding to the model_id
+            `ModelExecutor` class instance corresponding to the `model_id`
         """
         try:
             self.add_model_executor(model_id=model_id)  # only adds after checking that is not already added
@@ -492,7 +517,7 @@ class Generators():
 
     def generate(self, model_id: str, num_samples: int = 30, output_path: str = None,
                  is_gen_function_returned: bool = False, **kwargs):
-        """ Generate samples with the model corresponding to the model_id or return the model's generate function.
+        """ Generate samples with the model corresponding to the `model_id` or return the model's generate function.
 
         Parameters
         ----------
@@ -510,7 +535,7 @@ class Generators():
         Returns
         -------
         None
-            However, if is_gen_function_returned is True, it returns the internal generate function of the model.
+            However, if `is_gen_function_returned` is True, it returns the internal generate function of the model.
         """
         model_executor = self.get_model_executor(model_id=model_id)
         return model_executor.generate(num_samples=num_samples, output_path=output_path,
@@ -519,7 +544,7 @@ class Generators():
     def get_generate_function(self, model_id: str, num_samples: int = 30, output_path: str = None, **kwargs):
         """ Return the model's generate function.
 
-        Relies on the self.generate function.
+        Relies on the `self.generate` function.
 
         Parameters
         ----------

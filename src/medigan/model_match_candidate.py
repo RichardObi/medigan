@@ -15,24 +15,44 @@ import json
 from .matched_entry import MatchedEntry
 
 
-class ModelMatchCandidate():
-    """ ModelMatchCandidate class: A prospectively matching model given the target values as model search params.
+class ModelMatchCandidate:
+    """ `ModelMatchCandidate` class: A prospectively matching model given the target values as model search params.
+
+    Parameters
+    ----------
+    model_id: str
+        The generative model's unique id
+    target_values: list
+        list of target values used to evaluate if a `ModelMatchCandidate` instance is a match
+    target_values_operator: str
+        the operator indicating the relationship between `values` in the evaluation of `ModelMatchCandidate` instances.
+        Should be either "AND", "OR", or "XOR".
+    is_case_sensitive: bool
+        flag indicating whether the matching of `values` (and) keys should be case-sensitive
+    are_keys_also_matched: bool
+        flag indicating whether, apart from `values`, keys should also be matched
+    is_match: bool
+        flag indicating whether the `ModelMatchCandidate` instance is a match
 
     Attributes
     ----------
     model_id: str
         The generative model's unique id
     target_values: list
-        list of target values used to evaluate of a ModelMatchCandidate instance is a match
+        list of target values used to evaluate if a `ModelMatchCandidate` instance is a match
     target_values_operator: str
-        the operator indicating the relationship between 'values' in the evaluation of ModelMatchCandidate instances.
+        the operator indicating the relationship between `values` in the evaluation of `ModelMatchCandidate` instances.
         Should be either "AND", "OR", or "XOR".
     is_case_sensitive: bool
-        flag indicating whether the matching of values (and) keys should be case-sensitive
+        flag indicating whether the matching of `values` (and) keys should be case-sensitive
     are_keys_also_matched: bool
         flag indicating whether, apart from values, keys should also be matched
+    matched_entries: list
+        contains iteratively added `MatchedEntry` class instances. Each of the `MatchedEntry` instances indicates a match
+        between one of the user specified values in `self.target_values` and the selection config keys or `values` of the
+        model of this `ModelMatchCandidate`.
     is_match: bool
-        flag indicating whether the ModelMatchCandidate instance is a match
+        flag indicating whether the `ModelMatchCandidate` instance is a match
     """
 
     def __init__(
@@ -46,27 +66,27 @@ class ModelMatchCandidate():
     ):
         # Descriptive variables
         self.model_id = model_id
+        self.target_values = target_values
         self.target_values_operator = target_values_operator
         self.is_case_sensitive = is_case_sensitive
         self.are_keys_also_matched = are_keys_also_matched
-        self.target_values = target_values
 
         # Dynamically filled/changed variables
         self.matched_entries = []
         self.is_match = is_match
 
     def add_matched_entry(self, matched_entry: MatchedEntry) -> None:
-        """ Add a MatchedEntry instance to the 'matched_entries' list. """
+        """ Add a `MatchedEntry` instance to the `matched_entries` list. """
         self.matched_entries.append(matched_entry)
 
     def get_all_matching_elements(self) -> list:
-        """ Get the matching element from each of the MatchedEntry instances in the 'matched_entries' list.
+        """ Get the matching element from each of the `MatchedEntry` instances in the `matched_entries` list.
 
         Returns
         -------
         list
-            list of all matching elements (i.e. string that matched a search value) from each MatchedEntry in
-            'matched_entries'
+            list of all matching elements (i.e. string that matched a search value) from each `MatchedEntry` in
+            `matched_entries`
         """
 
         matching_elements = []
@@ -77,11 +97,11 @@ class ModelMatchCandidate():
     def check_if_is_match(self) -> bool:
         """ Evaluates whether the model represented by this instance is a match given search values and operator.
 
-        The matching element from each MatchEntry of this instance ('self.matched_entries') are retrieved. To be a
+        The matching element from each `MatchEntry` of this instance ('self.matched_entries') are retrieved. To be a
         match, this instance ('self') needs to fulfill the requirement of the operator, which can be of value 'AND',
         or 'OR', or 'XOR'. For example, the default 'AND' requires that each search value ('self.target_values') has at
-        least one corresponding MatchEntry, while in 'OR' only one of the search values needs to have been matched by a
-        corresponding MatchedEntry.
+        least one corresponding `MatchEntry`, while in 'OR' only one of the search values needs to have been matched by a
+        corresponding `MatchedEntry`.
 
         Returns
         -------

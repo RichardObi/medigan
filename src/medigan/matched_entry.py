@@ -12,15 +12,24 @@ from __future__ import absolute_import
 import json
 
 
-class MatchedEntry():
-    """ ModelMatchCandidate class: A prospectively matching model given the target values as model search params.
+class MatchedEntry:
+    """ `MatchedEntry` class: One target key-value pair that matches with a model's selection config.
+
+    Parameters
+    ----------
+    key: str
+        string that represents the matched key in model selection dict
+    value
+        represents the key's matched value in the model selection dict
+    matching_element: str
+        string that was used to match the search value
 
     Attributes
     ----------
     key: str
-        string that represents the matched key in model dict
+        string that represents the matched key in model selection dict
     value
-        represents the key's matched value in the model dict
+        represents the key's matched value in the model selection dict
     matching_element: str
         string that was used to match the search value
     """

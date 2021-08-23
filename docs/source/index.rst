@@ -22,6 +22,9 @@ Welcome to medigan's documentation!
 .. automodule:: medigan.matched_entry
     :members:
 
+.. automodule:: medigan.utils
+    :members:
+
 .. automodule:: medigan.constants
     :members:
 

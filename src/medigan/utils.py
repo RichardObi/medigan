@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # ! /usr/bin/env python
-""" Utils class providing generalized reusable functions for I/O, parsing, sorting, type conversions, etc.
+""" `Utils` class providing generalized reusable functions for I/O, parsing, sorting, type conversions, etc.
 
 .. codeauthor:: Richard Osuala <richard.osuala@gmail.com>
 .. codeauthor:: Noussair Lazrak <lazrak.noussair@gmail.com>
@@ -27,7 +27,7 @@ class Utils():
     @staticmethod
 
     def mkdirs(path_as_string: str) -> bool:
-        """ create folder in path_as_string if not already created. """
+        """ create folder in `path_as_string` if not already created. """
 
         if not os.path.exists(path_as_string):
             try:
@@ -41,7 +41,7 @@ class Utils():
     @staticmethod
     def is_file_located_or_downloaded(path_as_string: str, download_if_not_found: bool = True,
                                       download_link: str = None, is_new_download_forced: bool = False) -> bool:
-        """ check if is file in path_as_string and optionally download the file (again). """
+        """ check if is file in `path_as_string` and optionally download the file (again). """
 
         if not path_as_string.is_file() or is_new_download_forced:
             if not download_if_not_found:
@@ -61,7 +61,7 @@ class Utils():
 
     @staticmethod
     def download_file(download_link: str, path_as_string: str):
-        """ download a file using requests and store in path_as_string"""
+        """ download a file using the `requests` lib and store in `path_as_string`"""
 
         print(f"Now downloading file {path_as_string} from {download_link} ...")
         try:
@@ -87,7 +87,7 @@ class Utils():
 
     @staticmethod
     def unzip_archive(source_path: Path, target_path_as_string: str = "./"):
-        """ unzip a .zip archive in the target path """
+        """ unzip a .zip archive in the `target_path_as_string` """
 
         try:
             with zipfile.ZipFile(source_path, 'r') as zip_ref:
@@ -100,7 +100,7 @@ class Utils():
     def dict_to_lowercase(target_dict: dict, string_conversion: bool = True) -> dict:
         """ transform values and keys in dict to lowercase, optionally with string conversion of the values.
 
-        Warning: Does not convert nested dicts in the target_dict, but rather removes them from return object.
+        Warning: Does not convert nested dicts in the `target_dict`, but rather removes them from return object.
         """
 
         if string_conversion:
@@ -130,8 +130,10 @@ class Utils():
     def order_dict_by_value(self, dict_list, key: str, order: str = "asc", sort_algorithm='bubbleSort') -> list:
         """ Sorting a list of dicts by the values of a specific key in the dict using a sorting algorithm.
 
-            This function is deprecated. You may use Python List sort() with key=lambda function instead.
+        - This function is deprecated. You may use Python List sort() with key=lambda function instead.
+
         """
+
         if sort_algorithm == 'bubbleSort':
             for i in range(len(dict_list)):
                 for j in range(len(dict_list) - i - 1):
