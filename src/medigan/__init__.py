@@ -5,7 +5,7 @@
 While being extendable to any modality and generative model, `medigan` focuses on automating medical image
 dataset synthesis using GANs for training deep learning models.
 
-Github: https://github.com/RichardObi/GANtoolbox/tree/v0.1
+Github: https://github.com/RichardObi/medigan
 
 Examples
 --------
