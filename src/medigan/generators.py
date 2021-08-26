@@ -9,6 +9,8 @@
 # Import python native libs
 from __future__ import absolute_import
 
+import logging
+
 # Import library internal modules
 from .config_manager import ConfigManager
 from .constants import CONFIG_FILE_KEY_EXECUTION, MODEL_ID
@@ -55,11 +57,13 @@ class Generators:
     ):
         if config_manager is None:
             self.config_manager = ConfigManager()
+            logging.debug(f"Initialized ConfigManager instance: {self.config_manager}")
         else:
             self.config_manager = config_manager
 
         if model_selector is None:
             self.model_selector = ModelSelector(config_manager=self.config_manager)
+            logging.debug(f"Initialized ModelSelector instance: {self.model_selector}")
         else:
             self.model_selector = model_selector
 
@@ -340,12 +344,13 @@ class Generators:
                                                                  metric=metric,
                                                                  order=order)
         if len(ranked_models) < 1:
-            print(f'For your input, there were {len(ranked_models)} matching models, while at least 1 is needed. '
-                  f'Please adjust your search value inputs {values} to find at least one match.')
+            logging.error(
+                f'For your input, there were {len(ranked_models)} matching models, while at least 1 is needed. '
+                f'Please adjust your search value inputs {values} to find at least one match.')
         else:
             # Let's generate with the best-ranked model
-            print(f'For your input, there were {len(ranked_models)} models found and ranked. '
-                  f'The highest ranked model will now be used for generation: {ranked_models[0]}')
+            logging.info(f'For your input, there were {len(ranked_models)} models found and ranked. '
+                         f'The highest ranked model will now be used for generation: {ranked_models[0]}')
             highest_ranking_model_id = ranked_models[0][MODEL_ID]
             return self.generate(model_id=highest_ranking_model_id, num_samples=num_samples, output_path=output_path,
                                  is_gen_function_returned=is_gen_function_returned, **kwargs)
@@ -356,7 +361,8 @@ class Generators:
                                 **kwargs):
         """ Search for values (and keys) in model configs to generate samples with the found model.
 
-        Note that the number of found models should be ==1. Else no samples will be generated and a warning is printed.
+        Note that the number of found models should be ==1. Else no samples will be generated and a error is logged to
+        console.
 
         Parameters
         ----------
@@ -389,17 +395,17 @@ class Generators:
                                                                                    are_keys_also_matched=are_keys_also_matched,
                                                                                    is_case_sensitive=is_case_sensitive)
         if len(matching_models) > 1:
-            print(f'For your input, there were more than 1 matching model ({len(matching_models)}). '
-                  f'Please choose one of the models (see model_ids below) or use find_models_rank_and_generate() instead.'
-                  f'Alternatively, you may also further specify additional search values apart from the provided ones '
-                  f'to find exactly one model: {values}. The matching models were the following: \n {matching_models}')
+            logging.error(f'For your input, there were more than 1 matching model ({len(matching_models)}). '
+                          f'Please choose one of the models (see model_ids below) or use find_models_rank_and_generate() instead.'
+                          f'Alternatively, you may also further specify additional search values apart from the provided ones '
+                          f'to find exactly one model: {values}. The matching models were the following: \n {matching_models}')
         elif len(matching_models) < 1:
-            print(f'For your input, there were {len(matching_models)} matching models, while 1 is needed. '
-                  f'Please adjust your search value inputs {values} to find at least one match.')
+            logging.error(f'For your input, there were {len(matching_models)} matching models, while 1 is needed. '
+                          f'Please adjust your search value inputs {values} to find at least one match.')
         else:
             # Exactly one matching model. Let's generate with this model
-            print(f'For your input, there was {len(matching_models)} model matched. '
-                  f'This model will now be used for generation: {matching_models}')
+            logging.info(f'For your input, there was {len(matching_models)} model matched. '
+                         f'This model will now be used for generation: {matching_models}')
             matched_model_id = matching_models[0].model_id
             return self.generate(model_id=matched_model_id, num_samples=num_samples, output_path=output_path,
                                  is_gen_function_returned=is_gen_function_returned, **kwargs)
@@ -413,6 +419,7 @@ class Generators:
         -------
         None
         """
+
         for model_id in self.config_manager.model_ids:
             execution_config = self.config_manager.get_config_by_id(model_id=model_id,
                                                                     config_key=CONFIG_FILE_KEY_EXECUTION)
@@ -431,6 +438,7 @@ class Generators:
         -------
         None
         """
+
         if not self.is_model_executor_already_added(model_id):
             execution_config = self.config_manager.get_config_by_id(model_id=model_id,
                                                                     config_key=CONFIG_FILE_KEY_EXECUTION)
@@ -471,7 +479,7 @@ class Generators:
         """
 
         if self.find_model_executor_by_id(model_id=model_id) is None:
-            print(f"{model_id}: The model has not yet been added to the model_executor list.")
+            logging.debug(f"{model_id}: The model has not yet been added to the model_executor list.")
             return False
         return True
 
@@ -488,6 +496,7 @@ class Generators:
         ModelExecutor
             `ModelExecutor` class instance corresponding to the `model_id`
         """
+
         for idx, model_executor in enumerate(self.model_executors):
             if model_executor.model_id == model_id:
                 return model_executor
@@ -508,11 +517,12 @@ class Generators:
         ModelExecutor
             `ModelExecutor` class instance corresponding to the `model_id`
         """
+
         try:
             self.add_model_executor(model_id=model_id)  # only adds after checking that is not already added
             return self.find_model_executor_by_id(model_id=model_id)
         except Exception as e:
-            print(f"{model_id}: The model could not be added to model_executor list: {e}")
+            logging.error(f"{model_id}: This model could not be added to model_executor list: {e}")
             raise e
 
     def generate(self, model_id: str, num_samples: int = 30, output_path: str = None,
@@ -537,6 +547,7 @@ class Generators:
         None
             However, if `is_gen_function_returned` is True, it returns the internal generate function of the model.
         """
+
         model_executor = self.get_model_executor(model_id=model_id)
         return model_executor.generate(num_samples=num_samples, output_path=output_path,
                                        is_gen_function_returned=is_gen_function_returned, **kwargs)
@@ -559,9 +570,10 @@ class Generators:
 
         Returns
         -------
-        Function
+        function
             The internal reusable generate function of the generative model.
         """
+
         return self.generate(model_id=model_id, num_samples=num_samples, output_path=output_path,
                              is_gen_function_returned=True, **kwargs)
 

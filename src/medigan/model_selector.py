@@ -8,6 +8,8 @@
 # Import python native libs
 from __future__ import absolute_import
 
+import logging
+
 # Import library internal modules
 from .config_manager import ConfigManager
 from .constants import MODEL_ID, CONFIG_FILE_KEY_SELECTION, CONFIG_FILE_KEY_PERFORMANCE
@@ -38,6 +40,7 @@ class ModelSelector():
     ):
         if config_manager is None:
             self.config_manager = ConfigManager()
+            logging.debug(f"Initialized ConfigManager instance: {self.config_manager}")
         else:
             self.config_manager = config_manager
         self.model_selection_dicts = []
@@ -50,6 +53,8 @@ class ModelSelector():
                                                                     config_key=CONFIG_FILE_KEY_SELECTION)
             model_selector_dict = {MODEL_ID: model_id, CONFIG_FILE_KEY_SELECTION: selection_config}
             self.model_selection_dicts.append(model_selector_dict)
+        logging.debug(f"These were the available model selection dicts that were added to the ModelSelector: "
+                      f"{self.model_selection_dicts}.")
 
     def get_selection_criteria_by_id(self, model_id: str, is_model_id_removed: bool = True) -> dict:
         """ Get and return the selection config dict for a specific `model_id`.
@@ -69,8 +74,12 @@ class ModelSelector():
         for idx, selection_dict in enumerate(self.model_selection_dicts):
             if selection_dict[MODEL_ID] == model_id:
                 if is_model_id_removed:
+                    logging.debug(f"For model {model_id}, the following selection dicts was found:"
+                                  f" {selection_dict[CONFIG_FILE_KEY_SELECTION]}.")
                     return selection_dict[CONFIG_FILE_KEY_SELECTION]
                 else:
+                    logging.debug(f"For model {model_id}, the following selection dicts was found:"
+                                  f" {selection_dict}.")
                     return selection_dict
         return None
 
@@ -98,6 +107,7 @@ class ModelSelector():
                     selection_dict_list.append(selection_dict[CONFIG_FILE_KEY_SELECTION])
                 else:
                     selection_dict_list.append(selection_dict)
+        logging.debug(f"The following selection dicts were found: {selection_dict_list}.")
         return selection_dict_list
 
     def get_selection_keys(self, model_id: str = None) -> list:
@@ -125,6 +135,7 @@ class ModelSelector():
                 for key in selection_config:
                     if key not in key_list:
                         key_list.append(key)
+        logging.debug(f"For model {model_id}, the following selection keys were in its selection config: {key_list}.")
         return key_list
 
     def get_selection_values_for_key(self, key: str, model_id: str = None) -> list:
@@ -156,6 +167,8 @@ class ModelSelector():
                 # if applicable, split key by "." and get value in nested dict in selection_config
                 selection_config = Utils.deep_get(base_dict=selection_config, key=key)
                 values_for_key.append(selection_config)
+        logging.debug(f"For key {key}, the following values were found across the models' selection "
+                      f"dicts {values_for_key}.")
         return values_for_key
 
     def get_models_by_key_value_pair(self, key1: str, value1: str, is_case_sensitive: bool = False) -> list:
@@ -180,11 +193,11 @@ class ModelSelector():
         """
 
         model_dict_list = []
-        for selection_dicts in self.model_selection_dicts:
+        for selection_dict in self.model_selection_dicts:
             is_model_match: bool = False
             # Now, for each model, we want to get the respective value for the key
             try:
-                key_value = selection_dicts[CONFIG_FILE_KEY_SELECTION]
+                key_value = selection_dict[CONFIG_FILE_KEY_SELECTION]
                 key_value = Utils.deep_get(base_dict=key_value, key=key1)
                 if key_value is not None:
                     # If key value is None, the model is not added to the model
@@ -206,11 +219,13 @@ class ModelSelector():
                                 not is_case_sensitive and str(key_value).lower() == str(value1).lower()):
                             is_model_match = True
             except KeyError as e:
-                # The model does not have the specified keys and, hence, has not been added to the model_dict_list
+                logging.debug(f"Model {selection_dict[MODEL_ID]} was discarded as it does not have the specified keys "
+                              f"in its selection dict: {selection_dict}")
                 pass
             if is_model_match:
-                model_id = selection_dicts[MODEL_ID]
+                model_id = selection_dict[MODEL_ID]
                 model_dict = {MODEL_ID: model_id, key1: value1}
+                logging.debug(f"Model {model_id} was a match for the specified key value pair: {model_dict}")
                 model_dict_list.append(model_dict)
         return model_dict_list
 
@@ -252,9 +267,11 @@ class ModelSelector():
                     # Maybe add further validation of metric_value here, e.g. string to float conversion, etc.
                     model_id = selection_dict[MODEL_ID]
                     model_metric_dict = {MODEL_ID: model_id, metric: metric_value}
+                    logging.debug(f"Model {model_id} was a match for the specified metric value: {model_metric_dict}")
                     model_metric_dict_list.append(model_metric_dict)
             except KeyError as e:
-                # The model does not have the specified keys and, hence, has not been added to the model_metric_dict_list
+                logging.debug(f"Model {selection_dict[MODEL_ID]} was discarded as it does not have the specified keys "
+                              f"in its selection dict: {selection_dict}")
                 pass
         if order == 'asc':
             model_metric_dict_list.sort(key=lambda x: x.get(metric))
@@ -294,7 +311,7 @@ class ModelSelector():
                                                               are_keys_also_matched=are_keys_also_matched,
                                                               is_case_sensitive=is_case_sensitive)
         matching_model_ids = [model.model_id for model in matching_models]
-        print(f"matching_model_ids: {matching_model_ids}")
+        logging.debug(f"matching_model_ids: {matching_model_ids}")
         return self.rank_models_by_performance(model_ids=matching_model_ids, metric=metric, order=order)
 
     def find_matching_models_by_values(self, values: list, target_values_operator: str = 'AND',
@@ -330,6 +347,7 @@ class ModelSelector():
         if not is_case_sensitive:
             # Removing case-sensitivity search requirement by replacing with lowercase values list
             values = Utils.list_to_lowercase(target_list=values)
+            logging.debug(f"Processed search values: {values}")
         for selection_dict in self.model_selection_dicts:
             selection_config = selection_dict[CONFIG_FILE_KEY_SELECTION]
             model_match_candidate = ModelMatchCandidate(model_id=selection_dict[MODEL_ID],
@@ -340,6 +358,7 @@ class ModelSelector():
             model_match_candidate = self.recursive_search_for_values(search_dict=selection_config,
                                                                      model_match_candidate=model_match_candidate)
             if model_match_candidate.check_if_is_match():
+                logging.debug(f"Found a matching ModelMatchCandidate: {model_match_candidate}")
                 matching_models.append(model_match_candidate)
         return matching_models
 

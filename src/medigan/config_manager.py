@@ -10,6 +10,7 @@
 from __future__ import absolute_import
 
 import json
+import logging
 # Import pypi libs
 from pathlib import Path
 
@@ -73,10 +74,14 @@ class ConfigManager:
             if not Utils.is_file_located_or_downloaded(path_as_string=config_file_path, download_if_not_found=True,
                                                        download_link=CONFIG_FILE_URL,
                                                        is_new_download_forced=is_new_download_forced):
-                raise FileNotFoundError(
-                    f"The config file {CONFIG_FILE_NAME_AND_EXTENSION} was not found in {config_file_path} nor downloaded from {CONFIG_FILE_URL}.")
+                error_string = f"The config file {CONFIG_FILE_NAME_AND_EXTENSION} was not found in {config_file_path} " \
+                               f"nor downloaded from {CONFIG_FILE_URL}."
+                logging.error(error_string)
+                raise FileNotFoundError(error_string)
             self.config_dict = Utils.read_in_json(path_as_string=config_file_path)
+            logging.debug(f"The parsed config dict: {self.config_dict} ")
             self.model_ids = [config for config in self.config_dict]
+            logging.debug(f"The model_ids found in the config dict: {self.model_ids} ")
             self.is_config_loaded = True
         return self.is_config_loaded
 

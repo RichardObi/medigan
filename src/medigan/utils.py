@@ -5,9 +5,9 @@
 .. codeauthor:: Richard Osuala <richard.osuala@gmail.com>
 .. codeauthor:: Noussair Lazrak <lazrak.noussair@gmail.com>
 """
-
-import json
 # Import python native libs
+import json
+import logging
 import os
 import zipfile
 from pathlib import Path
@@ -25,7 +25,6 @@ class Utils():
         pass
 
     @staticmethod
-
     def mkdirs(path_as_string: str) -> bool:
         """ create folder in `path_as_string` if not already created. """
 
@@ -34,7 +33,7 @@ class Utils():
                 os.makedirs(path_as_string)
                 return True
             except Exception as e:
-                print(f"Error while creating folders for path {path_as_string}: {e}")
+                logging.error(f"Error while creating folders for path {path_as_string}: {e}")
                 return False
         return True
 
@@ -47,15 +46,16 @@ class Utils():
             if not download_if_not_found:
                 # download_if_not_found is prioritized over is is_new_download_forced in this case, as users likely
                 # prefer to avoid automated downloads altogether when setting download_if_not_found to False.
-                print(f"File {path_as_string} was not found ({not path_as_string.is_file()}) or download was forced "
-                      f"({is_new_download_forced}). However, downloading it from {download_link} was not allowed: "
-                      f"download_if_not_found == {download_if_not_found}.")
+                logging.warning(f"File {path_as_string} was not found ({not path_as_string.is_file()}) or download "
+                                f"was forced ({is_new_download_forced}). However, downloading it from {download_link} "
+                                f"was not allowed: download_if_not_found == {download_if_not_found}. This may cause an "
+                                f"error, as the file might be outdated or missing, while being used in subsequent "
+                                f"workflows.")
                 return False
             else:
                 try:
                     Utils.download_file(path_as_string=path_as_string, download_link=download_link)
                 except Exception as e:
-                    print(f"Error while trying to download file ({path_as_string}) from {download_link}: {e}")
                     return False
         return True
 
@@ -63,14 +63,14 @@ class Utils():
     def download_file(download_link: str, path_as_string: str):
         """ download a file using the `requests` lib and store in `path_as_string`"""
 
-        print(f"Now downloading file {path_as_string} from {download_link} ...")
+        logging.debug(f"Now downloading file {path_as_string} from {download_link} ...")
         try:
             response = requests.get(download_link, allow_redirects=True)
             open(path_as_string, 'wb').write(response.content)
-            print(
+            logging.debug(
                 f"Received response {response}: Retrieved file from {download_link} and wrote it to {path_as_string}.")
         except Exception as e:
-            print(f"Error while downloading and storing file {path_as_string} from {download_link}: {e}")
+            logging.error(f"Error while downloading and storing file {path_as_string} from {download_link}: {e}")
             raise e
 
     @staticmethod
@@ -82,7 +82,7 @@ class Utils():
                 json_file = json.load(f)
                 return json_file
         except Exception as e:
-            print(f"Error while reading in json file from {path_as_string}: {e}")
+            logging.error(f"Error while reading in json file from {path_as_string}: {e}")
             raise e
 
     @staticmethod
@@ -93,7 +93,7 @@ class Utils():
             with zipfile.ZipFile(source_path, 'r') as zip_ref:
                 zip_ref.extractall(target_path_as_string)
         except Exception as e:
-            print(f"Error while unzipping {source_path}: {e}")
+            logging.error(f"Error while unzipping {source_path}: {e}")
             raise e
 
     @staticmethod

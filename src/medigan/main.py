@@ -47,9 +47,9 @@ def main():
 
 
 def model_generation_test(generators):
-    #generators.generate(model_id="2d29d505-9fb7-4c4d-b81f-47976e2c7dbf", num_samples=3)
+    generators.generate(model_id="2d29d505-9fb7-4c4d-b81f-47976e2c7dbf", num_samples=3)
     generators.generate(model_id="8f933c5e-72fc-461a-a5cb-73cbe65af6fc", num_samples=3)
-    generators.generate(model_id="2d29d505-9fb7-4c4d-b81f-47976e2c7dbf", num_samples=3, **{"test": "this is my test"})
+    #generators.generate(model_id="2d29d505-9fb7-4c4d-b81f-47976e2c7dbf", num_samples=3, **{"test": "this is my test"})
 
 
 def model_return_generate_function(generators):

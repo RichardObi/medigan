@@ -10,6 +10,7 @@
 from __future__ import absolute_import
 
 import json
+import logging
 
 # Import library internal modules
 from .matched_entry import MatchedEntry
@@ -116,13 +117,14 @@ class ModelMatchCandidate:
                 # removing duplicates via set conversion
                 found_target_values = set(self.get_all_matching_elements())
                 if all(elem in found_target_values for elem in self.target_values):
-                    # print(f'values: {self.target_values} AND found_target_values_list: {found_target_values}')
+                    logging.debug(f'values: {self.target_values} AND found_target_values_list: {found_target_values}')
                     self.is_match = True
             elif self.target_values_operator == 'XOR':
                 # removing duplicates via set conversion
                 if len(list(set(self.get_all_matching_elements()).intersection(
                         self.target_values))) == 1:
                     self.is_match = True
+        logging.debug(f"This ModelMatchCandidate was found to be a match: ({self}).")
         return self.is_match
 
     def __str__(self):

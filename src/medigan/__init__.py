@@ -5,7 +5,8 @@
 While being extendable to any modality and generative model, `medigan` focuses on automating medical image
 dataset synthesis using GANs for training deep learning models.
 
-Github: https://github.com/RichardObi/medigan
+- Github (medigan library): https://github.com/RichardObi/medigan
+- Github (medigan config): https://github.com/RichardObi/medigan-models
 
 Examples
 --------
@@ -15,7 +16,8 @@ Examples
 >>> from medigan import Generators
 >>> generators = Generators()
 
->>> # generate 10 samples using one of the medigan models
+>>> # generate 10 samples using one of the medigan models.
+>>> # note: the model_ids are in the config.json in https://github.com/RichardObi/medigan-models/blob/main/global.json
 >>> generators.generate(model_id="2d29d505-9fb7-4c4d-b81f-47976e2c7dbf",num_samples=10)
 
 >>> # get the model's generate method and run it to generate 3 samples
@@ -83,6 +85,12 @@ Examples
 .. codeauthor:: Richard Osuala <richard.osuala@gmail.com>
 .. codeauthor:: Noussair Lazrak <lazrak.noussair@gmail.com>
 """
+# Set default logging handler to avoid "No handler found" warnings.
+import logging
+from logging import NullHandler
+
 # importing the generators module and class for the convenience of extending the "medigan.generators" namespace to
 # "medigan", allowing 'from medigan import Generators'
 from .generators import Generators
+
+logging.getLogger(__name__).addHandler(NullHandler())
