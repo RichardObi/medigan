@@ -6,12 +6,10 @@
 .. codeauthor:: Noussair Lazrak <lazrak.noussair@gmail.com>
 """
 
-# TODO Move this to ../tests/tests.py
-# run with python -m src.medigan.main
+# Note: The below tests were moved to unittest class in ../tests/tests.py
+# run with python -m tests.main
 
-from __future__ import absolute_import
-
-from .generators import Generators
+from src.medigan.generators import Generators
 
 
 def main():
@@ -19,7 +17,7 @@ def main():
     # quit()
 
     # TEST: model generation
-    model_generation_test(generators)
+    # model_generation_test(generators)
 
     # TEST: return a generate() function and test it's usage
     # model_return_generate_function(generators)
@@ -96,7 +94,7 @@ def find_model_and_generate_test(generators):
     generators.find_model_and_generate(values=values_list, target_values_operator='AND', are_keys_also_matched=True,
                                        is_case_sensitive=False, num_samples=5)
 
-
+# TODO ADD THIS to tests/tests.py
 def rank_models_by_performance_test(generators):
     ranked_models = generators.rank_models_by_performance(metric="SSIM", order="asc")
     print(ranked_models)
@@ -120,7 +118,7 @@ def rank_models_by_performance_test(generators):
                                                           order="asc")
     print(ranked_models)
 
-
+# TODO ADD THIS to tests/tests.py
 def find_and_rank_models_by_performance(generators):
     values_list = ['dcgan', 'MMG']  # , 'inbreast']
     print("                      ---------                      ")
@@ -156,7 +154,7 @@ def find_and_rank_models_then_generate_test(generators):
 
 
 
-
+# TODO ADD THIS to tests/tests.py
 def get_models_by_key_value_pair(generators):
     key1 = "modality"
     value1 = "Full-Field Mammography"
