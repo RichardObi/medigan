@@ -4,6 +4,9 @@
 
 While being extendable to any modality and generative model, medigan focuses on automating medical image dataset synthesis using GANs for training deep learning models.
 
+### Documentation
+Link to Documentation: https://medigan.readthedocs.io/en/latest/
+
 ### Usage & Core Features:
 
     - Researchers and ML-practitioners can conveniently use an existing model in `medigan` for synthetic data augmentation instead of having to train their own generative model each time.
