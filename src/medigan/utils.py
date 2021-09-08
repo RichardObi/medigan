@@ -10,7 +10,9 @@ import json
 import logging
 import os
 import zipfile
+import shutil
 from pathlib import Path
+from urllib.parse import urlparse  # python3
 
 # Import pypi libs
 import requests
@@ -39,12 +41,13 @@ class Utils():
 
     @staticmethod
     def is_file_located_or_downloaded(path_as_string: str, download_if_not_found: bool = True,
-                                      download_link: str = None, is_new_download_forced: bool = False) -> bool:
+                                      download_link: str = None, is_new_download_forced: bool = False,
+                                      allow_local_path_as_url: bool = True) -> bool:
         """ check if is file in `path_as_string` and optionally download the file (again). """
 
         if not path_as_string.is_file() or is_new_download_forced:
             if not download_if_not_found:
-                # download_if_not_found is prioritized over is is_new_download_forced in this case, as users likely
+                # download_if_not_found is prioritized over is_new_download_forced in this case, as users likely
                 # prefer to avoid automated downloads altogether when setting download_if_not_found to False.
                 logging.warning(f"File {path_as_string} was not found ({not path_as_string.is_file()}) or download "
                                 f"was forced ({is_new_download_forced}). However, downloading it from {download_link} "
@@ -54,8 +57,12 @@ class Utils():
                 return False
             else:
                 try:
-                    Utils.download_file(path_as_string=path_as_string, download_link=download_link)
+                    if allow_local_path_as_url and not Utils.is_url_valid(the_url=download_link):
+                        shutil.copy2(src=download_link, dst=path_as_string)
+                    else:
+                        Utils.download_file(path_as_string=path_as_string, download_link=download_link)
                 except Exception as e:
+                    logging.debug(f"Error while trying to download/copy from {download_link} to {path_as_string}:{e}")
                     return False
         return True
 
@@ -118,13 +125,23 @@ class Utils():
 
         return [str(x).lower() for x in target_list]
 
-    def deep_get(base_dict: dict, key: str):
+    @staticmethod
+    def deep_get(base_dict: dict, key: str) -> dict:
         """ Split the key by "." to get value in nested dictionary."""
 
         key_split = key.split(".")
         for key_ in key_split:
             base_dict = base_dict[key_]
         return base_dict
+
+    @staticmethod
+    def is_url_valid(the_url: str) -> bool:
+        try:
+            result = urlparse(the_url)
+            # testing if both result.scheme and result.netloc are non-empty strings (empty strings evaluate to False).
+            return all([result.scheme, result.netloc])
+        except Exception:
+            return False
 
     @staticmethod
     def order_dict_by_value(self, dict_list, key: str, order: str = "asc", sort_algorithm='bubbleSort') -> list:
