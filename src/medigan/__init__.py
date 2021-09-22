@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # ! /usr/bin/env python
-""" This module is the core component of `medigan` - a Python library for automated synthetic data generation.
+""" `medigan` is a modular Python library for automating synthetic dataset generation.
 
 While being extendable to any modality and generative model, `medigan` focuses on automating medical image
 dataset synthesis using GANs for training deep learning models.
@@ -56,7 +56,7 @@ Examples
 >>> found_models = generators.get_models_by_key_value_pair(key1=key, value1=value, is_case_sensitive=False)
 >>> print(found_models)
 
-- Usage & Core Features:
+- Usage & core features:
 
     - Researchers and ML-practitioners can conveniently use an existing model in `medigan` for synthetic data augmentation instead of having to train their own generative model each time.
 
@@ -68,7 +68,7 @@ Examples
 
     - Users can also get the generate_method of a model that they may want to use dynamically inside their dataloaders
 
-- How to Add New Models to medigan:
+- How to add new models to `medigan`:
 
     - `medigan` motivates the reuse of trained generative models.
 

@@ -1,6 +1,11 @@
 Welcome to medigan's documentation!
 ===================================
 
+.. figure:: medigan-workflows.png
+   :alt: Architectural overview and main workflows
+
+   Architectural overview including main workflows consisting of (a) library import and initialisation, (b) generative model search and ranking, (c) sample generation, and (d) generative model contribution.
+
 .. automodule:: medigan.__init__
     :members:
 
