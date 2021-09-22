@@ -15,6 +15,7 @@ scikit-image = "*"
 scipy = "*"
 sphinx = "*"
 sphinx-rtd-theme = "*"
+pillow = ">=8.3.2"
 
 [requires]
 python_version = "3.9"
