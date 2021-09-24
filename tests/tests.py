@@ -19,7 +19,7 @@ class TestMediganMethods(unittest.TestCase):
     def setUp(self):
         ## unittest logger config
         # This logger on root level initialized via logging.getLogger() will also log all log events
-        # from the medigan library. Pass a logger nake (e.g. __name__) instead if you only want logs from tests.py
+        # from the medigan library. Pass a logger name (e.g. __name__) instead if you only want logs from tests.py
         self.logger = logging.getLogger()  # (__name__)
         self.logger.setLevel(logging.INFO)
         stream_handler = logging.StreamHandler(sys.stdout)

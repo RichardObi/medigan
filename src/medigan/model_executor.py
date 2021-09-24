@@ -171,7 +171,8 @@ class ModelExecutor:
                 logging.error(f"{self.model_id}: Error while importing {self.package_name} from /{self.model_id}: {e}")
                 raise e
 
-    def generate(self, num_samples: int = 20, output_path: str = None, is_gen_function_returned: bool = False,
+    def generate(self, num_samples: int = 20, output_path: str = None, save_images: bool = True,
+                 is_gen_function_returned: bool = False,
                  **kwargs):
         """ Generate samples using the generative model or return the model's generate function.
 
@@ -184,6 +185,9 @@ class ModelExecutor:
             the number of samples that will be generated
         output_path: str
             the path as str to the output folder where the generated samples will be stored
+        save_images: bool
+            flag indicating whether generated samples are returned (i.e. as list of numpy arrays) or rather stored in
+            file system (i.e in `output_path)
         is_gen_function_returned: bool
             flag indicating whether, instead of generating samples, the sample generation function will be returned
         **kwargs
@@ -209,17 +213,16 @@ class ModelExecutor:
             generate_method = getattr(self.deserialized_model_as_lib, f'{self.generate_method_name}')
             prepared_kwargs = self._prepare_generate_method_args(model_file=self.serialised_model_file_path,
                                                                  num_samples=num_samples, output_path=output_path,
-                                                                 **kwargs)
+                                                                 save_images=save_images, **kwargs)
             logging.info(f"The generate function's parameters are: {prepared_kwargs}")
             if is_gen_function_returned:
                 def gen(**some_other_kwargs):
-                    logging.info(f"Generate method called with the following params. (i) default: {prepared_kwargs}, "
+                    logging.debug(f"Generate method called with the following params. (i) default: {prepared_kwargs}, "
                                  f"(ii) custom: {some_other_kwargs}")
-                    generate_method(**prepared_kwargs, **some_other_kwargs)
-
+                    return generate_method(**prepared_kwargs, **some_other_kwargs)
                 return gen
             else:
-                generate_method(**prepared_kwargs)
+                return generate_method(**prepared_kwargs)
         except Exception as e:
             logging.error(f"{self.model_id}: Error while trying to generate images with model "
                           f"{self.serialised_model_file_path}: {e}")

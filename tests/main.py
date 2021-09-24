@@ -5,13 +5,27 @@
 .. codeauthor:: Richard Osuala <richard.osuala@gmail.com>
 .. codeauthor:: Noussair Lazrak <lazrak.noussair@gmail.com>
 """
+import logging
+import sys
+import numpy
+
+from src.medigan.generators import Generators
+
 
 # Note: The below tests were moved to unittest class in ../tests/tests.py
 # run with python -m tests.main
 
-from src.medigan.generators import Generators
-
 def main():
+    # This logger on root level initialized via logging.getLogger() will also log all log events
+    # from the medigan library. Pass a logger name (e.g. __name__) instead if you only want logs from tests.py
+    logger = logging.getLogger()  # (__name__)
+    logger.setLevel(logging.INFO)
+    stream_handler = logging.StreamHandler(sys.stdout)
+    stream_handler.setLevel(logging.INFO)
+    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+    stream_handler.setFormatter(formatter)
+    logger.addHandler(stream_handler)
+
     generators = Generators()
     # quit()
 
@@ -44,9 +58,15 @@ def main():
 
 
 def model_generation_test(generators):
-    generators.generate(model_id="2d29d505-9fb7-4c4d-b81f-47976e2c7dbf", num_samples=3)
-    #generators.generate(model_id="8f933c5e-72fc-461a-a5cb-73cbe65af6fc", num_samples=3)
-    #generators.generate(model_id="2d29d505-9fb7-4c4d-b81f-47976e2c7dbf", num_samples=3, **{"test": "this is my test"})
+    #images1 = generators.generate(model_id="2d29d505-9fb7-4c4d-b81f-47976e2c7dbf", num_samples=3, save_images=False)
+    #logging.info(f"images1: {images1}")
+    #images2 = generators.generate(model_id="8f933c5e-72fc-461a-a5cb-73cbe65af6fc", num_samples=3, save_images=False)
+    #logging.info(f"images2: {images2}")
+    ## generators.generate(model_id="2d29d505-9fb7-4c4d-b81f-47976e2c7dbf", num_samples=3, **{"test": "this is my test"})
+
+    generate_method = generators.get_generate_function(model_id="2d29d505-9fb7-4c4d-b81f-47976e2c7dbf", num_samples=3, save_images=False)
+    images1 = generate_method()
+    logging.info(f"images1: {images1}")
 
 
 def model_return_generate_function(generators):
@@ -93,6 +113,7 @@ def find_model_and_generate_test(generators):
     generators.find_model_and_generate(values=values_list, target_values_operator='AND', are_keys_also_matched=True,
                                        is_case_sensitive=False, num_samples=5)
 
+
 # TODO ADD THIS to tests/tests.py
 def rank_models_by_performance_test(generators):
     ranked_models = generators.rank_models_by_performance(metric="SSIM", order="asc")
@@ -116,6 +137,7 @@ def rank_models_by_performance_test(generators):
     ranked_models = generators.rank_models_by_performance(metric="downstream_task.CLF.trained on fake.accuracy",
                                                           order="asc")
     print(ranked_models)
+
 
 # TODO ADD THIS to tests/tests.py
 def find_and_rank_models_by_performance(generators):
@@ -149,8 +171,6 @@ def find_and_rank_models_then_generate_test(generators):
     generators.find_models_rank_and_generate(values=values_list, target_values_operator='AND',
                                              are_keys_also_matched=True,
                                              is_case_sensitive=False, metric="SSIM", order="desc", num_samples=5)
-
-
 
 
 # TODO ADD THIS to tests/tests.py

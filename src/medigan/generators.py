@@ -525,7 +525,7 @@ class Generators:
             logging.error(f"{model_id}: This model could not be added to model_executor list: {e}")
             raise e
 
-    def generate(self, model_id: str, num_samples: int = 30, output_path: str = None,
+    def generate(self, model_id: str, num_samples: int = 30, output_path: str = None, save_images: bool = True,
                  is_gen_function_returned: bool = False, **kwargs):
         """ Generate samples with the model corresponding to the `model_id` or return the model's generate function.
 
@@ -537,6 +537,9 @@ class Generators:
             the number of samples that will be generated
         output_path: str
             the path as str to the output folder where the generated samples will be stored
+        save_images: bool
+            flag indicating whether generated samples are returned (i.e. as list of numpy arrays) or rather stored in
+            file system (i.e in `output_path)
         is_gen_function_returned: bool
             flag indicating whether, instead of generating samples, the sample generation function will be returned
         **kwargs
@@ -549,7 +552,7 @@ class Generators:
         """
 
         model_executor = self.get_model_executor(model_id=model_id)
-        return model_executor.generate(num_samples=num_samples, output_path=output_path,
+        return model_executor.generate(num_samples=num_samples, output_path=output_path, save_images=save_images,
                                        is_gen_function_returned=is_gen_function_returned, **kwargs)
 
     def get_generate_function(self, model_id: str, num_samples: int = 30, output_path: str = None, **kwargs):
