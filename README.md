@@ -7,6 +7,9 @@ While being extendable to any modality and generative model, medigan focuses on 
 ### Documentation
 Link to Documentation: https://medigan.readthedocs.io/en/latest/
 
+### Generative Models
+The metadata and links to the models in medigan are stored in: https://github.com/RichardObi/medigan-models
+
 ### Architectural Overview
 ![medigan architecture and worklows](./docs/source/medigan-workflows.png)
 
