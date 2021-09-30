@@ -28,8 +28,8 @@ class TestMediganMethods(unittest.TestCase):
         stream_handler.setFormatter(formatter)
         self.logger.addHandler(stream_handler)
 
-        self.model_id_1 = "8f933c5e-72fc-461a-a5cb-73cbe65af6fc"
-        self.model_id_2 = "2d29d505-9fb7-4c4d-b81f-47976e2c7dbf"
+        self.model_id_1 = "00002_DCGAN_MMG_MASS_ROI"
+        self.model_id_2 = "00001_DCGAN_MMG_CALC_ROI"
         self.test_output_path1 = "test_output_path1"
         self.test_output_path2 = "test_output_path2"
         self.num_samples = 5

@@ -18,10 +18,10 @@ Examples
 
 >>> # generate 10 samples using one of the medigan models.
 >>> # note: the model_ids are in the config.json in https://github.com/RichardObi/medigan-models/blob/main/global.json
->>> generators.generate(model_id="2d29d505-9fb7-4c4d-b81f-47976e2c7dbf",num_samples=10)
+>>> generators.generate(model_id="00001_DCGAN_MMG_CALC_ROI",num_samples=10)
 
 >>> # get the model's generate method and run it to generate 3 samples
->>> gen_function = generators.get_generate_function(model_id="2d29d505-9fb7-4c4d-b81f-47976e2c7dbf", num_samples=3)
+>>> gen_function = generators.get_generate_function(model_id="00001_DCGAN_MMG_CALC_ROI", num_samples=3)
 >>> gen_function()
 
 >>> # create a list of search terms and find the models that have these terms in their config.

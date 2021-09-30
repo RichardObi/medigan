@@ -58,25 +58,25 @@ def main():
 
 
 def model_generation_test(generators):
-    #images1 = generators.generate(model_id="2d29d505-9fb7-4c4d-b81f-47976e2c7dbf", num_samples=3, save_images=False)
+    images1 = generators.generate(model_id="00001_DCGAN_MMG_CALC_ROI", num_samples=3, save_images=False)
     #logging.info(f"images1: {images1}")
-    #images2 = generators.generate(model_id="8f933c5e-72fc-461a-a5cb-73cbe65af6fc", num_samples=3, save_images=False)
+    images2 = generators.generate(model_id="00002_DCGAN_MMG_MASS_ROI", num_samples=3, save_images=False)
     #logging.info(f"images2: {images2}")
-    ## generators.generate(model_id="2d29d505-9fb7-4c4d-b81f-47976e2c7dbf", num_samples=3, **{"test": "this is my test"})
+    ## generators.generate(model_id="00001_DCGAN_MMG_CALC_ROI", num_samples=3, **{"test": "this is my test"})
 
-    generate_method = generators.get_generate_function(model_id="2d29d505-9fb7-4c4d-b81f-47976e2c7dbf", num_samples=3, save_images=False)
-    images1 = generate_method()
-    logging.info(f"images1: {images1}")
+    #generate_method = generators.get_generate_function(model_id="00001_DCGAN_MMG_CALC_ROI", num_samples=3, save_images=False)
+    #images1 = generate_method()
+    #logging.info(f"images1: {images1}")
 
 
 def model_return_generate_function(generators):
-    gen_function = generators.get_generate_function(model_id="2d29d505-9fb7-4c4d-b81f-47976e2c7dbf", num_samples=3)
+    gen_function = generators.get_generate_function(model_id="00001_DCGAN_MMG_CALC_ROI", num_samples=3)
     print("I now generate 1 !!")
     gen_function()
     print("I now generate 2 !!")
     gen_function(**{"test2": "abcdefghijklmnopqrstuvwxyz"})
     print("I now generate 3 !!")
-    # generators.generate(model_id="8f933c5e-72fc-461a-a5cb-73cbe65af6fc", num_samples=3)
+    # generators.generate(model_id="00002_DCGAN_MMG_MASS_ROI", num_samples=3)
 
 
 def print_tests(generators):
@@ -125,7 +125,7 @@ def rank_models_by_performance_test(generators):
     print("                      ---------                      ")
 
     ranked_models = generators.rank_models_by_performance(
-        model_ids=["2d29d505-9fb7-4c4d-b81f-47976e2c7dbf", "8f933c5e-72fc-461a-a5cb-73cbe65af6fc"], metric="SSIM",
+        model_ids=["00001_DCGAN_MMG_CALC_ROI", "00002_DCGAN_MMG_MASS_ROI"], metric="SSIM",
         order="asc")
     print(ranked_models)
     print("                      ---------                      ")
