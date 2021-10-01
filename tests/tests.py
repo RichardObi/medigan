@@ -30,11 +30,14 @@ class TestMediganMethods(unittest.TestCase):
 
         self.model_id_1 = "00002_DCGAN_MMG_MASS_ROI"
         self.model_id_2 = "00001_DCGAN_MMG_CALC_ROI"
+        self.model_id_3 = "00003_CYCLEGAN_MMG_DENSITY_FULL"
         self.test_output_path1 = "test_output_path1"
         self.test_output_path2 = "test_output_path2"
+        self.test_output_path3 = "test_output_path3"
         self.num_samples = 5
         self.test_medigan_imports()
         self.test_init_generators()
+        self._remove_dir_and_contents()  # in case something is left there.
 
     def test_medigan_imports(self):
         try:
@@ -54,6 +57,7 @@ class TestMediganMethods(unittest.TestCase):
         self.assertRaises(expected_exception=Exception)
 
     def test_generate_methods(self):
+        self._remove_dir_and_contents()
         try:
             self.generators.generate(model_id=self.model_id_1, num_samples=self.num_samples,
                                      output_path=self.test_output_path1)
@@ -61,27 +65,23 @@ class TestMediganMethods(unittest.TestCase):
             self.generators.generate(model_id=self.model_id_2, num_samples=self.num_samples,
                                      output_path=self.test_output_path2)
 
+            self.generators.generate(model_id=self.model_id_3, num_samples=self.num_samples,
+                                     output_path=self.test_output_path3)
+
         except Exception as e:
             self.logger.error(f"test_generate_methods error: {e}")
             raise e
         self.assertRaises(expected_exception=Exception)
+        self._check_if_samples_were_generated(models=[1,2,3])
 
-        # check if the number of generated files of model_id_1 is as expected.
-        file_list_1 = glob.glob(self.test_output_path1 + "/*")
-        self.logger.info(f"{len(file_list_1)} == {self.num_samples}")
-        self.assertTrue(len(file_list_1) == self.num_samples)
-
-        # check if the number of generated files of model_id_2 is as expected.
-        file_list_2 = glob.glob(self.test_output_path2 + "/*")
-        self.logger.debug(f"{len(file_list_2)} == {self.num_samples}")
-        self.assertTrue(len(file_list_2) == self.num_samples)
-        self._remove_dir_and_contents()
 
     def test_generate_methods_with_additional_args(self):
+        self._remove_dir_and_contents()
         # At the moment, no optional test_dict params are implemented in the model's generate methods.
-        # TODO Add some valid key value pairs into test_dicts below and test.
+        # TODO Add some valid key value pairs into test_dicts below and test generation.
         test_dict_1 = {}
         test_dict_2 = {}
+        test_dict_3 = {}
         try:
             self.generators.generate(model_id=self.model_id_1, num_samples=self.num_samples,
                                      output_path=self.test_output_path1, **test_dict_1)
@@ -89,14 +89,17 @@ class TestMediganMethods(unittest.TestCase):
             self.generators.generate(model_id=self.model_id_2, num_samples=self.num_samples,
                                      output_path=self.test_output_path2, **test_dict_2)
 
+            self.generators.generate(model_id=self.model_id_3, num_samples=self.num_samples,
+                                     output_path=self.test_output_path3, **test_dict_3)
+
         except Exception as e:
             self.logger.error(f"test_generate_methods_with_additional_args error: {e}")
             raise e
         self.assertRaises(expected_exception=Exception)
-        self._check_if_samples_were_generated()
-        self._remove_dir_and_contents()
+        self._check_if_samples_were_generated(models=[1, 2, 3])
 
     def test_get_generate_method(self):
+        self._remove_dir_and_contents()
         try:
             gen_function_1 = self.generators.get_generate_function(model_id=self.model_id_1,
                                                                    num_samples=self.num_samples)
@@ -114,7 +117,7 @@ class TestMediganMethods(unittest.TestCase):
             raise e
         self.assertRaises(expected_exception=Exception)
         self._check_if_samples_were_generated()
-        self._remove_dir_and_contents()
+
 
     def test_search_for_models_method(self):
         try:
@@ -135,6 +138,7 @@ class TestMediganMethods(unittest.TestCase):
         self.assertRaises(expected_exception=Exception)
 
     def test_find_model_and_generate_method(self):
+        self._remove_dir_and_contents()
         try:
             # For the values_list below exactly 1 model should be found due to inbreast (27.08.2021)
             values_list = ['dcgan', 'mMg', 'ClF', 'modalities', 'inbreast']
@@ -152,7 +156,6 @@ class TestMediganMethods(unittest.TestCase):
             raise e
         self._check_if_samples_were_generated()
         self._remove_dir_and_contents()
-
         try:
             # For the values_list below at least 2 models should be found. There should be no synthetic data generated in this case.
             values_list = ['dcgan', 'mMg', 'ClF', 'modalities']
@@ -163,10 +166,10 @@ class TestMediganMethods(unittest.TestCase):
             self.logger.error(f"test_find_model_and_generate_method error: {e}")
             raise e
         self._check_if_samples_were_generated(should_sample_be_generated=False)
-        self._remove_dir_and_contents()
         self.assertRaises(expected_exception=Exception)
 
     def test_find_and_rank_models_then_generate_method(self):
+        self._remove_dir_and_contents()
         try:
             # TODO This might not work if there are no respective metrics for any of these models in the global json file.
             # These values would need to find at least two models
@@ -183,35 +186,46 @@ class TestMediganMethods(unittest.TestCase):
             self.logger.error(f"test_find_and_rank_models_then_generate_method error: {e}")
             raise e
         self._check_if_samples_were_generated()
-        self._remove_dir_and_contents()
         self.assertRaises(expected_exception=Exception)
 
-    def _check_if_samples_were_generated(self, should_sample_be_generated: bool = True):
+    def _check_if_samples_were_generated(self, models=[1,2], should_sample_be_generated: bool = True):
         if should_sample_be_generated:
-            # check if the number of generated samples of model_id_1 is as expected.
-            file_list_1 = glob.glob(self.test_output_path1 + "/*")
-            # self.logger.debug(f"{len(file_list_1)} == {self.num_samples}")
-            self.assertTrue(len(file_list_1) == self.num_samples)
-
-            # check if the number of generated samples of model_id_2 is as expected.
-            file_list_2 = glob.glob(self.test_output_path2 + "/*")
-            # self.logger.debug(f"{len(file_list_2)} == {self.num_samples}")
-            self.assertTrue(len(file_list_2) == self.num_samples)
+            if 1 in models:
+                # check if the number of generated samples of model_id_1 is as expected.
+                file_list_1 = glob.glob(self.test_output_path1 + "/*")
+                # self.logger.debug(f"{len(file_list_1)} == {self.num_samples}")
+                self.assertTrue(len(file_list_1) == self.num_samples)
+            if 2 in models:
+                # check if the number of generated samples of model_id_2 is as expected.
+                file_list_2 = glob.glob(self.test_output_path2 + "/*")
+                # self.logger.debug(f"{len(file_list_2)} == {self.num_samples}")
+                self.assertTrue(len(file_list_2) == self.num_samples)
+            if 3 in models:
+                # check if the number of generated samples of model_id_3 is as expected.
+                file_list_3 = glob.glob(self.test_output_path3 + "/*")
+                # self.logger.debug(f"{len(file_list_3)} == {self.num_samples}")
+                self.assertTrue(len(file_list_3) == self.num_samples)
         else:
-            # check if the sample have NOT been generated for model_id 1 and 2
-            file_list_1 = glob.glob(self.test_output_path1 + "/*")
-            # self.logger.debug(f"{len(file_list_1)} == {self.num_samples}")
-            self.assertTrue(len(file_list_1) != self.num_samples)
-
-            file_list_2 = glob.glob(self.test_output_path2 + "/*")
-            # self.logger.debug(f"{len(file_list_2)} == {self.num_samples}")
-            self.assertTrue(len(file_list_2) != self.num_samples)
+            if 1 in models:
+                # check if the sample have NOT been generated for model_id 1 and 2 and 3
+                file_list_1 = glob.glob(self.test_output_path1 + "/*")
+                # self.logger.debug(f"{len(file_list_1)} == {self.num_samples}")
+                self.assertTrue(len(file_list_1) != self.num_samples)
+            if 2 in models:
+                file_list_2 = glob.glob(self.test_output_path2 + "/*")
+                # self.logger.debug(f"{len(file_list_2)} == {self.num_samples}")
+                self.assertTrue(len(file_list_2) != self.num_samples)
+            if 3 in models:
+                file_list_3 = glob.glob(self.test_output_path3 + "/*")
+                # self.logger.debug(f"{len(file_list_3)} == {self.num_samples}")
+                self.assertTrue(len(file_list_3) != self.num_samples)
 
     def _remove_dir_and_contents(self):
         # After each test, empty the created folders and files to avoid corrupting a new test.
         try:
             shutil.rmtree(self.test_output_path1)
             shutil.rmtree(self.test_output_path2)
+            shutil.rmtree(self.test_output_path3)
         except OSError as e:
             self.logger.error("Error: %s - %s." % (e.filename, e.strerror))
 

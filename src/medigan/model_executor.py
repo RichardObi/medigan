@@ -207,8 +207,8 @@ class ModelExecutor:
 
         if output_path is None:
             output_path = f'{DEFAULT_OUTPUT_FOLDER}/{self.model_id}/{time.time()}/'
-            assert Utils.mkdirs(
-                path_as_string=output_path), f"{self.model_id}: The output folder was not found nor created in {output_path}."
+        assert Utils.mkdirs(
+            path_as_string=output_path), f"{self.model_id}: The output folder was not found nor created in {output_path}."
         try:
             generate_method = getattr(self.deserialized_model_as_lib, f'{self.generate_method_name}')
             prepared_kwargs = self._prepare_generate_method_args(model_file=self.serialised_model_file_path,
