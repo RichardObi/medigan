@@ -23,7 +23,8 @@ from .constants import CONFIG_FILE_KEY_DEPENDENCIES, CONFIG_FILE_KEY_MODEL_NAME,
     PACKAGE_EXTENSION, CONFIG_FILE_KEY_IMAGE_SIZE, CONFIG_FILE_KEY_GENERATE, \
     CONFIG_FILE_KEY_GENERATE_NAME, CONFIG_FILE_KEY_GENERATE_ARGS, \
     CONFIG_FILE_KEY_GENERATE_ARGS_MODEL_FILE, CONFIG_FILE_KEY_GENERATE_ARGS_NUM_SAMPLES, \
-    CONFIG_FILE_KEY_GENERATE_ARGS_OUTPUT_PATH, CONFIG_FILE_KEY_GENERATE_ARGS_CUSTOM, CONFIG_FILE_KEY_GENERATE_ARGS_BASE
+    CONFIG_FILE_KEY_GENERATE_ARGS_OUTPUT_PATH, CONFIG_FILE_KEY_GENERATE_ARGS_CUSTOM, \
+    CONFIG_FILE_KEY_GENERATE_ARGS_BASE, CONFIG_FILE_KEY_GENERATE_ARGS_SAVE_IMAGES
 from .utils import Utils
 
 
@@ -218,8 +219,9 @@ class ModelExecutor:
             if is_gen_function_returned:
                 def gen(**some_other_kwargs):
                     logging.debug(f"Generate method called with the following params. (i) default: {prepared_kwargs}, "
-                                 f"(ii) custom: {some_other_kwargs}")
+                                  f"(ii) custom: {some_other_kwargs}")
                     return generate_method(**prepared_kwargs, **some_other_kwargs)
+
                 return gen
             else:
                 return generate_method(**prepared_kwargs)
@@ -228,7 +230,8 @@ class ModelExecutor:
                           f"{self.serialised_model_file_path}: {e}")
             raise e
 
-    def _prepare_generate_method_args(self, model_file: str, num_samples: int, output_path: str, **kwargs):
+    def _prepare_generate_method_args(self, model_file: str, num_samples: int, output_path: str, save_images: bool,
+                                      **kwargs):
         """ Prepare the keyword arguments that will be passed to the models generate function.
 
         Prepares the keyword arguments that need to be passed to the generative model's generate function to generate
@@ -274,24 +277,27 @@ class ModelExecutor:
             # validating that these specific keys are available in the config. also retrieving default values
             base_config_list = [self.generate_method_args[CONFIG_FILE_KEY_GENERATE_ARGS_BASE][0],
                                 self.generate_method_args[CONFIG_FILE_KEY_GENERATE_ARGS_BASE][1],
-                                self.generate_method_args[CONFIG_FILE_KEY_GENERATE_ARGS_BASE][2]]
+                                self.generate_method_args[CONFIG_FILE_KEY_GENERATE_ARGS_BASE][2],
+                                self.generate_method_args[CONFIG_FILE_KEY_GENERATE_ARGS_BASE][3]]
             if not all(x in base_config_list for x in
                        [CONFIG_FILE_KEY_GENERATE_ARGS_MODEL_FILE, CONFIG_FILE_KEY_GENERATE_ARGS_NUM_SAMPLES,
-                        CONFIG_FILE_KEY_GENERATE_ARGS_OUTPUT_PATH]):
+                        CONFIG_FILE_KEY_GENERATE_ARGS_OUTPUT_PATH, CONFIG_FILE_KEY_GENERATE_ARGS_SAVE_IMAGES]):
                 raise KeyError
         except KeyError as e:
             logging.warning(
                 f"{self.model_id}: Warning: In this model's generate args ({self.generate_method_args}), some "
                 f"required generate method keys ({CONFIG_FILE_KEY_GENERATE_ARGS_MODEL_FILE}, "
-                f"{CONFIG_FILE_KEY_GENERATE_ARGS_NUM_SAMPLES}, {CONFIG_FILE_KEY_GENERATE_ARGS_OUTPUT_PATH}) are "
-                f"missing: {e}. A value for this key will be provided nevertheless when calling the model's generate "
-                f"method ({self.generate_method_name})'. This could hence cause an error.")
+                f"{CONFIG_FILE_KEY_GENERATE_ARGS_NUM_SAMPLES}, {CONFIG_FILE_KEY_GENERATE_ARGS_OUTPUT_PATH}, "
+                f"{CONFIG_FILE_KEY_GENERATE_ARGS_SAVE_IMAGES}) are missing: {e}. A value for this key will be "
+                f"provided nevertheless when calling the model's generate method ({self.generate_method_name})'. "
+                f"This could hence cause an error.")
         # Adding the always necessary base parameters to kwargs. They are updated if erroneously
         # introduced via the user-provided kwargs.
         prepared_kwargs.update({
             CONFIG_FILE_KEY_GENERATE_ARGS_MODEL_FILE: model_file,
             CONFIG_FILE_KEY_GENERATE_ARGS_NUM_SAMPLES: num_samples,
             CONFIG_FILE_KEY_GENERATE_ARGS_OUTPUT_PATH: output_path,
+            CONFIG_FILE_KEY_GENERATE_ARGS_SAVE_IMAGES: save_images,
         })
         return prepared_kwargs
 

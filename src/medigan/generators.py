@@ -293,13 +293,25 @@ class Generators:
         list
             a list of the searched and matched model dictionaries containing metric and model_id, sorted by metric.
         """
-
-        return self.model_selector.find_models_and_rank(values=values,
-                                                        target_values_operator=target_values_operator,
-                                                        are_keys_also_matched=are_keys_also_matched,
-                                                        is_case_sensitive=is_case_sensitive,
-                                                        metric=metric,
-                                                        order=order)
+        ranked_models = []
+        matching_models = self.model_selector.find_matching_models_by_values(values=values,
+                                                                             target_values_operator=target_values_operator,
+                                                                             are_keys_also_matched=are_keys_also_matched,
+                                                                             is_case_sensitive=is_case_sensitive)
+        if len(matching_models) < 1:
+            logging.warning(
+                f'For your input, there were {len(matching_models)} matching models, while at least 1 is needed. '
+                f'Please adjust either your metric your search value inputs {values} to find at least one match.')
+        else:
+            matching_model_ids = [model.model_id for model in matching_models]
+            logging.debug(f"matching_model_ids: {matching_model_ids}")
+            ranked_models = self.model_selector.rank_models_by_performance(model_ids=matching_model_ids, metric=metric,
+                                                                           order=order)
+            if len(ranked_models) < 1:
+                logging.warning(
+                    f'None ({len(ranked_models)}) of the {len(matching_model_ids)} found matching models, had a valid metric entry for {metric}. '
+                    f'Please adjust your metric to enable ranking of the found models.')
+        return ranked_models
 
     def find_models_rank_and_generate(self, values: list, target_values_operator: str = 'AND',
                                       are_keys_also_matched: bool = False, is_case_sensitive: bool = False,
@@ -336,24 +348,26 @@ class Generators:
         None
             However, if `is_gen_function_returned` is True, it returns the internal generate function of the model.
         """
+        ranked_models = self.find_models_and_rank(values=values,
+                                                  target_values_operator=target_values_operator,
+                                                  are_keys_also_matched=are_keys_also_matched,
+                                                  is_case_sensitive=is_case_sensitive, metric=metric, order=order)
 
-        ranked_models = self.model_selector.find_models_and_rank(values=values,
-                                                                 target_values_operator=target_values_operator,
-                                                                 are_keys_also_matched=are_keys_also_matched,
-                                                                 is_case_sensitive=is_case_sensitive,
-                                                                 metric=metric,
-                                                                 order=order)
-        if len(ranked_models) < 1:
-            logging.error(
-                f'For your input, there were {len(ranked_models)} matching models, while at least 1 is needed. '
-                f'Please adjust your search value inputs {values} to find at least one match.')
-        else:
-            # Let's generate with the best-ranked model
-            logging.info(f'For your input, there were {len(ranked_models)} models found and ranked. '
-                         f'The highest ranked model will now be used for generation: {ranked_models[0]}')
-            highest_ranking_model_id = ranked_models[0][MODEL_ID]
-            return self.generate(model_id=highest_ranking_model_id, num_samples=num_samples, output_path=output_path,
-                                 is_gen_function_returned=is_gen_function_returned, **kwargs)
+        assert ranked_models is not None and len(ranked_models) > 0, \
+            f'None of the models fulfilled both, the matching (values: {values}) AND ' \
+            f'ranking (metric: {metric}) criteria you provided.'
+
+        # Get the ID of the highest ranking model to generate() with that model
+        highest_ranking_model_id = ranked_models[0][MODEL_ID]
+
+        # Let's generate with the best-ranked model
+        logging.info(f'For your input, there were {len(ranked_models)} models found and ranked. '
+                     f'The highest ranked model ({highest_ranking_model_id}) will now be used for generation: '
+                     f'{ranked_models[0]}')
+
+        return self.generate(model_id=highest_ranking_model_id, num_samples=num_samples,
+                             output_path=output_path,
+                             is_gen_function_returned=is_gen_function_returned, **kwargs)
 
     def find_model_and_generate(self, values: list, target_values_operator: str = 'AND',
                                 are_keys_also_matched: bool = False, is_case_sensitive: bool = False,

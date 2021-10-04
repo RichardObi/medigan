@@ -175,11 +175,11 @@ class ModelSelector():
         """ Get and return a list of `model_id` dicts that contain the specified key value pair in their selection config.
 
         The key param can contain '.' (dot) separations to allow for retrieval of nested config keys such as
-        'execution.generator.name'
+        'execution.generator.name'. If `key1` points to a list, any value in the list that matches value1` is accepted.
 
         Parameters
         ----------
-        key1: str
+        key1: str`
             The key in the selection dict
         value1: str
             The value in the selection dict that corresponds to key1
@@ -211,7 +211,7 @@ class ModelSelector():
                         if not is_case_sensitive:
                             key_value = Utils.list_to_lowercase(key_value)
                             value1 = value1.lower()
-                        if value1 in key_value:
+                        if str(value1) in key_value:
                             is_model_match = True
                     else:
                         # If the value of the key is something else (str, float, int, etc), we check if equal to value1
@@ -232,8 +232,9 @@ class ModelSelector():
     def rank_models_by_performance(self, model_ids: list = None, metric: str = 'SSIM', order: str = "asc") -> list:
         """ Rank model based on a provided metric and return sorted list of model dicts.
 
-        The metric param can contain '.' (dot) separations to allow for retrieval of nested metric config keys such as
-        'downstream_task.CLF.accuracy'
+        The metric param can contain '.' (dot) separations to allow for retrieval via nested metric config keys such as
+        'downstream_task.CLF.accuracy'. If the value found for the metric key is of type list, then the largest value in
+        the list is used for ranking if `order` is descending, while the smallest value is used if `order` is ascending.
 
         Parameters
         ----------
@@ -262,9 +263,17 @@ class ModelSelector():
                 # Maybe remove the case-sensitivity for metric here.
                 metric_value = selection_dict[CONFIG_FILE_KEY_SELECTION][CONFIG_FILE_KEY_PERFORMANCE]
                 metric_value = Utils.deep_get(base_dict=metric_value, key=metric)
-                if metric_value is not None:
+                if metric_value is not None :
                     # If metric value is None, the model is not added to the model_metric_dict_list
-                    # Maybe add further validation of metric_value here, e.g. string to float conversion, etc.
+                    # TODO Maybe add further validation of metric_value here, e.g. string to float conversion, etc.
+                    if isinstance(metric_value, list) and order == 'asc':
+                        # Assumption: As order is ascending (smallest item at top of list), we want to get the
+                        # smallest (=best) possible value from our metric_value list.
+                        metric_value = min(metric_value)
+                    elif isinstance(metric_value, list):
+                        # Assumption: As order is descending (largest item at top of list), we want to get the
+                        # largest (=best) possible value from our metric_value list.
+                        metric_value = max(metric_value)
                     model_id = selection_dict[MODEL_ID]
                     model_metric_dict = {MODEL_ID: model_id, metric: metric_value}
                     logging.debug(f"Model {model_id} was a match for the specified metric value: {model_metric_dict}")
@@ -274,8 +283,10 @@ class ModelSelector():
                               f"in its selection dict: {selection_dict}")
                 pass
         if order == 'asc':
+            # ascending -> the smallest item appears at the top of the list
             model_metric_dict_list.sort(key=lambda x: x.get(metric))
         else:
+            # descending -> the largest item appears at the top of the list
             model_metric_dict_list.sort(key=lambda x: x.get(metric), reverse=True)
         return model_metric_dict_list
 

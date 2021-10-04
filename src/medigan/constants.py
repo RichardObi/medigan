@@ -78,6 +78,9 @@ CONFIG_FILE_KEY_GENERATE_ARGS_NUM_SAMPLES = "num_samples"
 """ Below the execution dict, the key under which the output_path argument value of any model's generate() function is present. """
 CONFIG_FILE_KEY_GENERATE_ARGS_OUTPUT_PATH = "output_path"
 
+""" Below the execution dict, the key under which the save images boolean flag argument value of any model's generate() function is present. """
+CONFIG_FILE_KEY_GENERATE_ARGS_SAVE_IMAGES = "save_images"
+
 """ The filetype of any of the generative model's python packages after download and before unpacking. """
 PACKAGE_EXTENSION = ".zip"
 

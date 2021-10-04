@@ -9,8 +9,8 @@
 import json
 import logging
 import os
-import zipfile
 import shutil
+import zipfile
 from pathlib import Path
 from urllib.parse import urlparse  # python3
 
@@ -126,13 +126,17 @@ class Utils():
         return [str(x).lower() for x in target_list]
 
     @staticmethod
-    def deep_get(base_dict: dict, key: str) -> dict:
+    def deep_get(base_dict: dict, key: str):
         """ Split the key by "." to get value in nested dictionary."""
-
-        key_split = key.split(".")
-        for key_ in key_split:
-            base_dict = base_dict[key_]
-        return base_dict
+        try:
+            key_split = key.split(".")
+            for key_ in key_split:
+                base_dict = base_dict[key_]
+            return base_dict
+        except TypeError as e:
+            logging.debug(
+                f"No key ({key}) found in base_dict ({base_dict}) for this model. Fallback: Returning None.")
+        return None
 
     @staticmethod
     def is_url_valid(the_url: str) -> bool:
