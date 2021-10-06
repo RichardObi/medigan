@@ -1,6 +1,6 @@
 # WELCOME TO MEDIGAN
 
-#### Medigan - A Modular Python Library For Automating Synthetic Dataset Generation.
+#### medigan - A Modular Python Library For Automating Synthetic Dataset Generation.
 
 While being extendable to any modality and generative model, medigan focuses on automating medical image dataset synthesis using GANs for training deep learning models.
 

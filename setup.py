@@ -6,14 +6,14 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="medigan",
-    version="0.0.1",
-    author="Noussair Lazrak, Richard Osuala, Kaisar Kushibar, Oliver Díaz, Karim Lekadir",
-    description="MediGAN is a Python library to implement Generative Adversarial Networks(GANs), Conditional GANs, Adversarial Auto-Encoders(AAEs), etc. This library aims to enhance data augmentation via providing/ generating training data sets for other Deep learning models.",
+    version="0.1",
+    author="Richard Osuala", "Noussair Lazrak",
+    description="medigan is a modular open-source Python library that provides an interface to multiple generative models and automates synthetic dataset generation.",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/RichardObi/GANtoolbox",
+    url="https://github.com/RichardObi/medigan",
     project_urls={
-        "Bug Tracker": "https://github.com/RichardObi/GANtoolbox/issues",
+        "Bug Tracker": "https://github.com/RichardObi/medigan/issues",
     },
     classifiers=[
         "Programming Language :: Python :: 3",

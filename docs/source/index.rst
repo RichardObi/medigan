@@ -1,10 +1,7 @@
-Welcome to medigan's documentation!
-===================================
-
 
 Getting started
 ================
-Let's install medigan and generate a few synthetic images.
+Let's install `medigan` and generate a few synthetic images.
 
 .. code-block:: Python
 

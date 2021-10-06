@@ -1,0 +1,5 @@
+# File: docs/requirements.txt
+
+sphinx-rtd-theme==1.0.0
+sphinx==4.2.0
+sphinx_automodapi==0.13
