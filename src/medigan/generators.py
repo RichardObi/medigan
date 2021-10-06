@@ -552,8 +552,7 @@ class Generators:
         output_path: str
             the path as str to the output folder where the generated samples will be stored
         save_images: bool
-            flag indicating whether generated samples are returned (i.e. as list of numpy arrays) or rather stored in
-            file system (i.e in `output_path)
+            flag indicating whether generated samples are returned (i.e. as list of numpy arrays) or rather stored in file system (i.e in `output_path`)
         is_gen_function_returned: bool
             flag indicating whether, instead of generating samples, the sample generation function will be returned
         **kwargs
@@ -561,8 +560,8 @@ class Generators:
 
         Returns
         -------
-        None
-            However, if `is_gen_function_returned` is True, it returns the internal generate function of the model.
+        list
+            Returns images as list of numpy arrays if `save_images` is False. However, if `is_gen_function_returned` is True, it returns the internal generate function of the model.
         """
 
         model_executor = self.get_model_executor(model_id=model_id)

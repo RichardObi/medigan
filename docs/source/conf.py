@@ -17,7 +17,6 @@ import sys
 
 sys.path.insert(0, os.path.abspath('../../src'))
 
-
 # -- Project information -----------------------------------------------------
 
 project = u'medigan'
@@ -29,7 +28,6 @@ version = u''
 # The full version, including alpha/beta/rc tags
 release = u'0.1'
 
-
 # -- General configuration ---------------------------------------------------
 
 # If your documentation needs a minimal Sphinx version, state it here.
@@ -40,7 +38,6 @@ release = u'0.1'
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 
-import sphinx_rtd_theme
 extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.doctest',
@@ -49,8 +46,14 @@ extensions = [
     'sphinx.ext.viewcode',
     'sphinx.ext.githubpages',
     'sphinx.ext.napoleon',
-    'sphinx_rtd_theme'
+    'sphinx_rtd_theme',
+    'sphinx_automodapi.automodapi',
+    'sphinx_automodapi.smart_resolver'
 ]
+# 'sphinx_automodapi.smart_resolver'
+
+# https://sphinx-automodapi.readthedocs.io/_/downloads/en/stable/pdf/
+numpydoc_show_class_members = False
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
@@ -79,19 +82,21 @@ exclude_patterns = []
 # The name of the Pygments (syntax highlighting) style to use.
 pygments_style = 'sphinx'
 
-
 # -- Options for HTML output -------------------------------------------------
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 # Check themes here: https://sphinxthemes.com/
-html_theme = 'sphinx_rtd_theme' #'book' #'classic' #'alabaster'
+html_theme = 'sphinx_rtd_theme'  # 'book' #'classic' #'alabaster'
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
 # documentation.
 #
-# html_theme_options = {}
+html_theme_options = {'collapse_navigation': True,
+                      'navigation_depth': 4,
+                      'includehidden': True,
+                      'titles_only': False}
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
@@ -113,7 +118,6 @@ html_static_path = ['_static']
 
 # Output file base name for HTML help builder.
 htmlhelp_basename = 'medigandoc'
-
 
 # -- Options for LaTeX output ------------------------------------------------
 
@@ -140,9 +144,8 @@ latex_elements = {
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
     (master_doc, 'medigan.tex', u'medigan Documentation',
-     u'Richard Osuala, Noussair Lazrak', 'manual'),
+     u'Richard Osuala', 'manual'),
 ]
-
 
 # -- Options for manual page output ------------------------------------------
 
@@ -152,7 +155,6 @@ man_pages = [
     (master_doc, 'medigan', u'medigan Documentation',
      [author], 1)
 ]
-
 
 # -- Options for Texinfo output ----------------------------------------------
 
@@ -164,7 +166,6 @@ texinfo_documents = [
      author, 'medigan', 'One line description of project.',
      'Miscellaneous'),
 ]
-
 
 # -- Options for Epub output -------------------------------------------------
 
@@ -185,6 +186,5 @@ epub_copyright = copyright
 
 # A list of files that should not be packed into the epub file.
 epub_exclude_files = ['search.html']
-
 
 # -- Extension configuration -------------------------------------------------

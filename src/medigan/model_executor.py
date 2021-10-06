@@ -122,8 +122,9 @@ class ModelExecutor:
             pkg_resources.require(self.dependencies)
             logging.info(f"{self.model_id}: All necessary dependencies for model are available: {self.dependencies}")
         except Exception as e:
-            logging.error(f"{self.model_id}: Some of the necessary dependencies ({self.dependencies}) for model "
-                          f"are missing: {e}")
+            logging.error(f"{self.model_id}: Some of the necessary dependencies ({self.dependencies}) for this model "
+                          f"are missing: {e}. Please retry after installing them e.g. via 'pip install "
+                          f"{self.dependencies}'.")
             raise e
 
     def _get_and_store_package(self):
@@ -187,8 +188,7 @@ class ModelExecutor:
         output_path: str
             the path as str to the output folder where the generated samples will be stored
         save_images: bool
-            flag indicating whether generated samples are returned (i.e. as list of numpy arrays) or rather stored in
-            file system (i.e in `output_path)
+            flag indicating whether generated samples are returned (i.e. as list of numpy arrays) or rather stored in file system (i.e in `output_path`)
         is_gen_function_returned: bool
             flag indicating whether, instead of generating samples, the sample generation function will be returned
         **kwargs
@@ -196,8 +196,8 @@ class ModelExecutor:
 
         Returns
         -------
-        None
-            However, if `is_gen_function_returned` is True, it returns the internal generate function of the model.
+        list
+            Returns images as list of numpy arrays if `save_images` is False. However, if `is_gen_function_returned` is True, it returns the internal generate function of the model.
 
         Raises
         ------

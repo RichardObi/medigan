@@ -1,44 +1,61 @@
 Welcome to medigan's documentation!
 ===================================
 
-.. figure:: medigan-workflows.png
+
+Getting started
+================
+Let's install medigan and generate a few synthetic images.
+
+.. code-block:: Python
+
+    pip install medigan
+
+
+.. code-block:: Python
+
+    from medigan import Generators
+    Generators.generate(model_id="00001_DCGAN_MMG_CALC_ROI")
+
+
+Workflow
+=============
+.. figure:: _static/medigan-workflows.png
    :alt: Architectural overview and main workflows
 
    Architectural overview including main workflows consisting of (a) library import and initialisation, (b) generative model search and ranking, (c) sample generation, and (d) generative model contribution.
 
-.. automodule:: medigan.__init__
-    :members:
+.. toctree::
+   :caption: Description
+   :maxdepth: 3
 
-.. automodule:: medigan.generators
-    :members:
-
-.. automodule:: medigan.config_manager
-    :members:
-
-.. automodule:: medigan.model_selector
-    :members:
-
-.. automodule:: medigan.model_executor
-    :members:
-
-.. automodule:: medigan.model_match_candidate
-    :members:
-
-.. automodule:: medigan.matched_entry
-    :members:
-
-.. automodule:: medigan.utils
-    :members:
-
-.. automodule:: medigan.constants
-    :members:
+   description
 
 .. toctree::
-   :maxdepth: 2
-   :caption: Contents:
+   :caption: Code Examples
+   :maxdepth: 3
 
-Indices and tables
-==================
+   code_examples
+
+.. toctree::
+   :caption: Modules
+   :maxdepth: 5
+
+   modules
+
+.. toctree::
+   :caption: Tests
+   :maxdepth: 5
+
+   tests
+
+.. toctree::
+   :caption: Models
+   :maxdepth: 5
+
+   models
+
+Indices
+=======
 * :ref:`genindex`
 * :ref:`modindex`
 * :ref:`search`

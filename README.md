@@ -11,7 +11,7 @@ Link to Documentation: https://medigan.readthedocs.io/en/latest/
 The metadata and links to the models in medigan are stored in: https://github.com/RichardObi/medigan-models
 
 ### Architectural Overview
-![medigan architecture and worklows](./docs/source/medigan-workflows.png)
+![medigan architecture and worklows](docs/source/_static/medigan-workflows.png)
 
 
 ### Usage & Core Features:
