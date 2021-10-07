@@ -26,22 +26,22 @@ _______________
 
     - Users can also get the generate_method of a model that they may want to use dynamically inside their dataloaders
 
-Adding Models to medigan
+    - Model contributors can share and disseminate their generative models thereby augmenting their reach.
+
+
+Overview and workflows
 ___________________________
 
-    - `medigan` motivates the reuse of trained generative models.
+.. figure:: _static/medigan-workflows.png
+   :alt: Architectural overview and main workflows
 
-    - Models can be added via pull request by adding a model to the `config <https://github.com/RichardObi/medigan-models>`_
+   Architectural overview including main workflows consisting of (a) library import and initialisation, (b) generative model search and ranking, (c) sample generation, and (d) generative model contribution.
 
-        - This link is also stored in `medigan.constants.CONFIG_FILE_URL`.
 
-    - Model contributors need to specify a link to their model package in the config. We recommend to host and link model pack`ages on Zenodo. Reasons:
+Issues
+_______________
+In case you encounter problems while using `medigan` or would like to request additional features, please create a `new issue <https://github.com/RichardObi/medigan/issues>`_ and we will try to help.
 
-        - Zenodo model packages get a static DOI. This provides clarity as to who the contributors and IP owners of each generative model in `medigan` are.
-
-        - File modification/updates under the same DOI are not possible in Zenodo. This helps to avoid security issues as package content remains static after the model is tested, verified, and added to `medigan`.
-
-        - Examples of how `medigan` model packages should be hosted on Zenodo can be found `here <https://doi.org/10.5281/zenodo.5187714>`_ (model_id: 00001_DCGAN_MMG_CALC_ROI), `here <https://doi.org/10.5281/zenodo.5188557>`_ (model_id: 00002_DCGAN_MMG_MASS_ROI), and `here <https://doi.org/10.5281/zenodo.5547263>`_ (model id: 00003_CYCLEGAN_MMG_DENSITY_FULL).
 
 Links
 ___________________________

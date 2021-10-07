@@ -20,3 +20,8 @@ _______________________________________
 _______________________________________
 
 - `Documentation on Zenodo <https://doi.org/10.5281/zenodo.5547263>`_
+
+00004_PIX2PIX_MASKTOMASS_BREAST_MG_SYNTHESIS
+_______________________________________
+
+- `Documentation on Zenodo <https://doi.org/10.5281/zenodo.5554950>`_
