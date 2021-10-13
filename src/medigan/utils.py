@@ -16,6 +16,7 @@ from urllib.parse import urlparse  # python3
 
 # Import pypi libs
 import requests
+from tqdm import tqdm
 
 
 class Utils():
@@ -62,8 +63,7 @@ class Utils():
                     else:
                         Utils.download_file(path_as_string=path_as_string, download_link=download_link)
                 except Exception as e:
-                    logging.debug(f"Error while trying to download/copy from {download_link} to {path_as_string}:{e}")
-                    return False
+                    raise e
         return True
 
     @staticmethod
@@ -72,12 +72,22 @@ class Utils():
 
         logging.debug(f"Now downloading file {path_as_string} from {download_link} ...")
         try:
-            response = requests.get(download_link, allow_redirects=True)
-            open(path_as_string, 'wb').write(response.content)
-            logging.debug(
-                f"Received response {response}: Retrieved file from {download_link} and wrote it to {path_as_string}.")
+            response = requests.get(download_link, allow_redirects=True, stream=True)
+            total_size_in_bytes = int(
+                response.headers.get('content-length', 0))# / (32 * 1024)  # 32*1024 bytes received by requests.
+            print(total_size_in_bytes)
+            block_size = 1024
+            progress_bar = tqdm(total=total_size_in_bytes, unit='B', unit_scale=True)
+            progress_bar.set_description(f"Downloading {download_link}")
+            with open(path_as_string, 'wb') as file:
+                for data in response.iter_content(block_size):
+                    progress_bar.update(len(data))
+                    file.write(data)
+                logging.debug(
+                    f"Received response {response}: Retrieved file from {download_link} and wrote it "
+                    f"to {path_as_string}.")
         except Exception as e:
-            logging.error(f"Error while downloading and storing file {path_as_string} from {download_link}: {e}")
+            logging.error(f"Error while trying to download/copy from {download_link} to {path_as_string}:{e}")
             raise e
 
     @staticmethod

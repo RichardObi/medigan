@@ -135,13 +135,16 @@ class ModelExecutor:
                 path_as_string=self.model_id), f"{self.model_id}: The model folder was not found nor created " \
                                                f"in /{self.model_id}."
             package_path = Path(f"{self.model_id}/{self.package_name}{PACKAGE_EXTENSION}")
-            if not Utils.is_file_located_or_downloaded(path_as_string=package_path,
+            try:
+                if not Utils.is_file_located_or_downloaded(path_as_string=package_path,
                                                        download_if_not_found=True,
                                                        download_link=self.package_link):
-                error_string = f"{self.model_id}: The package archive ({self.package_name}{PACKAGE_EXTENSION}) " \
-                               f"was not found in {package_path} nor downloaded from {self.package_link}."
-                logging.error(error_string)
-                raise FileNotFoundError(error_string)
+                    error_string = f"{self.model_id}: The package archive ({self.package_name}{PACKAGE_EXTENSION}) " \
+                                   f"was not found in {package_path} nor downloaded from {self.package_link}."
+                    logging.error(error_string)
+                    raise FileNotFoundError(error_string)
+            except Exception as e:
+                raise e
             self.package_path = package_path
         logging.info(f"{self.model_id}: Model package should now be available in: {self.package_path}.")
 

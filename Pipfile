@@ -19,6 +19,8 @@ pillow = ">=8.3.2"
 visdom = "*"
 dominate = "*"
 torchvision = "*"
+tqdm = "*"
+sphinx-automodapi = "*"
 
 [requires]
 python_version = "3.9"

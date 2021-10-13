@@ -71,13 +71,16 @@ class ConfigManager:
             assert Utils.mkdirs(
                 path_as_string=CONFIG_FILE_FOLDER), f"The config folder was not found nor created in {CONFIG_FILE_FOLDER}."
             config_file_path = Path(f"{CONFIG_FILE_FOLDER}/{CONFIG_FILE_NAME_AND_EXTENSION}")
-            if not Utils.is_file_located_or_downloaded(path_as_string=config_file_path, download_if_not_found=True,
-                                                       download_link=CONFIG_FILE_URL,
-                                                       is_new_download_forced=is_new_download_forced):
-                error_string = f"The config file {CONFIG_FILE_NAME_AND_EXTENSION} was not found in {config_file_path} " \
-                               f"nor downloaded from {CONFIG_FILE_URL}."
-                logging.error(error_string)
-                raise FileNotFoundError(error_string)
+            try:
+                if not Utils.is_file_located_or_downloaded(path_as_string=config_file_path, download_if_not_found=True,
+                                                           download_link=CONFIG_FILE_URL,
+                                                           is_new_download_forced=is_new_download_forced):
+                    error_string = f"The config file {CONFIG_FILE_NAME_AND_EXTENSION} was not found in {config_file_path} " \
+                                   f"nor downloaded from {CONFIG_FILE_URL}."
+                    logging.error(error_string)
+                    raise FileNotFoundError(error_string)
+            except Exception as e:
+                raise e
             self.config_dict = Utils.read_in_json(path_as_string=config_file_path)
             logging.debug(f"The parsed config dict: {self.config_dict} ")
             self.model_ids = [config for config in self.config_dict]

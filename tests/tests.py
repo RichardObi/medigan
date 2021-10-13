@@ -33,10 +33,12 @@ class TestMediganMethods(unittest.TestCase):
         self.model_id_1 = "00001_DCGAN_MMG_CALC_ROI"
         self.model_id_2 = "00002_DCGAN_MMG_MASS_ROI"
         self.model_id_3 = "00003_CYCLEGAN_MMG_DENSITY_FULL"
+        self.model_id_4 = "00004_PIX2PIX_MASKTOMASS_BREAST_MG_SYNTHESIS"
         self.test_output_path1 = "test_output_path1"
         self.test_output_path2 = "test_output_path2"
         self.test_output_path3 = "test_output_path3"
-        self.num_samples = 5
+        self.test_output_path4 = "test_output_path4"
+        self.num_samples = 2
         self.test_medigan_imports()
         self.test_init_generators()
         self._remove_dir_and_contents()  # in case something is left there.
@@ -70,11 +72,14 @@ class TestMediganMethods(unittest.TestCase):
             self.generators.generate(model_id=self.model_id_3, num_samples=self.num_samples,
                                      output_path=self.test_output_path3)
 
+            self.generators.generate(model_id=self.model_id_4, num_samples=self.num_samples,
+                                     output_path=self.test_output_path4)
+
         except Exception as e:
             self.logger.error(f"test_generate_methods error: {e}")
             raise e
         self.assertRaises(expected_exception=Exception)
-        self._check_if_samples_were_generated(models=[1, 2, 3])
+        self._check_if_samples_were_generated(models=[1, 2, 3, 4])
 
     def test_generate_methods_with_additional_args(self):
         self._remove_dir_and_contents()
@@ -306,6 +311,14 @@ class TestMediganMethods(unittest.TestCase):
                     self.assertTrue(len(file_list_3) == self.num_samples)
                 else:
                     self.assertTrue(len(file_list_3) == num_samples)
+            if 4 in models:
+                # check if the number of generated samples of model_id_3 is as expected.
+                file_list_4 = glob.glob(self.test_output_path4 + "/*")
+                self.logger.debug(f"{len(file_list_4)} == {self.num_samples} ?")
+                if num_samples is None:
+                    self.assertTrue(len(file_list_4) == self.num_samples)
+                else:
+                    self.assertTrue(len(file_list_4) == num_samples)
         else:
             if 1 in models:
                 # check if the sample have NOT been generated for model_id 1 and 2 and 3
@@ -330,6 +343,14 @@ class TestMediganMethods(unittest.TestCase):
                     self.assertTrue(len(file_list_3) != self.num_samples)
                 else:
                     self.assertTrue(len(file_list_3) != num_samples)
+            if 4 in models:
+                file_list_4 = glob.glob(self.test_output_path4 + "/*")
+                self.logger.debug(f"{len(file_list_4)} != {self.num_samples} ?")
+                if num_samples is None:
+                    self.assertTrue(len(file_list_4) != self.num_samples)
+                else:
+                    self.assertTrue(len(file_list_4) != num_samples)
+
 
     def _remove_dir_and_contents(self):
         # After each test, empty the created folders and files to avoid corrupting a new test.
@@ -337,6 +358,7 @@ class TestMediganMethods(unittest.TestCase):
             shutil.rmtree(self.test_output_path1)
             shutil.rmtree(self.test_output_path2)
             shutil.rmtree(self.test_output_path3)
+            shutil.rmtree(self.test_output_path4)
         except OSError as e:
             # This may give an error if the folders are not created.
             self.logger.debug(

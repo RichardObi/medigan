@@ -23,5 +23,5 @@ setuptools.setup(
     python_requires='>=3.6',
     package_dir={"": "src"},
     packages=setuptools.find_packages(where="src"),
-    install_requires=["Path", "Union", "pyyaml", "numpy", "torch", "opencv-contrib-python-headless"]
+    install_requires=["Path", "Union", "numpy", "torch", "tqdm"]
 )
