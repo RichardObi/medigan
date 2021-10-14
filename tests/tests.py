@@ -13,7 +13,7 @@ import sys
 import unittest
 
 # Set the logging level depending on the level of detail you would like to have in the logs while running the tests.
-LOGGING_LEVEL = logging.ERROR  # logging.INFO
+LOGGING_LEVEL = logging.WARNING  # logging.INFO
 
 class TestMediganMethods(unittest.TestCase):
 
@@ -63,7 +63,6 @@ class TestMediganMethods(unittest.TestCase):
     def test_generate_methods(self):
         self._remove_dir_and_contents()
         try:
-
             self.generators.generate(model_id=self.model_id_1, num_samples=self.num_samples,
                                      output_path=self.test_output_path1)
 
@@ -75,7 +74,6 @@ class TestMediganMethods(unittest.TestCase):
 
             self.generators.generate(model_id=self.model_id_4, num_samples=self.num_samples,
                                      output_path=self.test_output_path4)
-
         except Exception as e:
             self.logger.error(f"test_generate_methods error: {e}")
             raise e
