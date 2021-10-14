@@ -1,6 +1,6 @@
 
 Getting started
-================
+=========================
 Let's install `medigan` and generate a few synthetic images.
 
 .. code-block:: Python
@@ -14,12 +14,12 @@ Let's install `medigan` and generate a few synthetic images.
     Generators.generate(model_id="00001_DCGAN_MMG_CALC_ROI")
 
 
-Workflow
-=============
-.. figure:: _static/medigan-workflows.png
-   :alt: Architectural overview and main workflows
+Overview
+===================
+.. figure:: _static/overview.png
+   :alt: Overview
 
-   Architectural overview including main workflows consisting of (a) library import and initialisation, (b) generative model search and ranking, (c) sample generation, and (d) generative model contribution.
+   Overview of `medigan` users, library, and models on the example of mammography cancer image dataset generation.
 
 .. toctree::
    :caption: Description
@@ -50,6 +50,12 @@ Workflow
    :maxdepth: 5
 
    models
+
+.. toctree::
+   :caption: Add Your Model
+   :maxdepth: 5
+
+   adding_models
 
 Indices
 =======

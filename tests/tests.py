@@ -38,7 +38,7 @@ class TestMediganMethods(unittest.TestCase):
         self.test_output_path2 = "test_output_path2"
         self.test_output_path3 = "test_output_path3"
         self.test_output_path4 = "test_output_path4"
-        self.num_samples = 2
+        self.num_samples = 3
         self.test_medigan_imports()
         self.test_init_generators()
         self._remove_dir_and_contents()  # in case something is left there.
@@ -63,6 +63,7 @@ class TestMediganMethods(unittest.TestCase):
     def test_generate_methods(self):
         self._remove_dir_and_contents()
         try:
+
             self.generators.generate(model_id=self.model_id_1, num_samples=self.num_samples,
                                      output_path=self.test_output_path1)
 
@@ -312,16 +313,18 @@ class TestMediganMethods(unittest.TestCase):
                 else:
                     self.assertTrue(len(file_list_3) == num_samples)
             if 4 in models:
-                # check if the number of generated samples of model_id_3 is as expected.
+                # check if the number of generated samples of model_id_4 is as expected.
+                # num_samples is multiplied by *2 here, because for each generated image the segmentation mask is
+                # stored alongside the image.
                 file_list_4 = glob.glob(self.test_output_path4 + "/*")
-                self.logger.debug(f"{len(file_list_4)} == {self.num_samples} ?")
+                self.logger.debug(f"{len(file_list_4)} == {self.num_samples*2} ?")
                 if num_samples is None:
-                    self.assertTrue(len(file_list_4) == self.num_samples)
+                    self.assertTrue(len(file_list_4) == self.num_samples*2)
                 else:
-                    self.assertTrue(len(file_list_4) == num_samples)
+                    self.assertTrue(len(file_list_4) == num_samples*2)
         else:
             if 1 in models:
-                # check if the sample have NOT been generated for model_id 1 and 2 and 3
+                # check if the sample have NOT been generated for model_id 1,2, 3,4 etc
                 file_list_1 = glob.glob(self.test_output_path1 + "/*")
                 self.logger.debug(f"{len(file_list_1)} != {self.num_samples}  ?")
 
@@ -344,12 +347,14 @@ class TestMediganMethods(unittest.TestCase):
                 else:
                     self.assertTrue(len(file_list_3) != num_samples)
             if 4 in models:
+                # num_samples is multiplied by *2 here, because for each generated image the segmentation mask is
+                # stored alongside the image.
                 file_list_4 = glob.glob(self.test_output_path4 + "/*")
-                self.logger.debug(f"{len(file_list_4)} != {self.num_samples} ?")
+                self.logger.debug(f"{len(file_list_4)} != {self.num_samples*2}?")
                 if num_samples is None:
-                    self.assertTrue(len(file_list_4) != self.num_samples)
+                    self.assertTrue(len(file_list_4) != self.num_samples*2)
                 else:
-                    self.assertTrue(len(file_list_4) != num_samples)
+                    self.assertTrue(len(file_list_4) != num_samples*2)
 
 
     def _remove_dir_and_contents(self):

@@ -17,11 +17,11 @@ _______________________________________
 - `Documentation on Zenodo  <https://doi.org/10.5281/zenodo.5188557>`_
 
 00003_CYCLEGAN_MMG_DENSITY_FULL
-_______________________________________
+______________________________________________________
 
 - `Documentation on Zenodo <https://doi.org/10.5281/zenodo.5547263>`_
 
 00004_PIX2PIX_MASKTOMASS_BREAST_MG_SYNTHESIS
-_______________________________________
+______________________________________________________
 
 - `Documentation on Zenodo <https://doi.org/10.5281/zenodo.5554950>`_

@@ -29,7 +29,7 @@ _______________
     - Model contributors can share and disseminate their generative models thereby augmenting their reach.
 
 
-Overview and workflows
+Architecture and Workflows
 ___________________________
 
 .. figure:: _static/medigan-workflows.png
