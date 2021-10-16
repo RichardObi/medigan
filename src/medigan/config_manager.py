@@ -8,10 +8,8 @@
 
 # Import python native libs
 from __future__ import absolute_import
-
 import json
 import logging
-# Import pypi libs
 from pathlib import Path
 
 # Import library internal modules

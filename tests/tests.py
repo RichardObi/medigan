@@ -38,7 +38,7 @@ class TestMediganMethods(unittest.TestCase):
         self.test_output_path2 = "test_output_path2"
         self.test_output_path3 = "test_output_path3"
         self.test_output_path4 = "test_output_path4"
-        self.num_samples = 3
+        self.num_samples = 20
         self.test_medigan_imports()
         self.test_init_generators()
         self._remove_dir_and_contents()  # in case something is left there.

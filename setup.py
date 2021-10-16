@@ -23,5 +23,5 @@ setuptools.setup(
     python_requires='>=3.6',
     package_dir={"": "src"},
     packages=setuptools.find_packages(where="src"),
-    install_requires=["Path", "Union", "numpy", "torch", "tqdm"]
+    install_requires=["tqdm", "requests"]
 )
