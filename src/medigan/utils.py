@@ -28,15 +28,17 @@ class Utils():
         pass
 
     @staticmethod
-    def mkdirs(path_as_string: str) -> bool:
+    def mkdirs(path_as_string: str, is_exception_raised: bool = False) -> bool:
         """ create folder in `path_as_string` if not already created. """
 
         if not os.path.exists(path_as_string):
             try:
-                os.makedirs(path_as_string)
+                os.makedirs(path_as_string, exist_ok=True)
                 return True
             except Exception as e:
                 logging.error(f"Error while creating folders for path {path_as_string}: {e}")
+                if is_exception_raised:
+                    raise e
                 return False
         return True
 
@@ -74,7 +76,7 @@ class Utils():
         try:
             response = requests.get(download_link, allow_redirects=True, stream=True)
             total_size_in_bytes = int(
-                response.headers.get('content-length', 0))# / (32 * 1024)  # 32*1024 bytes received by requests.
+                response.headers.get('content-length', 0))  # / (32 * 1024)  # 32*1024 bytes received by requests.
             print(total_size_in_bytes)
             block_size = 1024
             progress_bar = tqdm(total=total_size_in_bytes, unit='B', unit_scale=True)
@@ -172,6 +174,30 @@ class Utils():
                         # no need for a temp variable holder
                         dict_list[j][key], dict_list[j + 1][key] = dict_list[j + 1][key], dict_list[j][key]
         return dict_list
+
+    @staticmethod
+    def store(samples: list, output_path: str, filename: str = None, extension: str = 'png'):
+        """ create folder in `output_path` and store generated `samples` there.
+
+        -  This function is deprecated. medigan-models are responsible for storing generated samples. The reason is the
+         difficulty in standardization of sample storage as each model has its own post-processing and interval mapping
+         of images.
+
+        """
+        raise NotImplementedError
+        # if extension is None: extension = 'png'
+        # try:
+        #    Utils.mkdirs(output_path, is_exception_raised=True)
+        #    for idx, sample in enumerate(samples):
+        #        if filename is not None:
+        #            if len(samples) > 1:
+        #                cv2.imwrite(f"{output_path}/{filename}_{idx}.{extension}", sample)
+        #            else:
+        #                cv2.imwrite(f"{output_path}/{filename}.{extension}", sample)
+        #        else:
+        #            cv2.imwrite(f"{output_path}/{idx}.{extension}", sample)
+        # except Exception as e:
+        #    raise e
 
     def __len__(self):
         raise NotImplementedError

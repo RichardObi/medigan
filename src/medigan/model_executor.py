@@ -94,6 +94,7 @@ class ModelExecutor:
         self.serialised_model_file_path = None
         self.package_path = None
         self.deserialized_model_as_lib = None
+        self.model_internal_generate_method = None
         self._setup_model_package()
 
     def _setup_model_package(self):
@@ -113,6 +114,7 @@ class ModelExecutor:
         self._check_package_resources()
         self._get_and_store_package()
         self._import_package_as_lib()
+        self._initialize_generate_method()
 
     def _check_package_resources(self):
         """ Check if the dependencies inside the generative model's package are installed in the current setup. """
@@ -137,8 +139,8 @@ class ModelExecutor:
             package_path = Path(f"{self.model_id}/{self.package_name}{PACKAGE_EXTENSION}")
             try:
                 if not Utils.is_file_located_or_downloaded(path_as_string=package_path,
-                                                       download_if_not_found=True,
-                                                       download_link=self.package_link):
+                                                           download_if_not_found=True,
+                                                           download_link=self.package_link):
                     error_string = f"{self.model_id}: The package archive ({self.package_name}{PACKAGE_EXTENSION}) " \
                                    f"was not found in {package_path} nor downloaded from {self.package_link}."
                     logging.error(error_string)
@@ -176,6 +178,17 @@ class ModelExecutor:
                 logging.error(f"{self.model_id}: Error while importing {self.package_name} from /{self.model_id}: {e}")
                 raise e
 
+    def _initialize_generate_method(self):
+        """ Initialize the sample generation method inside the generative model's package. """
+
+        try:
+            self.model_internal_generate_method = getattr(self.deserialized_model_as_lib,
+                                                          f'{self.generate_method_name}')
+        except Exception as e:
+            logging.error(f"{self.model_id}: Error while trying to initialize the model's internal generate method "
+                          f"'{self.generate_method_name}': {e}")
+            raise e
+
     def generate(self, num_samples: int = 20, output_path: str = None, save_images: bool = True,
                  is_gen_function_returned: bool = False,
                  **kwargs):
@@ -209,29 +222,35 @@ class ModelExecutor:
             if the sample generation inside the model package returns an exception.
         """
 
-        if output_path is None:
+        if save_images and output_path is None:
             output_path = f'{DEFAULT_OUTPUT_FOLDER}/{self.model_id}/{time.time()}/'
-        assert Utils.mkdirs(
-            path_as_string=output_path), f"{self.model_id}: The output folder was not found nor created in {output_path}."
+            assert Utils.mkdirs(
+                path_as_string=output_path), f"{self.model_id}: The output folder was not found nor created in {output_path}."
+
         try:
-            generate_method = getattr(self.deserialized_model_as_lib, f'{self.generate_method_name}')
             prepared_kwargs = self._prepare_generate_method_args(model_file=self.serialised_model_file_path,
                                                                  num_samples=num_samples, output_path=output_path,
                                                                  save_images=save_images, **kwargs)
             logging.info(f"The generate function's parameters are: {prepared_kwargs}")
+        except Exception as e:
+            logging.error(
+                f"{self.model_id}: Error while trying to prepare the arguments of the model's internal generate method."
+                f"{self.serialised_model_file_path}: {e}")
+            raise e
+        try:
             if is_gen_function_returned:
                 def gen(**some_other_kwargs):
                     logging.debug(f"Generate method called with the following params. (i) default: {prepared_kwargs}, "
                                   f"(ii) custom: {some_other_kwargs}")
-                    return generate_method(**prepared_kwargs, **some_other_kwargs)
-
+                    return self.model_internal_generate_method(**prepared_kwargs, **some_other_kwargs)
                 return gen
             else:
-                return generate_method(**prepared_kwargs)
+                return self.model_internal_generate_method(**prepared_kwargs)
         except Exception as e:
             logging.error(f"{self.model_id}: Error while trying to generate images with model "
                           f"{self.serialised_model_file_path}: {e}")
             raise e
+
 
     def _prepare_generate_method_args(self, model_file: str, num_samples: int, output_path: str, save_images: bool,
                                       **kwargs):
