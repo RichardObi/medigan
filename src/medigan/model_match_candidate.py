@@ -3,7 +3,6 @@
 """ModelMatchCandidate class that holds data to evaluate if a generative model matches against a search query.
 
 .. codeauthor:: Richard Osuala <richard.osuala@gmail.com>
-.. codeauthor:: Noussair Lazrak <lazrak.noussair@gmail.com>
 """
 
 # Import python native libs

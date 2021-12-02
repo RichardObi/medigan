@@ -8,12 +8,14 @@
 
 # Import python native libs
 from __future__ import absolute_import
+
 import json
 import logging
 from pathlib import Path
 
 # Import library internal modules
-from .constants import CONFIG_FILE_NAME_AND_EXTENSION, CONFIG_FILE_URL, CONFIG_FILE_FOLDER
+from .constants import CONFIG_FILE_NAME_AND_EXTENSION, CONFIG_FILE_URL, CONFIG_FILE_FOLDER, \
+    CONFIG_TEMPLATE_FILE_NAME_AND_EXTENSION
 from .utils import Utils
 
 
@@ -42,14 +44,20 @@ class ConfigManager:
     """
 
     def __init__(
-            self, config_dict: dict = None, is_new_download_forced: bool = False
+            self, config_dict: dict = None, use_config_template: bool = False,
+            download_if_not_found: bool = True, is_new_download_forced: bool = False,
     ):
         self.config_dict = config_dict
         self.model_ids = []
         self.is_config_loaded = False
-        self.load_config_file(is_new_download_forced=is_new_download_forced)
+        if self.config_dict is None:
+            self.load_config_file(use_config_template=use_config_template,
+                                  download_if_not_found=download_if_not_found,
+                                  is_new_download_forced=is_new_download_forced,
+                                  )
 
-    def load_config_file(self, is_new_download_forced: bool = False) -> bool:
+    def load_config_file(self, use_config_template: bool = False,
+                         download_if_not_found: bool = True, is_new_download_forced: bool = False) -> bool:
         """ Load a config file and return boolean flag indicating success of loading process.
 
         If the config file is not present in `medigan.CONSTANTS.CONFIG_FILE_FOLDER`, it is per default downloaded from
@@ -65,12 +73,16 @@ class ConfigManager:
         bool
             a boolean flag indicating true only if the config file was loaded successfully.
         """
-        if self.config_dict is None:
-            assert Utils.mkdirs(
-                path_as_string=CONFIG_FILE_FOLDER), f"The config folder was not found nor created in {CONFIG_FILE_FOLDER}."
+        assert Utils.mkdirs(
+            path_as_string=CONFIG_FILE_FOLDER), f"The config folder was not found nor created in {CONFIG_FILE_FOLDER}."
+
+        if use_config_template:
+            config_file_path = Path(f"{CONFIG_FILE_FOLDER}/{CONFIG_TEMPLATE_FILE_NAME_AND_EXTENSION}")
+        else:
             config_file_path = Path(f"{CONFIG_FILE_FOLDER}/{CONFIG_FILE_NAME_AND_EXTENSION}")
             try:
-                if not Utils.is_file_located_or_downloaded(path_as_string=config_file_path, download_if_not_found=True,
+                if not Utils.is_file_located_or_downloaded(path_as_string=config_file_path,
+                                                           download_if_not_found=download_if_not_found,
                                                            download_link=CONFIG_FILE_URL,
                                                            is_new_download_forced=is_new_download_forced):
                     error_string = f"The config file {CONFIG_FILE_NAME_AND_EXTENSION} was not found in {config_file_path} " \
@@ -79,11 +91,11 @@ class ConfigManager:
                     raise FileNotFoundError(error_string)
             except Exception as e:
                 raise e
-            self.config_dict = Utils.read_in_json(path_as_string=config_file_path)
-            logging.debug(f"The parsed config dict: {self.config_dict} ")
-            self.model_ids = [config for config in self.config_dict]
-            logging.debug(f"The model_ids found in the config dict: {self.model_ids} ")
-            self.is_config_loaded = True
+        self.config_dict = Utils.read_in_json(path_as_string=config_file_path)
+        logging.debug(f"The parsed config dict: {self.config_dict} ")
+        self.model_ids = [config for config in self.config_dict]
+        logging.debug(f"The model_ids found in the config dict: {self.model_ids} ")
+        self.is_config_loaded = True
         return self.is_config_loaded
 
     def get_config_by_id(self, model_id, config_key: str = None) -> dict:
