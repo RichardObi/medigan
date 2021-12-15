@@ -13,6 +13,7 @@ import shutil
 import zipfile
 from pathlib import Path
 from urllib.parse import urlparse  # python3
+from distutils.dir_util import copy_tree
 
 # Import pypi libs
 import requests
@@ -59,7 +60,7 @@ class Utils():
             else:
                 try:
                     if allow_local_path_as_url and not Utils.is_url_valid(the_url=download_link):
-                        shutil.copy2(src=download_link, dst=path_as_string)
+                        Utils.copy(source_path=download_link, target_path=os.path.split(path_as_string)[0])
                     else:
                         Utils.download_file(path_as_string=path_as_string, download_link=download_link)
                 except Exception as e:
@@ -103,14 +104,27 @@ class Utils():
             raise e
 
     @staticmethod
-    def unzip_archive(source_path: Path, target_path_as_string: str = "./"):
-        """ unzip a .zip archive in the `target_path_as_string` """
+    def unzip_archive(source_path: Path, target_path: str = "./"):
+        """ unzip a .zip archive in the `target_path` """
 
         try:
             with zipfile.ZipFile(source_path, 'r') as zip_ref:
-                zip_ref.extractall(target_path_as_string)
+                zip_ref.extractall(target_path)
         except Exception as e:
             logging.error(f"Error while unzipping {source_path}: {e}")
+            raise e
+
+    @staticmethod
+    def copy(source_path: Path, target_path: str = "./"):
+        """ copy a folder or file from `source_path` to `target_path` """
+
+        try:
+            if Path(source_path).is_file():
+                shutil.copy2(src=source_path, dst=target_path)
+            else:
+                copy_tree(src=source_path, dst=target_path)
+        except Exception as e:
+            logging.error(f"Error while copying {source_path} to {target_path}: {e}")
             raise e
 
     @staticmethod

@@ -158,7 +158,8 @@ class ModelExecutor:
             f"{self.model_id}/{self.model_name}{self.model_extension}").is_file()
         # if is_model_already_unpacked == True, then the package was already unzipped previously.
         if self.package_path.is_file() and PACKAGE_EXTENSION == '.zip' and not is_model_already_unpacked:
-            Utils.unzip_archive(source_path=self.package_path, target_path_as_string=self.model_id)
+            # Unzip the model package in /{model_id}/{MODEL_PACKAGE}{PACKAGE_EXTENSION}
+            Utils.unzip_archive(source_path=self.package_path, target_path=self.model_id)
         else:
             logging.debug(f"{self.model_id}: Either no file found (== {self.package_path.is_file()}) or package "
                           f"already unarchived (=={is_model_already_unpacked}) in {self.package_path}. "
