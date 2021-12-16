@@ -56,8 +56,7 @@ class ConfigManager:
                                   is_new_download_forced=is_new_download_forced,
                                   )
 
-    def load_config_file(self, use_config_template: bool = False,
-                         download_if_not_found: bool = True, is_new_download_forced: bool = False) -> bool:
+    def load_config_file(self, download_if_not_found: bool = True, is_new_download_forced: bool = False) -> bool:
         """ Load a config file and return boolean flag indicating success of loading process.
 
         If the config file is not present in `medigan.CONSTANTS.CONFIG_FILE_FOLDER`, it is per default downloaded from
@@ -76,21 +75,17 @@ class ConfigManager:
         assert Utils.mkdirs(
             path_as_string=CONFIG_FILE_FOLDER), f"The config folder was not found nor created in {CONFIG_FILE_FOLDER}."
 
-        if use_config_template:
-            config_file_path = Path(f"{CONFIG_FILE_FOLDER}/{CONFIG_TEMPLATE_FILE_NAME_AND_EXTENSION}")
-        else:
-            config_file_path = Path(f"{CONFIG_FILE_FOLDER}/{CONFIG_FILE_NAME_AND_EXTENSION}")
-            try:
-                if not Utils.is_file_located_or_downloaded(path_as_string=config_file_path,
-                                                           download_if_not_found=download_if_not_found,
-                                                           download_link=CONFIG_FILE_URL,
-                                                           is_new_download_forced=is_new_download_forced):
-                    error_string = f"The config file {CONFIG_FILE_NAME_AND_EXTENSION} was not found in {config_file_path} " \
-                                   f"nor downloaded from {CONFIG_FILE_URL}."
-                    logging.error(error_string)
-                    raise FileNotFoundError(error_string)
-            except Exception as e:
-                raise e
+        config_file_path = Path(f"{CONFIG_FILE_FOLDER}/{CONFIG_FILE_NAME_AND_EXTENSION}")
+        try:
+            if not Utils.is_file_located_or_downloaded(path_as_string=config_file_path,
+                                                       download_if_not_found=download_if_not_found,
+                                                       download_link=CONFIG_FILE_URL,
+                                                       is_new_download_forced=is_new_download_forced):
+                raise FileNotFoundError(
+                    f"The config file {CONFIG_FILE_NAME_AND_EXTENSION} was not found in {config_file_path} " \
+                    f"nor downloaded from {CONFIG_FILE_URL}.")
+        except Exception as e:
+            raise e
         self.config_dict = Utils.read_in_json(path_as_string=config_file_path)
         logging.debug(f"The parsed config dict: {self.config_dict} ")
         self.model_ids = [config for config in self.config_dict]
@@ -123,6 +118,7 @@ class ConfigManager:
             for key in config_key_split:
                 config_dict = config_dict[key]
         return config_dict
+
 
     def _validate_config_file(self):
         raise NotImplementedError

@@ -15,6 +15,9 @@ CONFIG_FILE_FOLDER = "config"
 """ Name and extensions of config file. """
 CONFIG_FILE_NAME_AND_EXTENSION = "global.json"
 
+""" Name and extensions of template of config file. """
+CONFIG_TEMPLATE_FILE_NAME_AND_EXTENSION = "template.json"
+
 """ The key under which the execution dictionary of a model is nested in the config file. """
 CONFIG_FILE_KEY_EXECUTION = 'execution'
 

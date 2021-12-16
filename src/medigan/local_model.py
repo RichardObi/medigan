@@ -12,9 +12,14 @@ import json
 import logging
 from pathlib import Path
 
+from .constants import CONFIG_FILE_FOLDER, CONFIG_TEMPLATE_FILE_NAME_AND_EXTENSION, CONFIG_FILE_KEY_EXECUTION, \
+    CONFIG_FILE_KEY_GENERATE_NAME, CONFIG_FILE_KEY_PACKAGE_LINK, CONFIG_FILE_KEY_MODEL_EXTENSION, \
+    CONFIG_FILE_KEY_PACKAGE_NAME, CONFIG_FILE_KEY_GENERATE, CONFIG_FILE_KEY_SELECTION, CONFIG_FILE_KEY_DEPENDENCIES, \
+    CONFIG_FILE_KEY_GENERATE_ARGS, CONFIG_FILE_KEY_GENERATE_ARGS_BASE, CONFIG_FILE_KEY_GENERATE_ARGS_MODEL_FILE, \
+    CONFIG_FILE_KEY_GENERATE_ARGS_NUM_SAMPLES, CONFIG_FILE_KEY_GENERATE_ARGS_OUTPUT_PATH, \
+    CONFIG_FILE_KEY_GENERATE_ARGS_SAVE_IMAGES, CONFIG_FILE_KEY_IMAGE_SIZE, CONFIG_FILE_KEY_MODEL_NAME
 # Import library internal modules
-from .config_manager import ConfigManager
-from .constants import CONFIG_FILE_FOLDER
+from .utils import Utils
 
 
 class LocalModel:
@@ -22,63 +27,106 @@ class LocalModel:
 
     def __init__(
             self,
-            model_id: str,
-            metadata: dict,
+            model_id: str = None,
+            package_link: str = None,
+            package_name: str = None,
+            model_name: str = None,
+            model_extension: str = None,
+            generate_function_name: str = None,
             metadata_path: str = None,
-            root_folder_path: str = None,
             generate_method_script_path: str = None,
-            generate_method_name: str = None,
+            are_optional_config_fields_requested: str = None,
+            output_path: str = "/config",
+            image_size: list = [],
+            dependencies: list = [],
     ):
-
         if self.validate_model_id(model_id): self.model_id = model_id
 
-        if metadata_path is None:
-            self.metadata_path = f"{CONFIG_FILE_FOLDER}/{model_id}
+        # TODO: Check if there is already a metadata file named by model_id where it should be (e.g. inside folder /config)
+        # TODO Warn user that valid metadata is already here. Should be deleted manually first if user wants to generate a new one.
+
+        if metadata_path is not None:
+            if Path(metadata_path).is_file():
+                metadata = Utils.read_in_json(path_as_string=metadata_path)[0]
+            else:
+                raise FileNotFoundError(
+                    f"{self.model_id}: No metadata json file was found in thee path you provided ({metadata_path}). Please review.")
         else:
-            self.validate_metadata(metadata=None, metadata_path=metadata_path)
+            # Generate metadata with variables provided as parameters of the LocalModel class.
+            metadata = self.create_metadata(model_id=model_id, package_link=package_link,
+                                            model_extension=model_extension,
+                                            model_name=model_name, generate_function_name=generate_function_name,
+                                            image_size=image_size, dependencies=dependencies, package_name=package_name)
 
-        if metadata is not None and self.validate_metadata(metadata=metadata,
-                                                           metadata_path=None): self.metadata = metadata
+        self.validate_metadata(metadata)
 
+        if are_optional_config_fields_requested:
+            metadata = self._recursively_fill_metadata(metadata_template=self.get_metadata_template(),
+                                                       metadata=metadata)
 
-    def run(self):
-        # TODO: Init a model_executor if not yet initialized
-        # TODO: return generate method of model_executor
-        # What metadata is really needed for running the model? -> Retrieve via run() function arguments.
-        pass
+        # Note: In case user added via prompt, we store the user's input before re-validating the final metadata.
+        self.store_metadata(output_path=output_path)
+        logging.info(f"{self.model_id}: Local model's metadata is stored in: {output_path}")
 
-    def validate_model_id(self, model_id: str = None) -> bool:
-        # TODO: Assert model ID not None and length of characters and if it starts with 5 numbers. Raise exception logging an example of a good model_id to user
+        if self.validate_metadata(metadata): self.metadata = metadata
+        logging.info(f"{self.model_id}: Created local model's final validated metadata: {self.metadata}")
+
+    def validate_model_id(self, model_id: str = None, max_chars: int = 30, min_chars: int = 13) -> bool:
+        num_chars = str.count(model_id)
+        assert num_chars > max_chars, f"The model_id {model_id} is too large ({num_chars}). Please reduce to a maximum of {max_chars} characters. Format Convention: '00001_GANTYPE_MODALITY'"
+        assert num_chars < min_chars, f"The model_id {model_id} is too small ({num_chars}). Please reduce to a minimum of {min_chars} characters. Format Convention: '00001_GANTYPE_MODALITY'"
+        for i in range(5):
+            assert not model_id[
+                i].is_digit(), f"Your model_id's ({model_id}) character '{model_id[i]}' at position {i} is not a digit. The first 5 characters should be digits as in '00001_GANTYPE_MODALITY'. Please adjust."
         return True
 
-    def validate_metadata(self, metadata: dict = None, metadata_path: str = None) -> bool:
-        if metadata is not None:
-            # TODO: Assert metadata not None and the existence of the most important entries of the metadata.
-            pass
-        elif metadata_path is not None:
-            metadata_file = Path(self.metadata_path)
-            if not metadata_file.is_file():
-                return False
-            # TODO: Assert metadata not None and the existence of the most important entries of the metadata.
+    def validate_metadata(self, metadata: dict = None) -> bool:
+        # TODO: Simplify asserts
+        # Assert metadata not None and the existence of the most important entries of the metadata.
+        assert metadata is not None, f" {self.model_id}: Error validating metadata. metadata is None (metadata={metadata})."
+        assert CONFIG_FILE_KEY_EXECUTION in metadata, f" {self.model_id}: Error validating metadata. metadata did not contain '{CONFIG_FILE_KEY_EXECUTION}'. Metadata : {metadata}"
+        assert CONFIG_FILE_KEY_SELECTION in metadata, f" {self.model_id}: Error validating metadata ({metadata}). metadata did not contain '{CONFIG_FILE_KEY_SELECTION}'. Metadata : {metadata}"
+        assert CONFIG_FILE_KEY_PACKAGE_LINK in metadata[CONFIG_FILE_KEY_EXECUTION], f" {self.model_id}: Error validating metadata. It did not contain key '{CONFIG_FILE_KEY_PACKAGE_LINK}'. Metadata: {metadata[CONFIG_FILE_KEY_EXECUTION]}"
+        assert CONFIG_FILE_KEY_MODEL_EXTENSION in metadata[CONFIG_FILE_KEY_EXECUTION], f" {self.model_id}: Error validating metadata. It did not contain key '{CONFIG_FILE_KEY_MODEL_EXTENSION}'. Metadata: {metadata[CONFIG_FILE_KEY_EXECUTION]}"
+        assert CONFIG_FILE_KEY_PACKAGE_NAME in metadata[CONFIG_FILE_KEY_EXECUTION], f" {self.model_id}: Error validating metadata. It did not contain key '{CONFIG_FILE_KEY_PACKAGE_NAME}'. Metadata: {metadata[CONFIG_FILE_KEY_EXECUTION]}"
+        assert CONFIG_FILE_KEY_MODEL_NAME in metadata[CONFIG_FILE_KEY_EXECUTION], f" {self.model_id}: Error validating metadata. It did not contain key '{CONFIG_FILE_KEY_MODEL_NAME}'. Metadata: {metadata[CONFIG_FILE_KEY_EXECUTION]}"
+        assert CONFIG_FILE_KEY_DEPENDENCIES in metadata[CONFIG_FILE_KEY_EXECUTION], f" {self.model_id}: Error validating metadata. It did not contain key '{CONFIG_FILE_KEY_DEPENDENCIES}'. Metadata: {metadata[CONFIG_FILE_KEY_EXECUTION]}"
+        assert CONFIG_FILE_KEY_GENERATE in metadata[CONFIG_FILE_KEY_EXECUTION], f" {self.model_id}: Error validating metadata. It did not contain key '{CONFIG_FILE_KEY_GENERATE}'. Metadata: {metadata[CONFIG_FILE_KEY_EXECUTION]}"
+        assert CONFIG_FILE_KEY_GENERATE_ARGS in metadata[CONFIG_FILE_KEY_EXECUTION][CONFIG_FILE_KEY_GENERATE], f" {self.model_id}: Error validating metadata. It did not contain key '{CONFIG_FILE_KEY_GENERATE_ARGS}'. Metadata: {metadata[CONFIG_FILE_KEY_EXECUTION][CONFIG_FILE_KEY_GENERATE]}"
+        assert CONFIG_FILE_KEY_GENERATE_ARGS_BASE in metadata[CONFIG_FILE_KEY_EXECUTION][CONFIG_FILE_KEY_GENERATE][CONFIG_FILE_KEY_GENERATE_ARGS], f" {self.model_id}: Error validating metadata. It did not contain key '{CONFIG_FILE_KEY_GENERATE_ARGS_BASE}'. Metadata: {metadata[CONFIG_FILE_KEY_EXECUTION][CONFIG_FILE_KEY_GENERATE][CONFIG_FILE_KEY_GENERATE_ARGS]}"
+        assert CONFIG_FILE_KEY_GENERATE_ARGS_MODEL_FILE in metadata[CONFIG_FILE_KEY_EXECUTION][CONFIG_FILE_KEY_GENERATE][CONFIG_FILE_KEY_GENERATE_ARGS][CONFIG_FILE_KEY_GENERATE_ARGS_BASE], f" {self.model_id}: Error validating metadata. It did not contain key '{CONFIG_FILE_KEY_GENERATE_ARGS_MODEL_FILE}'. Metadata: {metadata[CONFIG_FILE_KEY_EXECUTION][CONFIG_FILE_KEY_GENERATE][CONFIG_FILE_KEY_GENERATE_ARGS][CONFIG_FILE_KEY_GENERATE_ARGS_BASE]}"
+        assert CONFIG_FILE_KEY_GENERATE_ARGS_NUM_SAMPLES in metadata[CONFIG_FILE_KEY_EXECUTION][CONFIG_FILE_KEY_GENERATE][CONFIG_FILE_KEY_GENERATE_ARGS][CONFIG_FILE_KEY_GENERATE_ARGS_BASE], f" {self.model_id}: Error validating metadata. It did not contain key '{CONFIG_FILE_KEY_GENERATE_ARGS_NUM_SAMPLES}'. Metadata: {metadata[CONFIG_FILE_KEY_EXECUTION][CONFIG_FILE_KEY_GENERATE][CONFIG_FILE_KEY_GENERATE_ARGS][CONFIG_FILE_KEY_GENERATE_ARGS_BASE]}"
+        assert CONFIG_FILE_KEY_GENERATE_ARGS_OUTPUT_PATH in metadata[CONFIG_FILE_KEY_EXECUTION][CONFIG_FILE_KEY_GENERATE][CONFIG_FILE_KEY_GENERATE_ARGS][CONFIG_FILE_KEY_GENERATE_ARGS_BASE], f" {self.model_id}: Error validating metadata. It did not contain key '{CONFIG_FILE_KEY_GENERATE_ARGS_OUTPUT_PATH}'. Metadata: {metadata[CONFIG_FILE_KEY_EXECUTION][CONFIG_FILE_KEY_GENERATE][CONFIG_FILE_KEY_GENERATE_ARGS][CONFIG_FILE_KEY_GENERATE_ARGS_BASE]}"
+        assert CONFIG_FILE_KEY_GENERATE_ARGS_SAVE_IMAGES in metadata[CONFIG_FILE_KEY_EXECUTION][CONFIG_FILE_KEY_GENERATE][CONFIG_FILE_KEY_GENERATE_ARGS][CONFIG_FILE_KEY_GENERATE_ARGS_BASE], f" {self.model_id}: Error validating metadata. It did not contain key '{CONFIG_FILE_KEY_GENERATE_ARGS_SAVE_IMAGES}'. Metadata: {metadata[CONFIG_FILE_KEY_EXECUTION][CONFIG_FILE_KEY_GENERATE][CONFIG_FILE_KEY_GENERATE_ARGS][CONFIG_FILE_KEY_GENERATE_ARGS_BASE]}"
         return True
 
-    def create_model_metadata(self, is_stored: bool = False, output_path: str = "/config"):
-        # TODO check if there is already a metadata file named by model_id where it should be (e.g. inside folder /config)
-        if self.validate_metadata(metadata_path=self.metadata_path):
-            # TODO Warn user that valid metadata is already here. Should be deleted manually first if user wants to generate a new one.
-            pass
-        self.config_manager = ConfigManager(use_config_template=True)
+    def create_metadata(self, package_link: str = None, package_name: str = None, model_name: str = None,
+                        model_extension: str = None,
+                        generate_function_name: str = None, dependencies: list = [], image_size: list = []):
+        # Insert the mandatory metadata into metadata template
+        metadata_template = self.get_metadata_template()
+        metadata = metadata_template[CONFIG_FILE_KEY_EXECUTION]
+        metadata.update(CONFIG_FILE_KEY_PACKAGE_LINK, package_link)
+        metadata.update(CONFIG_FILE_KEY_PACKAGE_NAME, package_name)
+        metadata.update(CONFIG_FILE_KEY_MODEL_NAME, model_name)
+        metadata.update(CONFIG_FILE_KEY_MODEL_EXTENSION, model_extension)
+        metadata.update(CONFIG_FILE_KEY_DEPENDENCIES, dependencies)
+        metadata.update(CONFIG_FILE_KEY_IMAGE_SIZE, image_size)
+        metadata[CONFIG_FILE_KEY_GENERATE][CONFIG_FILE_KEY_GENERATE_NAME] = generate_function_name
+        metadata_template.update(CONFIG_FILE_KEY_EXECUTION, metadata)
+        return metadata_template
 
-        # TODO insert the known mandatory metadata into metadata template
+    @staticmethod
+    def get_metadata_template(path_to_metadata_template: str = None) -> dict:
+        if path_to_metadata_template is None:
+            path_to_metadata_template = Path(f"{CONFIG_FILE_FOLDER}/{CONFIG_TEMPLATE_FILE_NAME_AND_EXTENSION}")
+        return Utils.read_in_json(path_as_string=path_to_metadata_template)
 
-        # TODO insert the optional metadata from metadata template recursively via user prompts.
-        self.metadata = self._recursively_fill_metadata(metadata_template=self.config_manager.config_dict)
-
-        # TODO: The whole metadata dict should be nested below the model_id, before storing
-
-        # TODO store and write to disk
-        if is_stored:
-            self.store_metadata(output_path=output_path)
+    def store_metadata(self, output_path: str = "/config"):
+        # medigan data structurr convention: Nesting the whole metadata dict below the model_id before storing.
+        metadata = {self.model_id: self.metadata}
+        Utils.store_dict_as(dictionary=metadata, extension=".json", output_path=output_path,
+                            filename=f"{self.model_id}.json")
 
     def is_key_value_set(self, key: str, metadata: dict, nested_key) -> bool:
         if metadata.get(key) is not None and metadata.get(key) != "" and not metadata.get(key):
@@ -89,9 +137,8 @@ class LocalModel:
             return True
         return False
 
-    def _recursively_fill_metadata(self, metadata_template: dict, nested_key: str = '') -> dict:
+    def _recursively_fill_metadata(self, metadata_template: dict, metadata: dict = {}, nested_key: str = '') -> dict:
         # Prompt user for optional metadata input
-        metadata: dict = {}
         for key in metadata_template:
             # nested_key to know where we are inside the metadata dict.
             nested_key = key if nested_key == '' else f"{nested_key}.{key}"
@@ -132,17 +179,12 @@ class LocalModel:
                         value_assigned = self._recursively_fill_metadata(metadata_template=value_template,
                                                                          nested_key=nested_key)
                 metadata.update(key, value_assigned)
-                return metadata
-
-    def store_metadata(self, filetype='json', output_path="/config"):
-        # TODO assert filetype != "json": Not yet implemented exception
-        # TODO parse as json and store by model_id.json
-        pass
+        return metadata
 
     def create_model_init_function(self):
         # TODO: Check if there is a __init__.py file there. Except if generate_script_path is None.
         # TODO: Else: Import generate_method_name from generate script in generated __init__.py.
-        pass
+        raise NotImplementedError
 
     def __str__(self):
         return json.dumps(

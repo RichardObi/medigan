@@ -176,6 +176,18 @@ class Utils():
         return dict_list
 
     @staticmethod
+    def store_dict_as(dictionary, extension: str = ".json", output_path: str = "/config", filename: str = "metadata.json"):
+        """ store a Python dictionary in file system as variable filetype."""
+
+        if extension not in output_path:
+            Utils.mkdirs(path_as_string=output_path)
+            if extension not in filename:
+                filename = filename + extension
+            output_path = f'{output_path}/{filename}'
+        with open(output_path, 'w') as outfile:
+            json.dump(dictionary, outfile)
+
+    @staticmethod
     def store(samples: list, output_path: str, filename: str = None, extension: str = 'png'):
         """ create folder in `output_path` and store generated `samples` there.
 

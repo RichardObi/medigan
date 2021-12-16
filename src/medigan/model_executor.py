@@ -141,10 +141,9 @@ class ModelExecutor:
                 if not Utils.is_file_located_or_downloaded(path_as_string=package_path,
                                                            download_if_not_found=True,
                                                            download_link=self.package_link):
-                    error_string = f"{self.model_id}: The package archive ({self.package_name}{PACKAGE_EXTENSION}) " \
-                                   f"was not found in {package_path} nor downloaded from {self.package_link}."
-                    logging.error(error_string)
-                    raise FileNotFoundError(error_string)
+                    raise FileNotFoundError(
+                        f"{self.model_id}: The package archive ({self.package_name}{PACKAGE_EXTENSION}) "
+                        f"was not found in {package_path} nor downloaded from {self.package_link}.")
             except Exception as e:
                 raise e
             self.package_path = package_path
@@ -243,6 +242,7 @@ class ModelExecutor:
                     logging.debug(f"Generate method called with the following params. (i) default: {prepared_kwargs}, "
                                   f"(ii) custom: {some_other_kwargs}")
                     return self.model_internal_generate_method(**prepared_kwargs, **some_other_kwargs)
+
                 return gen
             else:
                 return self.model_internal_generate_method(**prepared_kwargs)
@@ -250,7 +250,6 @@ class ModelExecutor:
             logging.error(f"{self.model_id}: Error while trying to generate images with model "
                           f"{self.serialised_model_file_path}: {e}")
             raise e
-
 
     def _prepare_generate_method_args(self, model_file: str, num_samples: int, output_path: str, save_images: bool,
                                       **kwargs):
