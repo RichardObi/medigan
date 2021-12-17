@@ -176,7 +176,7 @@ class Utils():
         return dict_list
 
     @staticmethod
-    def store_dict_as(dictionary, extension: str = ".json", output_path: str = "/config", filename: str = "metadata.json"):
+    def store_dict_as(dictionary, extension: str = ".json", output_path: str = "config/", filename: str = "metadata.json"):
         """ store a Python dictionary in file system as variable filetype."""
 
         if extension not in output_path:
@@ -184,8 +184,9 @@ class Utils():
             if extension not in filename:
                 filename = filename + extension
             output_path = f'{output_path}/{filename}'
+        json_object = json.dumps(dictionary, indent=4)
         with open(output_path, 'w') as outfile:
-            json.dump(dictionary, outfile)
+            outfile.write(json_object)
 
     @staticmethod
     def store(samples: list, output_path: str, filename: str = None, extension: str = 'png'):

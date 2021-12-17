@@ -106,13 +106,13 @@ class Generators:
 
     def create_local_model(self, model_id: str = None, package_link: str = None, model_name: str = None,
                            model_extension: str = None,
-                           generate_function_name: str = None, metadata_path: str = None, package_name: str = None,
+                           generate_method_name: str = None, metadata_path: str = None, package_name: str = None,
                            image_size: list = [], dependencies: list = [],
                            generate_function_script_path: str = None, are_optional_config_fields_requested: bool = True,
                            is_added_to_config: bool = True, is_metadata_file_updated: bool = True) -> LocalModel:
         local_model = LocalModel(model_id=model_id, package_link=package_link, model_name=model_name,
                                  model_extension=model_extension,
-                                 generate_function_name=generate_function_name,
+                                 generate_method_name=generate_method_name,
                                  image_size=image_size, dependencies=dependencies, package_name=package_name,
                                  metadata_path=metadata_path,
                                  generate_function_script_path=generate_function_script_path,
@@ -125,7 +125,7 @@ class Generators:
         return local_model
 
     def add_local_model_to_config(self, local_model: LocalModel):
-        self.config_manager.config_dict.update(local_model.model_id, local_model.metadata)
+        self.config_manager.config_dict.update(local_model.metadata)
 
     def is_local_model_in_config(self, local_model: LocalModel) -> bool:
         try:

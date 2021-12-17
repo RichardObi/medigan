@@ -44,15 +44,14 @@ class ConfigManager:
     """
 
     def __init__(
-            self, config_dict: dict = None, use_config_template: bool = False,
+            self, config_dict: dict = None,
             download_if_not_found: bool = True, is_new_download_forced: bool = False,
     ):
         self.config_dict = config_dict
         self.model_ids = []
         self.is_config_loaded = False
         if self.config_dict is None:
-            self.load_config_file(use_config_template=use_config_template,
-                                  download_if_not_found=download_if_not_found,
+            self.load_config_file(download_if_not_found=download_if_not_found,
                                   is_new_download_forced=is_new_download_forced,
                                   )
 
