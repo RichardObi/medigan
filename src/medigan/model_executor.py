@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # ! /usr/bin/env python
-"""Model executor class that downloads models, loads them as python packages, and runs their generate functions.
+""" Model executor class that downloads models, loads them as python packages, and runs their generate functions.
 
 .. codeauthor:: Richard Osuala <richard.osuala@gmail.com>
 .. codeauthor:: Noussair Lazrak <lazrak.noussair@gmail.com>
@@ -136,18 +136,28 @@ class ModelExecutor:
             assert Utils.mkdirs(
                 path_as_string=self.model_id), f"{self.model_id}: The model folder was not found nor created " \
                                                f"in /{self.model_id}."
-            package_path = Path(f"{self.model_id}/{self.package_name}{PACKAGE_EXTENSION}")
+            package_path = Path(f"{self.model_id}/{self.package_name}")
+            package_path_w_extension = Path(f"{self.model_id}/{self.package_name}{PACKAGE_EXTENSION}")
             try:
-                if not Utils.is_file_located_or_downloaded(path_as_string=package_path,
-                                                           download_if_not_found=True,
-                                                           download_link=self.package_link):
-                    raise FileNotFoundError(
-                        f"{self.model_id}: The package archive ({self.package_name}{PACKAGE_EXTENSION}) "
-                        f"was not found in {package_path} nor downloaded from {self.package_link}.")
+                # 1) Check if file is located
+                if not package_path_w_extension.is_file() and not package_path.is_dir():
+                    # 2) Copy if package_link points to local file/folder path.
+                    if not Utils.is_url_valid(the_url=self.package_link):
+                        if Path(self.package_link).is_file():
+                            Utils.copy(source_path=self.package_link, dest_path=package_path_w_extension)
+                        elif Path(self.package_link).is_dir():
+                            Utils.copy(source_path=self.package_link, dest_path=package_path)
+                    # 3) Download the file if not previously copied (utils.download)
+                    elif not Utils.is_file_located_or_downloaded(dest_path=package_path_w_extension,
+                                                                 download_link=self.package_link,
+                                                                 download_if_not_found=True):
+                        raise FileNotFoundError(
+                            f"{self.model_id}: The package ({self.package_name}{PACKAGE_EXTENSION}) "
+                            f"was not found in {package_path_w_extension} nor downloaded from {self.package_link}.")
             except Exception as e:
                 raise e
             self.package_path = package_path
-        logging.info(f"{self.model_id}: Model package should now be available in: {self.package_path}.")
+        logging.info(f"{self.model_id}: Your model package is available in: {self.package_path}.")
 
     def _import_package_as_lib(self):
         """ Unzip and import the generative model's python package using importlib. """
@@ -170,7 +180,8 @@ class ModelExecutor:
             self.serialised_model_file_path = f"{self.model_id}/{self.package_name}/{self.model_name}{self.model_extension}"
         except ModuleNotFoundError:
             try:
-                # Fallback: The zip's content might have been unzipped in the model_id folder without generating the package_name subfolder.
+                # Fallback: The zip's content might have been unzipped in the model_id folder without generating the
+                # package_name subfolder.
                 self.deserialized_model_as_lib = importlib.import_module(name=f"{self.model_id}")
                 self.serialised_model_file_path = f"{self.model_id}/{self.model_name}{self.model_extension}"
             except Exception as e:

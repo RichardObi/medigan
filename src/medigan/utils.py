@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # ! /usr/bin/env python
-""" `Utils` class providing generalized reusable functions for I/O, parsing, sorting, type conversions, etc.
+""" `Utils` class providing generalized reusable functions for I/O, parsing, downloads, sorting, type conversions, etc.
 
 .. codeauthor:: Richard Osuala <richard.osuala@gmail.com>
 .. codeauthor:: Noussair Lazrak <lazrak.noussair@gmail.com>
@@ -29,7 +29,7 @@ class Utils():
 
     @staticmethod
     def mkdirs(path_as_string: str, is_exception_raised: bool = False) -> bool:
-        """ create folder in `path_as_string` if not already created. """
+        """ create folder in `dest_path` if not already created. """
 
         if not os.path.exists(path_as_string):
             try:
@@ -43,36 +43,56 @@ class Utils():
         return True
 
     @staticmethod
-    def is_file_located_or_downloaded(path_as_string: str, download_if_not_found: bool = True,
-                                      download_link: str = None, is_new_download_forced: bool = False,
-                                      allow_local_path_as_url: bool = True) -> bool:
-        """ check if is file in `path_as_string` and optionally download the file (again). """
+    def is_file_located_or_downloaded(dest_path: str, download_if_not_found: bool = True,
+                                      download_link: str = None, is_new_download_forced: bool = False) -> bool:
+        """ check if there is a file in `dest_path` and, if not, download the file (again) using `download_link`. """
 
-        if not path_as_string.is_file() or is_new_download_forced:
+        if not dest_path.is_file() or is_new_download_forced:
             if not download_if_not_found:
                 # download_if_not_found is prioritized over is_new_download_forced in this case, as users likely
                 # prefer to avoid automated downloads altogether when setting download_if_not_found to False.
-                logging.warning(f"File {path_as_string} was not found ({not path_as_string.is_file()}) or download "
+                logging.warning(f"File {dest_path} was not found ({not dest_path.is_file()}) or download "
                                 f"was forced ({is_new_download_forced}). However, downloading it from {download_link} "
                                 f"was not allowed: download_if_not_found == {download_if_not_found}. This may cause an "
                                 f"error, as the file might be outdated or missing, while being used in subsequent "
                                 f"workflows.")
                 return False
             else:
-                try:
-                    if allow_local_path_as_url and not Utils.is_url_valid(the_url=download_link):
-                        shutil.copy2(src=download_link, dst=path_as_string)
-                    else:
-                        Utils.download_file(path_as_string=path_as_string, download_link=download_link)
-                except Exception as e:
-                    raise e
+                Utils.download_file(dest_path=dest_path, download_link=download_link)
         return True
 
     @staticmethod
-    def download_file(download_link: str, path_as_string: str):
-        """ download a file using the `requests` lib and store in `path_as_string`"""
+    def copy(source_path: str, dest_path: str):
+        """ copy either a file or folder from source to destination """
 
-        logging.debug(f"Now downloading file {path_as_string} from {download_link} ...")
+        try:
+            if not Path(source_path).exists():
+                # raise FileNotFound error here instead of warning?
+                logging.warning(f"Warning: Could not find a file/folder in: {source_path}. It was not copied to {dest_path}.")
+            elif Path(source_path).is_file():
+                print(f"Found a file in: {source_path}. Copying it now to {dest_path}.")
+                shutil.copy2(src=source_path, dst=dest_path)
+            elif Path(source_path).is_dir():
+                print(f"Found a folder in: {source_path}. Copying it now to {dest_path}.")
+                shutil.copytree(src=source_path, dst=dest_path)
+        except Exception as e:
+            raise e
+
+    @staticmethod
+    def is_file_in(folder_path: str, filename: str):
+        try:
+            if Path(folder_path).is_dir() and Path(folder_path/filename).is_file():
+                return True
+        except Exception as e:
+            logging.warning(f"File ({filename}) was not found in {folder_path}: {e}")
+        finally:
+            return False
+
+    @staticmethod
+    def download_file(download_link: str, dest_path: str):
+        """ download a file using the `requests` lib and store in `dest_path`"""
+
+        logging.debug(f"Now downloading file {dest_path} from {download_link} ...")
         try:
             response = requests.get(download_link, allow_redirects=True, stream=True)
             total_size_in_bytes = int(
@@ -81,15 +101,15 @@ class Utils():
             block_size = 1024
             progress_bar = tqdm(total=total_size_in_bytes, unit='B', unit_scale=True)
             progress_bar.set_description(f"Downloading {download_link}")
-            with open(path_as_string, 'wb') as file:
+            with open(dest_path, 'wb') as file:
                 for data in response.iter_content(block_size):
                     progress_bar.update(len(data))
                     file.write(data)
                 logging.debug(
                     f"Received response {response}: Retrieved file from {download_link} and wrote it "
-                    f"to {path_as_string}.")
+                    f"to {dest_path}.")
         except Exception as e:
-            logging.error(f"Error while trying to download/copy from {download_link} to {path_as_string}:{e}")
+            logging.error(f"Error while trying to download/copy from {download_link} to {dest_path}:{e}")
             raise e
 
     @staticmethod
@@ -103,6 +123,23 @@ class Utils():
         except Exception as e:
             logging.error(f"Error while reading in json file from {path_as_string}: {e}")
             raise e
+
+    @staticmethod
+    def unzip_and_return_unzipped_path(package_path: str):
+        """ if not already dir, unzip an archive with `Utils.unzip_archive`. Return path to unzipped dir/file """
+
+        if Path(package_path).is_dir()Path(package_path).is_file() and package_path.endswith(".zip"):
+            # Get the source_path without .zip extension to unzip.
+            package_path_unzipped = package_path[0: -4]
+            # We have a zip. Let's unzip and do the same operation (with new path)
+            Utils.unzip_archive(source_path=package_path, target_path_as_string=package_path_unzipped)
+            return package_path_unzipped
+        elif Path(package_path).is_dir():
+            logging.info(f"Your package path ({package_path}) does already point to a directory. It was not unzipped.")
+            return package_path
+        else:
+            raise Exception(
+                f"Your package path ({package_path}) does not point to a zip file nor directory. Please adjust and try again.")
 
     @staticmethod
     def unzip_archive(source_path: Path, target_path_as_string: str = "./"):

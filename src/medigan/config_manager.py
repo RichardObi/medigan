@@ -14,8 +14,7 @@ import logging
 from pathlib import Path
 
 # Import library internal modules
-from .constants import CONFIG_FILE_NAME_AND_EXTENSION, CONFIG_FILE_URL, CONFIG_FILE_FOLDER, \
-    CONFIG_TEMPLATE_FILE_NAME_AND_EXTENSION
+from .constants import CONFIG_FILE_NAME_AND_EXTENSION, CONFIG_FILE_URL, CONFIG_FILE_FOLDER
 from .utils import Utils
 
 
@@ -76,9 +75,9 @@ class ConfigManager:
 
         config_file_path = Path(f"{CONFIG_FILE_FOLDER}/{CONFIG_FILE_NAME_AND_EXTENSION}")
         try:
-            if not Utils.is_file_located_or_downloaded(path_as_string=config_file_path,
-                                                       download_if_not_found=download_if_not_found,
+            if not Utils.is_file_located_or_downloaded(dest_path=config_file_path,
                                                        download_link=CONFIG_FILE_URL,
+                                                       download_if_not_found=download_if_not_found,
                                                        is_new_download_forced=is_new_download_forced):
                 raise FileNotFoundError(
                     f"The config file {CONFIG_FILE_NAME_AND_EXTENSION} was not found in {config_file_path} " \
@@ -117,7 +116,6 @@ class ConfigManager:
             for key in config_key_split:
                 config_dict = config_dict[key]
         return config_dict
-
 
     def _validate_config_file(self):
         raise NotImplementedError

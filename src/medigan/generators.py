@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # ! /usr/bin/env python
-""" Base class providing user-library interaction methods for config management, and model selection and execution.
+""" Main class providing user-library interaction methods for config management, and model selection and execution.
 
 .. codeauthor:: Richard Osuala <richard.osuala@gmail.com>
 .. codeauthor:: Noussair Lazrak <lazrak.noussair@gmail.com>
@@ -108,19 +108,17 @@ class Generators:
                            model_extension: str = None,
                            generate_method_name: str = None, metadata_path: str = None, package_name: str = None,
                            image_size: list = [], dependencies: list = [],
-                           generate_function_script_path: str = None, are_optional_config_fields_requested: bool = True,
-                           is_added_to_config: bool = True, is_metadata_file_updated: bool = True) -> LocalModel:
+                           path_to_script_w_generate_function: str = None, are_optional_config_fields_requested: bool = True, is_metadata_file_updated: bool = True) -> LocalModel:
         local_model = LocalModel(model_id=model_id, package_link=package_link, model_name=model_name,
                                  model_extension=model_extension,
                                  generate_method_name=generate_method_name,
                                  image_size=image_size, dependencies=dependencies, package_name=package_name,
                                  metadata_path=metadata_path,
-                                 generate_function_script_path=generate_function_script_path,
+                                 path_to_script_w_generate_function=path_to_script_w_generate_function,
                                  are_optional_config_fields_requested=are_optional_config_fields_requested)
-        if is_added_to_config:
+        if is_metadata_file_updated:
             self.add_local_model_to_config(local_model=local_model)
-            if is_metadata_file_updated:
-                Utils.store_dict_as(dictionary=self.config_manager.config_dict,
+            Utils.store_dict_as(dictionary=self.config_manager.config_dict,
                                     output_path=f"{CONFIG_FILE_FOLDER}/{CONFIG_FILE_NAME_AND_EXTENSION}")
         return local_model
 
@@ -137,7 +135,7 @@ class Generators:
     def get_local_model_config(self, local_model: LocalModel) -> dict:
         return self.config_manager.get_config_by_id(local_model.model_id)
 
-    def generate_with_local_model(self, local_model: LocalModel = None, num_samples: int = 30, output_path: str = None,
+    def generate_with_local_model(self, local_model: LocalModel = None, num_samples: int = 10, output_path: str = None,
                                   save_images: bool = True, is_gen_function_returned: bool = False, **kwargs):
         if not self.is_local_model_in_config:
             self.add_local_model_to_config(local_model)
