@@ -8,8 +8,10 @@
 # Import python native libs
 from __future__ import absolute_import
 
+import importlib
 import json
 import logging
+import sys
 from pathlib import Path
 
 from .constants import CONFIG_FILE_FOLDER, CONFIG_TEMPLATE_FILE_NAME_AND_EXTENSION, CONFIG_FILE_KEY_EXECUTION, \
@@ -35,7 +37,7 @@ class LocalModel:
             generate_method_name: str = None,
             metadata_path: str = None,
             path_to_script_w_generate_function: str = None,
-            are_optional_config_fields_requested: str = None,
+            are_optional_config_fields_requested: bool = True,
             output_path: str = "config/",
             image_size: list = [],
             dependencies: list = [],
@@ -78,21 +80,30 @@ class LocalModel:
             metadata = self._recursively_fill_metadata(metadata=metadata)
 
         # Note: In case user added via prompt, we store the user's input before re-validating the final metadata.
+        output_path = f"{output_path}{self.model_id}.json"
         self.store_metadata(output_path=output_path, metadata=metadata)
         logging.info(f"{self.model_id}: Local model's metadata is stored in: {output_path}")
+        try:
+            # Validation of the previously created metadata
+            if self.validate_metadata(metadata): self.metadata = metadata
+            logging.debug(f"{self.model_id}: Created local model's final validated metadata: {self.metadata}")
 
-        if self.validate_metadata(metadata): self.metadata = metadata
-        logging.info(f"{self.model_id}: Created local model's final validated metadata: {self.metadata}")
+            # Preparation of package_path needed for testing generation of __init__.py and testing of import as package.
+            print(f"{self.metadata}")
+            package_path = Path(self.metadata[self.model_id][CONFIG_FILE_KEY_EXECUTION][CONFIG_FILE_KEY_PACKAGE_LINK])
+            # Update package_link in case it points to a zip archive instead of a dir.
+            package_path = Utils.unzip_and_return_unzipped_path(package_path)
+            self.metadata[CONFIG_FILE_KEY_PACKAGE_LINK] = str(package_path)
 
-        # Update package_link in case it points to a zip archive instead of a dir.
-        package_path = Path(self.metadata[CONFIG_FILE_KEY_PACKAGE_LINK])
-        package_path = Utils.unzip_and_return_unzipped_path(package_path)
-        self.metadata[CONFIG_FILE_KEY_PACKAGE_LINK] = package_path
-
-        # Now we want to check if there is an __init__.py file inside the dir that the package_link points to.
-        if not self.is_init_file_available(package_path=package_path):
-            self.create_model_init_file(package_path=package_path,
-                                        path_to_script_w_generate_function=path_to_script_w_generate_function)
+            # Now we want to check if there is an __init__.py file inside the dir that the package_link points to.
+            if not self.is_init_file_available(package_path=package_path):
+                # No __init__.py file exists, so we need to create one to enable imports of package.
+                # Also, the import as package is tested.
+                self.create_and_test_init_file(package_path=package_path,
+                                               path_to_script_w_generate_function=path_to_script_w_generate_function)
+        except Exception as e:
+            raise Exception(f"{self.model_id}: An error occurred, but your model metadata was stored for reuse. "
+                            f"Find it here: {output_path}") from e
 
     def validate_model_id(self, model_id: str, max_chars: int = 30, min_chars: int = 13) -> bool:
         num_chars = len(model_id)
@@ -189,8 +200,7 @@ class LocalModel:
         if metadata is None:
             metadata = self.metadata
         logging.debug(f"{self.model_id}: Metadata before storing: {metadata}")
-        Utils.store_dict_as(dictionary=metadata, extension=".json", output_path=output_path,
-                            filename=f"{self.model_id}.json")
+        Utils.store_dict_as(dictionary=metadata, extension=".json", output_path=output_path)
 
     def is_key_value_set_or_dict(self, key: str, metadata: dict, nested_key) -> bool:
         if metadata.get(key) is None or metadata.get(key) == "" or (
@@ -260,17 +270,17 @@ class LocalModel:
             raise Exception(
                 f"{self.model_id}: Your package path ({package_path}) does not point to a directory nor to a zip file. Please adjust and try again.")
 
-    def create_model_init_file(self, path_to_script_w_generate_function: str, package_path: str,
-                               generate_function_name: str,
-                               target_filename="__init__.py"):
+    def create_and_test_init_file(self, path_to_script_w_generate_function: str, package_path: str,
+                                  target_filename="__init__.py"):
         # Check absolute and relative paths for script that contains generate function.
         if path_to_script_w_generate_function is None or not (
                 Path(path_to_script_w_generate_function).is_file() or Path(
-                f'{package_path}/{path_to_script_w_generate_function}').is_file()):
-            raise Exception(f"{self.model_id}: path_to_script_w_generate_function is '{path_to_script_w_generate_function}'. "
-                            f"To automatically create an __init__.py file inside your package_path ({package_path}), "
-                            f"you need to provide an absolute path to a script that contains a synthetic data generation "
-                            f"function.")
+            f'{package_path}/{path_to_script_w_generate_function}').is_file()):
+            raise Exception(
+                f"{self.model_id}: path_to_script_w_generate_function is '{path_to_script_w_generate_function}'. "
+                f"To automatically create an __init__.py file inside your package_path ({package_path}), "
+                f"you need to provide an absolute path to a script that contains a synthetic data generation "
+                f"function.")
 
         if Utils.is_file_in(filename=target_filename, folder_path=package_path):
             logging.warning(
@@ -278,32 +288,39 @@ class LocalModel:
                 f"to it. Please revise file '{target_filename}'.")
         # Get the module path information needed to specify import of generate function in to-be-generated __init__.py
         # Remove package_path in case path_to_script_w_generate_function is absolute path. Also, change / to .
-        module_import_path = path_to_script_w_generate_function.replace(f'{package_path}/', '').replace(
+        module_import_path = "." + path_to_script_w_generate_function.replace(f'{package_path}/', '').replace(
             f'{package_path}', '').replace('/', '.').replace('\\', '.').replace('.py', '')
 
         # Create __init__.py file inside the package
         f = open(f'{package_path}/{target_filename}', "w")
         f.write("\n")
-        f.write(f"from {module_import_path} import {generate_function_name}")
+        f.write(f"from {module_import_path} import *")
+        #f.write(f"import .{module_import_path}")
         f.write("\n")
         f.close()
 
         # Validation: Import module as python library to check if generate function is inside the
         # path_to_script_w_generate_function python file and no errors occur.
         try:
-
+            module_name = Path(package_path).name
+            sys.path.insert(1, str(package_path).replace(module_name, ""))
+            importlib.import_module(name=module_name)
         except Exception as e:
-            raise Exception(f"{self.model_id}: The file {package_path}/{target_filename} already in {package_path}.") from e
+            raise Exception(f"{self.model_id}: Error while testing the import of this module. Was the file "
+                            f"'{path_to_script_w_generate_function}' imported into {package_path}/{target_filename}? Another source of error is that the "
+                            f"generate function may not be inside the file '{path_to_script_w_generate_function}'. Or, "
+                            f"the import path '{module_import_path}' in __init__.py might be broken? Please revise and "
+                            f"try again.") from e
 
     def __str__(self):
         return json.dumps(
-            {'model_id': self.model_id, 'metadata': self.metadata)
+            {'model_id': self.model_id, 'metadata': self.metadata})
 
-        def __repr__(self):
-            return f'ModelMatchCandidate(model_id={self.model_id}, metadata={self.metadata})'
+    def __repr__(self):
+        return f'ModelMatchCandidate(model_id={self.model_id}, metadata={self.metadata})'
 
-        def __len__(self):
-            raise NotImplementedError
+    def __len__(self):
+        raise NotImplementedError
 
-        def __getitem__(self, idx: int):
-            raise NotImplementedError
+    def __getitem__(self, idx: int):
+        raise NotImplementedError

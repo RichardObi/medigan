@@ -15,31 +15,25 @@ class MyTestCase(unittest.TestCase):
     def test_local_model(self):
 
         ######### Local Model Init Parameters #########
-        ## These are examples, please adjust.
-        generate_function_script_path: str = None
-        are_optional_config_fields_requested: bool = True  # True
-        is_added_to_config: bool = True
-        is_metadata_file_updated: bool = True
+        ## These are examples, please adjust to your needs.
+        path_to_script_w_generate_function = "some_folder/another_folder/generate_samples.py"
+        # "some_folder/another_folder/generate_samples.py"
+        are_optional_config_fields_requested: bool = False  # True
+        is_metadata_file_updated: bool = False
 
         # metadata_path param:
         # Note: Also test with the metadata_path being set to None. Only then, the other params are considered.
-        metadata_path: str = None
-        # metadata_path: str = "/Users/richardosuala/Desktop/MMG_MASS_BCDR_DCGAN/metadata.json"
+        metadata_path: str = None #"/Users/richardosuala/Desktop/MMG_MASS_BCDR_DCGAN/metadata.json"
 
-        # Other params:
+        # Other metadata params - no need for them if you already provide a metadata_path to a json file containing them
         model_id: str = "00012_DCGAN_MMG_MASS_ROI"
         package_link: str = "/Users/richardosuala/Desktop/MMG_MASS_BCDR_DCGAN"
         model_name: str = "500"
         model_extension: str = ".pt"
-        generate_method_name: str = "" # "generate"
+        generate_method_name: str = ""  # "generate"
         package_name: str = "DCGAN_MMG"
         image_size: list = []
         dependencies: list = []
-
-        ######### Generate with Local Model Parameters #########
-        # MODEL_ID = "YOUR_MODEL_ID_HERE"
-        # NUM_SAMPLES = 10
-        # OUTPUT_PATH = f"output/{MODEL_ID}/"
 
         try:
             from src.medigan.generators import Generators
@@ -51,9 +45,8 @@ class MyTestCase(unittest.TestCase):
                                                         image_size=image_size, dependencies=dependencies,
                                                         package_name=package_name,
                                                         metadata_path=metadata_path,
-                                                        path_to_script_w_generate_function=generate_function_script_path,
+                                                        path_to_script_w_generate_function=path_to_script_w_generate_function,
                                                         are_optional_config_fields_requested=are_optional_config_fields_requested,
-                                                        is_added_to_config=is_added_to_config,
                                                         is_metadata_file_updated=is_metadata_file_updated)
         except Exception as e:
             logging.error(f"test_local_model error during local model creation: {e}")

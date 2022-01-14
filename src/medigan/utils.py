@@ -68,7 +68,8 @@ class Utils():
         try:
             if not Path(source_path).exists():
                 # raise FileNotFound error here instead of warning?
-                logging.warning(f"Warning: Could not find a file/folder in: {source_path}. It was not copied to {dest_path}.")
+                logging.warning(
+                    f"Warning: Could not find a file/folder in: {source_path}. It was not copied to {dest_path}.")
             elif Path(source_path).is_file():
                 print(f"Found a file in: {source_path}. Copying it now to {dest_path}.")
                 shutil.copy2(src=source_path, dst=dest_path)
@@ -81,7 +82,7 @@ class Utils():
     @staticmethod
     def is_file_in(folder_path: str, filename: str):
         try:
-            if Path(folder_path).is_dir() and Path(folder_path/filename).is_file():
+            if Path(folder_path).is_dir() and Path(folder_path / filename).is_file():
                 return True
         except Exception as e:
             logging.warning(f"File ({filename}) was not found in {folder_path}: {e}")
@@ -128,7 +129,7 @@ class Utils():
     def unzip_and_return_unzipped_path(package_path: str):
         """ if not already dir, unzip an archive with `Utils.unzip_archive`. Return path to unzipped dir/file """
 
-        if Path(package_path).is_dir()Path(package_path).is_file() and package_path.endswith(".zip"):
+        if Path(package_path).is_file() and package_path.endswith(".zip"):
             # Get the source_path without .zip extension to unzip.
             package_path_unzipped = package_path[0: -4]
             # We have a zip. Let's unzip and do the same operation (with new path)
@@ -213,7 +214,8 @@ class Utils():
         return dict_list
 
     @staticmethod
-    def store_dict_as(dictionary, extension: str = ".json", output_path: str = "config/", filename: str = "metadata.json"):
+    def store_dict_as(dictionary, extension: str = ".json", output_path: str = "config/",
+                      filename: str = "metadata.json"):
         """ store a Python dictionary in file system as variable filetype."""
 
         if extension not in output_path:
