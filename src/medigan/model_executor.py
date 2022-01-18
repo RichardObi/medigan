@@ -24,7 +24,7 @@ from .constants import CONFIG_FILE_KEY_DEPENDENCIES, CONFIG_FILE_KEY_MODEL_NAME,
     CONFIG_FILE_KEY_GENERATE_NAME, CONFIG_FILE_KEY_GENERATE_ARGS, \
     CONFIG_FILE_KEY_GENERATE_ARGS_MODEL_FILE, CONFIG_FILE_KEY_GENERATE_ARGS_NUM_SAMPLES, \
     CONFIG_FILE_KEY_GENERATE_ARGS_OUTPUT_PATH, CONFIG_FILE_KEY_GENERATE_ARGS_CUSTOM, \
-    CONFIG_FILE_KEY_GENERATE_ARGS_BASE, CONFIG_FILE_KEY_GENERATE_ARGS_SAVE_IMAGES
+    CONFIG_FILE_KEY_GENERATE_ARGS_BASE, CONFIG_FILE_KEY_GENERATE_ARGS_SAVE_IMAGES, INIT_PY_FILE
 from .utils import Utils
 
 
@@ -137,43 +137,65 @@ class ModelExecutor:
                 path_as_string=self.model_id), f"{self.model_id}: The model folder was not found nor created " \
                                                f"in /{self.model_id}."
             package_path = Path(f"{self.model_id}/{self.package_name}")
+            package_path_alternative = Path(f"{self.model_id}")
             package_path_w_extension = Path(f"{self.model_id}/{self.package_name}{PACKAGE_EXTENSION}")
             try:
                 # 1) Check if file is located
-                if not package_path_w_extension.is_file() and not package_path.is_dir():
+                print(
+                    f"HEEEERE")
+
+                if package_path.is_dir():
+                    self.package_path = package_path
+                elif Path(package_path_alternative / INIT_PY_FILE).is_file():
+                    print(
+                        f"HEEEERE2 Path(package_path_alternative/INIT_PY_FILE -> {Path(package_path_alternative / INIT_PY_FILE)}")
+                    self.package_path = package_path_alternative
+                elif package_path_w_extension.is_file():
+                    self.package_path = package_path_w_extension
+                # File is not located, so let's try to get and store it.
+                else:
                     # 2) Copy if package_link points to local file/folder path.
                     if not Utils.is_url_valid(the_url=self.package_link):
                         if Path(self.package_link).is_file():
                             Utils.copy(source_path=self.package_link, dest_path=package_path_w_extension)
+                            self.package_path = package_path_w_extension
                         elif Path(self.package_link).is_dir():
                             Utils.copy(source_path=self.package_link, dest_path=package_path)
+                            self.package_path = package_path
                     # 3) Download the file if not previously copied (utils.download)
-                    elif not Utils.is_file_located_or_downloaded(dest_path=package_path_w_extension,
-                                                                 download_link=self.package_link,
-                                                                 download_if_not_found=True):
+                    elif Utils.is_file_located_or_downloaded(dest_path=package_path_w_extension,
+                                                             download_link=self.package_link,
+                                                             download_if_not_found=True):
+                        self.package_path = package_path_w_extension
+                    else:
                         raise FileNotFoundError(
                             f"{self.model_id}: The package ({self.package_name}{PACKAGE_EXTENSION}) "
                             f"was not found in {package_path_w_extension} nor downloaded from {self.package_link}.")
+
             except Exception as e:
                 raise e
-            self.package_path = package_path
-        logging.info(f"{self.model_id}: Your model package is available in: {self.package_path}.")
+        logging.info(f"{self.model_id}: Your model package is stored in: {self.package_path}.")
 
     def _import_package_as_lib(self):
         """ Unzip and import the generative model's python package using importlib. """
 
         logging.debug(f"{self.model_id}: Now importing model package ({self.package_name}) as lib using "
                       f"importlib from {self.package_path}.")
-        is_model_already_unpacked = Path(
-            f"{self.model_id}/{self.package_name}/{self.model_name}{self.model_extension}").is_file() or Path(
-            f"{self.model_id}/{self.model_name}{self.model_extension}").is_file()
+        is_model_already_unpacked = \
+            Path(f"{self.model_id}/{self.package_name}/{self.model_name}{self.model_extension}").is_file() or \
+            Path(f"{self.model_id}/{self.model_name}{self.model_extension}").is_file()
         # if is_model_already_unpacked == True, then the package was already unzipped previously.
-        if self.package_path.is_file() and PACKAGE_EXTENSION == '.zip' and not is_model_already_unpacked:
+        if Path(self.package_path).is_file() and str(self.package_path)[
+                                                 -4:] == PACKAGE_EXTENSION and not is_model_already_unpacked:
             Utils.unzip_archive(source_path=self.package_path, target_path_as_string=self.model_id)
-        else:
-            logging.debug(f"{self.model_id}: Either no file found (== {self.package_path.is_file()}) or package "
-                          f"already unarchived (=={is_model_already_unpacked}) in {self.package_path}. "
+
+        elif is_model_already_unpacked:
+            logging.debug(f"{self.model_id}: The model was already unpacked/unarchived in '{self.package_path}'. "
                           f"No action was taken.")
+        else:
+            raise Exception(
+                f"{self.model_id}: Error: The model could not be unarchived. Please revise the package_path "
+                f"({self.package_path}), which should point to a '.zip' file.")
         try:
             # Installing generative model as python library
             self.deserialized_model_as_lib = importlib.import_module(name=f"{self.model_id}.{self.package_name}")

@@ -92,3 +92,6 @@ MODEL_ID = 'model_id'
 
 """ The default path to a folder under which the outputs of the medigan package (i.e. generated samples) are stored. """
 DEFAULT_OUTPUT_FOLDER = "output"
+""
+""" The folder containing an __init__.py file is a python module. """
+INIT_PY_FILE = "__init__.py"

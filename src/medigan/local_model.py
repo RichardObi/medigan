@@ -19,7 +19,7 @@ from .constants import CONFIG_FILE_FOLDER, CONFIG_TEMPLATE_FILE_NAME_AND_EXTENSI
     CONFIG_FILE_KEY_PACKAGE_NAME, CONFIG_FILE_KEY_GENERATE, CONFIG_FILE_KEY_SELECTION, CONFIG_FILE_KEY_DEPENDENCIES, \
     CONFIG_FILE_KEY_GENERATE_ARGS, CONFIG_FILE_KEY_GENERATE_ARGS_BASE, CONFIG_FILE_KEY_GENERATE_ARGS_MODEL_FILE, \
     CONFIG_FILE_KEY_GENERATE_ARGS_NUM_SAMPLES, CONFIG_FILE_KEY_GENERATE_ARGS_OUTPUT_PATH, \
-    CONFIG_FILE_KEY_GENERATE_ARGS_SAVE_IMAGES, CONFIG_FILE_KEY_IMAGE_SIZE, CONFIG_FILE_KEY_MODEL_NAME
+    CONFIG_FILE_KEY_GENERATE_ARGS_SAVE_IMAGES, CONFIG_FILE_KEY_IMAGE_SIZE, CONFIG_FILE_KEY_MODEL_NAME, INIT_PY_FILE
 # Import library internal modules
 from .utils import Utils
 
@@ -263,15 +263,14 @@ class LocalModel:
                 metadata.update({key: value_assigned})
         return metadata
 
-    def is_init_file_available(self, package_path: str, target_filename: str = "__init__.py") -> bool:
+    def is_init_file_available(self, package_path: str) -> bool:
         if Path(package_path).is_dir():
-            return Utils.is_file_in(folder_path=package_path, filename=target_filename)
+            return Utils.is_file_in(folder_path=package_path, filename=INIT_PY_FILE)
         else:
             raise Exception(
                 f"{self.model_id}: Your package path ({package_path}) does not point to a directory nor to a zip file. Please adjust and try again.")
 
-    def create_and_test_init_file(self, path_to_script_w_generate_function: str, package_path: str,
-                                  target_filename="__init__.py"):
+    def create_and_test_init_file(self, path_to_script_w_generate_function: str, package_path: str):
         # Check absolute and relative paths for script that contains generate function.
         if path_to_script_w_generate_function is None or not (
                 Path(path_to_script_w_generate_function).is_file() or Path(
@@ -282,17 +281,17 @@ class LocalModel:
                 f"you need to provide an absolute path to a script that contains a synthetic data generation "
                 f"function.")
 
-        if Utils.is_file_in(filename=target_filename, folder_path=package_path):
+        if Utils.is_file_in(filename=INIT_PY_FILE, folder_path=package_path):
             logging.warning(
-                f"{self.model_id}: The file {target_filename} is already in {package_path}. Adding import statements "
-                f"to it. Please revise file '{target_filename}'.")
+                f"{self.model_id}: The file {INIT_PY_FILE} is already in {package_path}. Adding import statements "
+                f"to it. Please revise file '{INIT_PY_FILE}'.")
         # Get the module path information needed to specify import of generate function in to-be-generated __init__.py
         # Remove package_path in case path_to_script_w_generate_function is absolute path. Also, change / to .
         module_import_path = "." + path_to_script_w_generate_function.replace(f'{package_path}/', '').replace(
             f'{package_path}', '').replace('/', '.').replace('\\', '.').replace('.py', '')
 
         # Create __init__.py file inside the package
-        f = open(f'{package_path}/{target_filename}', "w")
+        f = open(f'{package_path}/{INIT_PY_FILE}', "w")
         f.write("\n")
         f.write(f"from {module_import_path} import *")
         #f.write(f"import .{module_import_path}")
@@ -309,7 +308,7 @@ class LocalModel:
             raise Exception(f"{self.model_id}: Error while testing the import of this module. Was the file "
                             f"'{path_to_script_w_generate_function}' imported into {package_path}/{target_filename}? Another source of error is that the "
                             f"generate function may not be inside the file '{path_to_script_w_generate_function}'. Or, "
-                            f"the import path '{module_import_path}' in __init__.py might be broken? Please revise and "
+                            f"the import path '{module_import_path}' in {INIT_PY_FILE} might be broken? Please revise and "
                             f"try again.") from e
 
     def __str__(self):

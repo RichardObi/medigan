@@ -71,10 +71,10 @@ class Utils():
                 logging.warning(
                     f"Warning: Could not find a file/folder in: {source_path}. It was not copied to {dest_path}.")
             elif Path(source_path).is_file():
-                print(f"Found a file in: {source_path}. Copying it now to {dest_path}.")
+                logging.debug(f"Found a file in: {source_path}. Copying it now to {dest_path}.")
                 shutil.copy2(src=source_path, dst=dest_path)
             elif Path(source_path).is_dir():
-                print(f"Found a folder in: {source_path}. Copying it now to {dest_path}.")
+                logging.debug(f"Found a folder in: {source_path}. Copying it now to {dest_path}.")
                 shutil.copytree(src=source_path, dst=dest_path)
         except Exception as e:
             raise e
@@ -90,18 +90,18 @@ class Utils():
             return False
 
     @staticmethod
-    def download_file(download_link: str, dest_path: str):
+    def download_file(download_link: str, dest_path: str, block_size: int = 1024):
         """ download a file using the `requests` lib and store in `dest_path`"""
 
-        logging.debug(f"Now downloading file {dest_path} from {download_link} ...")
         try:
-            response = requests.get(download_link, allow_redirects=True, stream=True)
+            response = requests.get(url=download_link, allow_redirects=True, stream=True)
             total_size_in_bytes = int(
                 response.headers.get('content-length', 0))  # / (32 * 1024)  # 32*1024 bytes received by requests.
-            print(total_size_in_bytes)
-            block_size = 1024
-            progress_bar = tqdm(total=total_size_in_bytes, unit='B', unit_scale=True)
-            progress_bar.set_description(f"Downloading {download_link}")
+            logging.warning(
+                f"Now downloading model (size: {round(total_size_in_bytes/1048576, 2)}MB) from: {download_link}. "
+                f"Will be stored in: {dest_path}")
+            progress_bar = tqdm(total=total_size_in_bytes, unit='iB', unit_scale=True)
+            progress_bar.set_description(f"Downloading model (size: {round(total_size_in_bytes/1048576, 2)}MB)")
             with open(dest_path, 'wb') as file:
                 for data in response.iter_content(block_size):
                     progress_bar.update(len(data))
@@ -109,9 +109,17 @@ class Utils():
                 logging.debug(
                     f"Received response {response}: Retrieved file from {download_link} and wrote it "
                     f"to {dest_path}.")
-        except Exception as e:
-            logging.error(f"Error while trying to download/copy from {download_link} to {dest_path}:{e}")
+            progress_bar.close()
+        except (Exception, KeyboardInterrupt)as e:
+            logging.error(f"Error: Interrupted while trying to download/copy from {download_link} to {dest_path}:{e}. "
+                          f"Now collecting and deleting any partially downloaded files.")
+            if os.path.isfile(dest_path):
+                os.remove(dest_path)
+            elif os.path.isdir(dest_path):
+                shutil.rmtree(dest_path)
             raise e
+
+
 
     @staticmethod
     def read_in_json(path_as_string) -> dict:

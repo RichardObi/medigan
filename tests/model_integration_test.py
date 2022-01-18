@@ -13,7 +13,7 @@ import unittest
 class MyTestCase(unittest.TestCase):
     def test_local_model(self):
 
-        MODEL_ID = "YOUR_MODEL_ID_HERE"
+        MODEL_ID = "00005_GAN_inpainting_CT_spine_ROI"
         NUM_SAMPLES = 10
         OUTPUT_PATH = f"output/{MODEL_ID}/"
 
