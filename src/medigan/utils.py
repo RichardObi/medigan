@@ -78,7 +78,10 @@ class Utils():
                 shutil.copy2(src=source_path, dst=dest_path)
             elif Path(source_path).is_dir():
                 logging.debug(f"Found a folder in: {source_path}. Copying it now to {dest_path}.")
-                shutil.copytree(src=source_path, dst=dest_path)
+                try:
+                    shutil.copytree(src=source_path, dst=dest_path)
+                except:
+                    copy_tree(src=source_path, dst=dest_path)
         except Exception as e:
             logging.error(f"Error while copying {source_path} to {dest_path}: {e}")
             raise e
