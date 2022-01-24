@@ -62,15 +62,17 @@ class Utils():
                 Utils.download_file(dest_path=dest_path, download_link=download_link)
         return True
 
+
+
     @staticmethod
-    def copy(source_path: str, dest_path: str):
-        """ copy either a file or folder from source to destination """
+    def copy_(source_path: str, dest_path: str = "./"):
+        """ copy either a file or folder from `source_path` to `dest_path` """
 
         try:
             if not Path(source_path).exists():
                 # raise FileNotFound error here instead of warning?
-                logging.warning(
-                    f"Warning: Could not find a file/folder in: {source_path}. It was not copied to {dest_path}.")
+                logging.error(
+                    f"Error: Could not find a file/folder in: {source_path}. It was not copied to {dest_path}.")
             elif Path(source_path).is_file():
                 logging.debug(f"Found a file in: {source_path}. Copying it now to {dest_path}.")
                 shutil.copy2(src=source_path, dst=dest_path)
@@ -78,6 +80,7 @@ class Utils():
                 logging.debug(f"Found a folder in: {source_path}. Copying it now to {dest_path}.")
                 shutil.copytree(src=source_path, dst=dest_path)
         except Exception as e:
+            logging.error(f"Error while copying {source_path} to {dest_path}: {e}")
             raise e
 
     @staticmethod
@@ -157,22 +160,9 @@ class Utils():
 
         try:
             with zipfile.ZipFile(source_path, 'r') as zip_ref:
-                zip_ref.extractall(target_path)
+                zip_ref.extractall(target_path_as_string)
         except Exception as e:
             logging.error(f"Error while unzipping {source_path}: {e}")
-            raise e
-
-    @staticmethod
-    def copy(source_path: Path, target_path: str = "./"):
-        """ copy a folder or file from `source_path` to `target_path` """
-
-        try:
-            if Path(source_path).is_file():
-                shutil.copy2(src=source_path, dst=target_path)
-            else:
-                copy_tree(src=source_path, dst=target_path)
-        except Exception as e:
-            logging.error(f"Error while copying {source_path} to {target_path}: {e}")
             raise e
 
     @staticmethod

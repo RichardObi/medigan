@@ -156,10 +156,10 @@ class ModelExecutor:
                     # 2) Copy if package_link points to local file/folder path.
                     if not Utils.is_url_valid(the_url=self.package_link):
                         if Path(self.package_link).is_file(): # is a zip
-                            Utils.copy(source_path=self.package_link, dest_path=package_path_w_extension)
+                            Utils.copy_(source_path=self.package_link, dest_path=package_path_w_extension)
                             self.package_path = package_path_w_extension
                         elif Path(self.package_link).is_dir():
-                            Utils.copy(source_path=self.package_link, dest_path=package_path_alternative)
+                            Utils.copy_(source_path=self.package_link, dest_path=package_path_alternative)
                             self.package_path = package_path_alternative
                     # 3) Download the file if not previously copied (utils.download)
                     elif Utils.is_file_located_or_downloaded(dest_path=package_path_w_extension,
