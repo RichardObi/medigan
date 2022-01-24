@@ -180,14 +180,17 @@ class ModelExecutor:
 
         logging.debug(f"{self.model_id}: Now importing model package ({self.package_name}) as lib using "
                       f"importlib from {self.package_path}.")
-        is_model_already_unpacked = \
+        # some models might have none or several model files. In this case it is good enough if the self.package_path is a dir
+        is_model_already_unpacked = Path(self.package_path).is_dir() or \
             Path(f"{self.model_id}/{self.package_name}/{self.model_name}{self.model_extension}").is_file() or \
-            Path(f"{self.model_id}/{self.model_name}{self.model_extension}").is_file()
+            Path(f"{self.model_id}/{self.package_name}/{self.model_name}{self.model_extension}").is_file() or \
+            Path(f"{self.model_id}/{self.model_name}{self.model_extension}").is_file() or \
+            Path(f"{self.model_id}/{self.model_name}.{self.model_extension}").is_file() or \
+            Path(f"{self.model_id}/{self.model_name}").is_file()
         # if is_model_already_unpacked == True, then the package was already unzipped previously.
         if Path(self.package_path).is_file() and str(self.package_path)[
                                                  -4:] == PACKAGE_EXTENSION and not is_model_already_unpacked:
             Utils.unzip_archive(source_path=self.package_path, target_path_as_string=self.model_id)
-
         elif is_model_already_unpacked:
             logging.debug(f"{self.model_id}: The model was already unpacked/unarchived in '{self.package_path}'. "
                           f"No action was taken.")
