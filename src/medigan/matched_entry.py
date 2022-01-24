@@ -3,7 +3,6 @@
 """MatchedEntry class that represents one match of a key value pair of a model's config against a search query.
 
 .. codeauthor:: Richard Osuala <richard.osuala@gmail.com>
-.. codeauthor:: Noussair Lazrak <lazrak.noussair@gmail.com>
 """
 
 # Import python native libs
