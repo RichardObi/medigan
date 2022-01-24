@@ -1,0 +1,87 @@
+{
+  "MODEL_ID": {
+    "execution": {
+      "package_name": "",
+      "package_link": "",
+      "model_name": "",
+      "extension": "",
+      "image_size": [],
+      "dependencies": [],
+      "generate_method": {
+        "name": "",
+        "args": {
+          "base": [
+            "model_file",
+            "num_samples",
+            "output_path",
+            "save_images"
+          ],
+          "custom": {}
+        }
+      }
+    },
+    "selection": {
+      "performance": {
+        "SSIM": null,
+        "MSE": null,
+        "NSME": null,
+        "PSNR": null,
+        "IS": null,
+        "FID": null,
+        "turing_test": null,
+        "downstream_task": {
+          "CLF": {
+            "trained_on_fake": {
+              "accuracy": null,
+              "precision": null,
+              "recall": null,
+              "f1": null,
+              "specificity": null,
+              "AUROC": null,
+              "AUPRC": null
+            }
+          },
+          "SEG": {
+            "trained_on_fake": {
+              "dice": null,
+              "jaccard": null,
+              "accuracy": null,
+              "precision": null,
+              "recall": null,
+              "f1": null
+            }
+          }
+        }
+      },
+      "use_cases": [],
+      "organ": [],
+      "modality": [],
+      "vendors": [],
+      "centres": [],
+      "function": [],
+      "condition": [],
+      "dataset": [],
+      "augmentations": [],
+      "generates": [],
+      "height": null,
+      "width": null,
+      "depth": null,
+      "type": "",
+      "license": "",
+      "dataset_type": "",
+      "privacy_preservation": null,
+      "tags": [],
+      "year": null
+    },
+    "description": {
+      "title": "",
+      "provided_date": "",
+      "trained_date": "",
+      "provided_after_epoch": null,
+      "version": "",
+      "published": null,
+      "doi": [],
+      "comment": ""
+    }
+  }
+}
