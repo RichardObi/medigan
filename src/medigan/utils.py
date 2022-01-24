@@ -81,7 +81,7 @@ class Utils():
                 try:
                     shutil.copytree(src=source_path, dst=dest_path)
                 except:
-                    copy_tree(src=source_path, dst=dest_path)
+                    copy_tree(src=str(source_path), dst=str(dest_path))
         except Exception as e:
             logging.error(f"Error while copying {source_path} to {dest_path}: {e}")
             raise e
