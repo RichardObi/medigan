@@ -13,6 +13,7 @@ import shutil
 import zipfile
 from pathlib import Path
 from urllib.parse import urlparse  # python3
+from distutils.dir_util import copy_tree
 
 # Import pypi libs
 import requests
@@ -156,9 +157,22 @@ class Utils():
 
         try:
             with zipfile.ZipFile(source_path, 'r') as zip_ref:
-                zip_ref.extractall(target_path_as_string)
+                zip_ref.extractall(target_path)
         except Exception as e:
             logging.error(f"Error while unzipping {source_path}: {e}")
+            raise e
+
+    @staticmethod
+    def copy(source_path: Path, target_path: str = "./"):
+        """ copy a folder or file from `source_path` to `target_path` """
+
+        try:
+            if Path(source_path).is_file():
+                shutil.copy2(src=source_path, dst=target_path)
+            else:
+                copy_tree(src=source_path, dst=target_path)
+        except Exception as e:
+            logging.error(f"Error while copying {source_path} to {target_path}: {e}")
             raise e
 
     @staticmethod
