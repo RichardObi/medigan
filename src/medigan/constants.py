@@ -15,9 +15,6 @@ CONFIG_FILE_FOLDER = "config"
 """ Name and extensions of config file. """
 CONFIG_FILE_NAME_AND_EXTENSION = "global.json"
 
-""" Name and extensions of template of config file. """
-CONFIG_TEMPLATE_FILE_NAME_AND_EXTENSION = "template.json"
-
 """ The key under which the execution dictionary of a model is nested in the config file. """
 CONFIG_FILE_KEY_EXECUTION = 'execution'
 
@@ -92,6 +89,3 @@ MODEL_ID = 'model_id'
 
 """ The default path to a folder under which the outputs of the medigan package (i.e. generated samples) are stored. """
 DEFAULT_OUTPUT_FOLDER = "output"
-""
-""" The folder containing an __init__.py file is a python module. """
-INIT_PY_FILE = "__init__.py"

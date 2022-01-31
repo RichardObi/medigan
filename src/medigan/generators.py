@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # ! /usr/bin/env python
-""" Main class providing user-library interaction methods for config management, and model selection and execution.
+""" Base class providing user-library interaction methods for config management, and model selection and execution.
 
 .. codeauthor:: Richard Osuala <richard.osuala@gmail.com>
 .. codeauthor:: Noussair Lazrak <lazrak.noussair@gmail.com>
@@ -13,11 +13,9 @@ import logging
 
 # Import library internal modules
 from .config_manager import ConfigManager
-from .constants import CONFIG_FILE_KEY_EXECUTION, MODEL_ID, CONFIG_FILE_FOLDER, CONFIG_FILE_NAME_AND_EXTENSION
-from .local_model import LocalModel
+from .constants import CONFIG_FILE_KEY_EXECUTION, MODEL_ID
 from .model_executor import ModelExecutor
 from .model_selector import ModelSelector
-from .utils import Utils
 
 
 # Import pypi libs
@@ -102,47 +100,7 @@ class Generators:
 
         return self.config_manager.get_config_by_id(model_id=model_id, config_key=config_key)
 
-    ############################ LOCAL MODEL METHODS ############################
-
-    def create_local_model(self, model_id: str = None, package_link: str = None, model_name: str = None,
-                           model_extension: str = None,
-                           generate_method_name: str = None, metadata_path: str = None, package_name: str = None,
-                           image_size: list = [], dependencies: list = [],
-                           path_to_script_w_generate_function: str = None, are_optional_config_fields_requested: bool = True, is_metadata_file_updated: bool = True) -> LocalModel:
-        local_model = LocalModel(model_id=model_id, package_link=package_link, model_name=model_name,
-                                 model_extension=model_extension,
-                                 generate_method_name=generate_method_name,
-                                 image_size=image_size, dependencies=dependencies, package_name=package_name,
-                                 metadata_path=metadata_path,
-                                 path_to_script_w_generate_function=path_to_script_w_generate_function,
-                                 are_optional_config_fields_requested=are_optional_config_fields_requested)
-        if is_metadata_file_updated:
-            self.add_local_model_to_config(local_model=local_model)
-            Utils.store_dict_as(dictionary=self.config_manager.config_dict,
-                                    output_path=f"{CONFIG_FILE_FOLDER}/{CONFIG_FILE_NAME_AND_EXTENSION}")
-        return local_model
-
-    def add_local_model_to_config(self, local_model: LocalModel):
-        self.config_manager.config_dict.update(local_model.metadata)
-
-    def is_local_model_in_config(self, local_model: LocalModel) -> bool:
-        try:
-            self.config_manager.get_config_by_id(local_model.model_id)
-        except KeyError as e:
-            return False
-        return True
-
-    def get_local_model_config(self, local_model: LocalModel) -> dict:
-        return self.config_manager.get_config_by_id(local_model.model_id)
-
-    def generate_with_local_model(self, local_model: LocalModel = None, num_samples: int = 10, output_path: str = None,
-                                  save_images: bool = True, is_gen_function_returned: bool = False, **kwargs):
-        if not self.is_local_model_in_config:
-            self.add_local_model_to_config(local_model)
-        self.generate(model_id=local_model.model_id, num_samples=num_samples, output_path=output_path,
-                      save_images=save_images, is_gen_function_returned=is_gen_function_returned, **kwargs)
-
-        ############################ MODEL SELECTOR METHODS ############################
+    ############################ MODEL SELECTOR METHODS ############################
 
     def get_selection_criteria_by_id(self, model_id: str, is_model_id_removed: bool = True) -> dict:
         """ Get and return the selection config dict for a specific model_id.
@@ -162,8 +120,7 @@ class Generators:
             a dictionary corresponding to the selection config of a model
         """
 
-        return self.model_selector.get_selection_criteria_by_id(model_id=model_id,
-                                                                is_model_id_removed=is_model_id_removed)
+        return self.model_selector.get_selection_criteria_by_id(model_id=model_id)
 
     def get_selection_criteria_by_ids(self, model_ids: list = None, are_model_ids_removed: bool = True) -> list:
         """ Get and return a list of selection config dicts for each of the specified model_ids.
