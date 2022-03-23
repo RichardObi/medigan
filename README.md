@@ -1,44 +1,52 @@
-# WELCOME TO MEDIGAN
+# MEDIGAN
 
 #### medigan - A Modular Python Library For Automating Synthetic Dataset Generation.
 
 While being extendable to any modality and generative model, medigan focuses on automating medical image dataset synthesis using GANs for training deep learning models.
 
-### Documentation
-Link to Documentation: https://medigan.readthedocs.io/en/latest/
+## Features:
 
-### Generative Models
+- Researchers and ML-practitioners can conveniently use an existing model in `medigan` for synthetic data augmentation instead of having to train their own generative model each time.
+
+- Search and find a model using search terms (e.g. "Mammography, 128x128, DCGAN") or key value pairs (e.g. `key` = "modality", `value` = "Mammography")
+
+- Explore the config and information (metrics, use-cases, modalities, etc) of each model in `medigan`
+
+- Generate samples using a model
+
+- Get the generate_method of a model to use dynamically inside your app
+
+## Installation
+To install the current release, simply run:
+```python
+pip install medigan
+```
+
+## Getting Started
+Examples and notebooks are located at [examples](examples) folder
+
+Documentation is available at [medigan.readthedocs.io](https://medigan.readthedocs.io/en/latest/)
+
+### Currently supported models
 The metadata and links to the models in medigan are stored in: https://github.com/RichardObi/medigan-models
 
 ### Architectural Overview
 ![medigan architecture and worklows](docs/source/_static/medigan-workflows.png)
 
-
-### Usage & Core Features:
-
-    - Researchers and ML-practitioners can conveniently use an existing model in `medigan` for synthetic data augmentation instead of having to train their own generative model each time.
-
-    - Users can search and find a model using search terms (e.g. "Mammography, 128x128, DCGAN") or key value pairs (e.g. `key` = "modality", `value` = "Mammography")
-
-    - Users can explore the config and information (metrics, use-cases, modalities, etc) of each model in `medigan`
-
-    - Users can generate samples using a model
-
-    - Users can also get the generate_method of a model that they may want to use dynamically inside their dataloaders
-
 ### How to Add New Models to medigan:
 
-    - `medigan` motivates the reuse of trained generative models.
+- `medigan` motivates the reuse of trained generative models.
 
-    - Models can be added via pull request by adding a model to the config in https://github.com/RichardObi/medigan-models (link stored in `medigan.constants.CONFIG_FILE_URL`).
+- Models can be added via pull request by adding a model to the config in https://github.com/RichardObi/medigan-models (link stored in `medigan.constants.CONFIG_FILE_URL`).
 
-    - Model contributors need to specify a link to their model package in the config. We recommend to host and link model packages on Zenodo. Reasons:
+- Model contributors need to specify a link to their model package in the config. We recommend to host and link model packages on Zenodo. Reasons:
 
-        - Zenodo model packages get a static DOI. This provides clarity as to who the contributors and IP owners of each generative model in `medigan` are.
+    - Zenodo model packages get a static DOI. This provides clarity as to who the contributors and IP owners of each generative model in `medigan` are.
 
-        - File modification/updates under the same DOI are not possible in Zenodo. This helps to avoid security issues as package content remains static after the model is tested, verified, and added to `medigan`.
+    - File modification/updates under the same DOI are not possible in Zenodo. This helps to avoid security issues as package content remains static after the model is tested, verified, and added to `medigan`.
 
-        - Examples of how `medigan` model packages should be hosted on Zenodo can be found here: https://doi.org/10.5281/zenodo.5187715 and here: https://doi.org/10.5281/zenodo.5188558
+    - Examples of how `medigan` model packages should be hosted on Zenodo can be found here: https://doi.org/10.5281/zenodo.5187715 and here: https://doi.org/10.5281/zenodo.5188558
+
 
 
 ### Example code snippets
@@ -124,3 +132,6 @@ found_models = generators.get_models_by_key_value_pair(key1=key,
                                                         is_case_sensitive=False)
 print(found_models)
 ```
+
+## Contributing
+We welcome contributions to medigan. Please read the [contributing guidelines](CONTRIBUTING.md) on how to contribute to medigan project.
