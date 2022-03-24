@@ -1,5 +1,8 @@
 # MEDIGAN
 
+[![PyPI version](https://badge.fury.io/py/medigan.svg)](https://badge.fury.io/py/medigan)
+[![Downloads](https://img.shields.io/pypi/dm/medigan)](https://img.shields.io/pypi/dm/medigan)
+
 #### medigan - A Modular Python Library For Automating Synthetic Dataset Generation.
 
 While being extendable to any modality and generative model, medigan focuses on automating medical image dataset synthesis using GANs for training deep learning models.
