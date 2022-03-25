@@ -1,0 +1,144 @@
+# This GitHub Action workflow will
+
+# - Format code using Black
+# - Build project with all dependencies
+# - Check code with flake8 linter
+# - Run tests with pytest
+
+
+name: Continuous integration
+
+on:
+  push:
+    branches: [ v0.1 ]
+  pull_request:
+    branches: [ v0.1 ]
+
+jobs:
+  formatting:
+    outputs:
+      new_sha: ${{ steps.sha.outputs.SHA }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+
+      - name: Setup Python 3.8
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.8"
+          cache: 'pip'
+
+      - name: Setup isort and Black
+        run: |
+          python -m pip install --upgrade pip
+          pip install isort black
+
+      - name: Run isort
+        run: |
+          # isort --profile black .
+
+      - name: Run Black formatter
+        run: |
+          # black .
+
+      - name: Commit changes
+        uses: EndBug/add-and-commit@v8
+        with:
+          message: 'Fix styling'
+          add: '*.py'
+      
+      - name: Get commit hash
+        id: sha
+        run: |
+          sha_new=$(git rev-parse HEAD)
+          echo $sha_new
+          echo "::set-output name=SHA::$sha_new"
+
+
+  build:
+    if: always()
+    needs: formatting
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout to latest changes
+      uses: actions/checkout@v2
+      with:
+        ref: ${{ needs.formatting.outputs.new_sha }}
+        fetch-depth: 0
+
+    - name: Set up Python 3.8
+      uses: actions/setup-python@v2
+      with:
+        python-version: "3.8"
+        cache: 'pip'
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install flake8 pytest
+        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+        pip install -e .
+
+  lint:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout to latest changes
+      uses: actions/checkout@v2
+      with:
+        ref: ${{ needs.formatting.outputs.new_sha }}
+        fetch-depth: 0
+
+    - name: Set up Python 3.8
+      uses: actions/setup-python@v2
+      with:
+        python-version: "3.8"
+        cache: 'pip'
+
+    - name: Install cached dependencies
+      run: |
+        python -m pip install --upgrade pip
+        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+        pip install flake8
+        pip install -e .
+   
+    - name: Lint with flake8
+      run: |
+        # stop the build if there are Python syntax errors or undefined names
+        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics --max-line-length=88 --extend-ignore=E203,E501
+        # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
+        flake8 . --count --exit-zero --max-complexity=10 --max-line-length=88 --extend-ignore=E203,E501 --statistics
+  
+  test:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout to latest changes
+      uses: actions/checkout@v2
+      with:
+        ref: ${{ needs.formatting.outputs.new_sha }}
+        fetch-depth: 0
+
+    - name: Set up Python 3.8
+      uses: actions/setup-python@v2
+      with:
+        python-version: "3.8"
+        cache: 'pip'
+
+    - name: Install cached dependencies
+      run: |
+        python -m pip install --upgrade pip
+        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+        pip install pytest
+        pip install -e .
+
+    - name: Test with pytest
+      run: |
+        # pytest
