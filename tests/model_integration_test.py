@@ -14,9 +14,10 @@ import unittest
 
 MODEL_ID = "YOUR_MODEL_ID_HERE"
 NUM_SAMPLES = 10
-OUTPUT_PATH= f"output/{MODEL_ID}/"
+OUTPUT_PATH = f"output/{MODEL_ID}/"
 try:
     from src.medigan.generators import Generators
+
     generators = Generators()
 except Exception as e:
     logging.error(f"test_init_generators error: {e}")

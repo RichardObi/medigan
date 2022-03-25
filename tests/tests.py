@@ -15,8 +15,8 @@ import unittest
 # Set the logging level depending on the level of detail you would like to have in the logs while running the tests.
 LOGGING_LEVEL = logging.WARNING  # logging.INFO
 
-class TestMediganMethods(unittest.TestCase):
 
+class TestMediganMethods(unittest.TestCase):
     def setUp(self):
 
         ## unittest logger config
@@ -26,7 +26,9 @@ class TestMediganMethods(unittest.TestCase):
         self.logger.setLevel(LOGGING_LEVEL)
         stream_handler = logging.StreamHandler(sys.stdout)
         stream_handler.setLevel(LOGGING_LEVEL)
-        formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+        formatter = logging.Formatter(
+            "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+        )
         stream_handler.setFormatter(formatter)
         self.logger.addHandler(stream_handler)
 
@@ -54,6 +56,7 @@ class TestMediganMethods(unittest.TestCase):
     def test_init_generators(self):
         try:
             from src.medigan.generators import Generators
+
             self.generators = Generators()
         except Exception as e:
             self.logger.error(f"test_init_generators error: {e}")
@@ -63,17 +66,29 @@ class TestMediganMethods(unittest.TestCase):
     def test_generate_methods(self):
         self._remove_dir_and_contents()
         try:
-            self.generators.generate(model_id=self.model_id_1, num_samples=self.num_samples,
-                                     output_path=self.test_output_path1)
+            self.generators.generate(
+                model_id=self.model_id_1,
+                num_samples=self.num_samples,
+                output_path=self.test_output_path1,
+            )
 
-            self.generators.generate(model_id=self.model_id_2, num_samples=self.num_samples,
-                                     output_path=self.test_output_path2)
+            self.generators.generate(
+                model_id=self.model_id_2,
+                num_samples=self.num_samples,
+                output_path=self.test_output_path2,
+            )
 
-            self.generators.generate(model_id=self.model_id_3, num_samples=self.num_samples,
-                                     output_path=self.test_output_path3)
+            self.generators.generate(
+                model_id=self.model_id_3,
+                num_samples=self.num_samples,
+                output_path=self.test_output_path3,
+            )
 
-            self.generators.generate(model_id=self.model_id_4, num_samples=self.num_samples,
-                                     output_path=self.test_output_path4)
+            self.generators.generate(
+                model_id=self.model_id_4,
+                num_samples=self.num_samples,
+                output_path=self.test_output_path4,
+            )
         except Exception as e:
             self.logger.error(f"test_generate_methods error: {e}")
             raise e
@@ -88,14 +103,26 @@ class TestMediganMethods(unittest.TestCase):
         test_dict_2 = {}
         test_dict_3 = {"translate_all_images": True}
         try:
-            self.generators.generate(model_id=self.model_id_1, num_samples=self.num_samples,
-                                     output_path=self.test_output_path1, **test_dict_1)
+            self.generators.generate(
+                model_id=self.model_id_1,
+                num_samples=self.num_samples,
+                output_path=self.test_output_path1,
+                **test_dict_1,
+            )
 
-            self.generators.generate(model_id=self.model_id_2, num_samples=self.num_samples,
-                                     output_path=self.test_output_path2, **test_dict_2)
+            self.generators.generate(
+                model_id=self.model_id_2,
+                num_samples=self.num_samples,
+                output_path=self.test_output_path2,
+                **test_dict_2,
+            )
 
-            self.generators.generate(model_id=self.model_id_3, num_samples=self.num_samples,
-                                     output_path=self.test_output_path3, **test_dict_3)
+            self.generators.generate(
+                model_id=self.model_id_3,
+                num_samples=self.num_samples,
+                output_path=self.test_output_path3,
+                **test_dict_3,
+            )
 
         except Exception as e:
             self.logger.error(f"test_generate_methods_with_additional_args error: {e}")
@@ -108,19 +135,25 @@ class TestMediganMethods(unittest.TestCase):
     def test_get_generate_method(self):
         self._remove_dir_and_contents()
         try:
-            gen_function_1 = self.generators.get_generate_function(model_id=self.model_id_1,
-                                                                   num_samples=self.num_samples,
-                                                                   output_path=self.test_output_path1)
+            gen_function_1 = self.generators.get_generate_function(
+                model_id=self.model_id_1,
+                num_samples=self.num_samples,
+                output_path=self.test_output_path1,
+            )
             gen_function_1()
 
-            gen_function_2 = self.generators.get_generate_function(model_id=self.model_id_2,
-                                                                   num_samples=self.num_samples,
-                                                                   output_path=self.test_output_path2)
+            gen_function_2 = self.generators.get_generate_function(
+                model_id=self.model_id_2,
+                num_samples=self.num_samples,
+                output_path=self.test_output_path2,
+            )
             gen_function_2()
 
-            gen_function_3 = self.generators.get_generate_function(model_id=self.model_id_3,
-                                                                   num_samples=self.num_samples,
-                                                                   output_path=self.test_output_path3)
+            gen_function_3 = self.generators.get_generate_function(
+                model_id=self.model_id_3,
+                num_samples=self.num_samples,
+                output_path=self.test_output_path3,
+            )
             gen_function_3()
         except Exception as e:
             self.logger.error(f"test_get_generate_method error: {e}")
@@ -130,16 +163,28 @@ class TestMediganMethods(unittest.TestCase):
 
     def test_search_for_models_method(self):
         try:
-            values_list = ['dcgan', 'mMg', 'ClF', 'modality']
-            models = self.generators.find_matching_models_by_values(values=values_list, target_values_operator='AND',
-                                                                    are_keys_also_matched=True, is_case_sensitive=False)
-            self.logger.debug(f'For value {values_list}, these models were found: {models}')
+            values_list = ["dcgan", "mMg", "ClF", "modality"]
+            models = self.generators.find_matching_models_by_values(
+                values=values_list,
+                target_values_operator="AND",
+                are_keys_also_matched=True,
+                is_case_sensitive=False,
+            )
+            self.logger.debug(
+                f"For value {values_list}, these models were found: {models}"
+            )
             self.assertTrue(len(models) > 0)
 
-            values_list = ['DCGAN', 'Mammography']
-            models = self.generators.find_matching_models_by_values(values=values_list, target_values_operator='OR',
-                                                                    are_keys_also_matched=False, is_case_sensitive=True)
-            self.logger.debug(f'For value {values_list}, these models were found: {models}')
+            values_list = ["DCGAN", "Mammography"]
+            models = self.generators.find_matching_models_by_values(
+                values=values_list,
+                target_values_operator="OR",
+                are_keys_also_matched=False,
+                is_case_sensitive=True,
+            )
+            self.logger.debug(
+                f"For value {values_list}, these models were found: {models}"
+            )
             self.assertTrue(len(models) > 0)
         except Exception as e:
             self.logger.error(f"test_search_for_models_method error: {e}")
@@ -150,18 +195,26 @@ class TestMediganMethods(unittest.TestCase):
         self._remove_dir_and_contents()
         try:
             # For the values_list below exactly 1 model should be found due to inbreast (27.08.2021)
-            values_list = ['dcgan', 'mMg', 'ClF', 'modality', 'inbreast']
-            self.generators.find_model_and_generate(values=values_list, target_values_operator='AND',
-                                                    are_keys_also_matched=True,
-                                                    is_case_sensitive=False, num_samples=self.num_samples,
-                                                    output_path=self.test_output_path1)
+            values_list = ["dcgan", "mMg", "ClF", "modality", "inbreast"]
+            self.generators.find_model_and_generate(
+                values=values_list,
+                target_values_operator="AND",
+                are_keys_also_matched=True,
+                is_case_sensitive=False,
+                num_samples=self.num_samples,
+                output_path=self.test_output_path1,
+            )
 
             # For the values_list below exactly 1 model should be found due to optimam (27.08.2021)
-            values_list = ['dcgan', 'mMg', 'ClF', 'modality', 'optimam']
-            self.generators.find_model_and_generate(values=values_list, target_values_operator='AND',
-                                                    are_keys_also_matched=True,
-                                                    is_case_sensitive=False, num_samples=self.num_samples,
-                                                    output_path=self.test_output_path2)
+            values_list = ["dcgan", "mMg", "ClF", "modality", "optimam"]
+            self.generators.find_model_and_generate(
+                values=values_list,
+                target_values_operator="AND",
+                are_keys_also_matched=True,
+                is_case_sensitive=False,
+                num_samples=self.num_samples,
+                output_path=self.test_output_path2,
+            )
         except Exception as e:
             self.logger.error(f"test_find_model_and_generate_method error: {e}")
             raise e
@@ -170,15 +223,21 @@ class TestMediganMethods(unittest.TestCase):
         try:
             # For the values_list below at least 2 models should be found.
             # There should be no synthetic data generated in this case.
-            values_list = ['dcgan', 'mMg', 'ClF', 'modalities']
-            self.generators.find_model_and_generate(values=values_list, target_values_operator='AND',
-                                                    are_keys_also_matched=True,
-                                                    is_case_sensitive=False, num_samples=self.num_samples,
-                                                    output_path=self.test_output_path1)
+            values_list = ["dcgan", "mMg", "ClF", "modalities"]
+            self.generators.find_model_and_generate(
+                values=values_list,
+                target_values_operator="AND",
+                are_keys_also_matched=True,
+                is_case_sensitive=False,
+                num_samples=self.num_samples,
+                output_path=self.test_output_path1,
+            )
         except Exception as e:
             self.logger.error(f"test_find_model_and_generate_method error: {e}")
             raise e
-        self._check_if_samples_were_generated(models=[1, 2], should_sample_be_generated=False)
+        self._check_if_samples_were_generated(
+            models=[1, 2], should_sample_be_generated=False
+        )
         self.assertRaises(expected_exception=Exception)
 
     def test_find_and_rank_models_then_generate_method(self):
@@ -186,30 +245,42 @@ class TestMediganMethods(unittest.TestCase):
         try:
             # TODO This test needs the respective metrics for any of these models to be available in config/global.json.
             # These values would need to find at least two models.
-            values_list = ['dcgan', 'MMG']
+            values_list = ["dcgan", "MMG"]
             metric = "downstream_task.CLF.trained_on_real_and_fake.f1"
-            self.generators.find_models_rank_and_generate(values=values_list, target_values_operator='AND',
-                                                          are_keys_also_matched=True,
-                                                          is_case_sensitive=False,
-                                                          metric=metric,
-                                                          order="asc",
-                                                          num_samples=self.num_samples,
-                                                          output_path=self.test_output_path1)
+            self.generators.find_models_rank_and_generate(
+                values=values_list,
+                target_values_operator="AND",
+                are_keys_also_matched=True,
+                is_case_sensitive=False,
+                metric=metric,
+                order="asc",
+                num_samples=self.num_samples,
+                output_path=self.test_output_path1,
+            )
         except Exception as e:
-            self.logger.error(f"test_find_and_rank_models_then_generate_method error: {e}")
+            self.logger.error(
+                f"test_find_and_rank_models_then_generate_method error: {e}"
+            )
             raise e
         self._check_if_samples_were_generated(models=[1])
         self._remove_dir_and_contents()
         try:
-            values_list = ['dcgan', 'MMG']
+            values_list = ["dcgan", "MMG"]
             metric = "turing_test.AUC"
-            self.generators.find_models_rank_and_generate(values=values_list, target_values_operator='AND',
-                                                          are_keys_also_matched=True,
-                                                          is_case_sensitive=False, metric=metric, order="desc",
-                                                          num_samples=self.num_samples,
-                                                          output_path=self.test_output_path1)
+            self.generators.find_models_rank_and_generate(
+                values=values_list,
+                target_values_operator="AND",
+                are_keys_also_matched=True,
+                is_case_sensitive=False,
+                metric=metric,
+                order="desc",
+                num_samples=self.num_samples,
+                output_path=self.test_output_path1,
+            )
         except Exception as e:
-            self.logger.error(f"test_find_and_rank_models_then_generate_method error: {e}")
+            self.logger.error(
+                f"test_find_and_rank_models_then_generate_method error: {e}"
+            )
             raise e
         self._check_if_samples_were_generated(models=[1])
 
@@ -218,14 +289,19 @@ class TestMediganMethods(unittest.TestCase):
     def test_find_and_rank_models_by_performance(self):
         try:
             # These values would need to find at least two models. See metrics and values in the config/global.json file.
-            values_list = ['dcgan', 'MMG']
+            values_list = ["dcgan", "MMG"]
             metric = "downstream_task.CLF.trained_on_real_and_fake.f1"
-            model_list = self.generators.find_models_and_rank(values=values_list, target_values_operator='AND',
-                                                              are_keys_also_matched=True,
-                                                              is_case_sensitive=False,
-                                                              metric=metric,
-                                                              order="asc")
-            self.assertTrue(len(model_list) > 0 and model_list[0]["model_id"] == self.model_id_2)
+            model_list = self.generators.find_models_and_rank(
+                values=values_list,
+                target_values_operator="AND",
+                are_keys_also_matched=True,
+                is_case_sensitive=False,
+                metric=metric,
+                order="asc",
+            )
+            self.assertTrue(
+                len(model_list) > 0 and model_list[0]["model_id"] == self.model_id_2
+            )
         except Exception as e:
             self.logger.error(f"test_find_and_rank_models_by_performance error: {e}")
             raise e
@@ -235,18 +311,28 @@ class TestMediganMethods(unittest.TestCase):
         try:
             # See metrics in the config/global.json file.
             ranked_models = self.generators.rank_models_by_performance(
-                model_ids=[self.model_id_1, self.model_id_2], metric="downstream_task.CLF.trained_on_real_and_fake.f1",
-                order="desc")
-            self.assertTrue(len(ranked_models) > 0 and ranked_models[0]["model_id"] == self.model_id_2)
+                model_ids=[self.model_id_1, self.model_id_2],
+                metric="downstream_task.CLF.trained_on_real_and_fake.f1",
+                order="desc",
+            )
+            self.assertTrue(
+                len(ranked_models) > 0
+                and ranked_models[0]["model_id"] == self.model_id_2
+            )
         except Exception as e:
             self.logger.error(f"test_rank_models_by_performance error: {e}")
             raise e
         try:
             # See metrics in the config/global.json file.
             ranked_models_2 = self.generators.rank_models_by_performance(
-                model_ids=[self.model_id_1, self.model_id_2], metric="turing_test.AUC",
-                order="desc")
-            self.assertTrue(len(ranked_models_2) > 0 and ranked_models_2[0]["model_id"] == self.model_id_2)
+                model_ids=[self.model_id_1, self.model_id_2],
+                metric="turing_test.AUC",
+                order="desc",
+            )
+            self.assertTrue(
+                len(ranked_models_2) > 0
+                and ranked_models_2[0]["model_id"] == self.model_id_2
+            )
         except Exception as e:
             self.logger.error(f"test_rank_models_by_performance error: {e}")
             raise e
@@ -256,26 +342,30 @@ class TestMediganMethods(unittest.TestCase):
         try:
             key1 = "modality"
             value1 = "Full-Field Mammography"
-            found_models = self.generators.get_models_by_key_value_pair(key1=key1, value1=value1,
-                                                                        is_case_sensitive=False)
+            found_models = self.generators.get_models_by_key_value_pair(
+                key1=key1, value1=value1, is_case_sensitive=False
+            )
             self.assertTrue(len(found_models) > 2)
 
             key1 = "license"
             value1 = "BSD-3"
-            found_models = self.generators.get_models_by_key_value_pair(key1=key1, value1=value1,
-                                                                        is_case_sensitive=True)
+            found_models = self.generators.get_models_by_key_value_pair(
+                key1=key1, value1=value1, is_case_sensitive=True
+            )
             self.assertTrue(len(found_models) > 1)
 
             key1 = "performance.downstream_task.CLF.trained_on_real_and_fake.f1"
             value1 = 0.89
-            found_models = self.generators.get_models_by_key_value_pair(key1=key1, value1=value1,
-                                                                        is_case_sensitive=True)
+            found_models = self.generators.get_models_by_key_value_pair(
+                key1=key1, value1=value1, is_case_sensitive=True
+            )
             self.assertTrue(len(found_models) > 0)
 
             key1 = "performance.turing_test.AUC"
             value1 = 0.56
-            found_models = self.generators.get_models_by_key_value_pair(key1=key1, value1=value1,
-                                                                        is_case_sensitive=True)
+            found_models = self.generators.get_models_by_key_value_pair(
+                key1=key1, value1=value1, is_case_sensitive=True
+            )
             self.assertTrue(len(found_models) > 0)
 
         except Exception as e:
@@ -283,8 +373,9 @@ class TestMediganMethods(unittest.TestCase):
             raise e
         self.assertRaises(expected_exception=Exception)
 
-    def _check_if_samples_were_generated(self, models=[1, 2], num_samples=None,
-                                         should_sample_be_generated: bool = True):
+    def _check_if_samples_were_generated(
+        self, models=[1, 2], num_samples=None, should_sample_be_generated: bool = True
+    ):
         if should_sample_be_generated:
             if 1 in models:
                 # check if the number of generated samples of model_id_1 is as expected.
@@ -317,9 +408,9 @@ class TestMediganMethods(unittest.TestCase):
                 file_list_4 = glob.glob(self.test_output_path4 + "/*")
                 self.logger.debug(f"{len(file_list_4)} == {self.num_samples*2} ?")
                 if num_samples is None:
-                    self.assertTrue(len(file_list_4) == self.num_samples*2)
+                    self.assertTrue(len(file_list_4) == self.num_samples * 2)
                 else:
-                    self.assertTrue(len(file_list_4) == num_samples*2)
+                    self.assertTrue(len(file_list_4) == num_samples * 2)
         else:
             if 1 in models:
                 # check if the sample have NOT been generated for model_id 1,2, 3,4 etc
@@ -350,10 +441,9 @@ class TestMediganMethods(unittest.TestCase):
                 file_list_4 = glob.glob(self.test_output_path4 + "/*")
                 self.logger.debug(f"{len(file_list_4)} != {self.num_samples*2}?")
                 if num_samples is None:
-                    self.assertTrue(len(file_list_4) != self.num_samples*2)
+                    self.assertTrue(len(file_list_4) != self.num_samples * 2)
                 else:
-                    self.assertTrue(len(file_list_4) != num_samples*2)
-
+                    self.assertTrue(len(file_list_4) != num_samples * 2)
 
     def _remove_dir_and_contents(self):
         # After each test, empty the created folders and files to avoid corrupting a new test.
@@ -365,10 +455,11 @@ class TestMediganMethods(unittest.TestCase):
         except OSError as e:
             # This may give an error if the folders are not created.
             self.logger.debug(
-                f"Exception while trying to delete folder. Likely it simply had not yet been created: {e}")
+                f"Exception while trying to delete folder. Likely it simply had not yet been created: {e}"
+            )
         except Exception as e2:
             self.logger.error(f"Error while trying to delete folder: {e2}")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()
