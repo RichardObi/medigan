@@ -1,4 +1,5 @@
 # WELCOME TO MEDIGAN
+![Continuous integration](https://github.com/RichardObi/medigan/actions/workflows/python-ci.yml/badge.svg)
 
 #### medigan - A Modular Python Library For Automating Synthetic Dataset Generation.
 
