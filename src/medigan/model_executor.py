@@ -12,24 +12,37 @@ from __future__ import absolute_import
 import importlib
 import logging
 import time
+
 # Import pypi libs
 from pathlib import Path
 
 import pkg_resources
 
 # Import library internal modules
-from .constants import CONFIG_FILE_KEY_DEPENDENCIES, CONFIG_FILE_KEY_MODEL_NAME, CONFIG_FILE_KEY_MODEL_EXTENSION, \
-    CONFIG_FILE_KEY_PACKAGE_NAME, DEFAULT_OUTPUT_FOLDER, CONFIG_FILE_KEY_PACKAGE_LINK, \
-    PACKAGE_EXTENSION, CONFIG_FILE_KEY_IMAGE_SIZE, CONFIG_FILE_KEY_GENERATE, \
-    CONFIG_FILE_KEY_GENERATE_NAME, CONFIG_FILE_KEY_GENERATE_ARGS, \
-    CONFIG_FILE_KEY_GENERATE_ARGS_MODEL_FILE, CONFIG_FILE_KEY_GENERATE_ARGS_NUM_SAMPLES, \
-    CONFIG_FILE_KEY_GENERATE_ARGS_OUTPUT_PATH, CONFIG_FILE_KEY_GENERATE_ARGS_CUSTOM, \
-    CONFIG_FILE_KEY_GENERATE_ARGS_BASE, CONFIG_FILE_KEY_GENERATE_ARGS_SAVE_IMAGES
+from .constants import (
+    CONFIG_FILE_KEY_DEPENDENCIES,
+    CONFIG_FILE_KEY_GENERATE,
+    CONFIG_FILE_KEY_GENERATE_ARGS,
+    CONFIG_FILE_KEY_GENERATE_ARGS_BASE,
+    CONFIG_FILE_KEY_GENERATE_ARGS_CUSTOM,
+    CONFIG_FILE_KEY_GENERATE_ARGS_MODEL_FILE,
+    CONFIG_FILE_KEY_GENERATE_ARGS_NUM_SAMPLES,
+    CONFIG_FILE_KEY_GENERATE_ARGS_OUTPUT_PATH,
+    CONFIG_FILE_KEY_GENERATE_ARGS_SAVE_IMAGES,
+    CONFIG_FILE_KEY_GENERATE_NAME,
+    CONFIG_FILE_KEY_IMAGE_SIZE,
+    CONFIG_FILE_KEY_MODEL_EXTENSION,
+    CONFIG_FILE_KEY_MODEL_NAME,
+    CONFIG_FILE_KEY_PACKAGE_LINK,
+    CONFIG_FILE_KEY_PACKAGE_NAME,
+    DEFAULT_OUTPUT_FOLDER,
+    PACKAGE_EXTENSION,
+)
 from .utils import Utils
 
 
 class ModelExecutor:
-    """ `ModelExecutor` class: Find config links to download models, init models as python packages, run generate methods.
+    """`ModelExecutor` class: Find config links to download models, init models as python packages, run generate methods.
 
     Parameters
     ----------
@@ -75,10 +88,10 @@ class ModelExecutor:
     """
 
     def __init__(
-            self,
-            model_id: str,
-            execution_config: dict,
-            download_package: bool = True,
+        self,
+        model_id: str,
+        execution_config: dict,
+        download_package: bool = True,
     ):
         self.model_id = model_id
         self.execution_config = execution_config
@@ -97,7 +110,7 @@ class ModelExecutor:
         self._setup_model_package()
 
     def _setup_model_package(self):
-        """ Use specific keys to retrieve needed model config values and load and initialize the model as package. """
+        """Use specific keys to retrieve needed model config values and load and initialize the model as package."""
 
         self.image_size = self.execution_config[CONFIG_FILE_KEY_IMAGE_SIZE]
         self.dependencies = self.execution_config[CONFIG_FILE_KEY_DEPENDENCIES]
@@ -106,81 +119,126 @@ class ModelExecutor:
         self.package_name = self.execution_config[CONFIG_FILE_KEY_PACKAGE_NAME]
         self.package_link = self.execution_config[CONFIG_FILE_KEY_PACKAGE_LINK]
         self.generate_method_name = self.execution_config[CONFIG_FILE_KEY_GENERATE][
-            CONFIG_FILE_KEY_GENERATE_NAME]
+            CONFIG_FILE_KEY_GENERATE_NAME
+        ]
         self.generate_method_args = self.execution_config[CONFIG_FILE_KEY_GENERATE][
-            CONFIG_FILE_KEY_GENERATE_ARGS]
+            CONFIG_FILE_KEY_GENERATE_ARGS
+        ]
 
         self._check_package_resources()
         self._get_and_store_package()
         self._import_package_as_lib()
 
     def _check_package_resources(self):
-        """ Check if the dependencies inside the generative model's package are installed in the current setup. """
+        """Check if the dependencies inside the generative model's package are installed in the current setup."""
 
-        logging.debug(f"{self.model_id}: Now checking availability of dependencies of model: {self.dependencies}")
+        logging.debug(
+            f"{self.model_id}: Now checking availability of dependencies of model: {self.dependencies}"
+        )
         try:
             pkg_resources.require(self.dependencies)
-            logging.info(f"{self.model_id}: All necessary dependencies for model are available: {self.dependencies}")
+            logging.info(
+                f"{self.model_id}: All necessary dependencies for model are available: {self.dependencies}"
+            )
         except Exception as e:
-            logging.error(f"{self.model_id}: Some of the necessary dependencies ({self.dependencies}) for this model "
-                          f"are missing: {e}. Please retry after installing them e.g. via 'pip install "
-                          f"{self.dependencies}'.")
+            logging.error(
+                f"{self.model_id}: Some of the necessary dependencies ({self.dependencies}) for this model "
+                f"are missing: {e}. Please retry after installing them e.g. via 'pip install "
+                f"{self.dependencies}'."
+            )
             raise e
 
     def _get_and_store_package(self):
-        """ Load and store the generative model's python package using the link from the model's `execution_config`. """
+        """Load and store the generative model's python package using the link from the model's `execution_config`."""
 
         if self.package_path is None:
-            assert Utils.mkdirs(
-                path_as_string=self.model_id), f"{self.model_id}: The model folder was not found nor created " \
-                                               f"in /{self.model_id}."
-            package_path = Path(f"{self.model_id}/{self.package_name}{PACKAGE_EXTENSION}")
+            assert Utils.mkdirs(path_as_string=self.model_id), (
+                f"{self.model_id}: The model folder was not found nor created "
+                f"in /{self.model_id}."
+            )
+            package_path = Path(
+                f"{self.model_id}/{self.package_name}{PACKAGE_EXTENSION}"
+            )
             try:
-                if not Utils.is_file_located_or_downloaded(path_as_string=package_path,
-                                                       download_if_not_found=True,
-                                                       download_link=self.package_link):
-                    error_string = f"{self.model_id}: The package archive ({self.package_name}{PACKAGE_EXTENSION}) " \
-                                   f"was not found in {package_path} nor downloaded from {self.package_link}."
+                if not Utils.is_file_located_or_downloaded(
+                    path_as_string=package_path,
+                    download_if_not_found=True,
+                    download_link=self.package_link,
+                ):
+                    error_string = (
+                        f"{self.model_id}: The package archive ({self.package_name}{PACKAGE_EXTENSION}) "
+                        f"was not found in {package_path} nor downloaded from {self.package_link}."
+                    )
                     logging.error(error_string)
                     raise FileNotFoundError(error_string)
             except Exception as e:
                 raise e
             self.package_path = package_path
-        logging.info(f"{self.model_id}: Model package should now be available in: {self.package_path}.")
+        logging.info(
+            f"{self.model_id}: Model package should now be available in: {self.package_path}."
+        )
 
     def _import_package_as_lib(self):
-        """ Unzip and import the generative model's python package using importlib. """
+        """Unzip and import the generative model's python package using importlib."""
 
-        logging.debug(f"{self.model_id}: Now importing model package ({self.package_name}) as lib using "
-                      f"importlib from {self.package_path}.")
-        is_model_already_unpacked = Path(
-            f"{self.model_id}/{self.package_name}/{self.model_name}{self.model_extension}").is_file() or Path(
-            f"{self.model_id}/{self.model_name}{self.model_extension}").is_file()
+        logging.debug(
+            f"{self.model_id}: Now importing model package ({self.package_name}) as lib using "
+            f"importlib from {self.package_path}."
+        )
+        is_model_already_unpacked = (
+            Path(
+                f"{self.model_id}/{self.package_name}/{self.model_name}{self.model_extension}"
+            ).is_file()
+            or Path(
+                f"{self.model_id}/{self.model_name}{self.model_extension}"
+            ).is_file()
+        )
         # if is_model_already_unpacked == True, then the package was already unzipped previously.
-        if self.package_path.is_file() and PACKAGE_EXTENSION == '.zip' and not is_model_already_unpacked:
+        if (
+            self.package_path.is_file()
+            and PACKAGE_EXTENSION == ".zip"
+            and not is_model_already_unpacked
+        ):
             # Unzip the model package in /{model_id}/{MODEL_PACKAGE}{PACKAGE_EXTENSION}
-            Utils.unzip_archive(source_path=self.package_path, target_path=self.model_id)
+            Utils.unzip_archive(
+                source_path=self.package_path, target_path=self.model_id
+            )
         else:
-            logging.debug(f"{self.model_id}: Either no file found (== {self.package_path.is_file()}) or package "
-                          f"already unarchived (=={is_model_already_unpacked}) in {self.package_path}. "
-                          f"No action was taken.")
+            logging.debug(
+                f"{self.model_id}: Either no file found (== {self.package_path.is_file()}) or package "
+                f"already unarchived (=={is_model_already_unpacked}) in {self.package_path}. "
+                f"No action was taken."
+            )
         try:
             # Installing generative model as python library
-            self.deserialized_model_as_lib = importlib.import_module(name=f"{self.model_id}.{self.package_name}")
+            self.deserialized_model_as_lib = importlib.import_module(
+                name=f"{self.model_id}.{self.package_name}"
+            )
             self.serialised_model_file_path = f"{self.model_id}/{self.package_name}/{self.model_name}{self.model_extension}"
         except ModuleNotFoundError:
             try:
                 # Fallback: The zip's content might have been unzipped in the model_id folder without generating the package_name subfolder.
-                self.deserialized_model_as_lib = importlib.import_module(name=f"{self.model_id}")
-                self.serialised_model_file_path = f"{self.model_id}/{self.model_name}{self.model_extension}"
+                self.deserialized_model_as_lib = importlib.import_module(
+                    name=f"{self.model_id}"
+                )
+                self.serialised_model_file_path = (
+                    f"{self.model_id}/{self.model_name}{self.model_extension}"
+                )
             except Exception as e:
-                logging.error(f"{self.model_id}: Error while importing {self.package_name} from /{self.model_id}: {e}")
+                logging.error(
+                    f"{self.model_id}: Error while importing {self.package_name} from /{self.model_id}: {e}"
+                )
                 raise e
 
-    def generate(self, num_samples: int = 20, output_path: str = None, save_images: bool = True,
-                 is_gen_function_returned: bool = False,
-                 **kwargs):
-        """ Generate samples using the generative model or return the model's generate function.
+    def generate(
+        self,
+        num_samples: int = 20,
+        output_path: str = None,
+        save_images: bool = True,
+        is_gen_function_returned: bool = False,
+        **kwargs,
+    ):
+        """Generate samples using the generative model or return the model's generate function.
 
         The name amd additional parameters of the generate function of the respective generative model are retrieved
         from the model's `execution_config`.
@@ -211,32 +269,50 @@ class ModelExecutor:
         """
 
         if output_path is None:
-            output_path = f'{DEFAULT_OUTPUT_FOLDER}/{self.model_id}/{time.time()}/'
+            output_path = f"{DEFAULT_OUTPUT_FOLDER}/{self.model_id}/{time.time()}/"
         assert Utils.mkdirs(
-            path_as_string=output_path), f"{self.model_id}: The output folder was not found nor created in {output_path}."
+            path_as_string=output_path
+        ), f"{self.model_id}: The output folder was not found nor created in {output_path}."
         try:
-            generate_method = getattr(self.deserialized_model_as_lib, f'{self.generate_method_name}')
-            prepared_kwargs = self._prepare_generate_method_args(model_file=self.serialised_model_file_path,
-                                                                 num_samples=num_samples, output_path=output_path,
-                                                                 save_images=save_images, **kwargs)
+            generate_method = getattr(
+                self.deserialized_model_as_lib, f"{self.generate_method_name}"
+            )
+            prepared_kwargs = self._prepare_generate_method_args(
+                model_file=self.serialised_model_file_path,
+                num_samples=num_samples,
+                output_path=output_path,
+                save_images=save_images,
+                **kwargs,
+            )
             logging.info(f"The generate function's parameters are: {prepared_kwargs}")
             if is_gen_function_returned:
+
                 def gen(**some_other_kwargs):
-                    logging.debug(f"Generate method called with the following params. (i) default: {prepared_kwargs}, "
-                                  f"(ii) custom: {some_other_kwargs}")
+                    logging.debug(
+                        f"Generate method called with the following params. (i) default: {prepared_kwargs}, "
+                        f"(ii) custom: {some_other_kwargs}"
+                    )
                     return generate_method(**prepared_kwargs, **some_other_kwargs)
 
                 return gen
             else:
                 return generate_method(**prepared_kwargs)
         except Exception as e:
-            logging.error(f"{self.model_id}: Error while trying to generate images with model "
-                          f"{self.serialised_model_file_path}: {e}")
+            logging.error(
+                f"{self.model_id}: Error while trying to generate images with model "
+                f"{self.serialised_model_file_path}: {e}"
+            )
             raise e
 
-    def _prepare_generate_method_args(self, model_file: str, num_samples: int, output_path: str, save_images: bool,
-                                      **kwargs):
-        """ Prepare the keyword arguments that will be passed to the models generate function.
+    def _prepare_generate_method_args(
+        self,
+        model_file: str,
+        num_samples: int,
+        output_path: str,
+        save_images: bool,
+        **kwargs,
+    ):
+        """Prepare the keyword arguments that will be passed to the models generate function.
 
         Prepares the keyword arguments that need to be passed to the generative model's generate function to generate
         samples. This contains the steps:
@@ -272,20 +348,30 @@ class ModelExecutor:
 
         prepared_kwargs: dict = {}
         # get keys of mandatory custom dictionary input args and assign the default value from config to values of keys
-        prepared_kwargs.update(self.generate_method_args[CONFIG_FILE_KEY_GENERATE_ARGS_CUSTOM])
+        prepared_kwargs.update(
+            self.generate_method_args[CONFIG_FILE_KEY_GENERATE_ARGS_CUSTOM]
+        )
 
         # update: If one of these keys was provided in **kwargs, then change default value to value provided in **kwargs
         prepared_kwargs.update(kwargs)
 
         try:
             # validating that these specific keys are available in the config. also retrieving default values
-            base_config_list = [self.generate_method_args[CONFIG_FILE_KEY_GENERATE_ARGS_BASE][0],
-                                self.generate_method_args[CONFIG_FILE_KEY_GENERATE_ARGS_BASE][1],
-                                self.generate_method_args[CONFIG_FILE_KEY_GENERATE_ARGS_BASE][2],
-                                self.generate_method_args[CONFIG_FILE_KEY_GENERATE_ARGS_BASE][3]]
-            if not all(x in base_config_list for x in
-                       [CONFIG_FILE_KEY_GENERATE_ARGS_MODEL_FILE, CONFIG_FILE_KEY_GENERATE_ARGS_NUM_SAMPLES,
-                        CONFIG_FILE_KEY_GENERATE_ARGS_OUTPUT_PATH, CONFIG_FILE_KEY_GENERATE_ARGS_SAVE_IMAGES]):
+            base_config_list = [
+                self.generate_method_args[CONFIG_FILE_KEY_GENERATE_ARGS_BASE][0],
+                self.generate_method_args[CONFIG_FILE_KEY_GENERATE_ARGS_BASE][1],
+                self.generate_method_args[CONFIG_FILE_KEY_GENERATE_ARGS_BASE][2],
+                self.generate_method_args[CONFIG_FILE_KEY_GENERATE_ARGS_BASE][3],
+            ]
+            if not all(
+                x in base_config_list
+                for x in [
+                    CONFIG_FILE_KEY_GENERATE_ARGS_MODEL_FILE,
+                    CONFIG_FILE_KEY_GENERATE_ARGS_NUM_SAMPLES,
+                    CONFIG_FILE_KEY_GENERATE_ARGS_OUTPUT_PATH,
+                    CONFIG_FILE_KEY_GENERATE_ARGS_SAVE_IMAGES,
+                ]
+            ):
                 raise KeyError
         except KeyError as e:
             logging.warning(
@@ -294,22 +380,27 @@ class ModelExecutor:
                 f"{CONFIG_FILE_KEY_GENERATE_ARGS_NUM_SAMPLES}, {CONFIG_FILE_KEY_GENERATE_ARGS_OUTPUT_PATH}, "
                 f"{CONFIG_FILE_KEY_GENERATE_ARGS_SAVE_IMAGES}) are missing: {e}. A value for this key will be "
                 f"provided nevertheless when calling the model's generate method ({self.generate_method_name})'. "
-                f"This could hence cause an error.")
+                f"This could hence cause an error."
+            )
         # Adding the always necessary base parameters to kwargs. They are updated if erroneously
         # introduced via the user-provided kwargs.
-        prepared_kwargs.update({
-            CONFIG_FILE_KEY_GENERATE_ARGS_MODEL_FILE: model_file,
-            CONFIG_FILE_KEY_GENERATE_ARGS_NUM_SAMPLES: num_samples,
-            CONFIG_FILE_KEY_GENERATE_ARGS_OUTPUT_PATH: output_path,
-            CONFIG_FILE_KEY_GENERATE_ARGS_SAVE_IMAGES: save_images,
-        })
+        prepared_kwargs.update(
+            {
+                CONFIG_FILE_KEY_GENERATE_ARGS_MODEL_FILE: model_file,
+                CONFIG_FILE_KEY_GENERATE_ARGS_NUM_SAMPLES: num_samples,
+                CONFIG_FILE_KEY_GENERATE_ARGS_OUTPUT_PATH: output_path,
+                CONFIG_FILE_KEY_GENERATE_ARGS_SAVE_IMAGES: save_images,
+            }
+        )
         return prepared_kwargs
 
     def __repr__(self):
-        return f'ModelExecutor(model_id={self.model_id}, name={self.model_name}, package={self.package_name}, ' \
-               f'image_size={self.image_size}, dependencies={self.dependencies}, link={self.package_link}, ' \
-               f'path={self.serialised_model_file_path}, generate_method={self.generate_method_name}, ' \
-               f'generate_method_args={self.generate_method_args})'
+        return (
+            f"ModelExecutor(model_id={self.model_id}, name={self.model_name}, package={self.package_name}, "
+            f"image_size={self.image_size}, dependencies={self.dependencies}, link={self.package_link}, "
+            f"path={self.serialised_model_file_path}, generate_method={self.generate_method_name}, "
+            f"generate_method_args={self.generate_method_args})"
+        )
 
     def __len__(self):
         raise NotImplementedError
