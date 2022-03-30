@@ -2,7 +2,7 @@
 <!-- ![medigan](medigan_logo_1.png) -->
 ![medigan](docs/source/_static/medigan_logo.png)
 
-
+![Continuous integration](https://github.com/RichardObi/medigan/actions/workflows/python-ci.yml/badge.svg)
 [![PyPI version](https://badge.fury.io/py/medigan.svg)](https://badge.fury.io/py/medigan)
 [![Downloads](https://img.shields.io/pypi/dm/medigan)](https://img.shields.io/pypi/dm/medigan)
 
