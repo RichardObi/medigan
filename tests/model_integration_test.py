@@ -23,4 +23,4 @@ except Exception as e:
     logging.error(f"test_init_generators error: {e}")
     raise e
 
-generators.generate(model_id=MODEL_ID, num_samples=NUM_SAMPLES, output_path=OUTPUT_PATH)
+generators.generate(model_id="00001_DCGAN_MMG_CALC_ROI", num_samples=NUM_SAMPLES, output_path=OUTPUT_PATH)

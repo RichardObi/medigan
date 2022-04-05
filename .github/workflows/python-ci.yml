@@ -6,13 +6,13 @@
 # - Run tests with pytest
 
 
-name: Continuous integration
+name: Build and test
 
 on:
   push:
-    branches: [ v0.1 ]
+    branches: [ main ]
   pull_request:
-    branches: [ v0.1 ]
+    branches: [ main ]
 
 jobs:
   formatting:
@@ -141,4 +141,4 @@ jobs:
 
     - name: Test with pytest
       run: |
-        # pytest
+        pytest
