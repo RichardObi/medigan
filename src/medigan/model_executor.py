@@ -146,7 +146,14 @@ class ModelExecutor:
                 f"are missing: {e}. Please retry after installing them e.g. via 'pip install "
                 f"{self.dependencies}'."
             )
-            raise e
+            import subprocess
+            import sys
+
+            def install(package):
+                subprocess.check_call([sys.executable, "-m", "pip", "install", package])
+            for package in self.dependencies:
+                install(package)
+            # raise e
 
     def _get_and_store_package(self):
         """Load and store the generative model's python package using the link from the model's `execution_config`."""
