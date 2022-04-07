@@ -467,6 +467,7 @@ class TestMediganMethods():
     def _remove_dir_and_contents(self):
         # After each test, empty the created folders and files to avoid corrupting a new test.
         try:
+            shutil.rmtree(self.test_output_path)
             shutil.rmtree(self.test_output_path1)
             shutil.rmtree(self.test_output_path2)
             shutil.rmtree(self.test_output_path3)
