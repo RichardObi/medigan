@@ -196,9 +196,9 @@ class TestMediganMethods:
         "key1, value1, expected",
         [
             ("modality", "Full-Field Mammography", 2),
-            ("license", "BSD-3", 1),
-            ("performance.downstream_task.CLF.trained_on_real_and_fake.f1", 0.89, 0),
-            ("performance.turing_test.AUC", 0.56, 0),
+            ("license", "BSD", 2),
+            ("performance.downstream_task.CLF.trained_on_real_and_fake.f1", "0.89", 0),
+            ("performance.turing_test.AUC", "0.56", 0),
         ],
     )
     def test_get_models_by_key_value_pair(self, key1, value1, expected):
@@ -206,7 +206,7 @@ class TestMediganMethods:
             key1=key1, value1=value1, is_case_sensitive=False
         )
 
-        assert len(found_models) > expected
+        assert len(found_models) >= expected
 
     def _check_if_samples_were_generated(
         self, num_samples=None, should_sample_be_generated: bool = True
@@ -235,7 +235,3 @@ class TestMediganMethods:
             )
         except Exception as e2:
             self.logger.error(f"Error while trying to delete folder: {e2}")
-
-
-if __name__ == "__main__":
-    unittest.main()
