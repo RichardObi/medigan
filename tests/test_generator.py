@@ -219,7 +219,7 @@ class TestMediganMethods:
 
         if should_sample_be_generated:
             assert (
-                len(file_list) == num_samples or len(file_list) == self.num_samples * 2
+                len(file_list) == num_samples or len(file_list) == num_samples * 2
             )  # Temporary fix for different outputs per model
         else:
             assert len(file_list) == 0
