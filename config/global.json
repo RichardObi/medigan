@@ -430,7 +430,8 @@
         "dominate",
         "visdom",
         "Pillow",
-        "imageio"
+        "imageio",
+        "scikit-image"
       ],
       "generate_method": {
         "name": "generate_GAN_images",
