@@ -17,10 +17,10 @@ import pytest
 LOGGING_LEVEL = logging.WARNING  # logging.INFO
 
 models = [
-    ("00001_DCGAN_MMG_CALC_ROI", {}, 5),
-    ("00002_DCGAN_MMG_MASS_ROI", {}, 5),
-    ("00003_CYCLEGAN_MMG_DENSITY_FULL", {"translate_all_images": True}, 17),
-    ("00004_PIX2PIX_MASKTOMASS_BREAST_MG_SYNTHESIS", {}, 5),
+    ("00001_DCGAN_MMG_CALC_ROI", {}, 3),
+    ("00002_DCGAN_MMG_MASS_ROI", {}, 3),
+    ("00003_CYCLEGAN_MMG_DENSITY_FULL", {"translate_all_images": False}, 2),
+    ("00004_PIX2PIX_MASKTOMASS_BREAST_MG_SYNTHESIS", {}, 3),
 ]
 
 # class TestMediganMethods(unittest.TestCase):
