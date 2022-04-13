@@ -4,7 +4,7 @@
 
 .. codeauthor:: Richard Osuala <richard.osuala@gmail.com>
 """
-# run with python -m tests.tests
+# run with python -m tests.test_generator
 
 import glob
 import logging
