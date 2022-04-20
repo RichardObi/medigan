@@ -48,20 +48,34 @@ Documentation is available at [medigan.readthedocs.io](https://medigan.readthedo
 
 
 ### Generation example
-Create mammography calcification images using dcgan model
+#### DCGAN 
+Create mammography calcification images using DCGAN model
 ```python
 # import medigan and initialize Generators
 from medigan import Generators
 generators = Generators()
 
-# generate 10 samples using one of the medigan models
-generators.generate(model_id="00001_DCGAN_MMG_CALC_ROI", num_samples=10)
+# generate 6 samples using one of the medigan models
+generators.generate(model_id="00001_DCGAN_MMG_CALC_ROI", num_samples=6)
 ```
-![sample](docs/source/_static/samples/gan_sample_1.png)
-![sample](docs/source/_static/samples/gan_sample_2.png)
-![sample](docs/source/_static/samples/gan_sample_3.png)
-![sample](docs/source/_static/samples/gan_sample_4.png)
-![sample](docs/source/_static/samples/gan_sample_5.png)
+![sample](docs/source/_static/samples/dcgan/gan_sample_1.png)
+![sample](docs/source/_static/samples/dcgan/gan_sample_2.png)
+![sample](docs/source/_static/samples/dcgan/gan_sample_3.png)
+![sample](docs/source/_static/samples/dcgan/gan_sample_4.png)
+![sample](docs/source/_static/samples/dcgan/3.png)
+![sample](docs/source/_static/samples/dcgan/gan_sample_5.png)
 
+
+#### CYCLEGAN 
+Create mammograms translated from Low-to-High Breast Density using CYCLEGAN model
+```python
+from medigan import Generators
+generators = Generators()
+
+generators.generate(model_id="00003_CYCLEGAN_MMG_DENSITY_FULL", num_samples=1)
+```
+![sample](docs/source/_static/samples/cyclegan/sample_image_5_low.png)
+&rarr;
+![sample](docs/source/_static/samples/cyclegan/sample_image_5_high.png)
 ## Contributing
 We welcome contributions to medigan. Please read the [contributing guidelines](CONTRIBUTING.md) on how to contribute to medigan project.
