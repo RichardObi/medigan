@@ -142,7 +142,7 @@ class ModelExecutor:
                 f"{self.model_id}: Some of the necessary dependencies ({self.dependencies}) for this model "
                 f"are missing: {e}. Please run 'python src/medigan/install_model_dependencies.py --model_id {self.model_id}' to install them."
             )
-            raise e
+            # raise e
 
     def _get_and_store_package(self):
         """Load and store the generative model's python package using the link from the model's `execution_config`."""
