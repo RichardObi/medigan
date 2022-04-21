@@ -142,6 +142,7 @@ jobs:
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
         pip install pytest
         pip install -e .
+        python src/medigan/install_model_dependencies.py
 
     - name: Test with pytest
       run: |
