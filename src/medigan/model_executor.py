@@ -88,10 +88,7 @@ class ModelExecutor:
     """
 
     def __init__(
-        self,
-        model_id: str,
-        execution_config: dict,
-        download_package: bool = True,
+        self, model_id: str, execution_config: dict, download_package: bool = True,
     ):
         self.model_id = model_id
         self.execution_config = execution_config
@@ -143,18 +140,9 @@ class ModelExecutor:
         except Exception as e:
             logging.error(
                 f"{self.model_id}: Some of the necessary dependencies ({self.dependencies}) for this model "
-                f"are missing: {e}. Please retry after installing them e.g. via 'pip install "
-                f"{self.dependencies}'."
+                f"are missing: {e}. Please run 'python src/medigan/install_model_dependencies.py --model_id {self.model_id}' to install them."
             )
-            import subprocess
-            import sys
-
-            def install(package):
-                subprocess.check_call([sys.executable, "-m", "pip", "install", package])
-
-            for package in self.dependencies:
-                install(package)
-            # raise e
+            raise e
 
     def _get_and_store_package(self):
         """Load and store the generative model's python package using the link from the model's `execution_config`."""
