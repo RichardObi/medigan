@@ -39,11 +39,11 @@ jobs:
 
       - name: Run isort
         run: |
-          # isort --profile black .
+          isort --profile black .
 
       - name: Run Black formatter
         run: |
-          # black .
+          black .
 
       - name: Commit changes
         uses: EndBug/add-and-commit@v8
