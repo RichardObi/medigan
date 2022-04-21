@@ -84,6 +84,10 @@ jobs:
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
         pip install -e .
 
+    - name: Install model dependencies
+      run: |
+        python src/medigan/install_model_dependencies.py
+
   lint:
     needs: build
     runs-on: ubuntu-latest
