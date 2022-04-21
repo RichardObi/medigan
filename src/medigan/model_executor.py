@@ -151,6 +151,7 @@ class ModelExecutor:
 
             def install(package):
                 subprocess.check_call([sys.executable, "-m", "pip", "install", package])
+
             for package in self.dependencies:
                 install(package)
             # raise e

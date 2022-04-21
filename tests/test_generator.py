@@ -11,6 +11,7 @@ import logging
 import shutil
 import sys
 import unittest
+
 import pytest
 
 # Set the logging level depending on the level of detail you would like to have in the logs while running the tests.
@@ -188,7 +189,9 @@ class TestMediganMethods:
     def test_rank_models_by_performance(self, metric, order):
         # See metrics in the config/global.json file.
         ranked_models = self.generators.rank_models_by_performance(
-            model_ids=[models[1][0], models[2][0]], metric=metric, order=order,
+            model_ids=[models[1][0], models[2][0]],
+            metric=metric,
+            order=order,
         )
         assert len(ranked_models) > 0 and ranked_models[0]["model_id"] == models[1][0]
 

@@ -23,7 +23,9 @@ from tqdm import tqdm
 class Utils:
     """Utils class."""
 
-    def __init__(self,):
+    def __init__(
+        self,
+    ):
         pass
 
     @staticmethod
