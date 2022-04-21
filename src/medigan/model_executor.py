@@ -88,7 +88,10 @@ class ModelExecutor:
     """
 
     def __init__(
-        self, model_id: str, execution_config: dict, download_package: bool = True,
+        self,
+        model_id: str,
+        execution_config: dict,
+        download_package: bool = True,
     ):
         self.model_id = model_id
         self.execution_config = execution_config
