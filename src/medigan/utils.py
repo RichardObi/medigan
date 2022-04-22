@@ -23,9 +23,7 @@ from tqdm import tqdm
 class Utils:
     """Utils class."""
 
-    def __init__(
-        self,
-    ):
+    def __init__(self,):
         pass
 
     @staticmethod
@@ -89,11 +87,8 @@ class Utils:
         logging.debug(f"Now downloading file {path_as_string} from {download_link} ...")
         try:
             for i in range(10):
-                headers = {
-                    "User-Agent": "Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101 Firefox/68.0"
-                }
                 response = requests.get(
-                    download_link, allow_redirects=True, stream=True, headers=headers
+                    download_link, allow_redirects=True, stream=True
                 )
                 total_size_in_bytes = int(
                     response.headers.get("content-length", 0)
