@@ -88,22 +88,36 @@ class Utils:
 
         logging.debug(f"Now downloading file {path_as_string} from {download_link} ...")
         try:
-            response = requests.get(download_link, allow_redirects=True, stream=True)
-            total_size_in_bytes = int(
-                response.headers.get("content-length", 0)
-            )  # / (32 * 1024)  # 32*1024 bytes received by requests.
-            print(total_size_in_bytes)
-            block_size = 1024
-            progress_bar = tqdm(total=total_size_in_bytes, unit="B", unit_scale=True)
-            progress_bar.set_description(f"Downloading {download_link}")
-            with open(path_as_string, "wb") as file:
-                for data in response.iter_content(block_size):
-                    progress_bar.update(len(data))
-                    file.write(data)
-                logging.debug(
-                    f"Received response {response}: Retrieved file from {download_link} and wrote it "
-                    f"to {path_as_string}."
+            for i in range(10):
+                response = requests.get(
+                    download_link, allow_redirects=True, stream=True
                 )
+                total_size_in_bytes = int(
+                    response.headers.get("content-length", 0)
+                )  # / (32 * 1024)  # 32*1024 bytes received by requests.
+                print(total_size_in_bytes)
+                block_size = 1024
+                progress_bar = tqdm(
+                    total=total_size_in_bytes, unit="B", unit_scale=True
+                )
+                progress_bar.set_description(f"Downloading {download_link}")
+                with open(path_as_string, "wb") as file:
+                    for data in response.iter_content(block_size):
+                        progress_bar.update(len(data))
+                        file.write(data)
+                    logging.debug(
+                        f"Received response {response}: Retrieved file from {download_link} and wrote it "
+                        f"to {path_as_string}."
+                    )
+
+                try:
+                    zipfile.ZipFile(path_as_string, "r")
+                    break
+                except Exception as e:
+                    logging.debug(
+                        f"Download failed. Retrying download from {download_link}"
+                    )
+
         except Exception as e:
             logging.error(
                 f"Error while trying to download/copy from {download_link} to {path_as_string}:{e}"

@@ -6,13 +6,13 @@
 # - Run tests with pytest
 
 
-name: Continuous integration
+name: Build and test
 
 on:
   push:
-    branches: [ v0.1 ]
+    branches: [ main ]
   pull_request:
-    branches: [ v0.1 ]
+    branches: [ main ]
 
 jobs:
   formatting:
@@ -39,11 +39,11 @@ jobs:
 
       - name: Run isort
         run: |
-          # isort --profile black .
+          isort --profile black .
 
       - name: Run Black formatter
         run: |
-          # black .
+          black .
 
       - name: Commit changes
         uses: EndBug/add-and-commit@v8
@@ -83,6 +83,10 @@ jobs:
         pip install flake8 pytest
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
         pip install -e .
+
+    - name: Install model dependencies
+      run: |
+        python src/medigan/install_model_dependencies.py
 
   lint:
     needs: build
@@ -138,7 +142,8 @@ jobs:
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
         pip install pytest
         pip install -e .
+        python src/medigan/install_model_dependencies.py
 
     - name: Test with pytest
       run: |
-        # pytest
+        pytest -W ignore::DeprecationWarning

@@ -143,8 +143,7 @@ class ModelExecutor:
         except Exception as e:
             logging.error(
                 f"{self.model_id}: Some of the necessary dependencies ({self.dependencies}) for this model "
-                f"are missing: {e}. Please retry after installing them e.g. via 'pip install "
-                f"{self.dependencies}'."
+                f"are missing: {e}. Please run 'python src/medigan/install_model_dependencies.py --model_id {self.model_id}' to install them."
             )
             raise e
 

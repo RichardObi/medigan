@@ -131,7 +131,11 @@ dmypy.json
 # Further (custom)
 .idea/
 *.DS_Store
-config/
+# config/
 output/
 2d29d505-9fb7-4c4d-b81f-47976e2c7dbf/
 8f933c5e-72fc-461a-a5cb-73cbe65af6fc/
+00001_DCGAN_MMG_CALC_ROI/
+00002_DCGAN_MMG_MASS_ROI/
+00003_CYCLEGAN_MMG_DENSITY_FULL/
+00004_PIX2PIX_MASKTOMASS_BREAST_MG_SYNTHESIS/
