@@ -541,7 +541,7 @@
   "00005_DCGAN_MMG_MASS_ROI": {
     "execution": {
       "package_name": "DCGAN",
-      "package_link": "https://zenodo.org/record/6555189/files/DCGAN_MMG_MASSES_BCDR_IWBI22.zip?download=1",
+      "package_link": "https://zenodo.org/record/6556282/files/DCGAN_MMG_MASSES_BCDR_IWBI22.zip?download=1",
       "model_name": "500",
       "extension": ".pt",
       "image_size": [
@@ -672,7 +672,7 @@
   "00006_WGANGP_MMG_MASS_ROI": {
     "execution": {
       "package_name": "WGANGP_MMG_MASSES_BCDR_IWBI22",
-      "package_link": "https://zenodo.org/record/6554714/files/WGANGP_MMG_MASSES_BCDR_IWBI22.zip?download=1",
+      "package_link": "https://zenodo.org/record/6556283/files/WGANGP_MMG_MASSES_BCDR_IWBI22.zip?download=1",
       "model_name": "10000",
       "extension": ".pt",
       "image_size": [
@@ -795,7 +795,7 @@
       "trained_date": "Mar 2022",
       "provided_after_epoch": 10000,
       "version": "1.0.0",
-      "publication": null,
+      "publication": "IWBI2022",
       "doi": ["10.48550/arXiv.2203.04961"],
       "comment": "A wasserstein generative adversarial network with gradient penalty (WGAN-GP) that generates mass patches of mammograms. Pixel dimensions are 128x128. The DCGAN was trained on MMG patches from the BCDR dataset (Lopez et al, 2012). The uploaded ZIP file contains the files 10000.pt (model weight), __init__.py (image generation method and utils), a requirements.txt, and the GAN model architecture (in pytorch) below the /src folder."
     }
