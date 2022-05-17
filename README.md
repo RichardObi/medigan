@@ -50,7 +50,6 @@ Examples and notebooks are located at [examples](examples) folder
 Documentation is available at [medigan.readthedocs.io](https://medigan.readthedocs.io/en/latest/)
 
 
-
 ### Generation example
 #### DCGAN 
 Create mammography calcification images using DCGAN model
@@ -81,5 +80,19 @@ generators.generate(model_id="00003_CYCLEGAN_MMG_DENSITY_FULL", num_samples=1)
 ![sample](docs/source/_static/samples/cyclegan/sample_image_5_low.png)
 &rarr;
 ![sample](docs/source/_static/samples/cyclegan/sample_image_5_high.png)
+
+
+### Search Example
+Search for a model inside medigan using keywords
+```python
+# import medigan and initialize Generators
+from medigan import Generators
+generators = Generators()
+
+# search for models that have specific keywords in their config
+keywords = ['DCGAN', 'Mammography', 'BCDR']
+results = generators.find_matching_models_by_values(keywords)
+```
+
 ## Contributing
 We welcome contributions to medigan. Please read the [contributing guidelines](CONTRIBUTING.md) on how to contribute to medigan project.
