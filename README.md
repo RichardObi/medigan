@@ -30,9 +30,11 @@ While being extendable to any modality and generative model, medigan focuses on 
 |-----------------------------|:--------:|:-------------:|:--------:|:------------:|:------:|
 | Breast Calcification        |   x-ray  |     dcgan     |  128x128 |   Inbreast   |        |
 | Breast Mass                 |   x-ray  |     dcgan     |  128x128 |    Optimam   |        |
-| Breast Density transfer     |   x-ray  |    cyclegan   | 1332x800 |     BCDR     |        |
-| Breast Mask to mass         |   x-ray  |    pix2pix    |  256x256 |     BCDR     |        |
-| Spine Bone cement injection |    CT    | inpaint_model |  128x128 |     VerSe    |        |
+| Breast Density Transfer     |   x-ray  |    cyclegan   | 1332x800 |     BCDR     |        |
+| Breast Mask to Mass         |   x-ray  |    pix2pix    |  256x256 |     BCDR     |        |
+| Breast Mass                 |   x-ray  |     dcgan     |  256x256 |     BCDR     |        |
+| Breast Mass                 |   x-ray  |    wgan-gp    |  256x256 |     BCDR     |        |
+| Spine Bone Cement Injection |    CT    |    biceps     |  128x128 |     VerSe    |        |
 
 The metadata and links to the models in medigan are stored in: https://github.com/RichardObi/medigan-models
 
