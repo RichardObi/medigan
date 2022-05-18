@@ -26,15 +26,15 @@ While being extendable to any modality and generative model, medigan focuses on 
 
 ## Available models
 
-| Type                        | Modality |     Model     |   Size   | Base dataset | Sample |
-|-----------------------------|:--------:|:-------------:|:--------:|:------------:|:------:|
-| Breast Calcification        |   x-ray  |     dcgan     |  128x128 |   Inbreast   |        |
-| Breast Mass                 |   x-ray  |     dcgan     |  128x128 |    Optimam   |        |
-| Breast Density Transfer     |   x-ray  |    cyclegan   | 1332x800 |     BCDR     |        |
-| Breast Mask to Mass         |   x-ray  |    pix2pix    |  256x256 |     BCDR     |        |
-| Breast Mass                 |   x-ray  |     dcgan     |  128x128 |     BCDR     |        |
-| Breast Mass                 |   x-ray  |    wgan-gp    |  128x128 |     BCDR     |        |
-| Spine Bone Cement Injection |    CT    |    biceps     |  128x128 |     VerSe    |        |
+| Type                        | Modality |     Model     |   Size   | Base dataset |   ID   | Sample |
+|-----------------------------|:--------:|:-------------:|:--------:|:------------:|:------:|:------:|
+| Breast Calcification        |   x-ray  |     dcgan     |  128x128 |   Inbreast   | <sub> 00001_DCGAN_MMG_CALC_ROI </sub>         |        |
+| Breast Mass                 |   x-ray  |     dcgan     |  128x128 |    Optimam   | <sub> 00002_DCGAN_MMG_MASS_ROI </sub>         |        |
+| Breast Density Transfer     |   x-ray  |    cyclegan   | 1332x800 |     BCDR     | <sub> 00003_CYCLEGAN_MMG_DENSITY_FULL </sub>  |        |
+| Breast Mask to Mass         |   x-ray  |    pix2pix    |  256x256 |     BCDR     | <sub> 00004_PIX2PIX_MASKTOMASS_BREAST_MG_SYNTHESIS </sub> |        |
+| Breast Mass                 |   x-ray  |     dcgan     |  128x128 |     BCDR     | <sub> 00005_DCGAN_MMG_MASS_ROI </sub>         |        |
+| Breast Mass                 |   x-ray  |    wgan-gp    |  128x128 |     BCDR     | <sub> 00006_WGANGP_MMG_MASS_ROI </sub>        |        |
+| Spine Bone Cement Injection |    CT    |    biceps     |  128x128 |     VerSe    | <sub> to be announced </sub>                  |        |
 
 The metadata and links to the models in medigan are stored in: https://github.com/RichardObi/medigan-models
 
