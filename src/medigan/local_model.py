@@ -24,7 +24,7 @@ from .constants import CONFIG_FILE_FOLDER, CONFIG_TEMPLATE_FILE_NAME_AND_EXTENSI
 from .utils import Utils
 
 
-class LocalModel:
+class LocalModel(Model):
     """ `LocalModel` class: A user's local model that can be run, tested and integrated into medigan. """
 
     def __init__(
