@@ -4,11 +4,23 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-numpy = "*"
-torch = "==1.7.0"
-torchvision = "==0.8.1"
-opencv-python = "==4.5.1.48"
+requests = "*"
+opencv-contrib-python-headless = "*"
+torch = "*"
 pyyaml = "*"
+union = "*"
+path = "*"
+numpy = "*"
+scikit-image = "*"
+scipy = "*"
+sphinx = "*"
+sphinx-rtd-theme = "*"
+pillow = "==9.0.0"
+visdom = "*"
+dominate = "*"
+torchvision = "*"
+tqdm = "*"
+sphinx-automodapi = "*"
 
 [requires]
 python_version = "3.8.5"
