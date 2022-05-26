@@ -383,8 +383,8 @@ class Generators:
             the path as str to the output folder where the generated samples will be stored
         is_gen_function_returned: bool
             flag indicating whether, instead of generating samples, the sample generation function will be returned
-        is_gen_function_returned: bool
-            flag indicating whether, instead of generating samples, the sample generation function will be returned
+        install_dependencies: bool
+            flag indicating whether a generative model's dependencies are automatically installed. Else error is raised if missing dependencies are detected.
         **kwargs
             arbitrary number of keyword arguments passed to the model's sample generation function
 
@@ -460,6 +460,8 @@ class Generators:
             the path as str to the output folder where the generated samples will be stored
         is_gen_function_returned: bool
             flag indicating whether, instead of generating samples, the sample generation function will be returned
+        install_dependencies: bool
+            flag indicating whether a generative model's dependencies are automatically installed. Else error is raised if missing dependencies are detected.
         **kwargs
             arbitrary number of keyword arguments passed to the model's sample generation function
 
@@ -528,6 +530,9 @@ class Generators:
         ----------
         model_id: str
             The generative model's unique id
+        install_dependencies: bool
+            flag indicating whether a generative model's dependencies are automatically installed. Else error is raised if missing dependencies are detected.
+
 
         Returns
         -------
@@ -555,6 +560,8 @@ class Generators:
             The generative model's unique id
         execution_config: dict
             The part of the config below the 'execution' key
+        install_dependencies: bool
+            flag indicating whether a generative model's dependencies are automatically installed. Else error is raised if missing dependencies are detected.
 
         Returns
         -------
@@ -621,6 +628,8 @@ class Generators:
         ----------
         model_id: str
             The generative model's unique id
+        install_dependencies: bool
+            flag indicating whether a generative model's dependencies are automatically installed. Else error is raised if missing dependencies are detected.
 
         Returns
         -------

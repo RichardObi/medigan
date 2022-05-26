@@ -54,8 +54,9 @@ class ModelExecutor:
     download_package: bool
         Flag indicating, if True, that the model's package should be downloaded instead of using an existing one that
         was downloaded previously
-    is_gen_function_returned: bool
-        flag indicating whether, instead of generating samples, the sample generation function will be returned
+    install_dependencies: bool
+            flag indicating whether a generative model's dependencies are automatically installed. Else error is raised if missing dependencies are detected.
+
 
     Attributes
     ----------
