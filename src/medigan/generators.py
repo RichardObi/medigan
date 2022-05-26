@@ -17,7 +17,6 @@ from .constants import CONFIG_FILE_KEY_EXECUTION, MODEL_ID
 from .model_executor import ModelExecutor
 from .model_selector import ModelSelector
 
-
 # Import pypi libs
 
 
@@ -49,11 +48,11 @@ class Generators:
     """
 
     def __init__(
-            self,
-            config_manager: ConfigManager = None,
-            model_selector: ModelSelector = None,
-            model_executors: list = None,
-            initialize_all_models: bool = False,
+        self,
+        config_manager: ConfigManager = None,
+        model_selector: ModelSelector = None,
+        model_executors: list = None,
+        initialize_all_models: bool = False,
     ):
         if config_manager is None:
             self.config_manager = ConfigManager()
@@ -105,7 +104,7 @@ class Generators:
     ############################ MODEL SELECTOR METHODS ############################
 
     def get_selection_criteria_by_id(
-            self, model_id: str, is_model_id_removed: bool = True
+        self, model_id: str, is_model_id_removed: bool = True
     ) -> dict:
         """Get and return the selection config dict for a specific model_id.
 
@@ -127,7 +126,7 @@ class Generators:
         return self.model_selector.get_selection_criteria_by_id(model_id=model_id)
 
     def get_selection_criteria_by_ids(
-            self, model_ids: list = None, are_model_ids_removed: bool = True
+        self, model_ids: list = None, are_model_ids_removed: bool = True
     ) -> list:
         """Get and return a list of selection config dicts for each of the specified model_ids.
 
@@ -194,7 +193,7 @@ class Generators:
         return self.model_selector.get_selection_keys(model_id=model_id)
 
     def get_models_by_key_value_pair(
-            self, key1: str, value1: str, is_case_sensitive: bool = False
+        self, key1: str, value1: str, is_case_sensitive: bool = False
     ) -> list:
         """Get and return a list of model_id dicts that contain the specified key value pair in their selection config.
 
@@ -223,7 +222,7 @@ class Generators:
         )
 
     def rank_models_by_performance(
-            self, model_ids: list = None, metric: str = "SSIM", order: str = "asc"
+        self, model_ids: list = None, metric: str = "SSIM", order: str = "asc"
     ) -> list:
         """Rank model based on a provided metric and return sorted list of model dicts.
 
@@ -252,11 +251,11 @@ class Generators:
         )
 
     def find_matching_models_by_values(
-            self,
-            values: list,
-            target_values_operator: str = "AND",
-            are_keys_also_matched: bool = False,
-            is_case_sensitive: bool = False,
+        self,
+        values: list,
+        target_values_operator: str = "AND",
+        are_keys_also_matched: bool = False,
+        is_case_sensitive: bool = False,
     ) -> list:
         """Search for values (and keys) in model configs and return a list of each matching `ModelMatchCandidate`.
 
@@ -289,13 +288,13 @@ class Generators:
         )
 
     def find_models_and_rank(
-            self,
-            values: list,
-            target_values_operator: str = "AND",
-            are_keys_also_matched: bool = False,
-            is_case_sensitive: bool = False,
-            metric: str = "SSIM",
-            order: str = "asc",
+        self,
+        values: list,
+        target_values_operator: str = "AND",
+        are_keys_also_matched: bool = False,
+        is_case_sensitive: bool = False,
+        metric: str = "SSIM",
+        order: str = "asc",
     ) -> list:
         """Search for values (and keys) in model configs, rank results and return sorted list of model dicts.
 
@@ -348,18 +347,18 @@ class Generators:
         return ranked_models
 
     def find_models_rank_and_generate(
-            self,
-            values: list,
-            target_values_operator: str = "AND",
-            are_keys_also_matched: bool = False,
-            is_case_sensitive: bool = False,
-            metric: str = "SSIM",
-            order: str = "asc",
-            num_samples: int = 30,
-            output_path: str = None,
-            is_gen_function_returned: bool = False,
-            install_dependencies: bool = True,
-            **kwargs,
+        self,
+        values: list,
+        target_values_operator: str = "AND",
+        are_keys_also_matched: bool = False,
+        is_case_sensitive: bool = False,
+        metric: str = "SSIM",
+        order: str = "asc",
+        num_samples: int = 30,
+        output_path: str = None,
+        is_gen_function_returned: bool = False,
+        install_dependencies: bool = True,
+        **kwargs,
     ):
         """Search for values (and keys) in model configs, rank results to generate samples with highest ranked model.
 
@@ -428,16 +427,16 @@ class Generators:
         )
 
     def find_model_and_generate(
-            self,
-            values: list,
-            target_values_operator: str = "AND",
-            are_keys_also_matched: bool = False,
-            is_case_sensitive: bool = False,
-            num_samples: int = 30,
-            output_path: str = None,
-            is_gen_function_returned: bool = False,
-            install_dependencies: bool = True,
-            **kwargs,
+        self,
+        values: list,
+        target_values_operator: str = "AND",
+        are_keys_also_matched: bool = False,
+        is_case_sensitive: bool = False,
+        num_samples: int = 30,
+        output_path: str = None,
+        is_gen_function_returned: bool = False,
+        install_dependencies: bool = True,
+        **kwargs,
     ):
         """Search for values (and keys) in model configs to generate samples with the found model.
 
@@ -540,10 +539,14 @@ class Generators:
                 model_id=model_id, config_key=CONFIG_FILE_KEY_EXECUTION
             )
             self._add_model_executor(
-                model_id=model_id, execution_config=execution_config, install_dependencies=install_dependencies
+                model_id=model_id,
+                execution_config=execution_config,
+                install_dependencies=install_dependencies,
             )
 
-    def _add_model_executor(self, model_id: str, execution_config: dict, install_dependencies: bool = True):
+    def _add_model_executor(
+        self, model_id: str, execution_config: dict, install_dependencies: bool = True
+    ):
         """Add one `ModelExecutor` class instance corresponding to the specified `model_id` and `execution_config`.
 
         Parameters
@@ -607,7 +610,9 @@ class Generators:
                 return model_executor
         return None
 
-    def get_model_executor(self, model_id: str, install_dependencies: bool = True) -> ModelExecutor:
+    def get_model_executor(
+        self, model_id: str, install_dependencies: bool = True
+    ) -> ModelExecutor:
         """Add and return the `ModelExecutor` instance of this model_id from the `self.model_executors` list.
 
         Relies on `self.add_model_executor` and `self.find_model_executor_by_id` functions.
@@ -636,14 +641,14 @@ class Generators:
             raise e
 
     def generate(
-            self,
-            model_id: str,
-            num_samples: int = 30,
-            output_path: str = None,
-            save_images: bool = True,
-            is_gen_function_returned: bool = False,
-            install_dependencies: bool = True,
-            **kwargs,
+        self,
+        model_id: str,
+        num_samples: int = 30,
+        output_path: str = None,
+        save_images: bool = True,
+        is_gen_function_returned: bool = False,
+        install_dependencies: bool = True,
+        **kwargs,
     ):
         """Generate samples with the model corresponding to the `model_id` or return the model's generate function.
 
@@ -670,8 +675,9 @@ class Generators:
             Returns images as list of numpy arrays if `save_images` is False. However, if `is_gen_function_returned` is True, it returns the internal generate function of the model.
         """
 
-        model_executor = self.get_model_executor(model_id=model_id,
-                                                 install_dependencies=install_dependencies)
+        model_executor = self.get_model_executor(
+            model_id=model_id, install_dependencies=install_dependencies
+        )
         return model_executor.generate(
             num_samples=num_samples,
             output_path=output_path,
@@ -681,8 +687,12 @@ class Generators:
         )
 
     def get_generate_function(
-            self, model_id: str, num_samples: int = 30, output_path: str = None,
-            install_dependencies: bool = True, **kwargs
+        self,
+        model_id: str,
+        num_samples: int = 30,
+        output_path: str = None,
+        install_dependencies: bool = True,
+        **kwargs,
     ):
         """Return the model's generate function.
 

@@ -38,9 +38,8 @@ from .constants import (
     DEFAULT_OUTPUT_FOLDER,
     PACKAGE_EXTENSION,
 )
-from .utils import Utils
-
 from .install_model_dependencies import install_model
+from .utils import Utils
 
 
 class ModelExecutor:
@@ -148,8 +147,12 @@ class ModelExecutor:
             )
         except Exception as e:
             if self.install_dependencies:
-                logging.info(f"{self.model_id}: Now installing dependencies using pip for model {self.dependencies}. This may take a few minutes.")
-                install_model(model_id=self.model_id, execution_config=self.execution_config)
+                logging.info(
+                    f"{self.model_id}: Now installing dependencies using pip for model {self.dependencies}. This may take a few minutes."
+                )
+                install_model(
+                    model_id=self.model_id, execution_config=self.execution_config
+                )
             else:
                 logging.error(
                     f"{self.model_id}: Some of the necessary dependencies ({self.dependencies}) for this model "

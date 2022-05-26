@@ -19,8 +19,10 @@ def parse_args() -> argparse.Namespace:
     return args
 
 
-def install_model(model_id: str, config_manager: ConfigManager = None, execution_config: dict = None):
-    """ installing the dependencies required for this model as stated in config """
+def install_model(
+    model_id: str, config_manager: ConfigManager = None, execution_config: dict = None
+):
+    """installing the dependencies required for this model as stated in config"""
 
     if execution_config is None:
         if config_manager is None:
