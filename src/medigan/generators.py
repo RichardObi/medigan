@@ -358,7 +358,7 @@ class Generators:
             num_samples: int = 30,
             output_path: str = None,
             is_gen_function_returned: bool = False,
-            are_dependencies_installed: bool = True,
+            install_dependencies: bool = True,
             **kwargs,
     ):
         """Search for values (and keys) in model configs, rank results to generate samples with highest ranked model.
@@ -423,7 +423,7 @@ class Generators:
             num_samples=num_samples,
             output_path=output_path,
             is_gen_function_returned=is_gen_function_returned,
-            are_dependencies_installed=are_dependencies_installed,
+            install_dependencies=install_dependencies,
             **kwargs,
         )
 
@@ -436,7 +436,7 @@ class Generators:
             num_samples: int = 30,
             output_path: str = None,
             is_gen_function_returned: bool = False,
-            are_dependencies_installed:bool = True,
+            install_dependencies: bool = True,
             **kwargs,
     ):
         """Search for values (and keys) in model configs to generate samples with the found model.
@@ -500,7 +500,7 @@ class Generators:
                 num_samples=num_samples,
                 output_path=output_path,
                 is_gen_function_returned=is_gen_function_returned,
-                are_dependencies_installed=are_dependencies_installed,
+                install_dependencies=install_dependencies,
                 **kwargs,
             )
 
@@ -522,7 +522,7 @@ class Generators:
                 model_id=model_id, execution_config=execution_config
             )
 
-    def add_model_executor(self, model_id: str):
+    def add_model_executor(self, model_id: str, install_dependencies: bool = True):
         """Add one `ModelExecutor` class instance corresponding to the specified `model_id`.
 
         Parameters
@@ -540,10 +540,10 @@ class Generators:
                 model_id=model_id, config_key=CONFIG_FILE_KEY_EXECUTION
             )
             self._add_model_executor(
-                model_id=model_id, execution_config=execution_config
+                model_id=model_id, execution_config=execution_config, install_dependencies=install_dependencies
             )
 
-    def _add_model_executor(self, model_id: str, execution_config: dict):
+    def _add_model_executor(self, model_id: str, execution_config: dict, install_dependencies: bool = True):
         """Add one `ModelExecutor` class instance corresponding to the specified `model_id` and `execution_config`.
 
         Parameters
@@ -563,6 +563,7 @@ class Generators:
                 model_id=model_id,
                 execution_config=execution_config,
                 download_package=True,
+                install_dependencies=install_dependencies,
             )
             self.model_executors.append(model_executor)
 
@@ -606,7 +607,7 @@ class Generators:
                 return model_executor
         return None
 
-    def get_model_executor(self, model_id: str) -> ModelExecutor:
+    def get_model_executor(self, model_id: str, install_dependencies: bool = True) -> ModelExecutor:
         """Add and return the `ModelExecutor` instance of this model_id from the `self.model_executors` list.
 
         Relies on `self.add_model_executor` and `self.find_model_executor_by_id` functions.
@@ -624,7 +625,8 @@ class Generators:
 
         try:
             self.add_model_executor(
-                model_id=model_id
+                model_id=model_id,
+                install_dependencies=install_dependencies,
             )  # only adds after checking that is not already added
             return self.find_model_executor_by_id(model_id=model_id)
         except Exception as e:
@@ -640,7 +642,7 @@ class Generators:
             output_path: str = None,
             save_images: bool = True,
             is_gen_function_returned: bool = False,
-            are_dependencies_installed: bool = True,
+            install_dependencies: bool = True,
             **kwargs,
     ):
         """Generate samples with the model corresponding to the `model_id` or return the model's generate function.
@@ -657,7 +659,7 @@ class Generators:
             flag indicating whether generated samples are returned (i.e. as list of numpy arrays) or rather stored in file system (i.e in `output_path`)
         is_gen_function_returned: bool
             flag indicating whether, instead of generating samples, the sample generation function will be returned
-        are_dependencies_installed: bool
+        install_dependencies: bool
             flag indicating whether a generative model's dependencies are automatically installed. Else error is raised if missing dependencies are detected.
         **kwargs
             arbitrary number of keyword arguments passed to the model's sample generation function
@@ -669,7 +671,7 @@ class Generators:
         """
 
         model_executor = self.get_model_executor(model_id=model_id,
-                                                 are_dependencies_installed=are_dependencies_installed)
+                                                 install_dependencies=install_dependencies)
         return model_executor.generate(
             num_samples=num_samples,
             output_path=output_path,
@@ -680,7 +682,7 @@ class Generators:
 
     def get_generate_function(
             self, model_id: str, num_samples: int = 30, output_path: str = None,
-            are_dependencies_installed: bool = True, **kwargs
+            install_dependencies: bool = True, **kwargs
     ):
         """Return the model's generate function.
 
@@ -694,7 +696,7 @@ class Generators:
             the number of samples that will be generated
         output_path: str
             the path as str to the output folder where the generated samples will be stored
-        are_dependencies_installed: bool
+        install_dependencies: bool
             flag indicating whether a generative model's dependencies are automatically installed. Else error is raised if missing dependencies are detected.
         **kwargs
             arbitrary number of keyword arguments passed to the model's sample generation function
@@ -710,7 +712,7 @@ class Generators:
             num_samples=num_samples,
             output_path=output_path,
             is_gen_function_returned=True,
-            are_dependencies_installed=are_dependencies_installed,
+            install_dependencies=install_dependencies,
             **kwargs,
         )
 
