@@ -103,6 +103,17 @@ class Generators:
 
     ############################ MODEL SELECTOR METHODS ############################
 
+    def list_model_ids(self) -> list:
+        """Return the list of model_ids as strings from config.
+
+         Returns
+         -------
+         list
+         """
+
+        return [model_id for model_id in self.config_manager.model_ids]
+
+
     def get_selection_criteria_by_id(
         self, model_id: str, is_model_id_removed: bool = True
     ) -> dict:
@@ -737,8 +748,8 @@ class Generators:
 
     ############################ OTHER METHODS ############################
 
-    def get_model_as_dataloader(self, model_id: str):
-        raise NotImplementedError
+    def get_model_as_dataset(self, model_id: str):
+        NotImplementedError
 
     def __repr__(self):
         return (
