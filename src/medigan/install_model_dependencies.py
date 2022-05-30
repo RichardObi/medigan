@@ -19,10 +19,17 @@ def parse_args() -> argparse.Namespace:
     return args
 
 
-def install_model(model_id):
+def install_model(
+    model_id: str, config_manager: ConfigManager = None, execution_config: dict = None
+):
+    """installing the dependencies required for this model as stated in config"""
 
-    config = config_manager.get_config_by_id(model_id)
-    dependencies = config[CONFIG_FILE_KEY_EXECUTION][CONFIG_FILE_KEY_DEPENDENCIES]
+    if execution_config is None:
+        if config_manager is None:
+            config_manager = ConfigManager()
+        config = config_manager.get_config_by_id(model_id)
+        execution_config = config[CONFIG_FILE_KEY_EXECUTION]
+    dependencies = execution_config[CONFIG_FILE_KEY_DEPENDENCIES]
     for package in dependencies:
         subprocess.check_call([sys.executable, "-m", "pip", "install", package])
 
