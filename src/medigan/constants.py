@@ -8,7 +8,7 @@
 
 """ Static link to the config of medigan. Note: To add a model, please create pull request in this github repo. """
 CONFIG_FILE_URL = (
-    "https://raw.githubusercontent.com/RichardObi/medigan-models/main/global.json"
+    "https://raw.githubusercontent.com/RichardObi/medigan/main/config/global.json"
 )
 
 """ Folder path that will be created to locally store the config file. """

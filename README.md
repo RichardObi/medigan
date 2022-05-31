@@ -90,6 +90,9 @@ Search for a model inside medigan using keywords
 from medigan import Generators
 generators = Generators()
 
+# list all models
+print(generators.list_models())
+
 # search for models that have specific keywords in their config
 keywords = ['DCGAN', 'Mammography', 'BCDR']
 results = generators.find_matching_models_by_values(keywords)
@@ -101,7 +104,7 @@ We can directly receive a [torch.utils.data.DataLoader](https://pytorch.org/docs
 # import medigan and initialize Generators
 from medigan import Generators
 generators = Generators()
-dataloader = generators.get_as_torch_dataloader(model_id="00004_PIX2PIX_MASKTOMASS_BREAST_MG_SYNTHESIS", num_samples=2)
+dataloader = generators.get_as_torch_dataloader(model_id="00004_PIX2PIX_MASKTOMASS_BREAST_MG_SYNTHESIS", num_samples=3)
 ```
 
 Visualize the contents of the dataloader.
