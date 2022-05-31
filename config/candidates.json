@@ -1,0 +1,106 @@
+{
+  "00007_DCGAN_CT_spine_inpaint": {
+    "execution": {
+      "package_name": "bone-cement-injection-planning2",
+      "package_link": "https://zenodo.org/record/5898666/files/bone-cement-injection-planning2.zip?download=1",
+      "model_name": "inpaint_modelCor",
+      "extension": ".pt",
+      "image_size": [
+        128,
+        128
+      ],
+      "dependencies": [
+        "dipy",
+        "dcmstack",
+        "simpleitk",
+        "napari",
+        "torch",
+        "torchvision",
+        "nibabel",
+        "opencv-python",
+        "scikit-image",
+        "scikit-learn",
+        "nilearn",
+        "pandas",
+        "matplotlib"
+      ],
+      "generate_method": {
+        "name": "generate",
+        "args": {
+          "base": [
+            "model_file",
+            "num_samples",
+            "output_path",
+            "save_images"
+          ],
+          "custom": {
+            "save_intermediate_outputs": "False",
+            "patient_dir": "00005_DCGAN_CT_spine_inpaint/src/data/dataset-verse19test/rawdata/",
+            "fracture": 22
+          }
+        }
+      }
+    },
+    "selection": {
+      "performance": {},
+      "use_cases": [
+        "segmentation"
+      ],
+      "organ": [
+        "spine",
+        "vertebra"
+      ],
+      "modality": [
+        "CT",
+        "computerised tomography",
+        "CAT scans",
+        "computed tomography scans"
+      ],
+      "vendors": [],
+      "centres": [],
+      "function": [
+        "image generation"
+      ],
+      "condition": [],
+      "dataset": [
+        "https://github.com/anjany/verse"
+      ],
+      "augmentations": [],
+      "generates": [
+        "regions of interest",
+        "ROI",
+        "CT",
+        "measures",
+        "inpainted image"
+      ],
+      "height": 128,
+      "width": 128,
+      "depth": null,
+      "type": "inpainting",
+      "license": "MIT",
+      "dataset_type": "public",
+      "privacy_preservation": null,
+      "tags": [
+        "Deformable Registration",
+        "VCFs",
+        "CT",
+        "GAN",
+        "Spine Osteoplasty",
+        "Inpainting"
+      ],
+      "year": "2021"
+    },
+    "description": {
+      "title": "Patient-specific virtual spine straightening and vertebra inpainting: An automatic framework for osteoplasty plannings",
+      "provided_date": null,
+      "trained_date": null,
+      "provided_after_epoch": null,
+      "version": "0.0.1",
+      "publication": null,
+      "doi": [
+        "10.5281/zenodo.5838222"
+      ],
+      "comment": "BICEPS takes a CT image of a patient with one or more Vertebral Compression Fractures and generates an estimation of the healthy state of the patients spine to enable treatment planning. The uploaded ZIP file contains the model weights,the __init__.py (image generation method and utils), a README.md, and the GAN model architecture (in pytorch) below the /src folder."
+    }
+  }
+}
