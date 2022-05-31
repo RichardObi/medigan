@@ -26,14 +26,14 @@ While being extendable to any modality and generative model, medigan focuses on 
 
 ## Available models
 
-| Type                        | Modality |     Model     |   Size   | Base dataset |   ID   | Sample |
+| Type                        | Modality |     Model     |   Size   | Base dataset | Sample  |  ID   |
 |-----------------------------|:--------:|:-------------:|:--------:|:------------:|:------:|:------:|
-| Breast Calcification        |   x-ray  |     dcgan     |  128x128 |   Inbreast   | <sub> 00001_DCGAN_MMG_CALC_ROI </sub>         |        |
-| Breast Mass                 |   x-ray  |     dcgan     |  128x128 |    Optimam   | <sub> 00002_DCGAN_MMG_MASS_ROI </sub>         |        |
-| Breast Density Transfer     |   x-ray  |    cyclegan   | 1332x800 |     BCDR     | <sub> 00003_CYCLEGAN_MMG_DENSITY_FULL </sub>  |        |
-| Breast Mask to Mass         |   x-ray  |    pix2pix    |  256x256 |     BCDR     | <sub> 00004_PIX2PIX_MASKTOMASS_BREAST_MG_SYNTHESIS </sub> |        |
-| Breast Mass                 |   x-ray  |     dcgan     |  128x128 |     BCDR     | <sub> 00005_DCGAN_MMG_MASS_ROI </sub>         |        |
-| Breast Mass                 |   x-ray  |    wgan-gp    |  128x128 |     BCDR     | <sub> 00006_WGANGP_MMG_MASS_ROI </sub>        |        |
+| Breast Calcification        |   x-ray  |     dcgan     |  128x128 |   Inbreast   |  ![sample](docs/source/_static/samples/00001.png) | <sub> 00001_DCGAN_MMG_CALC_ROI </sub>  | 
+| Breast Mass                 |   x-ray  |     dcgan     |  128x128 |    Optimam   |  ![sample](docs/source/_static/samples/00002.png) | <sub> 00002_DCGAN_MMG_MASS_ROI </sub>         |
+| Breast Density Transfer     |   x-ray  |    cyclegan   | 1332x800 |     BCDR     |  ![sample](docs/source/_static/samples/00003.png) | <sub> 00003_CYCLEGAN_MMG_DENSITY_FULL </sub>  |
+| Breast Mask to Mass         |   x-ray  |    pix2pix    |  256x256 |     BCDR     |  ![sample](docs/source/_static/samples/00004.png) | <sub> 00004_PIX2PIX_MASKTOMASS_BREAST_MG_SYNTHESIS </sub> |
+| Breast Mass                 |   x-ray  |     dcgan     |  128x128 |     BCDR     |  ![sample](docs/source/_static/samples/00005.png) | <sub> 00005_DCGAN_MMG_MASS_ROI </sub>         | 
+| Breast Mass                 |   x-ray  |    wgan-gp    |  128x128 |     BCDR     |  ![sample](docs/source/_static/samples/00006.png) | <sub> 00006_WGANGP_MMG_MASS_ROI </sub>        | 
 
 [comment]: <> (| Spine Bone Cement Injection |    CT    |    biceps     |  128x128 |     VerSe    | <sub> to be announced </sub>                  |        |)
 
@@ -90,10 +90,40 @@ Search for a model inside medigan using keywords
 from medigan import Generators
 generators = Generators()
 
+# list all models
+print(generators.list_models())
+
 # search for models that have specific keywords in their config
 keywords = ['DCGAN', 'Mammography', 'BCDR']
 results = generators.find_matching_models_by_values(keywords)
 ```
+
+### Get Model as Dataloader 
+We can directly receive a [torch.utils.data.DataLoader](https://pytorch.org/docs/stable/data.html#torch.utils.data.DataLoader) object for any of medigan's generative models.
+```python
+# import medigan and initialize Generators
+from medigan import Generators
+generators = Generators()
+dataloader = generators.get_as_torch_dataloader(model_id="00004_PIX2PIX_MASKTOMASS_BREAST_MG_SYNTHESIS", num_samples=3)
+```
+
+Visualize the contents of the dataloader.
+```python
+from matplotlib import pyplot as plt
+import numpy as np
+
+plt.figure()
+# subplot with 2 rows and len(dataloader) columns
+f, img_array = plt.subplots(2, len(dataloader)) 
+
+for batch_idx, data_dict in enumerate(dataloader):
+    sample = np.squeeze(data_dict.get("sample"))
+    mask = np.squeeze(data_dict.get("mask"))
+    img_array[0][batch_idx].imshow(sample, interpolation='nearest', cmap='gray')
+    img_array[1][batch_idx].imshow(mask, interpolation='nearest', cmap='gray')
+plt.show()
+```
+![sample](docs/source/_static/samples/gan_sample_00004_dataloader.png)
 
 ## Contributing
 We welcome contributions to medigan. Please send us an email or read the [contributing guidelines](CONTRIBUTING.md) on how to contribute to medigan project.

@@ -11,11 +11,15 @@ from __future__ import absolute_import
 
 import logging
 
+from torch.utils.data import DataLoader, Dataset
+
 # Import library internal modules
 from .config_manager import ConfigManager
 from .constants import CONFIG_FILE_KEY_EXECUTION, MODEL_ID
 from .model_executor import ModelExecutor
 from .model_selector import ModelSelector
+from .synthetic_dataset import SyntheticDataset
+from .utils import Utils
 
 # Import pypi libs
 
@@ -102,6 +106,16 @@ class Generators:
         )
 
     ############################ MODEL SELECTOR METHODS ############################
+
+    def list_models(self) -> list:
+        """Return the list of model_ids as strings based on config.
+
+        Returns
+        -------
+        list
+        """
+
+        return [model_id for model_id in self.config_manager.model_ids]
 
     def get_selection_criteria_by_id(
         self, model_id: str, is_model_id_removed: bool = True
@@ -737,8 +751,165 @@ class Generators:
 
     ############################ OTHER METHODS ############################
 
-    def get_model_as_dataloader(self, model_id: str):
-        raise NotImplementedError
+    def get_as_torch_dataloader(
+        self,
+        dataset=None,
+        model_id: str = None,
+        num_samples: int = 1000,
+        install_dependencies: bool = True,
+        transform=None,
+        batch_size=1,
+        shuffle=False,
+        sampler=None,
+        batch_sampler=None,
+        num_workers=0,
+        collate_fn=None,
+        pin_memory=False,
+        drop_last=False,
+        timeout=0,
+        worker_init_fn=None,
+        *,
+        prefetch_factor=2,
+        persistent_workers=False,
+        **kwargs,
+    ) -> DataLoader:
+
+        """Get torch Dataloader sampling synthetic data from medigan model.
+
+        Dataloader combines a dataset and a sampler, and provides an iterable over
+        the given torch dataset. Dataloader is created for synthetic data for the specified medigan model.
+
+        Args:
+            dataset (Dataset): dataset from which to load the data.
+            model_id: str
+                The generative model's unique id
+            num_samples: int
+                the number of samples that will be generated
+            install_dependencies: bool
+                flag indicating whether a generative model's dependencies are automatically installed.
+                Else error is raised if missing dependencies are detected.
+            **kwargs
+                arbitrary number of keyword arguments passed to the model's sample generation function
+                (e.g. the input path for image-to-image translation models in medigan).
+            transform
+                the torch data transformation functions to be applied to the data in the dataset.
+            batch_size (int, optional): how many samples per batch to load
+                (default: ``1``).
+            shuffle (bool, optional): set to ``True`` to have the data reshuffled
+                at every epoch (default: ``False``).
+            sampler (Sampler or Iterable, optional): defines the strategy to draw
+                samples from the dataset. Can be any ``Iterable`` with ``__len__``
+                implemented. If specified, :attr:`shuffle` must not be specified.
+            batch_sampler (Sampler or Iterable, optional): like :attr:`sampler`, but
+                returns a batch of indices at a time. Mutually exclusive with
+                :attr:`batch_size`, :attr:`shuffle`, :attr:`sampler`,
+                and :attr:`drop_last`.
+            num_workers (int, optional): how many subprocesses to use for data
+                loading. ``0`` means that the data will be loaded in the main process.
+                (default: ``0``)
+            collate_fn (callable, optional): merges a list of samples to form a
+                mini-batch of Tensor(s).  Used when using batched loading from a
+                map-style dataset.
+            pin_memory (bool, optional): If ``True``, the data loader will copy Tensors
+                into CUDA pinned memory before returning them.  If your data elements
+                are a custom type, or your :attr:`collate_fn` returns a batch that is a custom type,
+                see the example below.
+            drop_last (bool, optional): set to ``True`` to drop the last incomplete batch,
+                if the dataset size is not divisible by the batch size. If ``False`` and
+                the size of dataset is not divisible by the batch size, then the last batch
+                will be smaller. (default: ``False``)
+            timeout (numeric, optional): if positive, the timeout value for collecting a batch
+                from workers. Should always be non-negative. (default: ``0``)
+            worker_init_fn (callable, optional): If not ``None``, this will be called on each
+                worker subprocess with the worker id (an int in ``[0, num_workers - 1]``) as
+                input, after seeding and before data loading. (default: ``None``)
+            prefetch_factor (int, optional, keyword-only arg): Number of samples loaded
+                in advance by each worker. ``2`` means there will be a total of
+                2 * num_workers samples prefetched across all workers. (default: ``2``)
+            persistent_workers (bool, optional): If ``True``, the data loader will not shutdown
+                the worker processes after a dataset has been consumed once. This allows to
+                maintain the workers `Dataset` instances alive. (default: ``False``)
+
+        Returns
+        -------
+        DataLoader
+            a torch.utils.data.DataLoader object with data generated by model corresponding to inputted `Dataset` or `model_id`.
+        """
+
+        dataset = (
+            self.get_as_torch_dataset(
+                model_id=model_id,
+                num_samples=num_samples,
+                install_dependencies=install_dependencies,
+                transform=transform,
+                **kwargs,
+            )
+            if dataset is None
+            else dataset
+        )
+
+        dataloader = DataLoader(
+            dataset=dataset,
+            batch_size=batch_size,
+            shuffle=shuffle,
+            sampler=sampler,
+            batch_sampler=batch_sampler,
+            num_workers=num_workers,
+            pin_memory=pin_memory,
+            drop_last=drop_last,
+            timeout=timeout,
+            worker_init_fn=worker_init_fn,
+            prefetch_factor=prefetch_factor,
+            persistent_workers=persistent_workers,
+        )
+
+        return dataloader
+
+    def get_as_torch_dataset(
+        self,
+        model_id: str,
+        num_samples: int = 1000,
+        install_dependencies: bool = True,
+        transform=None,
+        **kwargs,
+    ) -> Dataset:
+        """Get synthetic data in a torch Dataset for specified medigan model.
+
+        The dataset returns a dict with keys sample (== image), labels (== condition), and mask (== segmentation mask).
+        While key 'sample' is mandatory, the other key value pairs are only returned if applicable to generative model.
+
+        Args:
+           model_id: str
+               The generative model's unique id
+           num_samples: int
+               the number of samples that will be generated
+           install_dependencies: bool
+               flag indicating whether a generative model's dependencies are automatically installed. Else error is raised if missing dependencies are detected.
+            transform
+                the torch data transformation functions to be applied to the data in the dataset.
+           **kwargs
+               arbitrary number of keyword arguments passed to the model's sample generation function (e.g. the input path for image-to-image translation models in medigan).
+
+        Returns
+        -------
+        Dataset
+            a torch.utils.data.Dataset object with data generated by model corresponding to `model_id`.
+        """
+
+        data = self.generate(
+            model_id=model_id,
+            num_samples=num_samples,
+            is_gen_function_returned=False,
+            install_dependencies=install_dependencies,
+            save_images=False,  # design decision: temporary storage in memory instead of I/O from disk
+            **kwargs,
+        )
+        data, masks = Utils.split_images_and_masks(data=data, num_samples=num_samples)
+        labels = None  # TODO: Separate and add labels to dataset
+
+        return SyntheticDataset(
+            data=data, labels=labels, masks=masks, transform=transform
+        )
 
     def __repr__(self):
         return (
