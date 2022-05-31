@@ -18,6 +18,7 @@ from urllib.parse import urlparse  # python3
 # Import pypi libs
 import requests
 from tqdm import tqdm
+import numpy as np
 
 
 class Utils:
@@ -95,7 +96,7 @@ class Utils:
                 total_size_in_bytes = int(
                     response.headers.get("content-length", 0)
                 )  # / (32 * 1024)  # 32*1024 bytes received by requests.
-                print(total_size_in_bytes)
+                logging.debug(total_size_in_bytes)
                 block_size = 1024
                 progress_bar = tqdm(
                     total=total_size_in_bytes, unit="B", unit_scale=True
@@ -208,9 +209,56 @@ class Utils:
             return False
 
     @staticmethod
-    def order_dict_by_value(
-        self, dict_list, key: str, order: str = "asc", sort_algorithm="bubbleSort"
-    ) -> list:
+    def has_more_than_n_diff_pixel_values(img: np.ndarray, n: int =4) -> bool:
+        """ This function checks whether an image contains more than n different pixel values.
+
+        This helps to differentiate between segmentation masks and actual images.
+        """
+
+        import torch
+        torch_img = torch.from_numpy(img)
+        pixel_values_set = set(torch_img.flatten().tolist())
+        if len(pixel_values_set) > n:
+            return True
+        else:
+            return False
+
+    @staticmethod
+    def split_images_and_masks(data: list, num_samples: int, max_nested_arrays: int = 2) -> [np.ndarray, np.ndarray]:
+        """ Extracts and separates the masks from the images if a model returns both in the same np.ndarray.
+
+        This extendable function assumes that, in data, a mask follows the image that it corresponds to or vice versa.
+        """
+
+        images = []
+        masks = []
+        # if data is smaller than the number of samples that should have been generated, then data likely contains a nested array.
+        # We go a maximum of max_nested_arrays deep into the data.
+        counter = 0
+        while len(data) < num_samples:
+            data = data[0]
+            counter = counter + 1
+            if counter >= max_nested_arrays:
+                break
+
+        for data_point in data:
+            if isinstance(data_point, tuple):
+                for i in data_point:
+                    if isinstance(i, np.ndarray) and "int" in str(i.dtype) and not Utils.has_more_than_n_diff_pixel_values(i):
+                        # Check if numpy array that contains integers instead of floats indicates the presence of a mask
+                        masks.append(i)
+                    elif Utils.has_more_than_n_diff_pixel_values(i):
+                        images.append(i)
+            elif isinstance(data_point, np.ndarray) and "int" in str(data_point.dtype) and not Utils.has_more_than_n_diff_pixel_values(data_point):
+                masks.append(data_point)
+            else:
+                images.append(data_point)
+        masks = None if len(masks)==0 else masks
+        return images, masks
+
+
+    @staticmethod
+    def order_dict_by_value(dict_list, key: str, order: str = "asc", sort_algorithm="bubbleSort") -> list:
         """Sorting a list of dicts by the values of a specific key in the dict using a sorting algorithm.
 
         - This function is deprecated. You may use Python List sort() with key=lambda function instead.
@@ -227,6 +275,7 @@ class Utils:
                             dict_list[j][key],
                         )
         return dict_list
+
 
     def __len__(self):
         raise NotImplementedError
