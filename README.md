@@ -28,7 +28,7 @@ While being extendable to any modality and generative model, medigan focuses on 
 
 | Type                        | Modality |     Model     |   Size   | Base dataset |   ID   | Sample |
 |-----------------------------|:--------:|:-------------:|:--------:|:------------:|:------:|:------:|
-| Breast Calcification        |   x-ray  |     dcgan     |  128x128 |   Inbreast   | <sub> 00001_DCGAN_MMG_CALC_ROI </sub>         |  ![sample](docs/source/_static/samples/gan_sample_1.png)
+| Breast Calcification        |   x-ray  |     dcgan     |  128x128 |   Inbreast   | <sub> 00001_DCGAN_MMG_CALC_ROI </sub>         |  ![sample](docs/source/_static/samples/00001.png)
       |
 | Breast Mass                 |   x-ray  |     dcgan     |  128x128 |    Optimam   | <sub> 00002_DCGAN_MMG_MASS_ROI </sub>         |   ![sample](docs/source/_static/samples/00002.png)
      |
