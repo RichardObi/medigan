@@ -95,5 +95,32 @@ keywords = ['DCGAN', 'Mammography', 'BCDR']
 results = generators.find_matching_models_by_values(keywords)
 ```
 
+### Get Model as Dataloader 
+We can directly receive a [torch.utils.data.DataLoader](https://pytorch.org/docs/stable/data.html#torch.utils.data.DataLoader) object for any of medigan's generative models.
+```python
+# import medigan and initialize Generators
+from medigan import Generators
+generators = Generators()
+dataloader = generators.get_as_torch_dataloader(model_id="00004_PIX2PIX_MASKTOMASS_BREAST_MG_SYNTHESIS", num_samples=2)
+```
+
+Visualize the contents of the dataloader.
+```python
+from matplotlib import pyplot as plt
+import numpy as np
+
+plt.figure()
+# subplot with 2 rows and len(dataloader) columns
+f, img_array = plt.subplots(2, len(dataloader)) 
+
+for batch_idx, data_dict in enumerate(dataloader):
+    sample = np.squeeze(data_dict.get("sample"))
+    mask = np.squeeze(data_dict.get("mask"))
+    img_array[0][batch_idx].imshow(sample, interpolation='nearest', cmap='gray')
+    img_array[1][batch_idx].imshow(mask, interpolation='nearest', cmap='gray')
+plt.show()
+```
+![sample](docs/source/_static/samples/gan_sample_00004_dataloader.png)
+
 ## Contributing
 We welcome contributions to medigan. Please send us an email or read the [contributing guidelines](CONTRIBUTING.md) on how to contribute to medigan project.
