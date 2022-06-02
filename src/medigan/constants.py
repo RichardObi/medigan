@@ -7,7 +7,9 @@
 """
 
 """ Static link to the config of medigan. Note: To add a model, please create pull request in this github repo. """
-CONFIG_FILE_URL = "https://raw.githubusercontent.com/RichardObi/medigan-models/main/global.json"
+CONFIG_FILE_URL = (
+    "https://raw.githubusercontent.com/RichardObi/medigan/main/config/global.json"
+)
 
 """ Folder path that will be created to locally store the config file. """
 CONFIG_FILE_FOLDER = "config"
@@ -15,20 +17,17 @@ CONFIG_FILE_FOLDER = "config"
 """ Name and extensions of config file. """
 CONFIG_FILE_NAME_AND_EXTENSION = "global.json"
 
-""" Name and extensions of template of config file. """
-CONFIG_TEMPLATE_FILE_NAME_AND_EXTENSION = "template.json"
-
 """ The key under which the execution dictionary of a model is nested in the config file. """
-CONFIG_FILE_KEY_EXECUTION = 'execution'
+CONFIG_FILE_KEY_EXECUTION = "execution"
 
 """ The key under which the selection dictionary of a model is nested in the config file. """
-CONFIG_FILE_KEY_SELECTION = 'selection'
+CONFIG_FILE_KEY_SELECTION = "selection"
 
 """ The key under which the description dictionary of a model is nested in the config file. """
-CONFIG_FILE_KEY_DESCRIPTION = 'description'
+CONFIG_FILE_KEY_DESCRIPTION = "description"
 
 """ Below the selection dict, the key under which the performance dictionary of a model is nested in the config file. """
-CONFIG_FILE_KEY_PERFORMANCE = 'performance'
+CONFIG_FILE_KEY_PERFORMANCE = "performance"
 
 """ Below the execution dict, the key under which the dependencies dictionary of a model is nested in the config file. """
 CONFIG_FILE_KEY_DEPENDENCIES = "dependencies"
@@ -88,10 +87,7 @@ CONFIG_FILE_KEY_GENERATE_ARGS_SAVE_IMAGES = "save_images"
 PACKAGE_EXTENSION = ".zip"
 
 """ The string describing a model's unique id in medigan's data structures. """
-MODEL_ID = 'model_id'
+MODEL_ID = "model_id"
 
 """ The default path to a folder under which the outputs of the medigan package (i.e. generated samples) are stored. """
 DEFAULT_OUTPUT_FOLDER = "output"
-""
-""" The folder containing an __init__.py file is a python module. """
-INIT_PY_FILE = "__init__.py"

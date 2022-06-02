@@ -1,0 +1,131 @@
+{
+  "00005_DCGAN_MMG_MASS_ROI": {
+    "execution": {
+      "package_name": "MMG_MASS_BCDR_DCGAN",
+      "package_link": "ADD_ZENODO_OR_LOCAL_URL_HERE",
+      "model_name": "500",
+      "extension": ".pt",
+      "image_size": [
+        128,
+        128
+      ],
+      "dependencies": [
+        "numpy",
+        "torch",
+        "opencv-contrib-python-headless"
+      ],
+      "generate_method": {
+        "name": "generate",
+        "args": {
+          "base": [
+            "model_file",
+            "num_samples",
+            "output_path",
+            "save_images"
+          ],
+          "custom": {}
+        }
+      }
+    },
+    "selection": {
+      "performance": {
+        "SSIM": null,
+        "MSE": null,
+        "NSME": null,
+        "PSNR": null,
+        "IS": null,
+        "FID": null,
+        "turing_test": null,
+        "downstream_task": {
+          "CLF": {
+            "trained_on_fake": {
+              "accuracy": 0.9528,
+              "f1": 0.9721,
+              "AUROC": 0.9596,
+              "AUPRC": 0.9908
+            }
+          }
+        }
+      },
+      "use_cases": [
+        "classification"
+      ],
+      "organ": [
+        "breast",
+        "breasts",
+        "chest"
+      ],
+      "modality": [
+        "MMG",
+        "Mammography",
+        "Mammogram",
+        "full-field digital",
+        "full-field digital MMG",
+        "full-field MMG",
+        "full-field Mammography",
+        "digital Mammography",
+        "digital MMG",
+        "x-ray mammography"
+      ],
+      "vendors": [],
+      "centres": [],
+      "function": [
+        "noise to image",
+        "image generation",
+        "unconditional generation",
+        "data augmentation"
+      ],
+      "condition": [],
+      "dataset": [
+        "BCDR"
+      ],
+      "augmentations": [
+        "horizontal flip",
+        "vertical flip"
+      ],
+      "generates": [
+        "mass",
+        "masses",
+        "mass roi",
+        "mass ROI",
+        "mass images",
+        "mass region of interest",
+        "nodule",
+        "nodule",
+        "nodule roi",
+        "nodule ROI",
+        "nodule images",
+        "nodule region of interest"
+      ],
+      "height": 128,
+      "width": 128,
+      "depth": null,
+      "type": "DCGAN",
+      "license": "MIT",
+      "dataset_type": "public",
+      "privacy_preservation": null,
+      "tags": [
+        "Mammogram",
+        "Mammography",
+        "Digital Mammography",
+        "Full field Mammography",
+        "Full-field Mammography",
+        "128x128",
+        "128 x 128",
+        "MammoGANs",
+        "Masses",
+        "Nodules"
+      ],
+      "year": "2021"
+    },
+    "description": {
+      "title": "DCGAN Model for Mammogram MASS Patch Generation (Trained on BCDR)",
+      "provided_date": "15 Dec 2021",
+      "trained_date": "Nov 2021",
+      "provided_after_epoch": 1500,
+      "version": "0.0.1",
+      "publication": null,
+      "doi": [],
+      "comment": "A deep convolutional generative adversarial network (DCGAN) that generates mass patches of mammograms. Pixel dimensions are 128x128. The DCGAN was trained on MMG patches from the BCDR dataset (Lopez et al, 2012). The uploaded ZIP file contains the files 500.pt (model weight), __init__.py (image generation method and utils), a requirements.txt, and the GAN model architecture (in pytorch) below the /src folder."
+    }
+  },

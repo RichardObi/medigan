@@ -3,6 +3,7 @@
 """MatchedEntry class that represents one match of a key value pair of a model's config against a search query.
 
 .. codeauthor:: Richard Osuala <richard.osuala@gmail.com>
+.. codeauthor:: Noussair Lazrak <lazrak.noussair@gmail.com>
 """
 
 # Import python native libs
@@ -12,7 +13,7 @@ import json
 
 
 class MatchedEntry:
-    """ `MatchedEntry` class: One target key-value pair that matches with a model's selection config.
+    """`MatchedEntry` class: One target key-value pair that matches with a model's selection config.
 
     Parameters
     ----------
@@ -34,10 +35,10 @@ class MatchedEntry:
     """
 
     def __init__(
-            self,
-            key: str,
-            value,
-            matching_element: str = None,
+        self,
+        key: str,
+        value,
+        matching_element: str = None,
     ):
         self.key = key
         self.value = value
@@ -47,10 +48,16 @@ class MatchedEntry:
             self.matching_element = matching_element
 
     def __str__(self):
-        return json.dumps({'key': self.key, 'value': self.value, 'matching_element': self.matching_element})
+        return json.dumps(
+            {
+                "key": self.key,
+                "value": self.value,
+                "matching_element": self.matching_element,
+            }
+        )
 
     def __repr__(self):
-        return f'MatchedEntry(key={self.key}, value={self.value}, matching_element={self.matching_element})'
+        return f"MatchedEntry(key={self.key}, value={self.value}, matching_element={self.matching_element})"
 
     def __len__(self):
         raise NotImplementedError

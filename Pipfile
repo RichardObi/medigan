@@ -15,7 +15,7 @@ scikit-image = "*"
 scipy = "*"
 sphinx = "*"
 sphinx-rtd-theme = "*"
-pillow = ">=8.3.2"
+pillow = ">=9.0.1"
 visdom = "*"
 dominate = "*"
 torchvision = "*"
@@ -23,6 +23,6 @@ tqdm = "*"
 sphinx-automodapi = "*"
 
 [requires]
-python_version = "3.9"
+python_version = "3.8.5"
 
 [dev-packages]

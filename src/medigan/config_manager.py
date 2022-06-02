@@ -14,12 +14,16 @@ import logging
 from pathlib import Path
 
 # Import library internal modules
-from .constants import CONFIG_FILE_NAME_AND_EXTENSION, CONFIG_FILE_URL, CONFIG_FILE_FOLDER
+from .constants import (
+    CONFIG_FILE_FOLDER,
+    CONFIG_FILE_NAME_AND_EXTENSION,
+    CONFIG_FILE_URL,
+)
 from .utils import Utils
 
 
 class ConfigManager:
-    """ `ConfigManager` class: Downloads, loads and parses medigan's config json as dictionary.
+    """`ConfigManager` class: Downloads, loads and parses medigan's config json as dictionary.
 
     Parameters
     ----------
@@ -42,20 +46,14 @@ class ConfigManager:
         Flags if the loading and parsing of the config file was successful (True) or not (False).
     """
 
-    def __init__(
-            self, config_dict: dict = None,
-            download_if_not_found: bool = True, is_new_download_forced: bool = False,
-    ):
+    def __init__(self, config_dict: dict = None, is_new_download_forced: bool = False):
         self.config_dict = config_dict
         self.model_ids = []
         self.is_config_loaded = False
-        if self.config_dict is None:
-            self.load_config_file(download_if_not_found=download_if_not_found,
-                                  is_new_download_forced=is_new_download_forced,
-                                  )
+        self.load_config_file(is_new_download_forced=is_new_download_forced)
 
-    def load_config_file(self, download_if_not_found: bool = True, is_new_download_forced: bool = False) -> bool:
-        """ Load a config file and return boolean flag indicating success of loading process.
+    def load_config_file(self, is_new_download_forced: bool = False) -> bool:
+        """Load a config file and return boolean flag indicating success of loading process.
 
         If the config file is not present in `medigan.CONSTANTS.CONFIG_FILE_FOLDER`, it is per default downloaded from
         the web resource specified in `medigan.CONSTANTS.CONFIG_FILE_URL`.
@@ -70,29 +68,37 @@ class ConfigManager:
         bool
             a boolean flag indicating true only if the config file was loaded successfully.
         """
-        assert Utils.mkdirs(
-            path_as_string=CONFIG_FILE_FOLDER), f"The config folder was not found nor created in {CONFIG_FILE_FOLDER}."
-
-        config_file_path = Path(f"{CONFIG_FILE_FOLDER}/{CONFIG_FILE_NAME_AND_EXTENSION}")
-        try:
-            if not Utils.is_file_located_or_downloaded(dest_path=config_file_path,
-                                                       download_link=CONFIG_FILE_URL,
-                                                       download_if_not_found=download_if_not_found,
-                                                       is_new_download_forced=is_new_download_forced):
-                raise FileNotFoundError(
-                    f"The config file {CONFIG_FILE_NAME_AND_EXTENSION} was not found in {config_file_path} " \
-                    f"nor downloaded from {CONFIG_FILE_URL}.")
-        except Exception as e:
-            raise e
-        self.config_dict = Utils.read_in_json(path_as_string=config_file_path)
-        logging.debug(f"The parsed config dict: {self.config_dict} ")
-        self.model_ids = [config for config in self.config_dict]
-        logging.debug(f"The model_ids found in the config dict: {self.model_ids} ")
-        self.is_config_loaded = True
+        if self.config_dict is None:
+            assert Utils.mkdirs(
+                path_as_string=CONFIG_FILE_FOLDER
+            ), f"The config folder was not found nor created in {CONFIG_FILE_FOLDER}."
+            config_file_path = Path(
+                f"{CONFIG_FILE_FOLDER}/{CONFIG_FILE_NAME_AND_EXTENSION}"
+            )
+            try:
+                if not Utils.is_file_located_or_downloaded(
+                    path_as_string=config_file_path,
+                    download_if_not_found=True,
+                    download_link=CONFIG_FILE_URL,
+                    is_new_download_forced=is_new_download_forced,
+                ):
+                    error_string = (
+                        f"The config file {CONFIG_FILE_NAME_AND_EXTENSION} was not found in {config_file_path} "
+                        f"nor downloaded from {CONFIG_FILE_URL}."
+                    )
+                    logging.error(error_string)
+                    raise FileNotFoundError(error_string)
+            except Exception as e:
+                raise e
+            self.config_dict = Utils.read_in_json(path_as_string=config_file_path)
+            logging.debug(f"The parsed config dict: {self.config_dict} ")
+            self.model_ids = [config for config in self.config_dict]
+            logging.debug(f"The model_ids found in the config dict: {self.model_ids} ")
+            self.is_config_loaded = True
         return self.is_config_loaded
 
     def get_config_by_id(self, model_id, config_key: str = None) -> dict:
-        """ From `config_manager`, get and return the part of the config below a config_key for a specific `model_id`.
+        """From `config_manager`, get and return the part of the config below a config_key for a specific `model_id`.
 
         The key param can contain '.' (dot) separations to allow for retrieval of nested config keys such as
         'execution.generator.name'
@@ -124,7 +130,7 @@ class ConfigManager:
         return json.dumps(self.config_dict)
 
     def __repr__(self):
-        return f'ConfigManager(model_ids={self.model_ids}, is_config_loaded={self.is_config_loaded})'
+        return f"ConfigManager(model_ids={self.model_ids}, is_config_loaded={self.is_config_loaded})"
 
     def __len__(self):
         return len(self.config_dict)
