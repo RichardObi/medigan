@@ -149,6 +149,8 @@ class ConfigManager:
         overwrite_existing_metadata: bool = False,
         store_new_config: bool = True,
     ) -> bool:
+        """ TODO """
+
         if not self.is_model_metadata_valid(model_id, metadata):
             logging.warning(
                 f"{model_id}: Metadata was not added to config. Reason: metadata was not valid. Please revise and try again."
@@ -175,15 +177,19 @@ class ConfigManager:
         return True
 
     def is_model_in_config(self, model_id: str) -> bool:
+        """ TODO """
+
         try:
             self.get_config_by_id(model_id)
         except KeyError as e:
             return False
         return True
 
-    def is_local_model_metadata_valid(
+    def is_model_metadata_valid(
         self, model_id: str, metadata: dict, is_local_model: bool = True
     ) -> bool:
+        """ TODO """
+
         try:
             # Assert metadata not None and the existence of the most important entries of the metadata nested below model_id
             assert (

@@ -112,6 +112,23 @@ class Generators:
             model_id=model_id, config_key=config_key
         )
 
+
+    def is_model_metadata_valid(self, model_id: str, metadata: dict, is_local_model: bool = True) -> bool:
+        """ TODO """
+        return self.config_manager.is_model_metadata_valid(model_id= model_id, metadata=metadata, is_local_model=is_local_model)
+
+
+    def add_model_to_config(
+            self,
+            model_id: str,
+            metadata: dict,
+            overwrite_existing_metadata: bool = False,
+            store_new_config: bool = True,
+    ) -> bool:
+        """ TODO """
+        return self.config_manager.add_model_to_config(model_id= model_id, metadata=metadata, overwrite_existing_metadata=overwrite_existing_metadata, store_new_config=store_new_config)
+
+
     ############################ MODEL SELECTOR METHODS ############################
 
     def list_models(self) -> list:
@@ -758,17 +775,22 @@ class Generators:
 
     ############################ MODEL CONTRIBUTOR METHODS ############################
 
-    def get_model_contributor_by_id(
+    def add_model_contributor(
         self,
         model_id: str,
+        init_py_path: str = None,
     ) -> ModelContributor:
-        model_contributor = self.find_model_contributor_by_id(model_id=model_id)
-        if model_contributor is None:
-            model_contributor = ModelContributor(model_id=model_id)
+        """ TODO """
+        model_contributor = self.get_model_contributor_by_id(model_id=model_id)
+        if model_contributor is not None:
+            logging.warning(f"{model_id}: For this model_id, there already exists a ModelContributor. None was added. Returning the existing one.")
+        else:
+            model_contributor = ModelContributor(model_id=model_id, init_py_path=init_py_path)
             self.model_contributors.append(model_contributor)
         return model_contributor
 
-    def find_model_contributor_by_id(self, model_id: str) -> ModelExecutor:
+
+    def get_model_contributor_by_id(self, model_id: str) -> ModelExecutor:
         """Find and return the `ModelContributor` instance of this model_id in the `self.model_contributors` list.
 
         Parameters

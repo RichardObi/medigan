@@ -4,7 +4,7 @@
 
 .. codeauthor:: Richard Osuala <richard.osuala@gmail.com>
 """
-# run with python -m tests.model_integration_test
+# run with python -m tests.model_integration_test_manual
 
 import glob
 import logging

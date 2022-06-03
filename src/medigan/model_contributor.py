@@ -16,20 +16,12 @@ from pathlib import Path
 
 import requests
 
-from .config_manager import ConfigManager
 from .constants import (
     CONFIG_FILE_KEY_DEPENDENCIES,
     CONFIG_FILE_KEY_DESCRIPTION,
     CONFIG_FILE_KEY_EXECUTION,
     CONFIG_FILE_KEY_GENERATE,
-    CONFIG_FILE_KEY_GENERATE_ARGS,
-    CONFIG_FILE_KEY_GENERATE_ARGS_BASE,
-    CONFIG_FILE_KEY_GENERATE_ARGS_MODEL_FILE,
-    CONFIG_FILE_KEY_GENERATE_ARGS_NUM_SAMPLES,
-    CONFIG_FILE_KEY_GENERATE_ARGS_OUTPUT_PATH,
-    CONFIG_FILE_KEY_GENERATE_ARGS_SAVE_IMAGES,
     CONFIG_FILE_KEY_GENERATE_NAME,
-    CONFIG_FILE_KEY_IMAGE_SIZE,
     CONFIG_FILE_KEY_MODEL_EXTENSION,
     CONFIG_FILE_KEY_MODEL_NAME,
     CONFIG_FILE_KEY_PACKAGE_LINK,
@@ -45,7 +37,10 @@ from .utils import Utils
 
 
 class ModelContributor:
-    """`ModelContributor` class: Contributes a user's local model to the public medigan library"""
+    """`ModelContributor` class: Contributes a user's local model to the public medigan library
+
+        TODO
+    """
 
     def __init__(
         self,
@@ -54,8 +49,8 @@ class ModelContributor:
     ):
         self.validate_model_id(model_id)
         self.model_id = model_id
-        self.validate_init_py_path(init_py_path)
         self.init_py_path = init_py_path
+        self.validate_init_py_path(init_py_path)
         self.package_path = self.init_py_path.replace(INIT_PY_FILE, "")
         self.package_name = Path(self.package_path).name
         self.validate_local_model_import()
@@ -65,6 +60,8 @@ class ModelContributor:
     def validate_model_id(
         self, model_id: str, max_chars: int = 30, min_chars: int = 13
     ) -> bool:
+        """ TODO """
+
         num_chars = len(model_id)
         assert (
             num_chars <= max_chars
@@ -79,15 +76,19 @@ class ModelContributor:
         return True
 
     def validate_init_py_path(self, init_py_path):
+        """ TODO """
+
         assert (
             Path(init_py_path).exists() and Path(init_py_path).is_file()
         ), f"{self.model_id}: The path to your model's __init__.py function does not exist or does not point to a file. Please revise path {init_py_path}."
         assert Utils.is_file_in(
-            folder_path=self.init_py_path.replace(INIT_PY_FILE, ""),
+            folder_path=self.init_py_path.replace(f"/{INIT_PY_FILE}", ""),
             filename=INIT_PY_FILE,
         ), f"{self.model_id}: No __init__.py was found in your path {init_py_path}. Please revise."
 
     def validate_local_model_import(self):
+        """ TODO """
+
         # Validation: Import module as python library to check if generate function is inside the
         # path_to_script_w_generate_function python file and no errors occur.
         try:
@@ -95,7 +96,7 @@ class ModelContributor:
             importlib.import_module(name=self.package_name)
         except Exception as e:
             raise Exception(
-                f"{self.model_id}: Error while testing importlib model import. Is your {INIT_PY_FILE} erroneous? Please alos revise if the provided path ({self.init_py_path}) is valid and accessible and try again."
+                f"{self.model_id}: Error while testing importlib model import. Is your {INIT_PY_FILE} erroneous? Please revise if the provided path ({self.init_py_path}) is valid and accessible and try again."
             ) from e
 
     ############################ UPLOAD ############################
@@ -108,12 +109,14 @@ class ModelContributor:
         model_description: str = "",
         deposition_id: str = None,
     ):
+        """ TODO """
+
         # Get access token from https://zenodo.org/account/settings/applications/tokens/new/
         zenodo_model_data = ""
         if deposition_id is not None:
             # Create a zip archive for the model
             root_dir = Path(self.package_path).parent
-            file_name = self.package_name
+            filename = self.package_name
             shutil.make_archive(
                 base_name=self.package_name,
                 extension="zip",
@@ -139,12 +142,12 @@ class ModelContributor:
             ####### Using Zenodo API for zip file model upload
 
             bucket_url = r.json()["links"]["bucket"]
-            file_path = root_dir + "/" + file_name
+            file_path = root_dir + "/" + filename
 
             # The target URL is a combination of the bucket link with the desired filename seperated by a slash.
             with open(file_path, "rb") as fp:
                 r = requests.put(
-                    "%s/%s" % (bucket_url, file_name),
+                    "%s/%s" % (bucket_url, filename),
                     data=fp,
                     params=params,
                 )
@@ -219,7 +222,9 @@ class ModelContributor:
             )
 
     def push_to_repo(self):
-        # Get access_token from https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token
+        """ TODO """
+
+        # Users can get access_token from https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token
 
         # TODO Import libraries Gitpython and PyGithub
         # Info: https://stackoverflow.com/a/61533333
@@ -247,6 +252,8 @@ class ModelContributor:
     ############################ METADATA ############################
 
     def load_metadata_template(self):
+        """ TODO """
+
         path_to_metadata_template = Path(
             f"{TEMPLATE_FOLDER}/{CONFIG_TEMPLATE_FILE_NAME_AND_EXTENSION}"
         )
@@ -260,27 +267,32 @@ class ModelContributor:
         return metadata_template
 
     def add_metadata_from_file(self, metadata_file_path):
+        """ TODO """
+
         if Path(metadata_file_path).is_file():
             self.metadata = Utils.read_in_json(path_as_string=metadata_file_path)
-            return self.metadata
+        elif Path(metadata_file_path+"/metadata.json").is_file():
+            self.metadata = Utils.read_in_json(path_as_string=metadata_file_path+"/metadata.json")
         else:
             raise FileNotFoundError(
                 f"{self.model_id}: No metadata json file was found in the path you provided ({metadata_file_path}). "
                 f"If you do not have a metadata file, create one using the add_metadata_from_input() function."
             )
+        return self.metadata
 
     def add_metadata_from_input(
         self,
         model_weights_name: str = None,
         model_weights_extension: str = None,
         generate_method_name: str = None,
-        image_size: list = [],
         dependencies: list = [],
         fill_more_fields_interactively: bool = True,
-        output_path: str = "/config",
+        output_path: str = "config",
     ):
+        """ TODO """
+
         # Get the metadata template to guide data structure and formatting of metadata.
-        self.metadata_template = self.load_metadata_template(model_id=self.model_id)
+        self.metadata_template = self.load_metadata_template()
 
         # Generate metadata with variables provided as parameters
         metadata = self.metadata_template[self.model_id][CONFIG_FILE_KEY_EXECUTION]
@@ -289,32 +301,28 @@ class ModelContributor:
         metadata.update({CONFIG_FILE_KEY_MODEL_NAME: model_weights_name})
         metadata.update({CONFIG_FILE_KEY_MODEL_EXTENSION: model_weights_extension})
         metadata.update({CONFIG_FILE_KEY_DEPENDENCIES: dependencies})
-        metadata.update({CONFIG_FILE_KEY_IMAGE_SIZE: image_size})
         metadata[CONFIG_FILE_KEY_GENERATE][
             CONFIG_FILE_KEY_GENERATE_NAME
         ] = generate_method_name
         metadata_final = self.metadata_template
         metadata_final[self.model_id].update({CONFIG_FILE_KEY_EXECUTION: metadata})
-        logging.debug(
-            f"The following metadata was automatically created based on your input: {metadata_final}"
-        )
-        self.store_metadata(output_path, metadata=metadata_final)
+
+        Utils.store_dict_as(dictionary=metadata_final, extension=".json", output_path=output_path, filename=self.model_id )
+        logging.info(f"{self.model_id}: Your model's metadata was stored in {output_path}.")
+
         if fill_more_fields_interactively:
+            # Add more information to the metadata dict via user prompts
             metadata_final = self._recursively_fill_metadata(metadata=metadata_final)
-        self.store_metadata(output_path=output_path, metadata=metadata_final)
+            # Store again as additional fields should have now been filled
+            Utils.store_dict_as(dictionary=metadata_final, extension=".json", output_path=output_path, filename=self.model_id)
+            logging.info(f"{self.model_id}: Your model's metadata was updated. Find it in {output_path}/{self.model_id}.json")
+
         self.metadata = metadata_final
         return self.metadata
 
-    def store_metadata(self, output_path: str = "config/", metadata: dict = None):
-        logging.debug(f"{self.model_id}: Metadata before storing: {metadata}")
-        Utils.store_dict_as(
-            dictionary=metadata, extension=".json", output_path=output_path
-        )
-        logging.info(
-            f"{self.model_id}: Your model's metadata was stored in {output_path}."
-        )
-
     def is_key_value_set_or_dict(self, key: str, metadata: dict, nested_key) -> bool:
+        """ TODO """
+
         if (
             metadata.get(key) is None
             or metadata.get(key) == ""
@@ -333,6 +341,8 @@ class ModelContributor:
     def _recursively_fill_metadata(
         self, metadata_template: dict = None, metadata: dict = {}, nested_key: str = ""
     ) -> dict:
+        """ TODO """
+
         if metadata_template is None:
             metadata_template = self.metadata_template
         # Prompt user for optional metadata input
@@ -360,7 +370,7 @@ class ModelContributor:
                     input_value = input(
                         f"{self.model_id}: Please enter a comma-separated list of values for your model for key: '{nested_key}': "
                     )
-                    value_assigned = list(input_value) if input_value != "" else []
+                    value_assigned = [value.strip() for value in input_value.split(',')] if input_value != "" else []
                 elif isinstance(value_template, str):
                     value_assigned = str(
                         input(

@@ -314,12 +314,25 @@ class Utils:
     @staticmethod
     def is_file_in(folder_path: str, filename: str):
         try:
-            if Path(folder_path).is_dir() and Path(folder_path / filename).is_file():
+            if Path(folder_path).is_dir() and Path(f"{folder_path}/{filename}").is_file():
                 return True
         except Exception as e:
             logging.warning(f"File ({filename}) was not found in {folder_path}: {e}")
-        finally:
             return False
+
+    @staticmethod
+    def store_dict_as(dictionary, extension: str = ".json", output_path: str = "config/",
+                      filename: str = "metadata.json"):
+        """ store a Python dictionary in file system as variable filetype."""
+
+        if extension not in output_path:
+            Utils.mkdirs(path_as_string=output_path)
+            if extension not in filename:
+                filename = filename + extension
+            output_path = f'{output_path}/{filename}'
+        json_object = json.dumps(dictionary, indent=4)
+        with open(output_path, 'w') as outfile:
+            outfile.write(json_object)
 
     def __len__(self):
         raise NotImplementedError

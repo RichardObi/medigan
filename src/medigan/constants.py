@@ -53,8 +53,8 @@ CONFIG_FILE_KEY_GENERATOR_NAME = "name"
 """ Below the execution dict, the key under which a model's image_size is present in the config file. """
 CONFIG_FILE_KEY_IMAGE_SIZE = "image_size"
 
-""" Below the execution dict, the key under which a model's name is present in the config file. """
-CONFIG_FILE_KEY_MODEL_NAME = "model_weights_name"
+""" Below the execution dict, the key under which a model's name is present in the config file. This is the name of the weights file! """
+CONFIG_FILE_KEY_MODEL_NAME =  "model_name" # TODO: Rename to something like "model_weights_name"
 
 """ Below the execution dict, the key under which a nested dict with info on the model's generate() function is present. """
 CONFIG_FILE_KEY_GENERATE = "generate_method"

@@ -1,14 +1,14 @@
 {
   "MODEL_ID": {
     "execution": {
-      "package_name": null,
-      "package_link": null,
-      "model_name": null,
-      "extension": null,
+      "package_name": "",
+      "package_link": "",
+      "model_name": "",
+      "extension": "",
       "image_size": [],
       "dependencies": [],
       "generate_method": {
-        "name": null,
+        "name": "",
         "args": {
           "base": [
             "model_file",
@@ -28,7 +28,7 @@
         "PSNR": null,
         "IS": null,
         "FID": null,
-        "turing_test": null,
+        "turing_test": "",
         "downstream_task": {
           "CLF": {
             "trained_on_fake": {
@@ -70,22 +70,22 @@
       "height": null,
       "width": null,
       "depth": null,
-      "type": null,
-      "license": null,
-      "dataset_type": null,
-      "privacy_preservation": null,
+      "type": "",
+      "license": "",
+      "dataset_type": "",
+      "privacy_preservation": "",
       "tags": [],
       "year": null
     },
     "description": {
-      "title": null,
-      "provided_date": null,
-      "trained_date": null,
+      "title": "",
+      "provided_date": "",
+      "trained_date": "",
       "provided_after_epoch": null,
-      "version": null,
-      "publication": null,
+      "version": "",
+      "publication": "",
       "doi": [],
-      "comment": null
+      "comment": ""
     }
-  },
+  }
 }

@@ -38,6 +38,8 @@ class SyntheticDataset(Dataset):
         self.transform = transform
 
     def __getitem__(self, index):
+        """ TODO """
+
         x = self.data[index]
         y = self.labels[index] if self.labels is not None else None
         mask = self.masks[index] if self.masks is not None else None
