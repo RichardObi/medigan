@@ -16,8 +16,27 @@ from pathlib import Path
 # Import library internal modules
 from .constants import (
     CONFIG_FILE_FOLDER,
+    CONFIG_FILE_KEY_DEPENDENCIES,
+    CONFIG_FILE_KEY_EXECUTION,
+    CONFIG_FILE_KEY_GENERATE,
+    CONFIG_FILE_KEY_GENERATE_ARGS,
+    CONFIG_FILE_KEY_GENERATE_ARGS_BASE,
+    CONFIG_FILE_KEY_GENERATE_ARGS_MODEL_FILE,
+    CONFIG_FILE_KEY_GENERATE_ARGS_NUM_SAMPLES,
+    CONFIG_FILE_KEY_GENERATE_ARGS_OUTPUT_PATH,
+    CONFIG_FILE_KEY_GENERATE_ARGS_SAVE_IMAGES,
+    CONFIG_FILE_KEY_GENERATE_NAME,
+    CONFIG_FILE_KEY_IMAGE_SIZE,
+    CONFIG_FILE_KEY_MODEL_EXTENSION,
+    CONFIG_FILE_KEY_MODEL_NAME,
+    CONFIG_FILE_KEY_PACKAGE_LINK,
+    CONFIG_FILE_KEY_PACKAGE_NAME,
+    CONFIG_FILE_KEY_SELECTION,
     CONFIG_FILE_NAME_AND_EXTENSION,
     CONFIG_FILE_URL,
+    CONFIG_TEMPLATE_FILE_NAME_AND_EXTENSION,
+    INIT_PY_FILE,
+    TEMPLATE_FOLDER,
 )
 from .utils import Utils
 
@@ -97,7 +116,7 @@ class ConfigManager:
             self.is_config_loaded = True
         return self.is_config_loaded
 
-    def get_config_by_id(self, model_id, config_key: str = None) -> dict:
+    def get_config_by_id(self, model_id: str, config_key: str = None) -> dict:
         """From `config_manager`, get and return the part of the config below a config_key for a specific `model_id`.
 
         The key param can contain '.' (dot) separations to allow for retrieval of nested config keys such as
@@ -123,8 +142,130 @@ class ConfigManager:
                 config_dict = config_dict[key]
         return config_dict
 
-    def _validate_config_file(self):
-        raise NotImplementedError
+    def add_model_to_config(
+        self,
+        model_id: str,
+        metadata: dict,
+        overwrite_existing_metadata: bool = False,
+        store_new_config: bool = True,
+    ) -> bool:
+        if not self.is_model_metadata_valid(model_id, metadata):
+            logging.warning(
+                f"{model_id}: Metadata was not added to config. Reason: metadata was not valid. Please revise and try again."
+            )
+            return False
+        if self.is_model_in_config and not overwrite_existing_metadata:
+            logging.warning(
+                f"{model_id}: Metadata was not added to coonfig. Reason: For {model_id} there is already an entry in the metadata and 'overwrite_existing_metadata' was set to {overwrite_existing_metadata}."
+            )
+            return False
+        self.config_dict.update(metadata)
+        if store_new_config:
+            Utils.store_dict_as(
+                dictionary=self.config_dict,
+                output_path=f"{CONFIG_FILE_FOLDER}/{CONFIG_FILE_NAME_AND_EXTENSION}",
+            )
+            logging.info(
+                f"{model_id}: Model metadata was added and config file ({CONFIG_FILE_FOLDER}/{CONFIG_FILE_NAME_AND_EXTENSION}) was successfully updated."
+            )
+        else:
+            logging.info(
+                f"{model_id}: Model metadata was successfully added. Note: config file ({CONFIG_FILE_FOLDER}/{CONFIG_FILE_NAME_AND_EXTENSION}) was NOT updated."
+            )
+        return True
+
+    def is_model_in_config(self, model_id: str) -> bool:
+        try:
+            self.get_config_by_id(model_id)
+        except KeyError as e:
+            return False
+        return True
+
+    def is_local_model_metadata_valid(
+        self, model_id: str, metadata: dict, is_local_model: bool = True
+    ) -> bool:
+        try:
+            # Assert metadata not None and the existence of the most important entries of the metadata nested below model_id
+            assert (
+                metadata is not None
+            ), f" {model_id}: Error validating metadata. metadata is None (metadata={metadata})."
+            assert (
+                metadata[model_id] is not None
+            ), f" {model_id}: Error validating metadata. metadata does not contain model_id ({model_id}). (metadata={metadata})."
+            metadata = metadata[model_id]
+            expected_key_list = (CONFIG_FILE_KEY_EXECUTION, CONFIG_FILE_KEY_SELECTION)
+            assert all(
+                keys in metadata for keys in expected_key_list
+            ), f"{model_id}: Error validating metadata. metadata did not contain one of '{expected_key_list}'. Metadata : {metadata}"
+
+            # Checking entries inside 'execution' dict
+            metadata = metadata[CONFIG_FILE_KEY_EXECUTION]
+            expected_key_list = (
+                CONFIG_FILE_KEY_PACKAGE_LINK,
+                CONFIG_FILE_KEY_MODEL_EXTENSION,
+                CONFIG_FILE_KEY_PACKAGE_NAME,
+                CONFIG_FILE_KEY_MODEL_NAME,
+                CONFIG_FILE_KEY_DEPENDENCIES,
+                CONFIG_FILE_KEY_GENERATE,
+            )
+            assert all(
+                keys in metadata for keys in expected_key_list
+            ), f"{model_id}: Error validating metadata. metadata did not contain one of '{expected_key_list}'. Metadata : {metadata}"
+
+            # Checking if package name is present
+            package_name = metadata[CONFIG_FILE_KEY_PACKAGE_NAME]
+            assert (
+                package_name is not None and package_name != ""
+            ), f"{model_id}: Error validating metadata. The package name ({package_name}) is either not defined or an empty string. Please revise."
+
+            package_path = Path(metadata[CONFIG_FILE_KEY_PACKAGE_LINK])
+            if is_local_model:
+                # Checking if package link points to file or folder if the package_path points to a model on the local machine.
+                assert package_path.exists() and (
+                    package_path.is_file() or package_path.is_dir()
+                ), f"{model_id}: Error validating metadata. The package link ({package_path}) you provided does not point to a file nor a folder."
+
+                # Checking if there is a weights/checkpoint (model name + model extension) file inside the package link if the latter is folder not zip.
+                if package_path.is_dir():
+                    weights_path = Path(
+                        package_path
+                        / f"{metadata[CONFIG_FILE_KEY_MODEL_NAME]}{metadata[CONFIG_FILE_KEY_MODEL_EXTENSION]}"
+                    )
+                assert (
+                    weights_path.is_file()
+                ), f"{model_id}: Error validating metadata. There was no model (weights) file found in {weights_path}. Please revise."
+            else:
+                assert Utils.is_url_valid(
+                    the_url=package_path
+                ), f"{model_id}: Error validating metadata. The package_path is not a valid url {package_path}. Please revise."
+
+            # checking entries inside 'execution.generate_method' dict
+            metadata = metadata[CONFIG_FILE_KEY_GENERATE]
+            assert (
+                CONFIG_FILE_KEY_GENERATE_ARGS in metadata
+            ), f"{model_id}: Error validating metadata. It did not contain key '{CONFIG_FILE_KEY_GENERATE_ARGS}'. Metadata: {metadata}"
+
+            # checking entries inside 'execution.generate_method.args' dict
+            metadata = metadata[CONFIG_FILE_KEY_GENERATE_ARGS]
+            assert (
+                CONFIG_FILE_KEY_GENERATE_ARGS_BASE in metadata
+            ), f"{model_id}: Error validating metadata. It did not contain key '{CONFIG_FILE_KEY_GENERATE_ARGS_BASE}'. Metadata: {metadata}"
+
+            # checking entries inside 'execution.generate_method.args.base' dict
+            metadata = metadata[CONFIG_FILE_KEY_GENERATE_ARGS_BASE]
+            expected_key_list = (
+                CONFIG_FILE_KEY_GENERATE_ARGS_MODEL_FILE,
+                CONFIG_FILE_KEY_GENERATE_ARGS_NUM_SAMPLES,
+                CONFIG_FILE_KEY_GENERATE_ARGS_OUTPUT_PATH,
+                CONFIG_FILE_KEY_GENERATE_ARGS_SAVE_IMAGES,
+            )
+            assert all(
+                keys in metadata for keys in expected_key_list
+            ), f"{model_id}: Error validating metadata. metadata did not contain one of '{expected_key_list}'. Metadata : {metadata}"
+        except Exception as e:
+            logging.info(f"Metadata for model '{model_id}' was not valid: {e}")
+            return False
+        return True
 
     def __str__(self):
         return json.dumps(self.config_dict)
@@ -136,4 +277,4 @@ class ConfigManager:
         return len(self.config_dict)
 
     def __getitem__(self, idx: int):
-        raise NotImplementedError
+        return list(self.config_dict)[idx]

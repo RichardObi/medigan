@@ -16,6 +16,7 @@ from torch.utils.data import DataLoader, Dataset
 # Import library internal modules
 from .config_manager import ConfigManager
 from .constants import CONFIG_FILE_KEY_EXECUTION, MODEL_ID
+from .model_contributor import ModelContributor
 from .model_executor import ModelExecutor
 from .model_selector import ModelSelector
 from .synthetic_dataset import SyntheticDataset
@@ -56,6 +57,7 @@ class Generators:
         config_manager: ConfigManager = None,
         model_selector: ModelSelector = None,
         model_executors: list = None,
+        model_contributors: list = None,
         initialize_all_models: bool = False,
     ):
         if config_manager is None:
@@ -74,6 +76,11 @@ class Generators:
             self.model_executors = []
         else:
             self.model_executors = model_executors
+
+        if model_contributors is None:
+            self.model_contributors = []
+        else:
+            self.model_contributors = model_contributors
 
         if initialize_all_models:
             self.add_all_model_executors()
@@ -749,6 +756,37 @@ class Generators:
             **kwargs,
         )
 
+    ############################ MODEL CONTRIBUTOR METHODS ############################
+
+    def get_model_contributor_by_id(
+        self,
+        model_id: str,
+    ) -> ModelContributor:
+        model_contributor = self.find_model_contributor_by_id(model_id=model_id)
+        if model_contributor is None:
+            model_contributor = ModelContributor(model_id=model_id)
+            self.model_contributors.append(model_contributor)
+        return model_contributor
+
+    def find_model_contributor_by_id(self, model_id: str) -> ModelExecutor:
+        """Find and return the `ModelContributor` instance of this model_id in the `self.model_contributors` list.
+
+        Parameters
+        ----------
+        model_id: str
+            The generative model's unique id
+
+        Returns
+        -------
+        ModelContributor
+            `ModelContributor` class instance corresponding to the `model_id`
+        """
+
+        for idx, model_contributor in enumerate(self.model_contributors):
+            if model_contributor.model_id == model_id:
+                return model_contributor
+        return None
+
     ############################ OTHER METHODS ############################
 
     def get_as_torch_dataloader(
@@ -857,6 +895,7 @@ class Generators:
             num_workers=num_workers,
             pin_memory=pin_memory,
             drop_last=drop_last,
+            collate_fn=collate_fn,
             timeout=timeout,
             worker_init_fn=worker_init_fn,
             prefetch_factor=prefetch_factor,
