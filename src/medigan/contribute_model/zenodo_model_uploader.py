@@ -7,37 +7,22 @@
 
 from __future__ import absolute_import
 
-import importlib
 import json
 import logging
 import shutil
-import sys
-import zipfile
 from pathlib import Path
 
 import requests
 
 from ..constants import (
-    CONFIG_FILE_KEY_DEPENDENCIES,
     CONFIG_FILE_KEY_DESCRIPTION,
-    CONFIG_FILE_KEY_EXECUTION,
-    CONFIG_FILE_KEY_GENERATE,
-    CONFIG_FILE_KEY_GENERATE_NAME,
-    CONFIG_FILE_KEY_MODEL_EXTENSION,
-    CONFIG_FILE_KEY_MODEL_NAME,
-    CONFIG_FILE_KEY_PACKAGE_LINK,
-    CONFIG_FILE_KEY_PACKAGE_NAME,
     CONFIG_FILE_KEY_SELECTION,
     CONFIG_FILE_KEY_TAGS,
-    CONFIG_TEMPLATE_FILE_NAME_AND_EXTENSION,
-    INIT_PY_FILE,
-    TEMPLATE_FOLDER,
     ZENODO_API_URL,
     ZENODO_GENERIC_MODEL_DESCRIPTION,
     ZENODO_HEADERS,
     ZENODO_LINE_BREAK,
 )
-from ..utils import Utils
 from .base_model_uploader import BaseModelUploader
 
 
