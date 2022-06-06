@@ -124,9 +124,10 @@ class Generators:
             metadata: dict,
             overwrite_existing_metadata: bool = False,
             store_new_config: bool = True,
+            metadata_file_path: str = '',
     ) -> bool:
         """ TODO """
-        return self.config_manager.add_model_to_config(model_id= model_id, metadata=metadata, overwrite_existing_metadata=overwrite_existing_metadata, store_new_config=store_new_config)
+        return self.config_manager.add_model_to_config(model_id= model_id, metadata=metadata, overwrite_existing_metadata=overwrite_existing_metadata, store_new_config=store_new_config, metadata_file_path=metadata_file_path)
 
 
     ############################ MODEL SELECTOR METHODS ############################
