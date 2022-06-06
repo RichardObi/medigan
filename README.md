@@ -101,7 +101,6 @@ results = generators.find_matching_models_by_values(keywords)
 ### Get Model as Dataloader 
 We can directly receive a [torch.utils.data.DataLoader](https://pytorch.org/docs/stable/data.html#torch.utils.data.DataLoader) object for any of medigan's generative models.
 ```python
-# import medigan and initialize Generators
 from medigan import Generators
 generators = Generators()
 dataloader = generators.get_as_torch_dataloader(model_id="00004_PIX2PIX_MASKTOMASS_BREAST_MG_SYNTHESIS", num_samples=3)
@@ -125,5 +124,36 @@ plt.show()
 ```
 ![sample](docs/source/_static/samples/gan_sample_00004_dataloader.png)
 
-## Contributing
-We welcome contributions to medigan. Please send us an email or read the [contributing guidelines](CONTRIBUTING.md) on how to contribute to medigan project.
+## Contribute A Model
+
+Create an [__init__.py](templates/examples/__init__.py) file in your model's root folder. 
+
+Next, run the following code to push your model to Zenodo.
+
+```python
+from medigan import Generators
+generators = Generators()
+
+# The model contributor handles 
+generators.add_model_contributor(
+        model_id="00010_YOUR_MODEL", 
+        init_py_path="path/ending/with/__init__.py")
+
+# Input some metadata information for your model.
+generators.add_metadata_from_input(
+        model_id="00010_YOUR_MODEL", 
+        model_weights_name = "10000",
+        model_weights_extension=".pt", 
+        generate_method_name = "generate", 
+        dependencies=["numpy", "torch"])
+
+# Get Zenodo access token: https://zenodo.org/account/settings/applications/tokens/new/
+generators.push_to_zenodo(
+        model_id="00010_YOUR_MODEL",
+        access_token="ACCESS_TOKEN",
+        creator_name="NAME",
+        creator_affiliation="AFFILIATION")
+```
+
+## Contributions in General
+We welcome contributions to medigan. Please send us an email or read the [contributing guidelines](CONTRIBUTING.md) on how to contribute to the medigan project.

@@ -26,8 +26,8 @@ from ..constants import (
 from .base_model_uploader import BaseModelUploader
 
 
-class ZenodoBaseModelUploader(BaseModelUploader):
-    """`ZenodoBaseModelUploader` class: Uploads a user's model via API to Zenodo, here it is permanently stored with DOI.
+class ZenodoModelUploader(BaseModelUploader):
+    """`ZenodoModelUploader` class: Uploads a user's model via API to Zenodo, here it is permanently stored with DOI.
 
     TODO
     """
@@ -112,7 +112,7 @@ class ZenodoBaseModelUploader(BaseModelUploader):
         return r
 
     def upload(
-        self, deposition_id: str, file_path: str, filename: str, bucket_url: str
+        self, file_path: str, filename: str, bucket_url: str
     ) -> dict:
         """TODO"""
 
@@ -205,7 +205,6 @@ class ZenodoBaseModelUploader(BaseModelUploader):
         bucket_url = response.json()["links"]["bucket"]
 
         response = self.upload(
-            deposition_id=deposition_id,
             file_path=file_path,
             filename=filename,
             bucket_url=bucket_url,
@@ -239,7 +238,7 @@ class ZenodoBaseModelUploader(BaseModelUploader):
         )
 
     def __repr__(self):
-        return f"ZenodoBaseModelUploader(model_id={self.model_id}, zenodo_url={ZENODO_API_URL})"
+        return f"ZenodoModelUploader(model_id={self.model_id}, zenodo_url={ZENODO_API_URL})"
 
     def __len__(self):
         raise NotImplementedError

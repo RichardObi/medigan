@@ -10,8 +10,8 @@ from __future__ import absolute_import
 from .base_model_uploader import BaseModelUploader
 
 
-class GithubBaseModelUploader(BaseModelUploader):
-    """`GithubBaseModelUploader` class: Pushes the metadata of a user's model to the medigan repo and initiates Pull request.
+class GithubModelUploader(BaseModelUploader):
+    """`GithubModelUploader` class: Pushes the metadata of a user's model to the medigan repo and initiates Pull request.
 
     TODO
     """
@@ -59,7 +59,7 @@ class GithubBaseModelUploader(BaseModelUploader):
         raise NotImplementedError
 
     def __repr__(self):
-        return f"GithubBaseModelUploader(model_id={self.model_id}, metadata={self.metadata})"
+        return f"GithubModelUploader(model_id={self.model_id}, metadata={self.metadata})"
 
     def __len__(self):
         raise NotImplementedError
