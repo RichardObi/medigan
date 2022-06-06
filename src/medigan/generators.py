@@ -16,10 +16,10 @@ from torch.utils.data import DataLoader, Dataset
 # Import library internal modules
 from .config_manager import ConfigManager
 from .constants import CONFIG_FILE_KEY_EXECUTION, MODEL_ID
-from .model_contributor import ModelContributor
-from .model_executor import ModelExecutor
-from .model_selector import ModelSelector
-from .synthetic_dataset import SyntheticDataset
+from .contribute_model.model_contributor import ModelContributor
+from .execute_model.model_executor import ModelExecutor
+from .select_model.model_selector import ModelSelector
+from .execute_model.synthetic_dataset import SyntheticDataset
 from .utils import Utils
 
 # Import pypi libs
@@ -118,16 +118,32 @@ class Generators:
         return self.config_manager.is_model_metadata_valid(model_id= model_id, metadata=metadata, is_local_model=is_local_model)
 
 
-    def add_model_to_config(
+    def _add_model_to_config(
             self,
             model_id: str,
             metadata: dict,
+            metadata_file_path: str = '',
             overwrite_existing_metadata: bool = False,
             store_new_config: bool = True,
-            metadata_file_path: str = '',
     ) -> bool:
         """ TODO """
+
         return self.config_manager.add_model_to_config(model_id= model_id, metadata=metadata, overwrite_existing_metadata=overwrite_existing_metadata, store_new_config=store_new_config, metadata_file_path=metadata_file_path)
+
+
+    def add_model_to_config(
+            self,
+            model_id: str,
+            overwrite_existing_metadata: bool = False,
+            store_new_config: bool = True,
+    ) -> bool:
+        """ TODO """
+
+        model_contributor = self.get_model_contributor_by_id(model_id=model_id)
+
+        assert model_contributor is not None, f"{model_id}: No model_contributor is initialized for this model_id in Generators. Either run '_add_model_to_config()' instead or add a model_contributor first by running 'add_model_contributor()'."
+
+        return self.config_manager.add_model_to_config(model_id= model_contributor.model_id, metadata=model_contributor.metadata, metadata_file_path=model_contributor.metadata_file_path, overwrite_existing_metadata=overwrite_existing_metadata, store_new_config=store_new_config)
 
 
     ############################ MODEL SELECTOR METHODS ############################
@@ -782,6 +798,7 @@ class Generators:
         init_py_path: str = None,
     ) -> ModelContributor:
         """ TODO """
+
         model_contributor = self.get_model_contributor_by_id(model_id=model_id)
         if model_contributor is not None:
             logging.warning(f"{model_id}: For this model_id, there already exists a ModelContributor. None was added. Returning the existing one.")
@@ -791,7 +808,7 @@ class Generators:
         return model_contributor
 
 
-    def get_model_contributor_by_id(self, model_id: str) -> ModelExecutor:
+    def get_model_contributor_by_id(self, model_id: str) -> ModelContributor:
         """Find and return the `ModelContributor` instance of this model_id in the `self.model_contributors` list.
 
         Parameters
@@ -809,6 +826,53 @@ class Generators:
             if model_contributor.model_id == model_id:
                 return model_contributor
         return None
+
+
+    def add_metadata_from_file(self, model_id: str, metadata_file_path: str) -> dict:
+        """ TODO """
+
+        model_contributor = self.get_model_contributor_by_id(model_id=model_id)
+        assert model_contributor is not None, f"{model_id}: No model_contributor is initialized for this model_id in Generators. Add a model_contributor first by running 'add_model_contributor()'."
+        return model_contributor.add_metadata_from_file(metadata_file_path=metadata_file_path)
+
+    def add_metadata_from_input(
+        self,
+        model_id:str,
+        model_weights_name: str,
+        model_weights_extension: str,
+        generate_method_name: str,
+        dependencies: list,
+        fill_more_fields_interactively: bool = True,
+        output_path: str = "config",
+    ) -> dict:
+        """ TODO """
+
+        model_contributor = self.get_model_contributor_by_id(model_id=model_id)
+        assert model_contributor is not None, f"{model_id}: No model_contributor is initialized for this model_id in Generators. Add a model_contributor first by running 'add_model_contributor()'."
+        return model_contributor.add_metadata_from_input(
+                                                        model_weights_name = model_weights_name,
+                                                        model_weights_extension=model_weights_extension,
+                                                        generate_method_name =generate_method_name,
+                                                        dependencies=dependencies,
+                                                        fill_more_fields_interactively=fill_more_fields_interactively,
+                                                        output_path=output_path,
+                                                       )
+
+
+    def push_to_zenodo(
+            self,
+            model_id: str, access_token: str,
+            creator_name: str,
+            creator_affiliation: str,
+            model_description: str = "",
+    ):
+        """ TODO """
+
+        model_contributor = self.get_model_contributor_by_id(model_id=model_id)
+        assert model_contributor is not None, f"{model_id}: No model_contributor is initialized for this model_id in Generators. Add a model_contributor first by running 'add_model_contributor()'."
+
+        return model_contributor.push_to_zenodo(access_token=access_token,creator_name=creator_name,creator_affiliation=creator_affiliation, model_description=model_description  )
+
 
     ############################ OTHER METHODS ############################
 

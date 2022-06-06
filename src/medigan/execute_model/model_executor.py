@@ -19,7 +19,7 @@ from pathlib import Path
 import pkg_resources
 
 # Import library internal modules
-from .constants import (
+from ..constants import (
     CONFIG_FILE_KEY_DEPENDENCIES,
     CONFIG_FILE_KEY_GENERATE,
     CONFIG_FILE_KEY_GENERATE_ARGS,
@@ -39,7 +39,7 @@ from .constants import (
     PACKAGE_EXTENSION,
 )
 from .install_model_dependencies import install_model
-from .utils import Utils
+from ..utils import Utils
 
 
 class ModelExecutor:

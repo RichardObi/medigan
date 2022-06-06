@@ -146,14 +146,14 @@ class ConfigManager:
         self,
         model_id: str,
         metadata: dict,
+        metadata_file_path: str = "",
         overwrite_existing_metadata: bool = False,
         store_new_config: bool = True,
-        metadata_file_path: str = "",
     ) -> bool:
         """ TODO """
 
         if not self.is_model_metadata_valid(model_id=model_id, metadata=metadata, metadata_file_path=metadata_file_path):
-            logging.warning(
+            logging.debug(
                 f"{model_id}: Metadata was not added to config. Reason: metadata was not valid. Please revise and try again."
             )
             return False
@@ -229,10 +229,9 @@ class ConfigManager:
             if is_local_model:
                 if not (package_path.exists() and package_path.is_file()):
                     # TODO: Optional additional validation: If the package path actually points to a valid zip, check if the expected model file can be found in that zip.
-                    # Now checking if there is a weights/checkpoint (model name + model extension) file inside
-                    # the package link / metadata path if the latter is folder not zip.
-                    metadata = self.locate_and_update_model_weights(model_id=model_id, package_path=package_path,
-                                                         metadata=metadata, metadata_file_path=metadata_file_path)
+                    assert (
+                            package_path.exists() and package_path.is_dir()
+                    ), f"{model_id}: Error validating metadata. Your package path ({package_path}) does not exist. Please revise and make sure the entry for metadata field '{CONFIG_FILE_KEY_PACKAGE_LINK}' points to a valid folder or zip file containing your model."
             else:
                 assert Utils.is_url_valid(
                     the_url=package_path
@@ -265,43 +264,6 @@ class ConfigManager:
             logging.info(f"Metadata for model '{model_id}' was not valid: {e}")
             return False
         return True
-
-    def locate_and_update_model_weights(self, model_id:str, metadata: dict, package_path: str, metadata_file_path: str = "") -> str:
-        """ Check if the model files can be found in the `package_path` or based on the `path_to_metadata`.
-
-        Ideally, the user provided `package_path` and the `path_to_metadata` should both point to the same model package
-        containing weights, config, license, etc. Here we check both of these paths to find the model weights.
-
-        TODO Further docstring
-        """
-
-        metadata_dir_path = Path(metadata_file_path).parent
-
-        potential_weight_paths:list  = []
-
-        # package_path + package_path + file + extension
-        potential_weight_paths.append(Path(
-            package_path
-            / f"{metadata[CONFIG_FILE_KEY_MODEL_NAME]}{metadata[CONFIG_FILE_KEY_MODEL_EXTENSION]}"))
-
-
-        # metadata_dir + package_path + file + extension
-        potential_weight_paths.append(Path(
-            metadata_dir_path
-            / f"{metadata[CONFIG_FILE_KEY_MODEL_NAME]}{metadata[CONFIG_FILE_KEY_MODEL_EXTENSION]}"))
-
-
-        # metadata_dir + package_path + file + extension
-        potential_weight_paths.append(Path(
-            metadata_dir_path  / package_path
-            / f"{metadata[CONFIG_FILE_KEY_MODEL_NAME]}{metadata[CONFIG_FILE_KEY_MODEL_EXTENSION]}"))
-
-        for potential_weight_path in potential_weight_paths:
-            if potential_weight_path.is_file():
-                new_package_path = Path(potential_weight_path).parent.resolve(strict=False) # strict=False, as models might be not on user's disc.
-                metadata[CONFIG_FILE_KEY_PACKAGE_NAME] = str(new_package_path)
-                return metadata
-        raise FileNotFoundError(f"{model_id}: Error validating metadata. There was no model (weights) file found. Please revise. Tested paths: '{potential_weight_paths}'")
 
     def __str__(self):
         return json.dumps(self.config_dict)

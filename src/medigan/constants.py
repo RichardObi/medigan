@@ -104,5 +104,14 @@ CONFIG_TEMPLATE_FILE_NAME_AND_EXTENSION = "template.json"
 """ Name and extensions of template of config file. """
 TEMPLATE_FOLDER = "templates"
 
+""" The line break in the Zenodo description that appears together with the pushed model on Zenodo"""
+ZENODO_LINE_BREAK = "<p>&nbsp;</p>"
+
 """ A generic description appended to model uploads that are automatically uploaded to zenodo via Zenodo API call in medigan"""
-ZENODO_GENERIC_MODEL_DESCRIPTION = "\n This generative model is used as part of the medigan library. \n medigan is an open-source Python library on Github that allows developers and researchers to easily add synthetic imaging data into their model training pipelines. \n medigan github repository: https://github.com/RichardObi/medigan \n Please find the medigan documentation here: https://medigan.readthedocs.io/"
+ZENODO_GENERIC_MODEL_DESCRIPTION = f"{ZENODO_LINE_BREAK} This generative model is used as part of the medigan library. {ZENODO_LINE_BREAK} medigan is an open-source Python library on Github that allows developers and researchers to easily add synthetic imaging data into their model training pipelines. {ZENODO_LINE_BREAK} medigan github repository: https://github.com/RichardObi/medigan {ZENODO_LINE_BREAK} Please find the medigan documentation here: https://medigan.readthedocs.io/"
+
+""" The REST API to interact with Zenodo """
+ZENODO_API_URL = "https://sandbox.zenodo.org/api/deposit/depositions" #"https://zenodo.org/api/deposit/depositions" # https://sandbox.zenodo.org/api/deposit/depositions
+
+""" The HEADER for Zenodo REST API requests"""
+ZENODO_HEADERS = {"Content-Type": "application/json"}

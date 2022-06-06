@@ -8,6 +8,7 @@
 from __future__ import absolute_import
 
 import importlib
+import zipfile
 import json
 import logging
 import shutil
@@ -16,7 +17,7 @@ from pathlib import Path
 
 import requests
 
-from .constants import (
+from ..constants import (
     CONFIG_FILE_KEY_DEPENDENCIES,
     CONFIG_FILE_KEY_DESCRIPTION,
     CONFIG_FILE_KEY_EXECUTION,
@@ -32,8 +33,12 @@ from .constants import (
     INIT_PY_FILE,
     TEMPLATE_FOLDER,
     ZENODO_GENERIC_MODEL_DESCRIPTION,
+    ZENODO_LINE_BREAK,
+    ZENODO_API_URL,
 )
-from .utils import Utils
+from ..utils import Utils
+from .zenodo_model_uploader import ZenodoBaseModelUploader
+from .github_model_uploader import GithubBaseModelUploader
 
 
 class ModelContributor:
@@ -53,7 +58,11 @@ class ModelContributor:
         self.validate_init_py_path(init_py_path)
         self.package_path = self.init_py_path.replace(INIT_PY_FILE, "")
         self.package_name = Path(self.package_path).name
+        self.metadata_file_path = "" # Default is relative path to package root.
         self.validate_local_model_import()
+        self.zenodo_model_uploader = None
+        self.github_model_uploader = None
+
 
     ############################ VALIDATION ############################
 
@@ -80,11 +89,58 @@ class ModelContributor:
 
         assert (
             Path(init_py_path).exists() and Path(init_py_path).is_file()
-        ), f"{self.model_id}: The path to your model's __init__.py function does not exist or does not point to a file. Please revise path {init_py_path}."
+        ), f"{self.model_id}: The path to your model's __init__.py function does not exist or does not point to a file. Please revise path {init_py_path}. Note: You can find an __init__.py example in /templates in https://github.com/RichardObi/medigan"
         assert Utils.is_file_in(
             folder_path=self.init_py_path.replace(f"/{INIT_PY_FILE}", ""),
             filename=INIT_PY_FILE,
-        ), f"{self.model_id}: No __init__.py was found in your path {init_py_path}. Please revise."
+        ), f"{self.model_id}: No __init__.py was found in your path {init_py_path}. Please revise. Note: You can find an __init__.py example in /templates in https://github.com/RichardObi/medigan"
+
+
+    def validate_and_update_model_weights_path(self) -> str:
+        """ Check if the model files can be found in the `package_path` or based on the `path_to_metadata`.
+
+        Ideally, the user provided `package_path` and the `path_to_metadata` should both point to the same model package
+        containing weights, config, license, etc. Here we check both of these paths to find the model weights.
+
+        TODO Further docstring
+        """
+
+        metadata_dir_path = Path(self.metadata_file_path).parent
+
+        potential_weight_paths:list  = []
+
+        execution_metadata = self.metadata[self.model_id][CONFIG_FILE_KEY_EXECUTION]
+
+        # package_path + package_path + file + extension
+        try:
+            potential_weight_paths.append(Path(
+                self.package_path + f"/{execution_metadata[CONFIG_FILE_KEY_MODEL_NAME]}{execution_metadata[CONFIG_FILE_KEY_MODEL_EXTENSION]}"))
+        except KeyError as e:
+            raise e
+
+        # metadata_dir + package_path + file + extension
+        try:
+            potential_weight_paths.append(Path(
+                str(metadata_dir_path) + f"/{execution_metadata[CONFIG_FILE_KEY_MODEL_NAME]}{execution_metadata[CONFIG_FILE_KEY_MODEL_EXTENSION]}"))
+        except KeyError as e:
+            raise e
+
+        # metadata_dir + package_path + file + extension
+        try:
+            potential_weight_paths.append(Path(
+                str(metadata_dir_path) + "/" + self.package_path + f"/{execution_metadata[CONFIG_FILE_KEY_MODEL_NAME]}{execution_metadata[CONFIG_FILE_KEY_MODEL_EXTENSION]}"))
+        except KeyError as e:
+            raise e
+
+        for potential_weight_path in potential_weight_paths:
+            if potential_weight_path.is_file():
+                # Checking if there is a weights/checkpoint (model name + extension) file in the package /metadata path
+                self.package_path = str(Path(potential_weight_path).parent.resolve(strict=False)) # strict=False, as models might be not on user's disc.
+                self.metadata[self.model_id][CONFIG_FILE_KEY_EXECUTION][CONFIG_FILE_KEY_PACKAGE_NAME] = self.package_path
+                return self.metadata
+        raise FileNotFoundError(f"{self.model_id}: Error validating metadata. There was no valid model weights file found. Please revise. Tested paths: '{potential_weight_paths}'")
+
+
 
     def validate_local_model_import(self):
         """ TODO """
@@ -99,6 +155,7 @@ class ModelContributor:
                 f"{self.model_id}: Error while testing importlib model import. Is your {INIT_PY_FILE} erroneous? Please revise if the provided path ({self.init_py_path}) is valid and accessible and try again."
             ) from e
 
+
     ############################ UPLOAD ############################
 
     def push_to_zenodo(
@@ -107,147 +164,20 @@ class ModelContributor:
         creator_name: str,
         creator_affiliation: str,
         model_description: str = "",
-        deposition_id: str = None,
     ):
-        """ TODO """
+        """ TODO
 
-        # Get access token from https://zenodo.org/account/settings/applications/tokens/new/
-        zenodo_model_data = ""
-        if deposition_id is not None:
-            # Create a zip archive for the model
-            root_dir = Path(self.package_path).parent
-            filename = self.package_name
-            shutil.make_archive(
-                base_name=self.package_name,
-                extension="zip",
-                base_dir=self.package_path,
-                root_dir=root_dir,
-            )
+        Get zenodo access token from https://zenodo.org/account/settings/applications/tokens/new/
+        """
+        if self.zenodo_model_uploader is None:
+            self.zenodo_model_uploader = ZenodoBaseModelUploader(model_id=self.model_id, access_token=access_token)
+        self.zenodo_model_uploader.push(metadata=self.metadata,
+                                        package_path=self.package_path,
+                                        package_name=self.package_name,
+                                        creator_name=creator_name,
+                                        creator_affiliation=creator_affiliation,
+                                        model_description=model_description)
 
-            ####### Using Zenodo API for creating empty zenodo upload
-
-            headers = {"Content-Type": "application/json"}
-            params = {"access_token": access_token}
-            r = requests.post(
-                "https://sandbox.zenodo.org/api/deposit/depositions",
-                params=params,
-                json={},
-                headers=headers,
-            )
-            if not r.status_code == 201:
-                raise Exception(
-                    f"{self.model_id}: Error ({r.status_code}!=201) during Zenodo upload (step 1: creating empty upload template): {r.json()}"
-                )
-
-            ####### Using Zenodo API for zip file model upload
-
-            bucket_url = r.json()["links"]["bucket"]
-            file_path = root_dir + "/" + filename
-
-            # The target URL is a combination of the bucket link with the desired filename seperated by a slash.
-            with open(file_path, "rb") as fp:
-                r = requests.put(
-                    "%s/%s" % (bucket_url, filename),
-                    data=fp,
-                    params=params,
-                )
-
-            if not r.status_code == 200:
-                raise Exception(
-                    f"{self.model_id}: Error ({r.status_code}!=200) during Zenodo upload (step 2: uploading model as zip file): {r.json()}"
-                )
-
-            # Get the deposition id from the response
-            deposition_id = r.json()["id"]
-
-            ####### Using Zenodo API to update metadata of zip file upload
-            try:
-                tags = f"\n Tags: {self.metadata[self.model_id][CONFIG_FILE_KEY_SELECTION][CONFIG_FILE_KEY_TAGS]}"
-            except:
-                tags = ""
-            try:
-                description_from_config = f"\n Description from model config: {json.dumps(self.metadata[self.model_id][CONFIG_FILE_KEY_DESCRIPTION])}"
-            except:
-                description_from_config = ""
-
-            description = f"{model_description} \n Model: {self.model_id}. \n Upload via: API {tags} {ZENODO_GENERIC_MODEL_DESCRIPTION} {description_from_config}"
-
-            data = {
-                "metadata": {
-                    "title": f"{self.model_id}",
-                    "upload_type": "software",
-                    "description": description,
-                    "creators": [
-                        {
-                            "name": f"{creator_name}",
-                            "affiliation": f"{creator_affiliation}",
-                        }
-                    ],
-                }
-            }
-
-            r = requests.put(
-                "https://zenodo.org/api/deposit/depositions/%s" % deposition_id,
-                params={"access_token": access_token},
-                data=json.dumps(data),
-                headers=headers,
-            )
-            if not r.status_code == 200:
-                raise Exception(
-                    f"{self.model_id}: Error ({r.status_code}!=200) during Zenodo upload (step 3: updating metadata): {r.json()}"
-                )
-
-            zenodo_model_data = f"\n Model data: {r.json()}"
-
-        ####### Using Zenodo API to publish uploaded model
-
-        # Get explicit user approval to publish on Zenodo. Published files cannot be deleted.
-        is_user_sure = str(
-            input(
-                f"You are about to publish your model ({self.model_id}) on Zenodo. {zenodo_model_data} \n If you are sure you wold like to proceed, type 'Yes': "
-            )
-        )
-        if is_user_sure == "Yes":
-            r = requests.post(
-                f"https://zenodo.org/api/deposit/depositions/{deposition_id}/actions/publish",
-                params={"access_token": access_token},
-            )
-        else:
-            raise Exception(
-                f"{self.model_id}: Error during Zenodo upload (step 4: publishing uploaded model) due to user opt-out: You typed '{is_user_sure}' instead of 'Yes'. Model was not published. Try again providing Zenodo ID: '{deposition_id}'."
-            )
-        if not r.status_code == 202:
-            raise Exception(
-                f"{self.model_id}: Error ({r.status_code}!=202) during Zenodo upload (step 4: publishing uploaded model): {r.json()}"
-            )
-
-    def push_to_repo(self):
-        """ TODO """
-
-        # Users can get access_token from https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token
-
-        # TODO Import libraries Gitpython and PyGithub
-        # Info: https://stackoverflow.com/a/61533333
-
-        # TODO git clone (Gitpython)
-        #  Fork/Clone medigan repo into local folder
-
-        # TODO git add (Gitpython)
-        #  add the global.json to the medigan repo
-
-        # TODO git commit (Gitpython)
-        #  add the global.json to the medigan repo
-
-        # TODO git push (Gitpython)
-        # create upstream branch on Github and push code there
-
-        # TODO github PR (PyGithub)
-        # create a Github pull request (PR) from forked repo to the original medigan repo (https://github.com/RichardObi/medigan)
-
-        # TODO github assign_reviewer (PyGithub)
-        # assign user 'RichardObi' as reviewer using https://pygithub.readthedocs.io/en/latest/github_objects/PullRequest.html#github.PullRequest.PullRequest.create_review_request
-
-        raise NotImplementedError
 
     ############################ METADATA ############################
 
@@ -271,13 +201,16 @@ class ModelContributor:
 
         if Path(metadata_file_path).is_file():
             self.metadata = Utils.read_in_json(path_as_string=metadata_file_path)
+            self.metadata_file_path = metadata_file_path
         elif Path(metadata_file_path+"/metadata.json").is_file():
             self.metadata = Utils.read_in_json(path_as_string=metadata_file_path+"/metadata.json")
+            self.metadata_file_path = metadata_file_path+"/metadata.json"
         else:
             raise FileNotFoundError(
                 f"{self.model_id}: No metadata json file was found in the path you provided ({metadata_file_path}). "
                 f"If you do not have a metadata file, create one using the add_metadata_from_input() function."
             )
+        self.validate_and_update_model_weights_path()
         return self.metadata
 
     def add_metadata_from_input(
@@ -318,6 +251,8 @@ class ModelContributor:
             logging.info(f"{self.model_id}: Your model's metadata was updated. Find it in {output_path}/{self.model_id}.json")
 
         self.metadata = metadata_final
+        self.validate_and_update_model_weights_path()
+
         return self.metadata
 
     def is_key_value_set_or_dict(self, key: str, metadata: dict, nested_key) -> bool:
@@ -420,7 +355,7 @@ class ModelContributor:
         return metadata
 
     def __repr__(self):
-        return f"ModelContributor(model_id={self.model_id})"
+        return f"ModelContributor(model_id={self.model_id}, metadata={self.metadata})"
 
     def __len__(self):
         raise NotImplementedError

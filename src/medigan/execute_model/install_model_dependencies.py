@@ -4,12 +4,12 @@ import sys
 
 try:
     # if called as script (__main__) or from inside medigan
-    from medigan.config_manager import ConfigManager
-    from medigan.constants import CONFIG_FILE_KEY_DEPENDENCIES, CONFIG_FILE_KEY_EXECUTION
+    from ..config_manager import ConfigManager
+    from ..constants import CONFIG_FILE_KEY_DEPENDENCIES, CONFIG_FILE_KEY_EXECUTION
 except:
     # if called from outside medigan
-    from .config_manager import ConfigManager
-    from .constants import CONFIG_FILE_KEY_DEPENDENCIES, CONFIG_FILE_KEY_EXECUTION
+    from medigan.config_manager import ConfigManager
+    from medigan.constants import CONFIG_FILE_KEY_DEPENDENCIES, CONFIG_FILE_KEY_EXECUTION
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser()
