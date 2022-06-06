@@ -13,9 +13,9 @@ import logging
 # Import library internal modules
 from ..config_manager import ConfigManager
 from ..constants import CONFIG_FILE_KEY_PERFORMANCE, CONFIG_FILE_KEY_SELECTION, MODEL_ID
+from ..utils import Utils
 from .matched_entry import MatchedEntry
 from .model_match_candidate import ModelMatchCandidate
-from ..utils import Utils
 
 
 class ModelSelector:

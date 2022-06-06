@@ -150,9 +150,11 @@ class ConfigManager:
         overwrite_existing_metadata: bool = False,
         store_new_config: bool = True,
     ) -> bool:
-        """ TODO """
+        """TODO"""
 
-        if not self.is_model_metadata_valid(model_id=model_id, metadata=metadata, metadata_file_path=metadata_file_path):
+        if not self.is_model_metadata_valid(
+            model_id=model_id, metadata=metadata, metadata_file_path=metadata_file_path
+        ):
             logging.debug(
                 f"{model_id}: Metadata was not added to config. Reason: metadata was not valid. Please revise and try again."
             )
@@ -178,7 +180,7 @@ class ConfigManager:
         return True
 
     def is_model_in_config(self, model_id: str) -> bool:
-        """ TODO """
+        """TODO"""
 
         try:
             self.get_config_by_id(model_id)
@@ -187,9 +189,13 @@ class ConfigManager:
         return True
 
     def is_model_metadata_valid(
-        self, model_id: str, metadata: dict, is_local_model: bool = True, metadata_file_path:str= "",
+        self,
+        model_id: str,
+        metadata: dict,
+        is_local_model: bool = True,
+        metadata_file_path: str = "",
     ) -> bool:
-        """ TODO """
+        """TODO"""
 
         try:
             # Assert metadata not None and the existence of the most important entries of the metadata nested below model_id
@@ -230,7 +236,7 @@ class ConfigManager:
                 if not (package_path.exists() and package_path.is_file()):
                     # TODO: Optional additional validation: If the package path actually points to a valid zip, check if the expected model file can be found in that zip.
                     assert (
-                            package_path.exists() and package_path.is_dir()
+                        package_path.exists() and package_path.is_dir()
                     ), f"{model_id}: Error validating metadata. Your package path ({package_path}) does not exist. Please revise and make sure the entry for metadata field '{CONFIG_FILE_KEY_PACKAGE_LINK}' points to a valid folder or zip file containing your model."
             else:
                 assert Utils.is_url_valid(

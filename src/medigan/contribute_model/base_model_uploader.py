@@ -11,7 +11,7 @@ from __future__ import absolute_import
 class BaseModelUploader:
     """`BaseModelUploader` class: Uploads user's model to third party storage to allow its inclusion into medigan
 
-        TODO
+    TODO
     """
 
     def __init__(
@@ -25,7 +25,7 @@ class BaseModelUploader:
     ############################ UPLOAD ############################
 
     def push(self):
-        """ TODO """
+        """TODO"""
 
         raise NotImplementedError
 

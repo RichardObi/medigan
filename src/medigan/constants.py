@@ -54,7 +54,9 @@ CONFIG_FILE_KEY_GENERATOR_NAME = "name"
 CONFIG_FILE_KEY_IMAGE_SIZE = "image_size"
 
 """ Below the execution dict, the key under which a model's name is present in the config file. This is the name of the weights file! """
-CONFIG_FILE_KEY_MODEL_NAME =  "model_name" # TODO: Rename to something like "model_weights_name"
+CONFIG_FILE_KEY_MODEL_NAME = (
+    "model_name"  # TODO: Rename to something like "model_weights_name"
+)
 
 """ Below the execution dict, the key under which a nested dict with info on the model's generate() function is present. """
 CONFIG_FILE_KEY_GENERATE = "generate_method"
@@ -111,7 +113,7 @@ ZENODO_LINE_BREAK = "<p>&nbsp;</p>"
 ZENODO_GENERIC_MODEL_DESCRIPTION = f"{ZENODO_LINE_BREAK} This generative model is used as part of the medigan library. {ZENODO_LINE_BREAK} medigan is an open-source Python library on Github that allows developers and researchers to easily add synthetic imaging data into their model training pipelines. {ZENODO_LINE_BREAK} medigan github repository: https://github.com/RichardObi/medigan {ZENODO_LINE_BREAK} Please find the medigan documentation here: https://medigan.readthedocs.io/"
 
 """ The REST API to interact with Zenodo """
-ZENODO_API_URL = "https://sandbox.zenodo.org/api/deposit/depositions" #"https://zenodo.org/api/deposit/depositions" # https://sandbox.zenodo.org/api/deposit/depositions
+ZENODO_API_URL = "https://sandbox.zenodo.org/api/deposit/depositions"  # "https://zenodo.org/api/deposit/depositions" # https://sandbox.zenodo.org/api/deposit/depositions
 
 """ The HEADER for Zenodo REST API requests"""
 ZENODO_HEADERS = {"Content-Type": "application/json"}

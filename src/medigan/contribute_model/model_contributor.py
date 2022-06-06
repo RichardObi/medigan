@@ -8,11 +8,11 @@
 from __future__ import absolute_import
 
 import importlib
-import zipfile
 import json
 import logging
 import shutil
 import sys
+import zipfile
 from pathlib import Path
 
 import requests
@@ -32,19 +32,19 @@ from ..constants import (
     CONFIG_TEMPLATE_FILE_NAME_AND_EXTENSION,
     INIT_PY_FILE,
     TEMPLATE_FOLDER,
+    ZENODO_API_URL,
     ZENODO_GENERIC_MODEL_DESCRIPTION,
     ZENODO_LINE_BREAK,
-    ZENODO_API_URL,
 )
 from ..utils import Utils
-from .zenodo_model_uploader import ZenodoBaseModelUploader
 from .github_model_uploader import GithubBaseModelUploader
+from .zenodo_model_uploader import ZenodoBaseModelUploader
 
 
 class ModelContributor:
     """`ModelContributor` class: Contributes a user's local model to the public medigan library
 
-        TODO
+    TODO
     """
 
     def __init__(
@@ -58,18 +58,17 @@ class ModelContributor:
         self.validate_init_py_path(init_py_path)
         self.package_path = self.init_py_path.replace(INIT_PY_FILE, "")
         self.package_name = Path(self.package_path).name
-        self.metadata_file_path = "" # Default is relative path to package root.
+        self.metadata_file_path = ""  # Default is relative path to package root.
         self.validate_local_model_import()
         self.zenodo_model_uploader = None
         self.github_model_uploader = None
-
 
     ############################ VALIDATION ############################
 
     def validate_model_id(
         self, model_id: str, max_chars: int = 30, min_chars: int = 13
     ) -> bool:
-        """ TODO """
+        """TODO"""
 
         num_chars = len(model_id)
         assert (
@@ -85,7 +84,7 @@ class ModelContributor:
         return True
 
     def validate_init_py_path(self, init_py_path):
-        """ TODO """
+        """TODO"""
 
         assert (
             Path(init_py_path).exists() and Path(init_py_path).is_file()
@@ -95,9 +94,8 @@ class ModelContributor:
             filename=INIT_PY_FILE,
         ), f"{self.model_id}: No __init__.py was found in your path {init_py_path}. Please revise. Note: You can find an __init__.py example in /templates in https://github.com/RichardObi/medigan"
 
-
     def validate_and_update_model_weights_path(self) -> str:
-        """ Check if the model files can be found in the `package_path` or based on the `path_to_metadata`.
+        """Check if the model files can be found in the `package_path` or based on the `path_to_metadata`.
 
         Ideally, the user provided `package_path` and the `path_to_metadata` should both point to the same model package
         containing weights, config, license, etc. Here we check both of these paths to find the model weights.
@@ -107,43 +105,61 @@ class ModelContributor:
 
         metadata_dir_path = Path(self.metadata_file_path).parent
 
-        potential_weight_paths:list  = []
+        potential_weight_paths: list = []
 
         execution_metadata = self.metadata[self.model_id][CONFIG_FILE_KEY_EXECUTION]
 
         # package_path + package_path + file + extension
         try:
-            potential_weight_paths.append(Path(
-                self.package_path + f"/{execution_metadata[CONFIG_FILE_KEY_MODEL_NAME]}{execution_metadata[CONFIG_FILE_KEY_MODEL_EXTENSION]}"))
+            potential_weight_paths.append(
+                Path(
+                    self.package_path
+                    + f"/{execution_metadata[CONFIG_FILE_KEY_MODEL_NAME]}{execution_metadata[CONFIG_FILE_KEY_MODEL_EXTENSION]}"
+                )
+            )
         except KeyError as e:
             raise e
 
         # metadata_dir + package_path + file + extension
         try:
-            potential_weight_paths.append(Path(
-                str(metadata_dir_path) + f"/{execution_metadata[CONFIG_FILE_KEY_MODEL_NAME]}{execution_metadata[CONFIG_FILE_KEY_MODEL_EXTENSION]}"))
+            potential_weight_paths.append(
+                Path(
+                    str(metadata_dir_path)
+                    + f"/{execution_metadata[CONFIG_FILE_KEY_MODEL_NAME]}{execution_metadata[CONFIG_FILE_KEY_MODEL_EXTENSION]}"
+                )
+            )
         except KeyError as e:
             raise e
 
         # metadata_dir + package_path + file + extension
         try:
-            potential_weight_paths.append(Path(
-                str(metadata_dir_path) + "/" + self.package_path + f"/{execution_metadata[CONFIG_FILE_KEY_MODEL_NAME]}{execution_metadata[CONFIG_FILE_KEY_MODEL_EXTENSION]}"))
+            potential_weight_paths.append(
+                Path(
+                    str(metadata_dir_path)
+                    + "/"
+                    + self.package_path
+                    + f"/{execution_metadata[CONFIG_FILE_KEY_MODEL_NAME]}{execution_metadata[CONFIG_FILE_KEY_MODEL_EXTENSION]}"
+                )
+            )
         except KeyError as e:
             raise e
 
         for potential_weight_path in potential_weight_paths:
             if potential_weight_path.is_file():
                 # Checking if there is a weights/checkpoint (model name + extension) file in the package /metadata path
-                self.package_path = str(Path(potential_weight_path).parent.resolve(strict=False)) # strict=False, as models might be not on user's disc.
-                self.metadata[self.model_id][CONFIG_FILE_KEY_EXECUTION][CONFIG_FILE_KEY_PACKAGE_NAME] = self.package_path
+                self.package_path = str(
+                    Path(potential_weight_path).parent.resolve(strict=False)
+                )  # strict=False, as models might be not on user's disc.
+                self.metadata[self.model_id][CONFIG_FILE_KEY_EXECUTION][
+                    CONFIG_FILE_KEY_PACKAGE_NAME
+                ] = self.package_path
                 return self.metadata
-        raise FileNotFoundError(f"{self.model_id}: Error validating metadata. There was no valid model weights file found. Please revise. Tested paths: '{potential_weight_paths}'")
-
-
+        raise FileNotFoundError(
+            f"{self.model_id}: Error validating metadata. There was no valid model weights file found. Please revise. Tested paths: '{potential_weight_paths}'"
+        )
 
     def validate_local_model_import(self):
-        """ TODO """
+        """TODO"""
 
         # Validation: Import module as python library to check if generate function is inside the
         # path_to_script_w_generate_function python file and no errors occur.
@@ -155,7 +171,6 @@ class ModelContributor:
                 f"{self.model_id}: Error while testing importlib model import. Is your {INIT_PY_FILE} erroneous? Please revise if the provided path ({self.init_py_path}) is valid and accessible and try again."
             ) from e
 
-
     ############################ UPLOAD ############################
 
     def push_to_zenodo(
@@ -165,24 +180,27 @@ class ModelContributor:
         creator_affiliation: str,
         model_description: str = "",
     ):
-        """ TODO
+        """TODO
 
         Get zenodo access token from https://zenodo.org/account/settings/applications/tokens/new/
         """
         if self.zenodo_model_uploader is None:
-            self.zenodo_model_uploader = ZenodoBaseModelUploader(model_id=self.model_id, access_token=access_token)
-        self.zenodo_model_uploader.push(metadata=self.metadata,
-                                        package_path=self.package_path,
-                                        package_name=self.package_name,
-                                        creator_name=creator_name,
-                                        creator_affiliation=creator_affiliation,
-                                        model_description=model_description)
-
+            self.zenodo_model_uploader = ZenodoBaseModelUploader(
+                model_id=self.model_id, access_token=access_token
+            )
+        self.zenodo_model_uploader.push(
+            metadata=self.metadata,
+            package_path=self.package_path,
+            package_name=self.package_name,
+            creator_name=creator_name,
+            creator_affiliation=creator_affiliation,
+            model_description=model_description,
+        )
 
     ############################ METADATA ############################
 
     def load_metadata_template(self):
-        """ TODO """
+        """TODO"""
 
         path_to_metadata_template = Path(
             f"{TEMPLATE_FOLDER}/{CONFIG_TEMPLATE_FILE_NAME_AND_EXTENSION}"
@@ -197,14 +215,16 @@ class ModelContributor:
         return metadata_template
 
     def add_metadata_from_file(self, metadata_file_path):
-        """ TODO """
+        """TODO"""
 
         if Path(metadata_file_path).is_file():
             self.metadata = Utils.read_in_json(path_as_string=metadata_file_path)
             self.metadata_file_path = metadata_file_path
-        elif Path(metadata_file_path+"/metadata.json").is_file():
-            self.metadata = Utils.read_in_json(path_as_string=metadata_file_path+"/metadata.json")
-            self.metadata_file_path = metadata_file_path+"/metadata.json"
+        elif Path(metadata_file_path + "/metadata.json").is_file():
+            self.metadata = Utils.read_in_json(
+                path_as_string=metadata_file_path + "/metadata.json"
+            )
+            self.metadata_file_path = metadata_file_path + "/metadata.json"
         else:
             raise FileNotFoundError(
                 f"{self.model_id}: No metadata json file was found in the path you provided ({metadata_file_path}). "
@@ -222,7 +242,7 @@ class ModelContributor:
         fill_more_fields_interactively: bool = True,
         output_path: str = "config",
     ):
-        """ TODO """
+        """TODO"""
 
         # Get the metadata template to guide data structure and formatting of metadata.
         self.metadata_template = self.load_metadata_template()
@@ -240,15 +260,29 @@ class ModelContributor:
         metadata_final = self.metadata_template
         metadata_final[self.model_id].update({CONFIG_FILE_KEY_EXECUTION: metadata})
 
-        Utils.store_dict_as(dictionary=metadata_final, extension=".json", output_path=output_path, filename=self.model_id )
-        logging.info(f"{self.model_id}: Your model's metadata was stored in {output_path}.")
+        Utils.store_dict_as(
+            dictionary=metadata_final,
+            extension=".json",
+            output_path=output_path,
+            filename=self.model_id,
+        )
+        logging.info(
+            f"{self.model_id}: Your model's metadata was stored in {output_path}."
+        )
 
         if fill_more_fields_interactively:
             # Add more information to the metadata dict via user prompts
             metadata_final = self._recursively_fill_metadata(metadata=metadata_final)
             # Store again as additional fields should have now been filled
-            Utils.store_dict_as(dictionary=metadata_final, extension=".json", output_path=output_path, filename=self.model_id)
-            logging.info(f"{self.model_id}: Your model's metadata was updated. Find it in {output_path}/{self.model_id}.json")
+            Utils.store_dict_as(
+                dictionary=metadata_final,
+                extension=".json",
+                output_path=output_path,
+                filename=self.model_id,
+            )
+            logging.info(
+                f"{self.model_id}: Your model's metadata was updated. Find it in {output_path}/{self.model_id}.json"
+            )
 
         self.metadata = metadata_final
         self.validate_and_update_model_weights_path()
@@ -256,7 +290,7 @@ class ModelContributor:
         return self.metadata
 
     def is_key_value_set_or_dict(self, key: str, metadata: dict, nested_key) -> bool:
-        """ TODO """
+        """TODO"""
 
         if (
             metadata.get(key) is None
@@ -276,7 +310,7 @@ class ModelContributor:
     def _recursively_fill_metadata(
         self, metadata_template: dict = None, metadata: dict = {}, nested_key: str = ""
     ) -> dict:
-        """ TODO """
+        """TODO"""
 
         if metadata_template is None:
             metadata_template = self.metadata_template
@@ -305,7 +339,11 @@ class ModelContributor:
                     input_value = input(
                         f"{self.model_id}: Please enter a comma-separated list of values for your model for key: '{nested_key}': "
                     )
-                    value_assigned = [value.strip() for value in input_value.split(',')] if input_value != "" else []
+                    value_assigned = (
+                        [value.strip() for value in input_value.split(",")]
+                        if input_value != ""
+                        else []
+                    )
                 elif isinstance(value_template, str):
                     value_assigned = str(
                         input(

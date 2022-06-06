@@ -9,7 +9,11 @@ try:
 except:
     # if called from outside medigan
     from medigan.config_manager import ConfigManager
-    from medigan.constants import CONFIG_FILE_KEY_DEPENDENCIES, CONFIG_FILE_KEY_EXECUTION
+    from medigan.constants import (
+        CONFIG_FILE_KEY_DEPENDENCIES,
+        CONFIG_FILE_KEY_EXECUTION,
+    )
+
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser()

@@ -38,8 +38,8 @@ from ..constants import (
     DEFAULT_OUTPUT_FOLDER,
     PACKAGE_EXTENSION,
 )
-from .install_model_dependencies import install_model
 from ..utils import Utils
+from .install_model_dependencies import install_model
 
 
 class ModelExecutor:

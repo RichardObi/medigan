@@ -8,11 +8,11 @@
 from __future__ import absolute_import
 
 import importlib
-import zipfile
 import json
 import logging
 import shutil
 import sys
+import zipfile
 from pathlib import Path
 
 import requests
@@ -32,21 +32,22 @@ from ..constants import (
     CONFIG_TEMPLATE_FILE_NAME_AND_EXTENSION,
     INIT_PY_FILE,
     TEMPLATE_FOLDER,
+    ZENODO_API_URL,
     ZENODO_GENERIC_MODEL_DESCRIPTION,
     ZENODO_LINE_BREAK,
-    ZENODO_API_URL,
 )
 from ..utils import Utils
 from .base_model_uploader import BaseModelUploader
 
+
 class GithubBaseModelUploader(BaseModelUploader):
     """`GithubBaseModelUploader` class: Pushes the metadata of a user's model to the medigan repo and initiates Pull request.
 
-        TODO
+    TODO
     """
 
     def __init__(
-            self,
+        self,
         model_id,
         metadata,
     ):
@@ -54,7 +55,7 @@ class GithubBaseModelUploader(BaseModelUploader):
         self.metadata = metadata
 
     def push(self):
-        """ TODO """
+        """TODO"""
 
         # Users can get access_token from https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token
 
@@ -86,7 +87,6 @@ class GithubBaseModelUploader(BaseModelUploader):
         # assign user 'RichardObi' as reviewer using https://pygithub.readthedocs.io/en/latest/github_objects/PullRequest.html#github.PullRequest.PullRequest.create_review_request
 
         raise NotImplementedError
-
 
     def __repr__(self):
         return f"GithubBaseModelUploader(model_id={self.model_id}, metadata={self.metadata})"
