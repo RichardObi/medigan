@@ -139,7 +139,7 @@ class ModelContributor:
                     Path(potential_weight_path).parent.resolve(strict=False)
                 )  # strict=False, as models might be not on user's disc.
                 self.metadata[self.model_id][CONFIG_FILE_KEY_EXECUTION][
-                    CONFIG_FILE_KEY_PACKAGE_NAME
+                    CONFIG_FILE_KEY_PACKAGE_LINK
                 ] = self.package_path
                 return self.metadata
         raise FileNotFoundError(

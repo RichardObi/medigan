@@ -60,11 +60,10 @@ try:
     # generators._add_model_to_config(model_id=model_id, metadata=metadata, metadata_file_path=metadata_file_path,
     #                               overwrite_existing_metadata=True)
 
-    access_token = "MadYXplUJpYhtRsA46U91rhzw7ZYcsev3cu7y3rfYxCdCN7vYWRr6UZWtikO"
+    access_token = "ACCESS_TOKEN"
 
     # Manual Zenodo Test 1
-    import requests
-
+    #import requests
     # r = requests.get('https://zenodo.org/api/deposit/depositions', params = {'access_token': access_token})
     # print(r.status_code)
     # print(r.json())
