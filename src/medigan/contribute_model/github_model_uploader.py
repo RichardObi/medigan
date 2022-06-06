@@ -34,6 +34,8 @@ class GithubModelUploader(BaseModelUploader):
 
         # TODO Import libraries Gitpython and PyGithub
         # Info: https://stackoverflow.com/a/61533333
+        # Gitpython documentation: https://gitpython.readthedocs.io/en/stable/
+        # Pygithub documentation: https://pygithub.readthedocs.io/en/latest/introduction.html
 
         # TODO git clone (Gitpython)
         # fork/clone medigan repo into local folder
