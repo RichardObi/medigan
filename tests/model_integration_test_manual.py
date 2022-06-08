@@ -12,7 +12,7 @@ import shutil
 import sys
 import unittest
 
-MODEL_ID = "YOUR_MODEL_ID_HERE" #"00007_BEZIERCURVE_TUMOUR_MASK" #"00002_DCGAN_MMG_MASS_ROI" #
+MODEL_ID = "YOUR_MODEL_ID_HERE"  # "00007_BEZIERCURVE_TUMOUR_MASK" #"00002_DCGAN_MMG_MASS_ROI" #
 NUM_SAMPLES = 10
 IMAGE_SIZE = 64
 OUTPUT_PATH = f"output/{MODEL_ID}/"
@@ -24,4 +24,9 @@ except Exception as e:
     logging.error(f"test_init_generators error: {e}")
     raise e
 
-generators.generate(model_id=MODEL_ID, num_samples=NUM_SAMPLES, output_path=OUTPUT_PATH, image_size=IMAGE_SIZE)
+generators.generate(
+    model_id=MODEL_ID,
+    num_samples=NUM_SAMPLES,
+    output_path=OUTPUT_PATH,
+    image_size=IMAGE_SIZE,
+)

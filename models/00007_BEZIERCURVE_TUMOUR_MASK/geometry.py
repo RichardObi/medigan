@@ -1,12 +1,12 @@
+import logging
 import os
-import imageio as io
-import numpy as np
 import warnings
 from pathlib import Path
+
+import imageio as io
+import numpy as np
 from scipy.special import binom
 from skimage import draw, morphology
-
-import logging
 
 
 def get_nodular_points(n=10, scale=0.8):

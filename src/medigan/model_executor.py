@@ -36,8 +36,8 @@ from .constants import (
     CONFIG_FILE_KEY_PACKAGE_LINK,
     CONFIG_FILE_KEY_PACKAGE_NAME,
     DEFAULT_OUTPUT_FOLDER,
-    PACKAGE_EXTENSION,
     MODEL_FOLDER,
+    PACKAGE_EXTENSION,
 )
 from .install_model_dependencies import install_model
 from .utils import Utils
@@ -214,7 +214,8 @@ class ModelExecutor:
         ):
             # Unzip the model package in {MODEL_FOLDER}/{model_id}/{MODEL_PACKAGE}{PACKAGE_EXTENSION}
             Utils.unzip_archive(
-                source_path=self.package_path, target_path=f"{MODEL_FOLDER}/{self.model_id}"
+                source_path=self.package_path,
+                target_path=f"{MODEL_FOLDER}/{self.model_id}",
             )
         else:
             logging.debug(
@@ -234,9 +235,7 @@ class ModelExecutor:
                 self.deserialized_model_as_lib = importlib.import_module(
                     name=f"{MODEL_FOLDER}.{self.model_id}"
                 )
-                self.serialised_model_file_path = (
-                    f"{MODEL_FOLDER}/{self.model_id}/{self.model_name}{self.model_extension}"
-                )
+                self.serialised_model_file_path = f"{MODEL_FOLDER}/{self.model_id}/{self.model_name}{self.model_extension}"
             except Exception as e:
                 logging.error(
                     f"{self.model_id}: Error while importing {self.package_name} from /{self.model_id}: {e}"
