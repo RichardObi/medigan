@@ -12,8 +12,9 @@ import shutil
 import sys
 import unittest
 
-MODEL_ID = "00004_PIX2PIX_MASKTOMASS_BREAST_MG_SYNTHESIS"#"00002_DCGAN_MMG_MASS_ROI" #"YOUR_MODEL_ID_HERE"
+MODEL_ID = "YOUR_MODEL_ID_HERE" #"00007_BEZIERCURVE_TUMOUR_MASK" #"00002_DCGAN_MMG_MASS_ROI" #
 NUM_SAMPLES = 10
+IMAGE_SIZE = 64
 OUTPUT_PATH = f"output/{MODEL_ID}/"
 try:
     from src.medigan.generators import Generators
@@ -23,4 +24,4 @@ except Exception as e:
     logging.error(f"test_init_generators error: {e}")
     raise e
 
-generators.generate(model_id=MODEL_ID, num_samples=NUM_SAMPLES, output_path=OUTPUT_PATH)
+generators.generate(model_id=MODEL_ID, num_samples=NUM_SAMPLES, output_path=OUTPUT_PATH, image_size=IMAGE_SIZE)

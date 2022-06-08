@@ -665,7 +665,9 @@
       "provided_after_epoch": 500,
       "version": "0.0.1",
       "publication": "IWBI2022",
-      "doi": ["10.48550/arXiv.2203.04961"],
+      "doi": [
+        "10.48550/arXiv.2203.04961"
+      ],
       "comment": "A deep convolutional generative adversarial network (DCGAN) that generates mass patches of mammograms. Pixel dimensions are 128x128. The DCGAN was trained on MMG patches from the BCDR dataset (Lopez et al, 2012). The uploaded ZIP file contains the files 500.pt (model weight), __init__.py (image generation method and utils), a requirements.txt, and the GAN model architecture (in pytorch) below the /src folder."
     }
   },
@@ -800,6 +802,123 @@
         "10.48550/arXiv.2203.04961"
       ],
       "comment": "A wasserstein generative adversarial network with gradient penalty (WGAN-GP) that generates mass patches of mammograms. Pixel dimensions are 128x128. The DCGAN was trained on MMG patches from the BCDR dataset (Lopez et al, 2012). The uploaded ZIP file contains the files 10000.pt (model weight), __init__.py (image generation method and utils), a requirements.txt, and the GAN model architecture (in pytorch) below the /src folder."
+    }
+  },
+  "00007_BEZIERCURVE_TUMOUR_MASK": {
+    "execution": {
+      "package_name": "",
+      "package_link": "models/00007_BEZIERCURVE_TUMOUR_MASK",
+      "model_name": "",
+      "extension": "",
+      "image_size": [
+        256,
+        256
+      ],
+      "dependencies": [
+        "scikit-image",
+        "scipy",
+        "numpy",
+        "imageio",
+        "Pillow"
+      ],
+      "generate_method": {
+        "name": "generate",
+        "args": {
+          "base": [
+            "model_file",
+            "output_path",
+            "save_images",
+            "num_samples"
+          ],
+          "custom": {
+            "image_size": [
+              256,
+              256
+            ],
+            "shapes": [
+              "oval",
+              "lobulated",
+              "nodular",
+              "stellate",
+              "irregular"
+            ]
+          }
+        }
+      }
+    },
+    "selection": {
+      "performance": {},
+      "use_cases": [
+        "segmentation",
+        "segmentation mask generation"
+      ],
+      "organ": [
+        "any",
+        "breast",
+        "breasts",
+        "chest"
+      ],
+      "modality": [
+        "any",
+        "MMG",
+        "Mammography",
+        "Mammogram",
+        "full-field digital",
+        "full-field digital MMG",
+        "full-field MMG",
+        "full-field Mammography",
+        "digital Mammography",
+        "digital MMG",
+        "x-ray mammography"
+      ],
+      "vendors": [],
+      "centres": [],
+      "function": [
+        "mask generation",
+        "mask synthesis"
+      ],
+      "condition": [
+        "shapes"
+      ],
+      "dataset": [],
+      "augmentations": [],
+      "generates": [
+        "segmentation masks",
+        "masks",
+        "tumour masks",
+        "tumour delineation",
+        "mask"
+      ],
+      "height": 256,
+      "width": 256,
+      "depth": null,
+      "type": "bezier curve model",
+      "license": "MIT",
+      "dataset_type": null,
+      "privacy_preservation": null,
+      "tags": [
+        "bezier curves",
+        "segmentation masks",
+        "masks",
+        "tumour masks",
+        "tumour delineation",
+        "mask",
+        "Mammogram",
+        "Mammography lesion mask",
+        "Mass segmentation",
+        "Breast lesion mask"
+      ],
+      "year": "2021"
+    },
+    "description": {
+      "title": "Bezier Curve Based Tumour Mask Generator",
+      "provided_date": "8th June 2022",
+      "trained_date": null,
+      "provided_after_epoch": null,
+      "version": null,
+      "publication": null,
+      "doi": [],
+      "comment": "Generates segmentation masks of variable size of tumours of 5 different shape types based on bezier curves. This model is based on geometric operations and does not contain a GAN nor other deep learning models."
     }
   }
 }
