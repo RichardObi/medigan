@@ -37,6 +37,7 @@ from ..constants import (
     CONFIG_FILE_KEY_PACKAGE_NAME,
     DEFAULT_OUTPUT_FOLDER,
     PACKAGE_EXTENSION,
+    MODEL_FOLDER
 )
 from ..utils import Utils
 from .install_model_dependencies import install_model
@@ -165,12 +166,12 @@ class ModelExecutor:
         """Load and store the generative model's python package using the link from the model's `execution_config`."""
 
         if self.package_path is None:
-            assert Utils.mkdirs(path_as_string=self.model_id), (
+            assert Utils.mkdirs(path_as_string=f"{MODEL_FOLDER}/{self.model_id}"), (
                 f"{self.model_id}: The model folder was not found nor created "
-                f"in /{self.model_id}."
+                f"in {MODEL_FOLDER}/{self.model_id}."
             )
             package_path = Path(
-                f"{self.model_id}/{self.package_name}{PACKAGE_EXTENSION}"
+                f"{MODEL_FOLDER}/{self.model_id}/{self.package_name}{PACKAGE_EXTENSION}"
             )
             try:
                 if not Utils.is_file_located_or_downloaded(

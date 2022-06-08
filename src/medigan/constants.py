@@ -6,6 +6,9 @@
 .. codeauthor:: Noussair Lazrak <lazrak.noussair@gmail.com>
 """
 
+""" Folder path that will be created to locally store the model modules. """
+MODEL_FOLDER = "models"
+
 """ Static link to the config of medigan. Note: To add a model, please create pull request in this github repo. """
 CONFIG_FILE_URL = (
     "https://raw.githubusercontent.com/RichardObi/medigan/main/config/global.json"

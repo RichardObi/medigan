@@ -26,7 +26,7 @@ from ..constants import (
     TEMPLATE_FOLDER,
 )
 from ..utils import Utils
-from .zenodo_model_uploader import ZenodoBaseModelUploader
+from .zenodo_model_uploader import ZenodoModelUploader
 
 
 class ModelContributor:
@@ -173,7 +173,7 @@ class ModelContributor:
         Get zenodo access token from https://zenodo.org/account/settings/applications/tokens/new/
         """
         if self.zenodo_model_uploader is None:
-            self.zenodo_model_uploader = ZenodoBaseModelUploader(
+            self.zenodo_model_uploader = ZenodoModelUploader(
                 model_id=self.model_id, access_token=access_token
             )
         self.zenodo_model_uploader.push(

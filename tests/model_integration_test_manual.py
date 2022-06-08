@@ -12,7 +12,7 @@ import shutil
 import sys
 import unittest
 
-MODEL_ID = "YOUR_MODEL_ID_HERE"
+MODEL_ID = "YOUR_MODEL_ID_HERE" #"00006_WGANGP_MMG_MASS_ROI"
 NUM_SAMPLES = 10
 OUTPUT_PATH = f"output/{MODEL_ID}/"
 try:
