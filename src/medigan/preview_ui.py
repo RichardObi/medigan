@@ -2,41 +2,46 @@ import torch
 import torch.utils.data
 
 # from mass_bcdr_dcgan import Generator, return_images
-from malign_dcgan import Generator as Generator_mass
-from calc_dcgan import Generator as Generator_calc
+# from malign_dcgan import Generator as Generator_mass
+# from calc_dcgan import Generator as Generator_calc
 import matplotlib.pyplot as plt
 from matplotlib.widgets import Slider, Button
+
+from medigan import Generators
+
 
 model = "calc"
 num_samples = 1
 image_size = 128
+nz = 100
 
 device = torch.device("cuda") if torch.cuda.is_available() else "cpu"
 
-if model == "calc":
-    model_path = "calc_dcgan/DCGAN.pt"
-    nz = 100  # calc model
-    ngf = 64  # calc model
-    netG = Generator_calc(
-        nz=nz, ngf=ngf, nc=1, ngpu=0, image_size=image_size, is_conditional=False,
-    )
-    checkpoint = torch.load(model_path, map_location=device)
-    netG.load_state_dict(state_dict=checkpoint["generator_state_dict"])
+# if model == "calc":
+#     model_path = "calc_dcgan/DCGAN.pt"
+#     nz = 100  # calc model
+#     ngf = 64  # calc model
+#     netG = Generator_calc(
+#         nz=nz, ngf=ngf, nc=1, ngpu=0, image_size=image_size, is_conditional=False,
+#     )
+#     checkpoint = torch.load(model_path, map_location=device)
+#     netG.load_state_dict(state_dict=checkpoint["generator_state_dict"])
 
-if model == "mass":
-    model_path = "malign_dcgan/malign_mass_gen"
-    nz = 200
-    ngf = 45
-    netG = Generator_mass(nz=nz, ngf=ngf, nc=1, ngpu=0,)
-    netG.load_state_dict(torch.load(model_path, map_location=device))
+# if model == "mass":
+#     model_path = "malign_dcgan/malign_mass_gen"
+#     nz = 200
+#     ngf = 45
+#     netG = Generator_mass(nz=nz, ngf=ngf, nc=1, ngpu=0,)
+#     netG.load_state_dict(torch.load(model_path, map_location=device))
 
 
-netG.eval()
+# netG.eval()
 
 z = torch.randn(num_samples, nz, 1, 1, device=device)
 
-gen_images = netG(z).detach().cpu().numpy()
-
+gen_function = Generators().get_generate_function(model_id="00001_DCGAN_MMG_CALC_ROI", 
+                                                num_samples=1, save_images=False)
+gen_images = gen_function(z=z)
 image = gen_images[0].squeeze()
 
 fig, ax = plt.subplots()
@@ -47,7 +52,7 @@ fig.suptitle(
 )
 ax.axis("off")
 ax.set_title("Generated image")
-display = ax.imshow(image, cmap="gray", vmin=0, vmax=1)
+display = ax.imshow(image, cmap="gray", vmin=0, vmax=255)
 # adjust the main plot to make room for the sliders
 plt.subplots_adjust(left=0.45, bottom=0.2)
 
@@ -84,7 +89,7 @@ def update(val):
             for j in range(10):
                 z[0][i + j] = slider.val + sliders[0].val
 
-    gen_images = netG(z).detach().cpu().numpy()
+    gen_images = gen_function(z=z)
     image = gen_images[0].squeeze()
     display.set_data(image)
     fig.canvas.draw_idle()
