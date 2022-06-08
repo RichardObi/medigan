@@ -39,9 +39,8 @@ from .constants import (
     PACKAGE_EXTENSION,
     MODEL_FOLDER,
 )
-from .utils import Utils
-
 from .install_model_dependencies import install_model
+from .utils import Utils
 
 
 class ModelExecutor:
@@ -56,8 +55,9 @@ class ModelExecutor:
     download_package: bool
         Flag indicating, if True, that the model's package should be downloaded instead of using an existing one that
         was downloaded previously
-    is_gen_function_returned: bool
-        flag indicating whether, instead of generating samples, the sample generation function will be returned
+    install_dependencies: bool
+            flag indicating whether a generative model's dependencies are automatically installed. Else error is raised if missing dependencies are detected.
+
 
     Attributes
     ----------
@@ -97,12 +97,12 @@ class ModelExecutor:
         model_id: str,
         execution_config: dict,
         download_package: bool = True,
-        are_dependencies_installed: bool = False,
+        install_dependencies: bool = False,
     ):
         self.model_id = model_id
         self.execution_config = execution_config
         self.download_package = download_package
-        self.are_dependencies_installed = are_dependencies_installed
+        self.install_dependencies = install_dependencies
         self.image_size = None
         self.dependencies = None
         self.model_name = None
@@ -148,9 +148,13 @@ class ModelExecutor:
                 f"{self.model_id}: All necessary dependencies for model are available: {self.dependencies}"
             )
         except Exception as e:
-            if self.are_dependencies_installed:
-                logging.info(f"{self.model_id}: Now installing dependencies using pip for model {self.dependencies}. This may take a few minutes.")
-                install_model(self.model_id)
+            if self.install_dependencies:
+                logging.info(
+                    f"{self.model_id}: Now installing dependencies using pip for model {self.dependencies}. This may take a few minutes."
+                )
+                install_model(
+                    model_id=self.model_id, execution_config=self.execution_config
+                )
             else:
                 logging.error(
                     f"{self.model_id}: Some of the necessary dependencies ({self.dependencies}) for this model "
