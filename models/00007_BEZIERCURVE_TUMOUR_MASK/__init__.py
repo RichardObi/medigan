@@ -1,34 +1,40 @@
-from PIL import Image
-from .geometry import get_random_image
 import logging
-from pathlib import Path
 import os
+from pathlib import Path
 
-def normalise(data, nmax=1., nmin=0.):
-    """ Image normalization of pixel values """
+from PIL import Image
 
-    return (data-data.min()) * ((nmax - nmin) / (data.max() - data.min() + 1e-8)) + nmin
+from .geometry import get_random_image
+
+
+def normalise(data, nmax=1.0, nmin=0.0):
+    """Image normalization of pixel values"""
+
+    return (data - data.min()) * (
+        (nmax - nmin) / (data.max() - data.min() + 1e-8)
+    ) + nmin
 
 
 def save_generated_masks(images_to_save, output_dir):
-    """ Saving of the generated masks in output_dir """
+    """Saving of the generated masks in output_dir"""
 
     logging.debug(f"output_filepath: {output_dir}")
     try:
         Path(output_dir).mkdir(parents=True, exist_ok=True)
         for i, mask in enumerate(images_to_save):
             mask = normalise(mask, 255, 0)
-            mask_pil = Image.fromarray(mask).convert('L')
+            mask_pil = Image.fromarray(mask).convert("L")
             mask_pil.save(os.path.join(output_dir, f"{i}.png"))
         logging.debug(f"Saved all masks to {output_dir}")
     except Exception as e:
         logging.error(
-            f"Error while trying to save generated masks in {output_dir}: {e}")
+            f"Error while trying to save generated masks in {output_dir}: {e}"
+        )
         raise e
 
 
 def generate(model_file, image_size, num_samples, save_images, output_path, shapes):
-    """ Generating and returning the bezier curve based masks """
+    """Generating and returning the bezier curve based masks"""
 
     try:
         logging.debug("Generating masks...")
@@ -40,7 +46,9 @@ def generate(model_file, image_size, num_samples, save_images, output_path, shap
         elif isinstance(image_size, list) and len(image_size) == 2:
             patch_size = (image_size[0], image_size[1])
         else:
-            raise Exception(f"image_size needs to be either of type int or of type list with len==2. You provided {image_size}.")
+            raise Exception(
+                f"image_size needs to be either of type int or of type list with len==2. You provided {image_size}."
+            )
 
         masks = get_synthetic_masks(
             num_samples=num_samples,
@@ -56,7 +64,11 @@ def generate(model_file, image_size, num_samples, save_images, output_path, shap
         raise e
 
 
-def get_synthetic_masks(num_samples, shapes=['oval', 'lobulated', 'nodular', 'stellate', 'irregular'], patch_size=(256, 256)):
+def get_synthetic_masks(
+    num_samples,
+    shapes=["oval", "lobulated", "nodular", "stellate", "irregular"],
+    patch_size=(256, 256),
+):
     """Generate n masks of tumour masses of given shape type of variable height and width.
 
     Attributes
@@ -68,20 +80,17 @@ def get_synthetic_masks(num_samples, shapes=['oval', 'lobulated', 'nodular', 'st
     patch_size : tuple - default (32, 32)
         not to be mistaken by the input and output sizes of the mask inside the patch.
         min (16, 16); max (64, 64)
-    
+
     Returns
     -------
     list
         each element is a mask.
     """
 
-    x, y=patch_size
+    x, y = patch_size
     masks = []
     for i in range(num_samples):
         mask = get_random_image(x, y, shapes)
         masks.append(mask)
     logging.debug(f" len(masks) {len(masks)}, shape: {masks[0].shape} ")
     return masks
-
-
-
