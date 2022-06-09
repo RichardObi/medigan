@@ -1,45 +1,20 @@
 import torch
 import torch.utils.data
-
-# from mass_bcdr_dcgan import Generator, return_images
-# from malign_dcgan import Generator as Generator_mass
-# from calc_dcgan import Generator as Generator_calc
 import matplotlib.pyplot as plt
 from matplotlib.widgets import Slider, Button
 
 from medigan import Generators
 
+device = torch.device("cuda") if torch.cuda.is_available() else "cpu"
 
-model = "calc"
 num_samples = 1
 image_size = 128
 nz = 100
 
-device = torch.device("cuda") if torch.cuda.is_available() else "cpu"
-
-# if model == "calc":
-#     model_path = "calc_dcgan/DCGAN.pt"
-#     nz = 100  # calc model
-#     ngf = 64  # calc model
-#     netG = Generator_calc(
-#         nz=nz, ngf=ngf, nc=1, ngpu=0, image_size=image_size, is_conditional=False,
-#     )
-#     checkpoint = torch.load(model_path, map_location=device)
-#     netG.load_state_dict(state_dict=checkpoint["generator_state_dict"])
-
-# if model == "mass":
-#     model_path = "malign_dcgan/malign_mass_gen"
-#     nz = 200
-#     ngf = 45
-#     netG = Generator_mass(nz=nz, ngf=ngf, nc=1, ngpu=0,)
-#     netG.load_state_dict(torch.load(model_path, map_location=device))
-
-
-# netG.eval()
-
-model_id = "00001_DCGAN_MMG_CALC_ROI"
+# model_id = "00001_DCGAN_MMG_CALC_ROI"
 model_id = "00002_DCGAN_MMG_MASS_ROI"
-model_id = "00003_CYCLEGAN_MMG_DENSITY_FULL"
+# model_id = "00003_CYCLEGAN_MMG_DENSITY_FULL"
+model = model_id
 
 generators = Generators()
 model_executor = generators.get_model_executor(model_id)
