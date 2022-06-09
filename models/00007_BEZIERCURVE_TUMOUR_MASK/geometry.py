@@ -179,7 +179,7 @@ def sample_params(params, shape):
     return n, rad, edgy, scale, func
 
 
-def get_fg_shape(params, h, w, shape, xshift = 0, yshift = 0):
+def get_fg_shape(params, h, w, shape, xshift=0, yshift=0):
     """Get the shape based on point matrices"""
 
     n, rad, edgy, scale, point_generator = sample_params(params, shape)
@@ -195,7 +195,7 @@ def get_fg_shape(params, h, w, shape, xshift = 0, yshift = 0):
     # yshift = np.random.randint(-(w-dy)//3+pad, (w-dx)//2-pad)
     x += h / 2 + xshift
     y += w / 2 + yshift
-    xx, yy = draw.polygon(x, y, shape=(h,w))
+    xx, yy = draw.polygon(x, y, shape=(h, w))
 
     # Some points in the polygon might lie outside the height or width of the final image.
     # As a fallback, we iteratively increase image size until the mask fits onto the image.
@@ -207,7 +207,7 @@ def get_fg_shape(params, h, w, shape, xshift = 0, yshift = 0):
     multiplier = 1
     while img is None:
         try:
-            img = np.zeros((h*multiplier, w*multiplier), dtype=np.uint8)
+            img = np.zeros((h * multiplier, w * multiplier), dtype=np.uint8)
             img[xx, yy] = 1
             img = img[:h, :w]
         except:
