@@ -132,10 +132,13 @@ class ModelExecutor:
         self.generate_method_args = self.execution_config[CONFIG_FILE_KEY_GENERATE][
             CONFIG_FILE_KEY_GENERATE_ARGS
         ]
-        if CONFIG_FILE_KEY_GENERATE_ARGS_Z_SIZE in self.execution_config[CONFIG_FILE_KEY_GENERATE]:
-            self.generate_method_z_size = self.execution_config[CONFIG_FILE_KEY_GENERATE][
+        if (
             CONFIG_FILE_KEY_GENERATE_ARGS_Z_SIZE
-        ]
+            in self.execution_config[CONFIG_FILE_KEY_GENERATE]
+        ):
+            self.generate_method_z_size = self.execution_config[
+                CONFIG_FILE_KEY_GENERATE
+            ][CONFIG_FILE_KEY_GENERATE_ARGS_Z_SIZE]
 
         self._check_package_resources()
         self._get_and_store_package()
