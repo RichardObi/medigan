@@ -1,6 +1,6 @@
+import matplotlib.pyplot as plt
 import torch
 import torch.utils.data
-import matplotlib.pyplot as plt
 from matplotlib.widgets import Button, Slider
 
 from medigan import Generators
