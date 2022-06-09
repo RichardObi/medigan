@@ -179,7 +179,7 @@ def sample_params(params, shape):
     return n, rad, edgy, scale, func
 
 
-def get_fg_shape(params, h, w, shape):
+def get_fg_shape(params, h, w, shape, xshift = 0, yshift = 0):
     """Get the shape based on point matrices"""
 
     n, rad, edgy, scale, point_generator = sample_params(params, shape)
@@ -190,21 +190,29 @@ def get_fg_shape(params, h, w, shape):
     y -= y.mean()
     dx = x.max() - x.min()
     dy = y.max() - y.min()
+    # moving the points where shapes intersect (x and y) around via xshift and yshift
     # xshift = np.random.randint(-(h-dx)//2+pad, (h-dx)//2-pad)
     # yshift = np.random.randint(-(w-dy)//3+pad, (w-dx)//2-pad)
-    xshift = 0
-    yshift = 0
     x += h / 2 + xshift
     y += w / 2 + yshift
-    xx, yy = draw.polygon(x, y)
-    img = np.zeros((h, w), dtype=np.uint8)
+    xx, yy = draw.polygon(x, y, shape=(h,w))
 
-    try:
-        img[xx, yy] = 1
-    except:
-        img = np.zeros((h * 2, w * 2), dtype=np.uint8)
-        img[xx, yy] = 1
-        img = img[:h, :w]
+    # Some points in the polygon might lie outside the height or width of the final image.
+    # As a fallback, we iteratively increase image size until the mask fits onto the image.
+    # Lastly, the image is scaled back to its original height h and width w.
+    # This way we have a consistent returned image size, while the tradeoff is that.
+    # large masks will occupy a vast amount of space in the image.
+    # Masks are the same size (optimized for 256x256) indifferent of the image height h and width w.
+    img = None
+    multiplier = 1
+    while img is None:
+        try:
+            img = np.zeros((h*multiplier, w*multiplier), dtype=np.uint8)
+            img[xx, yy] = 1
+            img = img[:h, :w]
+        except:
+            pass
+        multiplier = multiplier + 1
     return img
 
 
