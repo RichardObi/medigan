@@ -6,14 +6,13 @@
 """
 # run with python -m tests.model_integration_test_manual
 
-import glob
 import logging
-import shutil
-import sys
-import unittest
 
-MODEL_ID = "YOUR_MODEL_ID_HERE" #"00006_WGANGP_MMG_MASS_ROI"
+
+MODEL_ID = "00007_BEZIERCURVE_TUMOUR_MASK" #"00002_DCGAN_MMG_MASS_ROI" #
+#MODEL_ID = "YOUR_MODEL_ID_HERE"
 NUM_SAMPLES = 10
+IMAGE_SIZE = 55
 OUTPUT_PATH = f"output/{MODEL_ID}/"
 try:
     from src.medigan.generators import Generators
@@ -23,4 +22,9 @@ except Exception as e:
     logging.error(f"test_init_generators error: {e}")
     raise e
 
-generators.generate(model_id=MODEL_ID, num_samples=NUM_SAMPLES, output_path=OUTPUT_PATH)
+generators.generate(
+    model_id=MODEL_ID,
+    num_samples=NUM_SAMPLES,
+    output_path=OUTPUT_PATH,
+    image_size=IMAGE_SIZE,
+)
