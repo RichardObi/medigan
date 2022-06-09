@@ -1,14 +1,12 @@
-import torch
-import torch.utils.data
-
 # from mass_bcdr_dcgan import Generator, return_images
 # from malign_dcgan import Generator as Generator_mass
 # from calc_dcgan import Generator as Generator_calc
 import matplotlib.pyplot as plt
-from matplotlib.widgets import Slider, Button
+import torch
+import torch.utils.data
+from matplotlib.widgets import Button, Slider
 
 from medigan import Generators
-
 
 model = "calc"
 num_samples = 1
