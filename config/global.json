@@ -27,7 +27,8 @@
           "custom": {
             "image_size": 128
           }
-        }
+        },
+        "z_size": 100
       }
     },
     "selection": {
@@ -171,7 +172,8 @@
             "save_images"
           ],
           "custom": {}
-        }
+        },
+        "z_size": 200
       }
     },
     "selection": {
@@ -665,7 +667,9 @@
       "provided_after_epoch": 500,
       "version": "0.0.1",
       "publication": "IWBI2022",
-      "doi": ["10.48550/arXiv.2203.04961"],
+      "doi": [
+        "10.48550/arXiv.2203.04961"
+      ],
       "comment": "A deep convolutional generative adversarial network (DCGAN) that generates mass patches of mammograms. Pixel dimensions are 128x128. The DCGAN was trained on MMG patches from the BCDR dataset (Lopez et al, 2012). The uploaded ZIP file contains the files 500.pt (model weight), __init__.py (image generation method and utils), a requirements.txt, and the GAN model architecture (in pytorch) below the /src folder."
     }
   },
