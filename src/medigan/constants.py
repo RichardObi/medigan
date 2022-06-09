@@ -83,6 +83,9 @@ CONFIG_FILE_KEY_GENERATE_ARGS_OUTPUT_PATH = "output_path"
 """ Below the execution dict, the key under which the save images boolean flag argument value of any model's generate() function is present. """
 CONFIG_FILE_KEY_GENERATE_ARGS_SAVE_IMAGES = "save_images"
 
+""" Below the execution dict, the key under which the random z_size argument value of model's generate() function is present. """
+CONFIG_FILE_KEY_GENERATE_ARGS_Z_SIZE = "z_size"
+
 """ The filetype of any of the generative model's python packages after download and before unpacking. """
 PACKAGE_EXTENSION = ".zip"
 

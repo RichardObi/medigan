@@ -37,10 +37,18 @@ device = torch.device("cuda") if torch.cuda.is_available() else "cpu"
 
 # netG.eval()
 
-z = torch.randn(num_samples, nz, 1, 1, device=device)
+model_id = "00001_DCGAN_MMG_CALC_ROI"
+model_id = "00002_DCGAN_MMG_MASS_ROI"
+model_id = "00003_CYCLEGAN_MMG_DENSITY_FULL"
 
-gen_function = Generators().get_generate_function(model_id="00001_DCGAN_MMG_CALC_ROI", 
-                                                num_samples=1, save_images=False)
+generators = Generators()
+model_executor = generators.get_model_executor(model_id)
+nz = model_executor.generate_method_z_size
+gen_function = generators.get_generate_function(
+    model_id=model_id, num_samples=num_samples, save_images=False
+)
+
+z = torch.randn(num_samples, nz, 1, 1, device=device)
 gen_images = gen_function(z=z)
 image = gen_images[0].squeeze()
 
