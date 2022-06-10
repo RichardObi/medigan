@@ -12,9 +12,10 @@ import shutil
 import sys
 import unittest
 
-MODEL_ID = "YOUR_MODEL_ID_HERE"  # "00007_BEZIERCURVE_TUMOUR_MASK" #"00002_DCGAN_MMG_MASS_ROI" #
+MODEL_ID = "YOUR_MODEL_ID_HERE"
+# MODEL_ID = "00007_BEZIERCURVE_TUMOUR_MASK" #"00002_DCGAN_MMG_MASS_ROI" #
 NUM_SAMPLES = 10
-IMAGE_SIZE = 64
+IMAGE_SIZE = 256
 OUTPUT_PATH = f"output/{MODEL_ID}/"
 try:
     from src.medigan.generators import Generators
