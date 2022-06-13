@@ -565,7 +565,8 @@
             "save_images"
           ],
           "custom": {}
-        }
+        },
+        "z_size": 100
       }
     },
     "selection": {
@@ -698,7 +699,8 @@
             "save_images"
           ],
           "custom": {}
-        }
+        },
+        "z_size": 100
       }
     },
     "selection": {
