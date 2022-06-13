@@ -1,11 +1,8 @@
 import matplotlib.pyplot as plt
-import torch
-import torch.utils.data
+import numpy as np
 from matplotlib.widgets import Button, Slider
 
 from medigan import Generators
-
-device = torch.device("cuda") if torch.cuda.is_available() else "cpu"
 
 num_samples = 1
 image_size = 128
@@ -14,7 +11,6 @@ nz = 100
 # model_id = "00001_DCGAN_MMG_CALC_ROI"
 model_id = "00002_DCGAN_MMG_MASS_ROI"
 # model_id = "00003_CYCLEGAN_MMG_DENSITY_FULL"
-model = model_id
 
 generators = Generators()
 model_executor = generators.get_model_executor(model_id)
@@ -23,13 +19,13 @@ gen_function = generators.get_generate_function(
     model_id=model_id, num_samples=num_samples, save_images=False
 )
 
-z = torch.randn(num_samples, nz, 1, 1, device=device)
+z = np.random.randn(num_samples, nz, 1, 1).astype(np.float32)
 gen_images = gen_function(z=z)
 image = gen_images[0].squeeze()
 
 fig, ax = plt.subplots()
 fig.suptitle(
-    "Model " + model,
+    "Model " + model_id,
     fontsize=15,
     # fontweight="bold",
 )
@@ -95,12 +91,12 @@ def reset(event):
 
 
 def new_seed(event):
-    z = torch.randn(num_samples, nz, 1, 1, device=device)
+    z = np.random.randn(num_samples, nz, 1, 1).astype(np.float32)
     for slider in sliders:
         if sliders.index(slider) == 0:
             pass
         else:
-            slider.valinit = float(z[0][sliders.index(slider)])
+            slider.valinit = z[0][sliders.index(slider)]
     reset(event)
 
 
