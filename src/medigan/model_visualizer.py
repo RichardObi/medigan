@@ -4,6 +4,7 @@ from matplotlib.widgets import Button, Slider
 
 from medigan import Generators
 
+
 class ModelVisualizer:
     """`ModelVisualizer` class: Visualises synthetic data through a user interface.
 
@@ -67,7 +68,6 @@ class ModelVisualizer:
             )
             sliders.append(slider)
 
-
         # The function to be called anytime a slider's value changes
         def update(val):
             for i, slider in enumerate(sliders):
@@ -82,7 +82,6 @@ class ModelVisualizer:
             display.set_data(image)
             fig.canvas.draw_idle()
 
-
         # register the update function with each slider
         for slider in sliders:
             slider.on_changed(update)
@@ -93,11 +92,9 @@ class ModelVisualizer:
         seedax = plt.axes([0.62, 0.155, 0.1, 0.04])
         seed_button = Button(seedax, "Seed", hovercolor="0.975")
 
-
         def reset(event):
             for slider in sliders:
                 slider.reset()
-
 
         def new_seed(event):
             z = np.random.randn(num_samples, self.nz, 1, 1).astype(np.float32)
@@ -107,7 +104,6 @@ class ModelVisualizer:
                 else:
                     slider.valinit = z[0][sliders.index(slider)]
             reset(event)
-
 
         reset_button.on_clicked(reset)
         seed_button.on_clicked(new_seed)
