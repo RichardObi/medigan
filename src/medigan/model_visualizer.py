@@ -24,7 +24,7 @@ class ModelVisualizer:
         generators = Generators()
         model_executor = generators.get_model_executor(self.model_id)
 
-        self.nz = model_executor.generate_method_z_size
+        self.nz = model_executor.generate_method_input_latent_vector_size
         self.gen_function = generators.get_generate_function(
             model_id=self.model_id, num_samples=num_samples, save_images=False
         )
@@ -75,9 +75,9 @@ class ModelVisualizer:
                     pass
                 else:
                     for j in range(10):
-                        z[0][i + j] = slider.val + sliders[0].val
+                        z[0][i + j] = slider.val
 
-            gen_images = self.gen_function(z=z)
+            # gen_images = self.gen_function(z=z)
             image = gen_images[0].squeeze()
             display.set_data(image)
             fig.canvas.draw_idle()
@@ -85,6 +85,27 @@ class ModelVisualizer:
         # register the update function with each slider
         for slider in sliders:
             slider.on_changed(update)
+
+        offset_old = 0
+
+        def update_offset(val):
+            global offset_old
+            diff = offset_slider.val - offset_old
+            offset_old = offset_slider.val
+
+            for i, slider in enumerate(sliders):
+                if sliders.index(slider) == 0:
+                    pass
+                slider.set_val(slider.val + diff)
+            #     for j in range(10):
+            #         z[0][i + j] = slider.val + sliders[0].val
+
+            # gen_images = self.gen_function(z=z)
+            # image = gen_images[0].squeeze()
+            # display.set_data(image)
+            # fig.canvas.draw_idle()
+
+        offset_slider.on_changed(update_offset)
 
         # Create a `matplotlib.widgets.Button` to reset the sliders to initial values.
         resetax = plt.axes([0.77, 0.155, 0.1, 0.04])
@@ -109,3 +130,6 @@ class ModelVisualizer:
         seed_button.on_clicked(new_seed)
         update(0)
         plt.show()
+
+
+ModelVisualizer("00002_DCGAN_MMG_MASS_ROI")

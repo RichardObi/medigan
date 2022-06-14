@@ -28,7 +28,7 @@
             "image_size": 128
           }
         },
-        "z_size": 100
+        "input_latent_vector_size": 100
       }
     },
     "selection": {
@@ -173,7 +173,7 @@
           ],
           "custom": {}
         },
-        "z_size": 200
+        "input_latent_vector_size": 200
       }
     },
     "selection": {
@@ -566,7 +566,7 @@
           ],
           "custom": {}
         },
-        "z_size": 100
+        "input_latent_vector_size": 100
       }
     },
     "selection": {
@@ -700,7 +700,7 @@
           ],
           "custom": {}
         },
-        "z_size": 100
+        "input_latent_vector_size": 100
       }
     },
     "selection": {

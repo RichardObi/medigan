@@ -29,7 +29,7 @@ from .constants import (
     CONFIG_FILE_KEY_GENERATE_ARGS_NUM_SAMPLES,
     CONFIG_FILE_KEY_GENERATE_ARGS_OUTPUT_PATH,
     CONFIG_FILE_KEY_GENERATE_ARGS_SAVE_IMAGES,
-    CONFIG_FILE_KEY_GENERATE_ARGS_Z_SIZE,
+    CONFIG_FILE_KEY_GENERATE_ARGS_INPUT_LATENT_VECTOR_SIZE,
     CONFIG_FILE_KEY_GENERATE_NAME,
     CONFIG_FILE_KEY_IMAGE_SIZE,
     CONFIG_FILE_KEY_MODEL_EXTENSION,
@@ -111,7 +111,7 @@ class ModelExecutor:
         self.package_link = None
         self.generate_method_name = None
         self.generate_method_args = None
-        self.generate_method_z_size = None
+        self.generate_method_input_latent_vector_size = None
         self.serialised_model_file_path = None
         self.package_path = None
         self.deserialized_model_as_lib = None
@@ -133,12 +133,12 @@ class ModelExecutor:
             CONFIG_FILE_KEY_GENERATE_ARGS
         ]
         if (
-            CONFIG_FILE_KEY_GENERATE_ARGS_Z_SIZE
+            CONFIG_FILE_KEY_GENERATE_ARGS_INPUT_LATENT_VECTOR_SIZE
             in self.execution_config[CONFIG_FILE_KEY_GENERATE]
         ):
-            self.generate_method_z_size = self.execution_config[
+            self.generate_method_input_latent_vector_size = self.execution_config[
                 CONFIG_FILE_KEY_GENERATE
-            ][CONFIG_FILE_KEY_GENERATE_ARGS_Z_SIZE]
+            ][CONFIG_FILE_KEY_GENERATE_ARGS_INPUT_LATENT_VECTOR_SIZE]
 
         self._check_package_resources()
         self._get_and_store_package()
