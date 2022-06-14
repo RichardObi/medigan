@@ -19,7 +19,7 @@ class ModelVisualizer:
 
         self.model_id = model_id
         num_samples = 1
-        image_size = 128
+        self.max_input_value = 3
 
         generators = Generators()
         model_executor = generators.get_model_executor(self.model_id)
@@ -51,17 +51,22 @@ class ModelVisualizer:
         axfreq = plt.axes((0.1, 0.80, 0.25, 0.02))
         axfreq.set_title("Input vector")
         offset_slider = Slider(
-            axfreq, "offset", -6, 6, valinit=0.0, initcolor="none", valfmt="%.2f"
+            axfreq,
+            "offset",
+            -self.max_input_value * 2,
+            self.max_input_value * 2,
+            valinit=0.0,
+            initcolor="none",
+            valfmt="%.2f",
         )
-        sliders.append(offset_slider)
         # for i in range(int(self.nz)):
         for i in range(int(self.nz / 10)):
             axfreq = plt.axes((0.1, 0.80 - (i + 2) * padding, 0.25, 0.02))
             slider = Slider(
                 axfreq,
                 "z{}".format(i + 1),
-                -3,
-                3,
+                -self.max_input_value,
+                self.max_input_value,
                 valinit=float(z[0][i]),
                 initcolor="none",
                 valfmt="%.2f",
@@ -71,13 +76,10 @@ class ModelVisualizer:
         # The function to be called anytime a slider's value changes
         def update(val):
             for i, slider in enumerate(sliders):
-                if sliders.index(slider) == 0:
-                    pass
-                else:
-                    for j in range(10):
-                        z[0][i + j] = slider.val
+                for j in range(10):
+                    z[0][i + j] = slider.val
 
-            # gen_images = self.gen_function(z=z)
+            gen_images = self.gen_function(z=z)
             image = gen_images[0].squeeze()
             display.set_data(image)
             fig.canvas.draw_idle()
@@ -86,24 +88,21 @@ class ModelVisualizer:
         for slider in sliders:
             slider.on_changed(update)
 
-        offset_old = 0
+        self.offset_old = 0
 
         def update_offset(val):
-            global offset_old
-            diff = offset_slider.val - offset_old
-            offset_old = offset_slider.val
+            diff = offset_slider.val - self.offset_old
+            self.offset_old = offset_slider.val
 
             for i, slider in enumerate(sliders):
-                if sliders.index(slider) == 0:
-                    pass
-                slider.set_val(slider.val + diff)
-            #     for j in range(10):
-            #         z[0][i + j] = slider.val + sliders[0].val
-
-            # gen_images = self.gen_function(z=z)
-            # image = gen_images[0].squeeze()
-            # display.set_data(image)
-            # fig.canvas.draw_idle()
+                if slider.val + diff > self.max_input_value:
+                    slider.set_val(self.max_input_value)
+                elif slider.val + diff < -self.max_input_value:
+                    slider.set_val(-self.max_input_value)
+                else:
+                    slider.set_val(slider.val + diff)
+                for j in range(10):
+                    z[0][i + j] = slider.val
 
         offset_slider.on_changed(update_offset)
 
@@ -114,16 +113,14 @@ class ModelVisualizer:
         seed_button = Button(seedax, "Seed", hovercolor="0.975")
 
         def reset(event):
+            offset_slider.reset()
             for slider in sliders:
                 slider.reset()
 
         def new_seed(event):
             z = np.random.randn(num_samples, self.nz, 1, 1).astype(np.float32)
             for slider in sliders:
-                if sliders.index(slider) == 0:
-                    pass
-                else:
-                    slider.valinit = z[0][sliders.index(slider)]
+                slider.valinit = z[0][sliders.index(slider)]
             reset(event)
 
         reset_button.on_clicked(reset)
