@@ -314,7 +314,8 @@ class ModelExecutor:
                         f"Generate method called with the following params. (i) default: {prepared_kwargs}, "
                         f"(ii) custom: {some_other_kwargs}"
                     )
-                    return generate_method(**prepared_kwargs, **some_other_kwargs)
+                    prepared_kwargs.update(some_other_kwargs)
+                    return generate_method(**prepared_kwargs)
 
                 return gen
             else:

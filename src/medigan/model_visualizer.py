@@ -1,6 +1,6 @@
 import matplotlib.pyplot as plt
 import numpy as np
-from matplotlib.widgets import Button, Slider
+from matplotlib.widgets import Button, Slider, TextBox
 
 from medigan import Generators
 
@@ -20,6 +20,8 @@ class ModelVisualizer:
         self.model_id = model_id
         num_samples = 1
         self.max_input_value = 3
+        self.conditional = False
+        self.condition = None
 
         generators = Generators()
         model_executor = generators.get_model_executor(self.model_id)
@@ -28,10 +30,21 @@ class ModelVisualizer:
         self.gen_function = generators.get_generate_function(
             model_id=self.model_id, num_samples=num_samples, save_images=False
         )
+        if "condition" in model_executor.generate_method_args["custom"]:
+            self.conditional = True
+            self.condition = model_executor.generate_method_args["custom"]["condition"]
 
         z = np.random.randn(num_samples, self.nz, 1, 1).astype(np.float32)
-        gen_images = self.gen_function(z=z)
-        image = gen_images[0].squeeze()
+        if self.conditional:
+            gen_images = self.gen_function(
+                condition=self.condition, input_latent_vector=z
+            )
+        else:
+            gen_images = self.gen_function(input_latent_vector=z)
+        if type(gen_images[0]) is tuple:
+            image = gen_images[0][0].squeeze()
+        else:
+            image = gen_images[0].squeeze()
 
         fig, ax = plt.subplots()
         fig.suptitle(
@@ -46,12 +59,34 @@ class ModelVisualizer:
         plt.subplots_adjust(left=0.45, bottom=0.2)
 
         padding = 0.03
+        sliders_x = 0.1
+        sliders_y = 0.80
+        sliders_width = 0.25
+        sliders_height = 0.02
         sliders = []
 
-        axfreq = plt.axes((0.1, 0.80, 0.25, 0.02))
-        axfreq.set_title("Input vector")
+        if self.conditional:
+            condition_ax = plt.axes(
+                (sliders_x, sliders_y, sliders_width, sliders_height)
+            )
+            condition_slider = Slider(
+                condition_ax,
+                None,
+                0,
+                1,
+                valinit=0.0,
+                valstep=1,
+                initcolor="none",
+                # valfmt="%.2f",
+            )
+            condition_ax.set_title("Input condition: " + gen_images[0][1])
+
+        offset_ax = plt.axes(
+            (sliders_x, sliders_y - 5 * padding, sliders_width, sliders_height)
+        )
+        offset_ax.set_title("Input latent vector")
         offset_slider = Slider(
-            axfreq,
+            offset_ax,
             "offset",
             -self.max_input_value * 2,
             self.max_input_value * 2,
@@ -61,7 +96,14 @@ class ModelVisualizer:
         )
         # for i in range(int(self.nz)):
         for i in range(int(self.nz / 10)):
-            axfreq = plt.axes((0.1, 0.80 - (i + 2) * padding, 0.25, 0.02))
+            axfreq = plt.axes(
+                (
+                    sliders_x,
+                    sliders_y - (i + 7) * padding,
+                    sliders_width,
+                    sliders_height,
+                )
+            )
             slider = Slider(
                 axfreq,
                 "z{}".format(i + 1),
@@ -79,14 +121,27 @@ class ModelVisualizer:
                 for j in range(10):
                     z[0][i + j] = slider.val
 
-            gen_images = self.gen_function(z=z)
-            image = gen_images[0].squeeze()
+            if self.conditional:
+                self.condition = condition_slider.val
+                gen_images = self.gen_function(
+                    condition=self.condition, input_latent_vector=z
+                )
+                condition_ax.set_title("Input condition: " + gen_images[0][1])
+            else:
+                gen_images = self.gen_function(input_latent_vector=z)
+
+            if type(gen_images[0]) is tuple:
+                image = gen_images[0][0].squeeze()
+            else:
+                image = gen_images[0].squeeze()
             display.set_data(image)
             fig.canvas.draw_idle()
 
         # register the update function with each slider
         for slider in sliders:
             slider.on_changed(update)
+        if self.conditional:
+            condition_slider.on_changed(update)
 
         self.offset_old = 0
 
@@ -101,6 +156,7 @@ class ModelVisualizer:
                     slider.set_val(-self.max_input_value)
                 else:
                     slider.set_val(slider.val + diff)
+
                 for j in range(10):
                     z[0][i + j] = slider.val
 
@@ -129,4 +185,8 @@ class ModelVisualizer:
         plt.show()
 
 
-ModelVisualizer("00002_DCGAN_MMG_MASS_ROI")
+# ModelVisualizer("00001_DCGAN_MMG_CALC_ROI")
+# ModelVisualizer("00002_DCGAN_MMG_MASS_ROI")
+# ModelVisualizer("00005_DCGAN_MMG_MASS_ROI")
+# ModelVisualizer("00006_WGANGP_MMG_MASS_ROI")
+ModelVisualizer("00008_C-DCGAN_MMG_MASSES")
