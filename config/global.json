@@ -807,5 +807,133 @@
       ],
       "comment": "A wasserstein generative adversarial network with gradient penalty (WGAN-GP) that generates mass patches of mammograms. Pixel dimensions are 128x128. The DCGAN was trained on MMG patches from the BCDR dataset (Lopez et al, 2012). The uploaded ZIP file contains the files 10000.pt (model weight), __init__.py (image generation method and utils), a requirements.txt, and the GAN model architecture (in pytorch) below the /src folder."
     }
+  },
+  "00008_C-DCGAN_MMG_MASSES": {
+    "execution": {
+      "package_name": "C-DCGAN_MMG_MASSES_CBISDDSM_MAL_BEN",
+      "package_link": "",
+      "model_name": "1750",
+      "extension": ".pt",
+      "image_size": [
+        128,
+        128
+      ],
+      "dependencies": [
+        "numpy",
+        "torch",
+        "opencv-contrib-python-headless"
+      ],
+      "generate_method": {
+        "name": "generate",
+        "args": {
+          "base": [
+            "model_file",
+            "num_samples",
+            "output_path",
+            "save_images"
+          ],
+          "custom": {
+            "condition": 1
+          }
+        },
+        "input_latent_vector_size": 100
+      }
+    },
+    "selection": {
+      "performance": {
+        "SSIM": null,
+        "MSE": null,
+        "NSME": null,
+        "PSNR": null,
+        "IS": null,
+        "FID": null,
+        "turing_test": null,
+        "downstream_task": {
+          "CLF": {}
+        }
+      },
+      "use_cases": [
+        "classification",
+        "malignant versus benign classification"
+      ],
+      "organ": [
+        "breast",
+        "breasts",
+        "chest"
+      ],
+      "modality": [
+        "MMG",
+        "Mammography",
+        "Mammogram",
+        "full-field digital",
+        "full-field digital MMG",
+        "full-field MMG",
+        "full-field Mammography",
+        "digital Mammography",
+        "digital MMG",
+        "x-ray mammography"
+      ],
+      "vendors": [],
+      "centres": [],
+      "function": [
+        "noise to image",
+        "image generation",
+        "unconditional generation",
+        "data augmentation"
+      ],
+      "condition": [],
+      "dataset": [
+        "CBIS-DDSM"
+      ],
+      "augmentations": [
+        "horizontal flip",
+        "vertical flip"
+      ],
+      "generates": [
+        "mass",
+        "masses",
+        "mass roi",
+        "mass ROI",
+        "mass images",
+        "mass region of interest",
+        "nodule",
+        "nodule",
+        "nodule roi",
+        "nodule ROI",
+        "nodule images",
+        "nodule region of interest"
+      ],
+      "height": 128,
+      "width": 128,
+      "depth": null,
+      "type": "Conditional DCGAN",
+      "license": "MIT",
+      "dataset_type": "public",
+      "privacy_preservation": null,
+      "tags": [
+        "Breast",
+        "Mammogram",
+        "Mammography",
+        "Digital Mammography",
+        "Full field Mammography",
+        "Full-field Mammography",
+        "128x128",
+        "128 x 128",
+        "MammoGANs",
+        "Masses",
+        "Nodules"
+      ],
+      "year": "2022"
+    },
+    "description": {
+      "title": "Conditional DCGAN Model for Patch Generation of Mammogram Masses Conditioned on Biopsy Proven Malignancy Status (Trained on CBIS-DDSM)",
+      "provided_date": "June 2022",
+      "trained_date": "June 2022",
+      "provided_after_epoch": 1750,
+      "version": "1.0.0",
+      "publication": null,
+      "doi": [],
+      "comment": "A class-conditional deep convolutional generative adversarial network that generates mass patches of mammograms that are conditioned to either be benign (1) or malignant (0). Pixel dimensions are 128x128. The Cond-DCGAN was trained on MMG patches from the CBIS-DDSM (Sawyer Lee et al, 2016). The uploaded ZIP file contains the files 1750.pt (model weight), __init__.py (image generation method and utils), a requirements.txt, a LICENSE file, the MEDIGAN metadata, the used GAN training config file, a test.sh file to run the model, and two folders with a few generated images."
+    }
   }
 }
