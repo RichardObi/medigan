@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.widgets import Button, Slider
 
-from medigan import Generators
+from . import Generators
 
 
 class ModelVisualizer:
@@ -30,7 +30,7 @@ class ModelVisualizer:
         )
 
         z = np.random.randn(num_samples, self.nz, 1, 1).astype(np.float32)
-        gen_images = self.gen_function(z=z)
+        gen_images = self.gen_function(input_latent_vector=z)
         image = gen_images[0].squeeze()
 
         fig, ax = plt.subplots()
@@ -79,7 +79,7 @@ class ModelVisualizer:
                 for j in range(10):
                     z[0][i + j] = slider.val
 
-            gen_images = self.gen_function(z=z)
+            gen_images = self.gen_function(input_latent_vector=z)
             image = gen_images[0].squeeze()
             display.set_data(image)
             fig.canvas.draw_idle()
