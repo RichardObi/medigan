@@ -928,7 +928,7 @@
   "00008_C-DCGAN_MMG_MASSES": {
     "execution": {
       "package_name": "C-DCGAN_MMG_MASSES_CBISDDSM_MAL_BEN",
-      "package_link": "/Users/richardosuala/Desktop/C-DCGAN_MMG_MASSES_CBISDDSM_MAL_BEN",
+      "package_link": "https://zenodo.org/record/6647350/files/C-DCGAN_MMG_MASSES_CBISDDSM_MAL_BEN.zip?download=1",
       "model_name": "1750",
       "extension": ".pt",
       "image_size": [
@@ -1056,7 +1056,7 @@
   "00009_PGGAN_POLYP_PATCHES_W_MASKS": {
     "execution": {
       "package_name": "ProGAN-4ch",
-      "package_link": "/Users/richardosuala/Desktop/ProGAN-4ch",
+      "package_link": "https://zenodo.org/record/6653744/files/ProGAN-4ch.zip?download=1",
       "model_name": "ProGAN_300000_g",
       "extension": ".model",
       "image_size": [
