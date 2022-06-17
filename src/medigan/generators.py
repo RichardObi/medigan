@@ -904,11 +904,15 @@ class Generators:
             save_images=False,  # design decision: temporary storage in memory instead of I/O from disk
             **kwargs,
         )
-        data, masks = Utils.split_images_and_masks(data=data, num_samples=num_samples)
-        labels = None  # TODO: Separate and add labels to dataset
+        print(f"data (all) {data}")
+
+        samples, masks, labels = Utils.split_images_masks_and_labels(data=data, num_samples=num_samples)
+        print(f"samples {samples}")
+        print(f"masks {masks}")
+        print(f"labels {labels}")
 
         return SyntheticDataset(
-            data=data, labels=labels, masks=masks, transform=transform
+            samples=samples, masks=masks, labels=labels, transform=transform
         )
 
     def __repr__(self):
