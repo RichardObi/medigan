@@ -226,8 +226,11 @@ class ModelExecutor:
         try:
             # Installing generative model as python library
             self.deserialized_model_as_lib = importlib.import_module(
-                name=f"{MODEL_FOLDER}/{self.model_id}.{self.package_name}"
+                name=f"{MODEL_FOLDER}.{self.model_id}.{self.package_name}"
             )
+            if not hasattr( self.deserialized_model_as_lib, f"{self.generate_method_name}"):
+                # if generate method is not in lib path, generating samples will not work. Next: Check fallback folder.
+                raise ModuleNotFoundError
             self.serialised_model_file_path = f"{MODEL_FOLDER}/{self.model_id}/{self.package_name}/{self.model_name}{self.model_extension}"
         except ModuleNotFoundError:
             try:
@@ -235,6 +238,13 @@ class ModelExecutor:
                 self.deserialized_model_as_lib = importlib.import_module(
                     name=f"{MODEL_FOLDER}.{self.model_id}"
                 )
+                if not hasattr(self.deserialized_model_as_lib, f"{self.generate_method_name}"):
+                    # if generate method is not in lib path, generating samples will not work. Next: Check fallback folder.
+                    raise AttributeError(f"Module '{MODEL_FOLDER}.{self.model_id}' has no attribute "
+                                         f"'{self.generate_method_name}' (generate method). We also tried module "
+                                         f"'{MODEL_FOLDER}.{self.model_id}.{self.package_name}'. Please check if "
+                                         f"generate_method_name and package_name are correct for this model in its "
+                                         f"global.json entry.")
                 self.serialised_model_file_path = f"{MODEL_FOLDER}/{self.model_id}/{self.model_name}{self.model_extension}"
             except Exception as e:
                 logging.error(
@@ -296,7 +306,6 @@ class ModelExecutor:
                 save_images=save_images,
                 **kwargs,
             )
-            print(prepared_kwargs)
             logging.info(f"The generate function's parameters are: {prepared_kwargs}")
             if is_gen_function_returned:
 

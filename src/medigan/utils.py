@@ -253,7 +253,7 @@ class Utils:
                 break
 
         for data_point in data:
-            #print(f"data_point {data_point}")
+            logging.debug(f"data_point {data_point}")
             if isinstance(data_point, tuple):
                 for i, item in enumerate(data_point):
                     if (isinstance(item, np.ndarray) and i==0):
@@ -292,7 +292,7 @@ class Utils:
                 break
 
         for data_point in data:
-            print(f"data_point {data_point}")
+            logging.debug(f"data_point {data_point}")
             if isinstance(data_point, tuple):
                 for i, sample in enumerate(data_point):
                     if (
