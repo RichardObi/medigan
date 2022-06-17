@@ -227,7 +227,7 @@ class Utils:
 
     @staticmethod
     def split_images_masks_and_labels(
-            data: list, num_samples: int, max_nested_arrays: int = 2
+        data: list, num_samples: int, max_nested_arrays: int = 2
     ) -> [np.ndarray, np.ndarray, str]:
         """Separates the data (sample, mask, label) returned by a generative model
 
@@ -246,7 +246,7 @@ class Utils:
         # if data is smaller than the number of samples that should have been generated, then data likely contains a nested array.
         # We go a maximum of max_nested_arrays deep into the data.
         counter = 0
-        while len(data) < num_samples and isinstance(data, list) :
+        while len(data) < num_samples and isinstance(data, list):
             data = data[0]
             counter = counter + 1
             if counter >= max_nested_arrays:
@@ -256,11 +256,11 @@ class Utils:
             logging.debug(f"data_point {data_point}")
             if isinstance(data_point, tuple):
                 for i, item in enumerate(data_point):
-                    if (isinstance(item, np.ndarray) and i==0):
+                    if isinstance(item, np.ndarray) and i == 0:
                         samples.append(item)
-                    elif (isinstance(item, np.ndarray) and i==1):
+                    elif isinstance(item, np.ndarray) and i == 1:
                         masks.append(item)
-                    elif (isinstance(item, str)):
+                    elif isinstance(item, str):
                         labels.append(item)
             elif isinstance(data_point, np.ndarray):
                 # An image is expected in the case no tuple is returned

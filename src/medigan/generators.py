@@ -905,7 +905,9 @@ class Generators:
             **kwargs,
         )
 
-        samples, masks, labels = Utils.split_images_masks_and_labels(data=data, num_samples=num_samples)
+        samples, masks, labels = Utils.split_images_masks_and_labels(
+            data=data, num_samples=num_samples
+        )
         logging.debug(f"samples: {samples} \n masks: {masks} \n labels: {labels}")
 
         return SyntheticDataset(
