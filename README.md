@@ -33,8 +33,9 @@ While being extendable to any modality and generative model, medigan focuses on 
 | Breast Mass                 |   x-ray  |     dcgan     |  128x128 |     BCDR     |  ![sample](docs/source/_static/samples/00005.png) | <sub> 00005_DCGAN_MMG_MASS_ROI </sub>         | 
 | Breast Mass                 |   x-ray  |    wgan-gp    |  128x128 |     BCDR     |  ![sample](docs/source/_static/samples/00006.png) | <sub> 00006_WGANGP_MMG_MASS_ROI </sub>        | 
 | Tumor Mask                  |   x-ray  |    bezier curves    |  256x256 |     BCDR     |  ![sample](docs/source/_static/samples/00007.png) | <sub> 00007_BEZIERCURVE_TUMOUR_MASK </sub>        | 
-| Breast Mass (Mal/Benign)    |   x-ray  |    c-dcgan    |  128x128 |     CBIS-DDSM     |  ![sample](docs/source/_static/samples/00008.png) | <sub> 00008_C-DCGAN_MMG_MASSES </sub>        | 
+| Breast Mass (Mal/Benign)    |   x-ray  |    c-dcgan     |  128x128 |     CBIS-DDSM     |  ![sample](docs/source/_static/samples/00008.png) | <sub> 00008_C-DCGAN_MMG_MASSES </sub>        | 
 | Polyp with Mask             |   endoscopy  |    pggan   |  256x256 |     HyperKvasir     |  ![sample](docs/source/_static/samples/00009.png)![sample](docs/source/_static/samples/00009_mask.png) | <sub> 00009_PGGAN_POLYP_PATCHES_W_MASKS </sub>        | 
+| Polyp with Mask             |   endoscopy  |    fastgan |  256x256 |     HyperKvasir     |  ![sample](docs/source/_static/samples/00010.png)![sample](docs/source/_static/samples/00010_mask.png) | <sub> 00010_FASTGAN_POLYP_PATCHES_W_MASKS </sub>      | 
 
 [comment]: <> (| Spine Bone Cement Injection |    CT    |    biceps     |  128x128 |     VerSe    | <sub> to be announced </sub>                  |        |)
 
