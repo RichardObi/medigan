@@ -14,12 +14,12 @@ import zipfile
 from distutils.dir_util import copy_tree
 from pathlib import Path
 from urllib.parse import urlparse  # python3
-
-import numpy as np
+import time
 
 # Import pypi libs
 import requests
 from tqdm import tqdm
+import numpy as np
 
 
 class Utils:
@@ -85,7 +85,7 @@ class Utils:
         return True
 
     @staticmethod
-    def download_file(download_link: str, path_as_string: str):
+    def download_file(download_link: str, path_as_string: str, file_extension: str = ".json"):
         """download a file using the `requests` lib and store in `path_as_string`"""
 
         logging.debug(f"Now downloading file {path_as_string} from {download_link} ...")
@@ -100,7 +100,7 @@ class Utils:
                 logging.debug(total_size_in_bytes)
                 block_size = 1024
                 progress_bar = tqdm(
-                    total=total_size_in_bytes, unit="B", unit_scale=True
+                    total=total_size_in_bytes, unit="B", unit_scale=True, position=0, leave=True, ascii=True
                 )
                 progress_bar.set_description(f"Downloading {download_link}")
                 with open(path_as_string, "wb") as file:
@@ -111,11 +111,13 @@ class Utils:
                         f"Received response {response}: Retrieved file from {download_link} and wrote it "
                         f"to {path_as_string}."
                     )
-
                 try:
-                    zipfile.ZipFile(path_as_string, "r")
+                    if not (download_link.endswith(file_extension) and Path(path_as_string).is_file() and str(path_as_string).endswith(file_extension)):
+                        # If we do not download a json file (global.json), we assume a zip and want to check if the downloaded zip is valid.
+                        zipfile.ZipFile(path_as_string, "r")
                     break
                 except Exception as e:
+                    print(e)
                     logging.debug(
                         f"Download failed. Retrying download from {download_link}"
                     )
