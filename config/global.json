@@ -928,7 +928,7 @@
   "00008_C-DCGAN_MMG_MASSES": {
     "execution": {
       "package_name": "C-DCGAN_MMG_MASSES_CBISDDSM_MAL_BEN",
-      "package_link": "https://zenodo.org/record/6647350/files/C-DCGAN_MMG_MASSES_CBISDDSM_MAL_BEN.zip?download=1",
+      "package_link": "https://zenodo.org/record/6671380/files/C-DCGAN_MMG_MASSES_CBISDDSM_MAL_BEN.zip?download=1",
       "model_name": "1750",
       "extension": ".pt",
       "image_size": [
@@ -1228,7 +1228,7 @@
         "input_latent_vector_size": 256
       }
     },
-      "selection": {
+    "selection": {
       "performance": {
         "SSIM": null,
         "MSE": null,
@@ -1311,9 +1311,141 @@
       "provided_after_epoch": null,
       "version": null,
       "publication": null,
-      "doi": ["https://doi.org/10.1371/journal.pone.0267976"],
+      "doi": [
+        "https://doi.org/10.1371/journal.pone.0267976"
+      ],
       "inputs": "gpu_id: type=int, default=None, help=0 is the first gpu, 1 is the second gpu, etc. | save_option: default=image_only, help=Options to save output, image_only, mask_only, image_and_mask, choices=[image_only,mask_only, image_and_mask]",
       "comment": "A Fast generative adversarial network (FastGAN) that generates a 4 dimensional output containing an RGB image (channels 1-3) and a segmentation mask (channel 4). FASTGAN is from the paper 'Towards Faster and Stabilized GAN Training for High-fidelity Few-shot Image Synthesis' in ICLR 2021. The RGB images are images of polyps and the segmentation mask indicates the location and shape of the polyp on the image. Pixel dimensions are 256x256. The model was trained on gastrointestinal endoscopy imaging data from the HyperKvasir dataset by Borgli et al (2020, 'https://doi.org/10.1038/s41597-020-00622-y'). The uploaded ZIP file contains the files FastGAN_all_50000.pth (model weight), __init__.py (image generation method and utils), a requirements.txt, a LICENSE file, the MEDIGAN metadata, the source code from the repository ('https://github.com/vlbthambawita/singan-seg-polyp'), and a test.sh file to run the model, and a folder 'examples/' with a few generated images."
+    }
+  },
+  "00011_SINGAN_POLYP_PATCHES_W_MASKS": {
+    "execution": {
+      "package_name": "singan-seg-polyp",
+      "package_link": "https://zenodo.org/record/6667945/files/singan-seg-polyp.zip?download=1",
+      "model_name": "",
+      "extension": "",
+      "image_size": [
+        250,
+        250,
+        3
+      ],
+      "dependencies": [
+        "numpy",
+        "tqdm",
+        "torch",
+        "torchvision",
+        "pandas",
+        "pathlib",
+        "PyYAML",
+        "scipy",
+        "scikit-image",
+        "scikit-learn",
+        "requests",
+        "natsort",
+        "matplotlib"
+      ],
+      "generate_method": {
+        "name": "generate",
+        "args": {
+          "base": [
+            "model_file",
+            "num_samples",
+            "output_path",
+            "save_images"
+          ],
+          "custom": {
+            "model_files": "models/00011_SINGAN_POLYP_PATCHES_W_MASKS/singan_seg_polyp/SinGAN-Generated",
+            "gen_start_scale": 0,
+            "checkpoint_ids": null,
+            "multiple_checkpoints": false
+          }
+        }
+      }
+    },
+      "selection": {
+      "performance": {
+        "SSIM": null,
+        "MSE": null,
+        "NSME": null,
+        "PSNR": null,
+        "IS": null,
+        "FID": 98.29,
+        "turing_test": null,
+        "downstream_task": null
+      },
+      "use_cases": [
+        "classification",
+        "segmentation"
+      ],
+      "organ": [
+        "polyps",
+        "colon"
+      ],
+      "modality": [
+        "endoscopy",
+        "gastrointestinal endoscopy"
+      ],
+      "vendors": [],
+      "centres": [],
+      "function": [
+        "noise to image and mask",
+        "noise to image",
+        "noise to mask",
+        "image generation",
+        "unconditional generation",
+        "data augmentation"
+      ],
+      "condition": [],
+      "dataset": [
+        "HyperKvasir"
+      ],
+      "augmentations": [
+        "resize",
+        "Albumentations library augmentations"
+      ],
+      "generates": [
+        "masks",
+        "segmentation masks",
+        "polyp masks",
+        "endoscopy masks",
+        "endoscopy roi",
+        "endoscopy ROI",
+        "endoscopy images",
+        "endoscopy region of interest",
+        "polyp",
+        "polyps",
+        "polyp roi",
+        "polyp ROI",
+        "polyp images",
+        "polyp region of interest"
+      ],
+      "height": 250,
+      "width": 250,
+      "depth": 3,
+      "type": "SinGAN",
+      "license": "MIT",
+      "dataset_type": "public",
+      "privacy_preservation": null,
+      "tags": [
+        "Endoscopy",
+        "Colonoscopy",
+        "Polyps",
+        "Polyp",
+        "Polyp Segmentation",
+        "Segmentation"
+      ],
+      "year": "2022"
+    },
+    "description": {
+      "title": "SinGAN Model for Patch Generation of Polyps with Corresponding Segmentation Masks (Trained on HyperKvasir)",
+      "provided_date": "June 2022",
+      "trained_date": "June 2022",
+      "provided_after_epoch": null,
+      "version": null,
+      "publication": null,
+      "doi": ["https://doi.org/10.1371/journal.pone.0267976"],
+      "inputs": "model_files: the folder where the checkpoints are stored | gen_start_scale: The start for scaling in SinGAN. | checkpoint_ids: A list of checkpoint ids that will be used for polyp generation. | multiple_checkpoints: A boolean indicating if all checkpoint_ids or one random one is used for generating images, but only in case 'checkpoint_ids'==None",
+      "comment": "A SinGAN generative adversarial network that generates a 2dimensional output image tuple containing a 3-channel RGB image and a 3-channel segmentation mask. SinGAN is from the paper 'SinGAN: Learning a Generative Model from a Single Natural Image' in ICCV 2019. The width of the outputted images varies depending on the corresponding original image. The RGB images are images of polyps and the segmentation mask indicates the location and shape of the polyp on the image. Pixel dimensions are 213x256. The model was trained on gastrointestinal endoscopy imaging data from the HyperKvasir dataset by Borgli et al (2020, 'https://doi.org/10.1038/s41597-020-00622-y'). The uploaded ZIP file contains the checkpoints in folder 'SinGAN-Generated' (model weights), __init__.py (image generation method and utils), a requirements.txt, a LICENSE file, the MEDIGAN metadata, the source code from the repository ('https://github.com/vlbthambawita/singan-seg-polyp'), and a test.sh file to run the model, and a folder 'examples/' with a few generated images."
     }
   }
 }
