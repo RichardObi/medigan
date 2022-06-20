@@ -768,7 +768,6 @@ class Generators:
         drop_last=False,
         timeout=0,
         worker_init_fn=None,
-        *,
         prefetch_factor=2,
         persistent_workers=False,
         **kwargs,
@@ -855,6 +854,7 @@ class Generators:
             sampler=sampler,
             batch_sampler=batch_sampler,
             num_workers=num_workers,
+            collate_fn=collate_fn,
             pin_memory=pin_memory,
             drop_last=drop_last,
             timeout=timeout,
@@ -904,11 +904,14 @@ class Generators:
             save_images=False,  # design decision: temporary storage in memory instead of I/O from disk
             **kwargs,
         )
-        data, masks = Utils.split_images_and_masks(data=data, num_samples=num_samples)
-        labels = None  # TODO: Separate and add labels to dataset
+
+        samples, masks, labels = Utils.split_images_masks_and_labels(
+            data=data, num_samples=num_samples
+        )
+        logging.debug(f"samples: {samples} \n masks: {masks} \n labels: {labels}")
 
         return SyntheticDataset(
-            data=data, labels=labels, masks=masks, transform=transform
+            samples=samples, masks=masks, labels=labels, transform=transform
         )
 
     def __repr__(self):

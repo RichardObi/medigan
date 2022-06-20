@@ -37,6 +37,7 @@ from .constants import (
     CONFIG_FILE_KEY_PACKAGE_LINK,
     CONFIG_FILE_KEY_PACKAGE_NAME,
     DEFAULT_OUTPUT_FOLDER,
+    MODEL_FOLDER,
     PACKAGE_EXTENSION,
 )
 from .install_model_dependencies import install_model
@@ -174,12 +175,12 @@ class ModelExecutor:
         """Load and store the generative model's python package using the link from the model's `execution_config`."""
 
         if self.package_path is None:
-            assert Utils.mkdirs(path_as_string=self.model_id), (
+            assert Utils.mkdirs(path_as_string=f"{MODEL_FOLDER}/{self.model_id}"), (
                 f"{self.model_id}: The model folder was not found nor created "
-                f"in /{self.model_id}."
+                f"in {MODEL_FOLDER}/{self.model_id}."
             )
             package_path = Path(
-                f"{self.model_id}/{self.package_name}{PACKAGE_EXTENSION}"
+                f"{MODEL_FOLDER}/{self.model_id}/{self.package_name}{PACKAGE_EXTENSION}"
             )
             try:
                 if not Utils.is_file_located_or_downloaded(
@@ -191,7 +192,6 @@ class ModelExecutor:
                         f"{self.model_id}: The package archive ({self.package_name}{PACKAGE_EXTENSION}) "
                         f"was not found in {package_path} nor downloaded from {self.package_link}."
                     )
-                    logging.error(error_string)
                     raise FileNotFoundError(error_string)
             except Exception as e:
                 raise e
@@ -209,10 +209,10 @@ class ModelExecutor:
         )
         is_model_already_unpacked = (
             Path(
-                f"{self.model_id}/{self.package_name}/{self.model_name}{self.model_extension}"
+                f"{MODEL_FOLDER}/{self.model_id}/{self.package_name}/{self.model_name}{self.model_extension}"
             ).is_file()
             or Path(
-                f"{self.model_id}/{self.model_name}{self.model_extension}"
+                f"{MODEL_FOLDER}/{self.model_id}/{self.model_name}{self.model_extension}"
             ).is_file()
         )
         # if is_model_already_unpacked == True, then the package was already unzipped previously.
@@ -221,9 +221,10 @@ class ModelExecutor:
             and PACKAGE_EXTENSION == ".zip"
             and not is_model_already_unpacked
         ):
-            # Unzip the model package in /{model_id}/{MODEL_PACKAGE}{PACKAGE_EXTENSION}
+            # Unzip the model package in {MODEL_FOLDER}/{model_id}/{MODEL_PACKAGE}{PACKAGE_EXTENSION}
             Utils.unzip_archive(
-                source_path=self.package_path, target_path=self.model_id
+                source_path=self.package_path,
+                target_path=f"{MODEL_FOLDER}/{self.model_id}",
             )
         else:
             logging.debug(
@@ -234,18 +235,32 @@ class ModelExecutor:
         try:
             # Installing generative model as python library
             self.deserialized_model_as_lib = importlib.import_module(
-                name=f"{self.model_id}.{self.package_name}"
+                name=f"{MODEL_FOLDER}.{self.model_id}.{self.package_name}"
             )
-            self.serialised_model_file_path = f"{self.model_id}/{self.package_name}/{self.model_name}{self.model_extension}"
+            if not hasattr(
+                self.deserialized_model_as_lib, f"{self.generate_method_name}"
+            ):
+                # if generate method is not in lib path, generating samples will not work. Next: Check fallback folder.
+                raise ModuleNotFoundError
+            self.serialised_model_file_path = f"{MODEL_FOLDER}/{self.model_id}/{self.package_name}/{self.model_name}{self.model_extension}"
         except ModuleNotFoundError:
             try:
                 # Fallback: The zip's content might have been unzipped in the model_id folder without generating the package_name subfolder.
                 self.deserialized_model_as_lib = importlib.import_module(
-                    name=f"{self.model_id}"
+                    name=f"{MODEL_FOLDER}.{self.model_id}"
                 )
-                self.serialised_model_file_path = (
-                    f"{self.model_id}/{self.model_name}{self.model_extension}"
-                )
+                if not hasattr(
+                    self.deserialized_model_as_lib, f"{self.generate_method_name}"
+                ):
+                    # if generate method is not in lib path, generating samples will not work. Next: Check fallback folder.
+                    raise AttributeError(
+                        f"Module '{MODEL_FOLDER}.{self.model_id}' has no attribute "
+                        f"'{self.generate_method_name}' (generate method). We also tried module "
+                        f"'{MODEL_FOLDER}.{self.model_id}.{self.package_name}'. Please check if "
+                        f"generate_method_name and package_name are correct for this model in its "
+                        f"global.json entry."
+                    )
+                self.serialised_model_file_path = f"{MODEL_FOLDER}/{self.model_id}/{self.model_name}{self.model_extension}"
             except Exception as e:
                 logging.error(
                     f"{self.model_id}: Error while importing {self.package_name} from /{self.model_id}: {e}"

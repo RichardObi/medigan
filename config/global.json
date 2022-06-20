@@ -2,7 +2,7 @@
   "00001_DCGAN_MMG_CALC_ROI": {
     "execution": {
       "package_name": "DCGAN",
-      "package_link": "https://zenodo.org/record/5526998/files/DCGAN.zip?download=1",
+      "package_link": "https://zenodo.org/record/6647234/files/DCGAN.zip?download=1",
       "model_name": "DCGAN",
       "extension": ".pt",
       "image_size": [
@@ -150,7 +150,7 @@
   "00002_DCGAN_MMG_MASS_ROI": {
     "execution": {
       "package_name": "MALIGN_DCGAN",
-      "package_link": "https://zenodo.org/record/5548158/files/MALIGN_DCGAN.zip?download=1",
+      "package_link": "https://zenodo.org/record/6647242/files/MALIGN_DCGAN.zip?download=1",
       "model_name": "malign_mass_gen",
       "extension": "",
       "image_size": [
@@ -322,7 +322,7 @@
           ],
           "custom": {
             "translate_all_images": false,
-            "input_path": "00003_CYCLEGAN_MMG_DENSITY_FULL/images",
+            "input_path": "models/00003_CYCLEGAN_MMG_DENSITY_FULL/images",
             "image_size": [
               1332,
               800
@@ -445,7 +445,7 @@
             "num_samples"
           ],
           "custom": {
-            "input_path": "00004_PIX2PIX_MASKTOMASS_BREAST_MG_SYNTHESIS/images",
+            "input_path": "models/00004_PIX2PIX_MASKTOMASS_BREAST_MG_SYNTHESIS/images",
             "image_size": [
               256,
               256
@@ -543,7 +543,7 @@
   "00005_DCGAN_MMG_MASS_ROI": {
     "execution": {
       "package_name": "DCGAN",
-      "package_link": "https://zenodo.org/record/6556282/files/DCGAN_MMG_MASSES_BCDR_IWBI22.zip?download=1",
+      "package_link": "https://zenodo.org/record/6647263/files/DCGAN_MMG_MASSES_BCDR_IWBI22.zip?download=1",
       "model_name": "500",
       "extension": ".pt",
       "image_size": [
@@ -677,7 +677,7 @@
   "00006_WGANGP_MMG_MASS_ROI": {
     "execution": {
       "package_name": "WGANGP_MMG_MASSES_BCDR_IWBI22",
-      "package_link": "https://zenodo.org/record/6556283/files/WGANGP_MMG_MASSES_BCDR_IWBI22.zip?download=1",
+      "package_link": "https://zenodo.org/record/6647264/files/WGANGP_MMG_MASSES_BCDR_IWBI22.zip?download=1",
       "model_name": "10000",
       "extension": ".pt",
       "image_size": [
@@ -808,10 +808,127 @@
       "comment": "A wasserstein generative adversarial network with gradient penalty (WGAN-GP) that generates mass patches of mammograms. Pixel dimensions are 128x128. The DCGAN was trained on MMG patches from the BCDR dataset (Lopez et al, 2012). The uploaded ZIP file contains the files 10000.pt (model weight), __init__.py (image generation method and utils), a requirements.txt, and the GAN model architecture (in pytorch) below the /src folder."
     }
   },
+  "00007_BEZIERCURVE_TUMOUR_MASK": {
+    "execution": {
+      "package_name": "",
+      "package_link": "models/00007_BEZIERCURVE_TUMOUR_MASK",
+      "model_name": "",
+      "extension": "",
+      "image_size": [
+        256,
+        256
+      ],
+      "dependencies": [
+        "scikit-image",
+        "scipy",
+        "numpy",
+        "imageio",
+        "Pillow"
+      ],
+      "generate_method": {
+        "name": "generate",
+        "args": {
+          "base": [
+            "model_file",
+            "output_path",
+            "save_images",
+            "num_samples"
+          ],
+          "custom": {
+            "image_size": [
+              256,
+              256
+            ],
+            "shapes": [
+              "oval",
+              "lobulated",
+              "nodular",
+              "stellate",
+              "irregular"
+            ]
+          }
+        }
+      }
+    },
+    "selection": {
+      "performance": {},
+      "use_cases": [
+        "segmentation",
+        "segmentation mask generation"
+      ],
+      "organ": [
+        "any",
+        "breast",
+        "breasts",
+        "chest"
+      ],
+      "modality": [
+        "any",
+        "MMG",
+        "Mammography",
+        "Mammogram",
+        "full-field digital",
+        "full-field digital MMG",
+        "full-field MMG",
+        "full-field Mammography",
+        "digital Mammography",
+        "digital MMG",
+        "x-ray mammography"
+      ],
+      "vendors": [],
+      "centres": [],
+      "function": [
+        "mask generation",
+        "mask synthesis"
+      ],
+      "condition": [
+        "shapes"
+      ],
+      "dataset": [],
+      "augmentations": [],
+      "generates": [
+        "segmentation masks",
+        "masks",
+        "tumour masks",
+        "tumour delineation",
+        "mask"
+      ],
+      "height": 256,
+      "width": 256,
+      "depth": null,
+      "type": "bezier curve model",
+      "license": "MIT",
+      "dataset_type": null,
+      "privacy_preservation": null,
+      "tags": [
+        "bezier curves",
+        "segmentation masks",
+        "masks",
+        "tumour masks",
+        "tumour delineation",
+        "mask",
+        "Mammogram",
+        "Mammography lesion mask",
+        "Mass segmentation",
+        "Breast lesion mask"
+      ],
+      "year": "2021"
+    },
+    "description": {
+      "title": "Bezier Curve Based Tumour Mask Generator",
+      "provided_date": "8th June 2022",
+      "trained_date": null,
+      "provided_after_epoch": null,
+      "version": null,
+      "publication": null,
+      "doi": [],
+      "comment": "Generates segmentation masks of variable size of tumours of 5 different shape types based on bezier curves. This model is based on geometric operations and does not contain a GAN nor other deep learning models."
+    }
+  },
   "00008_C-DCGAN_MMG_MASSES": {
     "execution": {
       "package_name": "C-DCGAN_MMG_MASSES_CBISDDSM_MAL_BEN",
-      "package_link": "",
+      "package_link": "https://zenodo.org/record/6647350/files/C-DCGAN_MMG_MASSES_CBISDDSM_MAL_BEN.zip?download=1",
       "model_name": "1750",
       "extension": ".pt",
       "image_size": [
@@ -934,6 +1051,269 @@
       "publication": null,
       "doi": [],
       "comment": "A class-conditional deep convolutional generative adversarial network that generates mass patches of mammograms that are conditioned to either be benign (1) or malignant (0). Pixel dimensions are 128x128. The Cond-DCGAN was trained on MMG patches from the CBIS-DDSM (Sawyer Lee et al, 2016). The uploaded ZIP file contains the files 1750.pt (model weight), __init__.py (image generation method and utils), a requirements.txt, a LICENSE file, the MEDIGAN metadata, the used GAN training config file, a test.sh file to run the model, and two folders with a few generated images."
+    }
+  },
+  "00009_PGGAN_POLYP_PATCHES_W_MASKS": {
+    "execution": {
+      "package_name": "ProGAN-4ch",
+      "package_link": "https://zenodo.org/record/6653744/files/ProGAN-4ch.zip?download=1",
+      "model_name": "ProGAN_300000_g",
+      "extension": ".model",
+      "image_size": [
+        256,
+        256,
+        4
+      ],
+      "dependencies": [
+        "torch",
+        "torchvision",
+        "numpy",
+        "pillow",
+        "glob2",
+        "opencv-contrib-python",
+        "scikit-image",
+        "natsort",
+        "matplotlib"
+      ],
+      "generate_method": {
+        "name": "generate",
+        "args": {
+          "base": [
+            "model_file",
+            "num_samples",
+            "output_path",
+            "save_images"
+          ],
+          "custom": {
+            "z_dim": 128,
+            "save_option": "image_and_mask",
+            "gpu_id": null,
+            "channel": 128,
+            "pixel_norm": false,
+            "img_channels": 4,
+            "tanh": false,
+            "step": 6,
+            "alpha": 1
+          }
+        },
+          "input_latent_vector_size": 128
+      }
+    },
+      "selection": {
+      "performance": {
+        "SSIM": null,
+        "MSE": null,
+        "NSME": null,
+        "PSNR": null,
+        "IS": null,
+        "FID": 284.29,
+        "turing_test": null,
+        "downstream_task": null
+      },
+      "use_cases": [
+        "classification",
+        "segmentation"
+      ],
+      "organ": [
+        "polyps",
+        "colon"
+      ],
+      "modality": [
+        "endoscopy",
+        "gastrointestinal endoscopy"
+      ],
+      "vendors": [],
+      "centres": [],
+      "function": [
+        "noise to image and mask",
+        "noise to image",
+        "noise to mask",
+        "image generation",
+        "unconditional generation",
+        "data augmentation"
+      ],
+      "condition": [],
+      "dataset": [
+        "HyperKvasir"
+      ],
+      "augmentations": [
+        "resize",
+        "Albumentations library augmentations"
+      ],
+      "generates": [
+        "masks",
+        "segmentation masks",
+        "polyp masks",
+        "endoscopy masks",
+        "endoscopy roi",
+        "endoscopy ROI",
+        "endoscopy images",
+        "endoscopy region of interest",
+        "polyp",
+        "polyps",
+        "polyp roi",
+        "polyp ROI",
+        "polyp images",
+        "polyp region of interest"
+      ],
+      "height": 256,
+      "width": 256,
+      "depth": 4,
+      "type": "Progressively-growing GAN (PGGAN)",
+      "license": "MIT",
+      "dataset_type": "public",
+      "privacy_preservation": null,
+      "tags": [
+        "Endoscopy",
+        "Colonoscopy",
+        "Polyps",
+        "Polyp",
+        "Polyp Segmentation",
+        "Segmentation",
+        "256x256",
+        "256 x 256"
+      ],
+      "year": "2022"
+    },
+    "description": {
+      "title": "PGGAN Model for Patch Generation of Polyps with Corresponding Segmentation Masks (Trained on HyperKvasir)",
+      "provided_date": "June 2022",
+      "trained_date": "June 2022",
+      "provided_after_epoch": 1750,
+      "version": "1.0.0",
+      "publication": null,
+      "doi": ["https://doi.org/10.1371/journal.pone.0267976"],
+      "inputs": "path_G: default=ProGAN_300000_g.model | gpu_id: type=int, default=None, help=0 is the first gpu, 1 is the second gpu, etc. | channel: type=int, default=128, help=determines how big the model is, smaller value means faster training, but less capacity of the model | z_dim: type=int, default=128, help=the initial latent vectors dimension, can be smaller such as 64, if the dataset is not diverse | pixel_norm: default=False, action=store_true, help=a normalization method inside the model, you can try use it or not depends on the dataset | img_channels: default=4, help=Number of channels in input data., for rgb images=3, gray=1 etc. | tanh: default=False, action=store_true, help=an output non-linearity on the output of Generator, you can try use it or not depends on the dataset | step: default=6, help=step to generate fake data. # can be 1 = 8, 2 = 16, 3 = 32, 4 = 64, 5 = 128, 6 = 256 | alpha: default=1, help=Progressive gan parameter to set, 0 or 1 | save_option: default=image_only, help=Options to svae output, image_only, mask_only, image_and_mask, choices=[image_only,mask_only, image_and_mask] | num_fakes: default=1000, help=Number of fakes to generate., type=int",
+      "comment": "A Progressively-growing generative adversarial network that generates a 4 dimensional output containing an RGB image (channels 1-3) and a segmentation mask (channel 4). The RGB images are images of polyps and the segmentation mask indicates the location and shape of the polyp on the image. Pixel dimensions are 256x256. The model was trained on gastrointestinal endoscopy imaging data from the HyperKvasir dataset by Borgli et al (2020, 'https://doi.org/10.1038/s41597-020-00622-y'). The uploaded ZIP file contains the files ProGAN_300000_g.model (model weight), __init__.py (image generation method and utils), a requirements.txt, a LICENSE file, the MEDIGAN metadata, the source code from the official repository ('https://github.com/vlbthambawita/singan-seg-polyp'), and a test.sh file to run the model, and a folder 'examples/' with a few generated images."
+    }
+  },
+  "00010_FASTGAN_POLYP_PATCHES_W_MASKS": {
+    "execution": {
+      "package_name": "FastGAN-4ch",
+      "package_link": "https://zenodo.org/record/6660712/files/FastGAN-4ch.zip?download=1",
+      "model_name": "FastGAN_all_50000",
+      "extension": ".pth",
+      "image_size": [
+        256,
+        256,
+        4
+      ],
+      "dependencies": [
+        "torch",
+        "scipy",
+        "torchvision",
+        "opencv-contrib-python",
+        "pandas",
+        "easing-functions",
+        "scikit-image",
+        "matplotlib",
+        "ipdb",
+        "lmdb",
+        "numpy"
+      ],
+      "generate_method": {
+        "name": "generate",
+        "args": {
+          "base": [
+            "model_file",
+            "num_samples",
+            "output_path",
+            "save_images"
+          ],
+          "custom": {
+            "save_option": "image_and_mask",
+            "gpu_id": null
+          }
+        },
+        "input_latent_vector_size": 256
+      }
+    },
+      "selection": {
+      "performance": {
+        "SSIM": null,
+        "MSE": null,
+        "NSME": null,
+        "PSNR": null,
+        "IS": null,
+        "FID": 75.17,
+        "turing_test": null,
+        "downstream_task": null
+      },
+      "use_cases": [
+        "classification",
+        "segmentation"
+      ],
+      "organ": [
+        "polyps",
+        "colon"
+      ],
+      "modality": [
+        "endoscopy",
+        "gastrointestinal endoscopy"
+      ],
+      "vendors": [],
+      "centres": [],
+      "function": [
+        "noise to image and mask",
+        "noise to image",
+        "noise to mask",
+        "image generation",
+        "unconditional generation",
+        "data augmentation"
+      ],
+      "condition": [],
+      "dataset": [
+        "HyperKvasir"
+      ],
+      "augmentations": [
+        "resize",
+        "Albumentations library augmentations"
+      ],
+      "generates": [
+        "masks",
+        "segmentation masks",
+        "polyp masks",
+        "endoscopy masks",
+        "endoscopy roi",
+        "endoscopy ROI",
+        "endoscopy images",
+        "endoscopy region of interest",
+        "polyp",
+        "polyps",
+        "polyp roi",
+        "polyp ROI",
+        "polyp images",
+        "polyp region of interest"
+      ],
+      "height": 256,
+      "width": 256,
+      "depth": 4,
+      "type": "FastGAN",
+      "license": "GNU GENERAL PUBLIC LICENSE",
+      "dataset_type": "public",
+      "privacy_preservation": null,
+      "tags": [
+        "Endoscopy",
+        "Colonoscopy",
+        "Polyps",
+        "Polyp",
+        "Polyp Segmentation",
+        "Segmentation",
+        "256x256",
+        "256 x 256"
+      ],
+      "year": "2022"
+    },
+    "description": {
+      "title": "FastGAN Model for Patch Generation of Polyps with Corresponding Segmentation Masks (Trained on HyperKvasir)",
+      "provided_date": "June 2022",
+      "trained_date": "June 2022",
+      "provided_after_epoch": null,
+      "version": null,
+      "publication": null,
+      "doi": ["https://doi.org/10.1371/journal.pone.0267976"],
+      "inputs": "gpu_id: type=int, default=None, help=0 is the first gpu, 1 is the second gpu, etc. | save_option: default=image_only, help=Options to save output, image_only, mask_only, image_and_mask, choices=[image_only,mask_only, image_and_mask]",
+      "comment": "A Fast generative adversarial network (FastGAN) that generates a 4 dimensional output containing an RGB image (channels 1-3) and a segmentation mask (channel 4). FASTGAN is from the paper 'Towards Faster and Stabilized GAN Training for High-fidelity Few-shot Image Synthesis' in ICLR 2021. The RGB images are images of polyps and the segmentation mask indicates the location and shape of the polyp on the image. Pixel dimensions are 256x256. The model was trained on gastrointestinal endoscopy imaging data from the HyperKvasir dataset by Borgli et al (2020, 'https://doi.org/10.1038/s41597-020-00622-y'). The uploaded ZIP file contains the files FastGAN_all_50000.pth (model weight), __init__.py (image generation method and utils), a requirements.txt, a LICENSE file, the MEDIGAN metadata, the source code from the repository ('https://github.com/vlbthambawita/singan-seg-polyp'), and a test.sh file to run the model, and a folder 'examples/' with a few generated images."
     }
   }
 }
