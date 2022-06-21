@@ -27,6 +27,7 @@ from ..constants import (
 )
 from ..utils import Utils
 from .zenodo_model_uploader import ZenodoModelUploader
+from .github_model_uploader import GithubModelUploader
 
 
 class ModelContributor:
@@ -176,10 +177,34 @@ class ModelContributor:
             self.zenodo_model_uploader = ZenodoModelUploader(
                 model_id=self.model_id, access_token=access_token
             )
-        self.zenodo_model_uploader.push(
+        return self.zenodo_model_uploader.push(
             metadata=self.metadata,
             package_path=self.package_path,
             package_name=self.package_name,
+            creator_name=creator_name,
+            creator_affiliation=creator_affiliation,
+            model_description=model_description,
+        )
+
+    def push_to_github(
+        self,
+        access_token: str,
+        package_link: str = None,
+        creator_name: str = 'n.a.',
+        creator_affiliation: str = 'n.a.',
+        model_description: str = 'n.a.',
+    ):
+        """TODO
+
+        Get github  access token from https://github.com/settings/tokens
+        """
+        if self.github_model_uploader is None:
+            self.github_model_uploader = GithubModelUploader(
+                model_id=self.model_id, access_token=access_token)
+
+        return self.github_model_uploader.push(
+            metadata=self.metadata,
+            package_link=package_link,
             creator_name=creator_name,
             creator_affiliation=creator_affiliation,
             model_description=model_description,

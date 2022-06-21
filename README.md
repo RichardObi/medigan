@@ -4,7 +4,6 @@
 
 ![Continuous integration](https://github.com/RichardObi/medigan/actions/workflows/python-ci.yml/badge.svg)
 [![PyPI version](https://badge.fury.io/py/medigan.svg)](https://badge.fury.io/py/medigan)
-[![Downloads](https://img.shields.io/pypi/dm/medigan)](https://img.shields.io/pypi/dm/medigan)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.6327625.svg)](https://doi.org/10.5281/zenodo.6327625)
 
 #### MEDIGAN - A Modular Python Library For Automating Synthetic Dataset Generation.
@@ -25,15 +24,19 @@ While being extendable to any modality and generative model, medigan focuses on 
 
 ## Available models
 
-| Type                        | Modality |     Model     |   Size   | Base dataset | Sample  |  ID   |
+| Output                       | Modality |     Model     |   Size   | Base dataset | Sample  |  ID   |
 |-----------------------------|:--------:|:-------------:|:--------:|:------------:|:------:|:------:|
 | Breast Calcification        |   x-ray  |     dcgan     |  128x128 |   Inbreast   |  ![sample](docs/source/_static/samples/00001.png) | <sub> 00001_DCGAN_MMG_CALC_ROI </sub>  | 
 | Breast Mass                 |   x-ray  |     dcgan     |  128x128 |    Optimam   |  ![sample](docs/source/_static/samples/00002.png) | <sub> 00002_DCGAN_MMG_MASS_ROI </sub>         |
 | Breast Density Transfer     |   x-ray  |    cyclegan   | 1332x800 |     BCDR     |  ![sample](docs/source/_static/samples/00003.png) | <sub> 00003_CYCLEGAN_MMG_DENSITY_FULL </sub>  |
-| Breast Mask to Mass         |   x-ray  |    pix2pix    |  256x256 |     BCDR     |  ![sample](docs/source/_static/samples/00004.png) | <sub> 00004_PIX2PIX_MASKTOMASS_BREAST_MG_SYNTHESIS </sub> |
+| Breast Mass with Mask       |   x-ray  |    pix2pix    |  256x256 |     BCDR     |  ![sample](docs/source/_static/samples/00004.png) ![sample](docs/source/_static/samples/00004_mask.png) | <sub> 00004_PIX2PIX_MASKTOMASS_BREAST_MG_SYNTHESIS </sub> |
 | Breast Mass                 |   x-ray  |     dcgan     |  128x128 |     BCDR     |  ![sample](docs/source/_static/samples/00005.png) | <sub> 00005_DCGAN_MMG_MASS_ROI </sub>         | 
 | Breast Mass                 |   x-ray  |    wgan-gp    |  128x128 |     BCDR     |  ![sample](docs/source/_static/samples/00006.png) | <sub> 00006_WGANGP_MMG_MASS_ROI </sub>        | 
 | Tumor Mask                  |   x-ray  |    bezier curves    |  256x256 |     BCDR     |  ![sample](docs/source/_static/samples/00007.png) | <sub> 00007_BEZIERCURVE_TUMOUR_MASK </sub>        | 
+| Breast Mass (Mal/Benign)    |   x-ray  |    c-dcgan     |  128x128 |     CBIS-DDSM     |  ![sample](docs/source/_static/samples/00008.png) | <sub> 00008_C-DCGAN_MMG_MASSES </sub>        | 
+| Polyp with Mask             |   endoscopy  |    pggan   |  256x256 |     HyperKvasir     |  ![sample](docs/source/_static/samples/00009.png)![sample](docs/source/_static/samples/00009_mask.png) | <sub> 00009_PGGAN_POLYP_PATCHES_W_MASKS </sub>        | 
+| Polyp with Mask             |   endoscopy  |    fastgan |  256x256 |     HyperKvasir     |  ![sample](docs/source/_static/samples/00010.png)![sample](docs/source/_static/samples/00010_mask.png) | <sub> 00010_FASTGAN_POLYP_PATCHES_W_MASKS </sub>      | 
+| Polyp with Mask             |   endoscopy  |    singan |  250x??? |     HyperKvasir     |  ![sample](docs/source/_static/samples/00011.png)![sample](docs/source/_static/samples/00011_mask.png) | <sub> 00011_SINGAN_POLYP_PATCHES_W_MASKS </sub>      | 
 
 [comment]: <> (| Spine Bone Cement Injection |    CT    |    biceps     |  128x128 |     VerSe    | <sub> to be announced </sub>                  |        |)
 

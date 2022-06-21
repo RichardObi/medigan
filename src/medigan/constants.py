@@ -120,3 +120,12 @@ ZENODO_API_URL = "https://sandbox.zenodo.org/api/deposit/depositions"  # "https:
 
 """ The HEADER for Zenodo REST API requests"""
 ZENODO_HEADERS = {"Content-Type": "application/json"}
+
+""" The title of the Github Issue when adding a model to medigan"""
+GITHUB_TITLE = "Model Integration Request for medigan"
+
+""" The repository of the Github Issue when adding a model to medigan"""
+GITHUB_REPO = "RichardObi/medigan-models"
+
+""" The assignee of the Github Issue when adding a model to medigan"""
+GITHUB_ASSIGNEE = "RichardObi"

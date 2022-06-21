@@ -236,6 +236,7 @@ class ZenodoModelUploader(BaseModelUploader):
         logging.debug(
             f"API Response after publishing the deposition {deposition_id} on Zenodo: {response}"
         )
+        return response.json()['links']['record_html'] # zenodo_record_url
 
     def __repr__(self):
         return f"ZenodoModelUploader(model_id={self.model_id}, zenodo_url={ZENODO_API_URL})"

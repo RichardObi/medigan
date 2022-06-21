@@ -10,6 +10,7 @@ import json
 import logging
 import os
 import shutil
+import time
 import zipfile
 from distutils.dir_util import copy_tree
 from pathlib import Path
@@ -85,7 +86,9 @@ class Utils:
         return True
 
     @staticmethod
-    def download_file(download_link: str, path_as_string: str):
+    def download_file(
+        download_link: str, path_as_string: str, file_extension: str = ".json"
+    ):
         """download a file using the `requests` lib and store in `path_as_string`"""
 
         logging.debug(f"Now downloading file {path_as_string} from {download_link} ...")
@@ -100,7 +103,12 @@ class Utils:
                 logging.debug(total_size_in_bytes)
                 block_size = 1024
                 progress_bar = tqdm(
-                    total=total_size_in_bytes, unit="B", unit_scale=True
+                    total=total_size_in_bytes,
+                    unit="B",
+                    unit_scale=True,
+                    position=0,
+                    leave=True,
+                    ascii=True,
                 )
                 progress_bar.set_description(f"Downloading {download_link}")
                 with open(path_as_string, "wb") as file:
@@ -111,11 +119,17 @@ class Utils:
                         f"Received response {response}: Retrieved file from {download_link} and wrote it "
                         f"to {path_as_string}."
                     )
-
                 try:
-                    zipfile.ZipFile(path_as_string, "r")
+                    if not (
+                        download_link.endswith(file_extension)
+                        and Path(path_as_string).is_file()
+                        and str(path_as_string).endswith(file_extension)
+                    ):
+                        # If we do not download a json file (global.json), we assume a zip and want to check if the downloaded zip is valid.
+                        zipfile.ZipFile(path_as_string, "r")
                     break
                 except Exception as e:
+                    print(e)
                     logging.debug(
                         f"Download failed. Retrying download from {download_link}"
                     )
@@ -248,12 +262,58 @@ class Utils:
             return False
 
     @staticmethod
-    def split_images_and_masks(
+    def split_images_masks_and_labels(
+        data: list, num_samples: int, max_nested_arrays: int = 2
+    ) -> [np.ndarray, np.ndarray, str]:
+        """Separates the data (sample, mask, label) returned by a generative model
+
+        This functions expects a list of tuples as input `data` and assumes that each
+        tuple contains sample, mask, label at index positions [0], [1], and [2] respectively.
+
+        samples, and masks are expected to be of type np.ndarray and labels of type "str".
+
+        For example, this extendable function assumes that, in data, a mask follows the image that it
+        corresponds to or vice versa.
+        """
+
+        samples = []
+        masks = []
+        labels = []
+        # if data is smaller than the number of samples that should have been generated, then data likely contains a nested array.
+        # We go a maximum of max_nested_arrays deep into the data.
+        counter = 0
+        while len(data) < num_samples and isinstance(data, list):
+            data = data[0]
+            counter = counter + 1
+            if counter >= max_nested_arrays:
+                break
+
+        for data_point in data:
+            logging.debug(f"data_point {data_point}")
+            if isinstance(data_point, tuple):
+                for i, item in enumerate(data_point):
+                    if isinstance(item, np.ndarray) and i == 0:
+                        samples.append(item)
+                    elif isinstance(item, np.ndarray) and i == 1:
+                        masks.append(item)
+                    elif isinstance(item, str):
+                        labels.append(item)
+            elif isinstance(data_point, np.ndarray):
+                # An image is expected in the case no tuple is returned
+                samples.append(data_point)
+        masks = None if len(masks) == 0 else masks
+        labels = None if len(labels) == 0 else labels
+        return samples, masks, labels
+
+    @staticmethod
+    def split_images_and_masks_no_ordering(
         data: list, num_samples: int, max_nested_arrays: int = 2
     ) -> [np.ndarray, np.ndarray]:
         """Extracts and separates the masks from the images if a model returns both in the same np.ndarray.
 
         This extendable function assumes that, in data, a mask follows the image that it corresponds to or vice versa.
+
+        - This function is deprecated. Please use `split_images_masks_and_labels` instead.
         """
 
         images = []
@@ -268,8 +328,9 @@ class Utils:
                 break
 
         for data_point in data:
+            logging.debug(f"data_point {data_point}")
             if isinstance(data_point, tuple):
-                for i in data_point:
+                for i, sample in enumerate(data_point):
                     if (
                         isinstance(i, np.ndarray)
                         and "int" in str(i.dtype)

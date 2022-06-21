@@ -10,37 +10,35 @@ class SyntheticDataset(Dataset):
 
     Parameters
     ----------
-    syn_data: list
+    samples: list
         List of data points in the dataset e.g. generated images as numpy array.
     labels: list
-        list of labels, if applicable, pertaining to the `syn_data` items
+        list of labels, if applicable, pertaining to the `samples` items
     masks: list
-        List of segmentation masks, if applicable,  pertaining to the `syn_data` items
+        List of segmentation masks, if applicable,  pertaining to the `samples` items
     transform:
         torch compose transform functions that are applied to the torch dataset.
 
     Attributes
     ----------
-    syn_data: list
+    samples: list
         List of data points in the dataset e.g. generated images as numpy array.
     labels: list
-        list of labels, if applicable, pertaining to the `syn_data` items
+        list of labels, if applicable, pertaining to the `samples` items
     masks: list
-        List of segmentation masks, if applicable,  pertaining to the `syn_data` items
+        List of segmentation masks, if applicable,  pertaining to the `samples` items
     transform:
         torch compose transform functions that are applied to the torch dataset.
     """
 
-    def __init__(self, data, labels=None, masks=None, transform=None):
-        self.data = data
-        self.labels = labels
+    def __init__(self, samples, masks=None, labels=None, transform=None):
+        self.samples = samples
         self.masks = masks
+        self.labels = labels
         self.transform = transform
 
     def __getitem__(self, index):
-        """TODO"""
-
-        x = self.data[index]
+        x = self.samples[index]
         y = self.labels[index] if self.labels is not None else None
         mask = self.masks[index] if self.masks is not None else None
 
@@ -57,4 +55,4 @@ class SyntheticDataset(Dataset):
         return item
 
     def __len__(self):
-        return len(self.data)
+        return len(self.samples)

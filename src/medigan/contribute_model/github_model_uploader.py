@@ -6,59 +6,80 @@
 """
 
 from __future__ import absolute_import
+import json
+import logging
+
+from github import Github
 
 from .base_model_uploader import BaseModelUploader
-
+from ..constants import CONFIG_FILE_KEY_EXECUTION, CONFIG_FILE_KEY_PACKAGE_LINK, GITHUB_TITLE, GITHUB_REPO, GITHUB_ASSIGNEE
+from ..utils import Utils
 
 class GithubModelUploader(BaseModelUploader):
-    """`GithubModelUploader` class: Pushes the metadata of a user's model to the medigan repo and initiates Pull request.
+    """`GithubModelUploader` class: Pushes the metadata of a user's model to the medigan repo, where it creates a
+    dedicated github issue.
 
     TODO
     """
 
     def __init__(
-        self,
-        model_id,
-        metadata,
+            self,
+            model_id: str,
+            access_token: str,
     ):
         self.model_id = model_id
-        self.metadata = metadata
+        self.access_token = access_token
 
-    def push(self):
-        """TODO"""
 
-        # Users can get access_token from https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token
+    def push(self, metadata: dict, package_link: str = None, creator_name: str = 'n.a.', creator_affiliation: str = 'n.a.',
+             model_description: str = 'n.a.'):
+        """ TODO """
+        print
+        # Check if the package_link is already in the metadata. If not, add it to metadata.
+        metadata = self.add_package_link_to_metadata(metadata=metadata, package_link=package_link)
 
-        # TODO: Check if model has been added to config. If not, add it to config.
-        # Important as the new config will be pushed to github PR later.
+        # First use pyGithub to create a Github instance based on san access token
+        g = Github(self.access_token)
+        repo = g.get_repo(GITHUB_REPO)
 
-        # TODO Import libraries Gitpython and PyGithub
-        # Info: https://stackoverflow.com/a/61533333
-        # Gitpython documentation: https://gitpython.readthedocs.io/en/stable/
-        # Pygithub documentation: https://pygithub.readthedocs.io/en/latest/introduction.html
+        # Create metadata for github issue
+        title = f"{GITHUB_TITLE}: {self.model_id}"
+        body = f"### Model: {self.model_id} \n\n**Creator:** {creator_name} \n\n**Affiliation:** {creator_affiliation} \n\n**Description:** {model_description} " \
+               f"\n\n**Package stored in:** {package_link} \n\n**Model Metadata:** \n\n{json.dumps(metadata, indent=3)}"
 
-        # TODO git clone (Gitpython)
-        # fork/clone medigan repo into local folder
+        # As logged in pyGithub user, let's now push to medigan repo
+        github_issue = repo.create_issue(title=title, body=body, assignee=GITHUB_ASSIGNEE)
+        logging.info(f"{self.model_id}: Created a github issue in '{GITHUB_REPO}': {github_issue}")
+        return github_issue
 
-        # TODO adjust global.json file
-        # add the new model metadata to global.json (if not done already)
+    def add_package_link_to_metadata(self, metadata: dict, package_link: str = None, is_update_forced:bool=False) -> dict:
+        """ TODO """
+        
+        # Get the package link from the metadata object
+        current_pl = None
+        try:
+            current_pl = metadata[self.model_id][CONFIG_FILE_KEY_EXECUTION][CONFIG_FILE_KEY_PACKAGE_LINK]
+        except Exception as e:
+            logging.debug(f"{self.model_id}: Package Link could not be located in metadata for key {self.model_id}.{CONFIG_FILE_KEY_EXECUTION}.{CONFIG_FILE_KEY_PACKAGE_LINK}: {e}")
 
-        # TODO git add (Gitpython)
-        # add the new global.json to the medigan repo
-
-        # TODO git commit (Gitpython)
-        # commit the new global.json to the medigan repo
-
-        # TODO git push (Gitpython)
-        # create upstream branch on Github and push code there
-
-        # TODO github PR (PyGithub)
-        # create a Github pull request (PR) from forked repo to the original medigan repo (https://github.com/RichardObi/medigan)
-
-        # TODO github assign_reviewer (PyGithub)
-        # assign user 'RichardObi' as reviewer using https://pygithub.readthedocs.io/en/latest/github_objects/PullRequest.html#github.PullRequest.PullRequest.create_review_request
-
-        raise NotImplementedError
+        # Check if the package link in the metadata contains a valid URL
+        if current_pl is not None and not is_update_forced and ((Utils.is_url_valid(current_pl) and current_pl.startswith("http")) or current_pl.startswith("models/")):
+            # If there is already a valid (non-local) url to a zip file,
+            # we assume that this URL is validly pointing to the model.
+            # Note: The package link can start with models/ indicating that the model is hosted directly in medigan
+            # instead of Zenodo, see model 00007 for an example.
+            pass
+        else:
+            # We update the metadata with the retrieved package_link. Note: Also, in case the metadata points to a path on a
+            # user's machine, we avoid publishing that path to github issue by making this update.
+            try:
+                metadata[self.model_id][CONFIG_FILE_KEY_EXECUTION][CONFIG_FILE_KEY_PACKAGE_LINK] = package_link
+            except Exception as e:
+                logging.warning(f"{self.model_id}: Package Link could not be update in metadata for key {self.model_id}.{CONFIG_FILE_KEY_EXECUTION}.{CONFIG_FILE_KEY_PACKAGE_LINK}: {e}")
+            logging.info(
+                f"{self.model_id}: Before creating github issue, updated package link from '{current_pl}' to '{package_link}'"
+            )
+        return metadata
 
     def __repr__(self):
         return f"GithubModelUploader(model_id={self.model_id}, metadata={self.metadata})"
