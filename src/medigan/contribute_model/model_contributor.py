@@ -33,7 +33,29 @@ from .zenodo_model_uploader import ZenodoModelUploader
 class ModelContributor:
     """`ModelContributor` class: Contributes a user's local model to the public medigan library
 
-    TODO
+    Parameters
+    ----------
+    model_id: str
+        The generative model's unique id
+    init_py_path: str
+        The path to the local model's `__init__.py` file needed for importing and running this model.
+
+    Attributes
+    ----------
+    model_id: str
+        The generative model's unique id
+    init_py_path: str
+        The path to the local model's __init__.py file needed for importing and running this model.
+    package_path: str
+        Path as string to the generative model's python package
+    package_name: str
+        Name of the model's python package i.e. the name of the model's zip file and unzipped package folder
+    metadata_file_path: str
+        Path as string to the generative model's metadata file e.g. default is relative path to package root.
+    zenodo_model_uploader: str
+        An instance of the `ZenodoModelUploader` class
+    github_model_uploader: str
+        An instance of the `GithubModelUploader` class.
     """
 
     def __init__(
@@ -169,10 +191,27 @@ class ModelContributor:
         creator_affiliation: str,
         model_description: str = "",
     ):
-        """TODO
+        """ Upload the model files as zip archive to a public Zenodo repository where the model will be persistently stored.
 
-        Get zenodo access token from https://zenodo.org/account/settings/applications/tokens/new/
+        Get your Zenodo access token here: https://zenodo.org/account/settings/applications/tokens/new/ (Enable scopes `deposit:actions` and `deposit:write`)
+
+        Parameters
+        ----------
+        access_token: str
+            a personal access token in Zenodo linked to a user account for authentication
+        creator_name: str
+            the creator name that will appear on the corresponding Zenodo model upload homepage
+        creator_affiliation: str
+            the creator affiliation that will appear on the corresponding Zenodo model upload homepage
+        model_description: list
+            the model_description that will appear on the corresponding Zenodo model upload homepage
+
+        Returns
+        -------
+        str
+            Returns the url pointing to the corresponding Zenodo model upload homepage
         """
+
         if self.zenodo_model_uploader is None:
             self.zenodo_model_uploader = ZenodoModelUploader(
                 model_id=self.model_id, access_token=access_token
@@ -194,10 +233,33 @@ class ModelContributor:
         creator_affiliation: str = "n.a.",
         model_description: str = "n.a.",
     ):
-        """TODO
+        """ Upload the model's metadata inside a github issue to the medigan github repository.
 
-        Get github  access token from https://github.com/settings/tokens
+        To add your model to medigan, your metadata will be reviewed on Github and added to medigan's official model metadata
+
+        The medigan repository issues page: https://github.com/RichardObi/medigan/issues
+
+        Get your Github access token here: https://github.com/settings/tokens
+
+        Parameters
+        ----------
+        access_token: str
+            a personal access token linked to your github user account, used as means of authentication
+        package_link:
+            a package link
+        creator_name: str
+            the creator name that will appear on the corresponding github issue
+        creator_affiliation: str
+            the creator affiliation that will appear on the corresponding github issue
+        model_description: list
+            the model_description that will appear on the corresponding github issue
+
+        Returns
+        -------
+        str
+            Returns the url pointing to the corresponding issue on github
         """
+
         if self.github_model_uploader is None:
             self.github_model_uploader = GithubModelUploader(
                 model_id=self.model_id, access_token=access_token
@@ -229,7 +291,20 @@ class ModelContributor:
         return metadata_template
 
     def add_metadata_from_file(self, metadata_file_path):
-        """TODO"""
+        """ Read and parse the metadata of a local model, identified by `model_id`, from a metadata file in json format.
+
+        Parameters
+        ----------
+        model_id: str
+            The generative model's unique id
+        metadata_file_path: str
+            the path pointing to the metadata file
+
+        Returns
+        -------
+        dict
+            Returns a dict containing the contents of parsed metadata json file.
+        """
 
         if Path(metadata_file_path).is_file():
             self.metadata = Utils.read_in_json(path_as_string=metadata_file_path)
@@ -256,7 +331,30 @@ class ModelContributor:
         fill_more_fields_interactively: bool = True,
         output_path: str = "config",
     ):
-        """TODO"""
+        """ Create a metadata dict for a local model, identified by `model_id`, given the necessary minimum metadata contents.
+
+        Parameters
+        ----------
+        model_id: str
+            The generative model's unique id
+        model_weights_name: str
+            the name of the checkpoint file containing the model's weights
+        model_weights_extension: str
+            the extension (e.g. .pt) of the checkpoint file containing the model's weights
+        generate_method_name: str
+            the name of the sample generation method inside the models __init__.py file
+        dependencies: list
+            the list of dependencies that need to be installed via pip to run the model.
+        fill_more_fields_interactively: bool
+            flag indicating whether a user will be interactively asked via command line for further input to fill out missing metadata content
+        output_path: str
+            the path where the created metadata json file will be stored.
+
+        Returns
+        -------
+        dict
+            Returns a dict containing the contents of the metadata json file.
+        """
 
         # Get the metadata template to guide data structure and formatting of metadata.
         self.metadata_template = self.load_metadata_template()

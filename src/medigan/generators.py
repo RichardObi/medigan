@@ -811,7 +811,20 @@ class Generators:
         model_id: str,
         init_py_path: str = None,
     ) -> ModelContributor:
-        """TODO"""
+        """Add a `ModelContributor` instance of this model_id to the `self.model_contributors` list.
+
+        Parameters
+        ----------
+        model_id: str
+            The generative model's unique id
+        init_py_path: str
+            The path to the local model's __init__.py file needed for importing and running this model.
+
+        Returns
+        -------
+        ModelContributor
+            `ModelContributor` class instance corresponding to the `model_id`
+        """
 
         model_contributor = self.get_model_contributor_by_id(model_id=model_id)
         if model_contributor is not None:
@@ -845,7 +858,20 @@ class Generators:
         return None
 
     def add_metadata_from_file(self, model_id: str, metadata_file_path: str) -> dict:
-        """TODO"""
+        """ Read and parse the metadata of a local model, identified by `model_id`, from a metadata file in json format.
+
+        Parameters
+        ----------
+        model_id: str
+            The generative model's unique id
+        metadata_file_path: str
+            the path pointing to the metadata file
+
+        Returns
+        -------
+        dict
+            Returns a dict containing the contents of parsed metadata json file.
+        """
 
         model_contributor = self.get_model_contributor_by_id(model_id=model_id)
         assert (
@@ -865,7 +891,30 @@ class Generators:
         fill_more_fields_interactively: bool = True,
         output_path: str = "config",
     ) -> dict:
-        """TODO"""
+        """ Create a metadata dict for a local model, identified by `model_id`, given the necessary minimum metadata contents.
+
+        Parameters
+        ----------
+        model_id: str
+            The generative model's unique id
+        model_weights_name: str
+            the name of the checkpoint file containing the model's weights
+        model_weights_extension: str
+            the extension (e.g. .pt) of the checkpoint file containing the model's weights
+        generate_method_name: str
+            the name of the sample generation method inside the models __init__.py file
+        dependencies: list
+            the list of dependencies that need to be installed via pip to run the model
+        fill_more_fields_interactively: bool
+            flag indicating whether a user will be interactively asked via command line for further input to fill out missing metadata content
+        output_path: str
+            the path where the created metadata json file will be stored
+
+        Returns
+        -------
+        dict
+            Returns a dict containing the contents of the metadata json file.
+        """
 
         model_contributor = self.get_model_contributor_by_id(model_id=model_id)
         assert (
@@ -887,8 +936,29 @@ class Generators:
         creator_name: str,
         creator_affiliation: str,
         model_description: str = "",
-    ):
-        """TODO"""
+    ) -> str:
+        """ Upload the model files as zip archive to a public Zenodo repository where the model will be persistently stored.
+
+        Get your Zenodo access token here: https://zenodo.org/account/settings/applications/tokens/new/ (Enable scopes `deposit:actions` and `deposit:write`)
+
+        Parameters
+        ----------
+        model_id: str
+            The generative model's unique id
+        zenodo_access_token: str
+            a personal access token in Zenodo linked to a user account for authentication
+        creator_name: str
+            the creator name that will appear on the corresponding Zenodo model upload homepage
+        creator_affiliation: str
+            the creator affiliation that will appear on the corresponding Zenodo model upload homepage
+        model_description: list
+            the model_description that will appear on the corresponding Zenodo model upload homepage
+
+        Returns
+        -------
+        str
+            Returns the url pointing to the corresponding Zenodo model upload homepage
+        """
 
         model_contributor = self.get_model_contributor_by_id(model_id=model_id)
         assert (
@@ -911,7 +981,34 @@ class Generators:
         creator_affiliation: str = "n.a.",
         model_description: str = "n.a.",
     ):
-        """TODO"""
+        """ Upload the model's metadata inside a github issue to the medigan github repository.
+
+        To add your model to medigan, your metadata will be reviewed on Github and added to medigan's official model metadata
+
+        The medigan repository issues page: https://github.com/RichardObi/medigan/issues
+
+        Get your Github access token here: https://github.com/settings/tokens
+
+        Parameters
+        ----------
+        model_id: str
+            The generative model's unique id
+        github_access_token: str
+            a personal access token linked to your github user account, used as means of authentication
+        package_link:
+            a package link
+        creator_name: str
+            the creator name that will appear on the corresponding github issue
+        creator_affiliation: str
+            the creator affiliation that will appear on the corresponding github issue
+        model_description: list
+            the model_description that will appear on the corresponding github issue
+
+        Returns
+        -------
+        str
+            Returns the url pointing to the corresponding issue on github
+        """
 
         model_contributor = self.get_model_contributor_by_id(model_id=model_id)
         assert (
@@ -934,7 +1031,26 @@ class Generators:
         store_new_config: bool = True,
         num_samples: int = 3,
     ):
-        """TODO"""
+        """ Test if a model generates and returns a specific number of samples in the correct format
+
+        Parameters
+        ----------
+        model_id: str
+            The generative model's unique id
+        is_local_model: bool
+            flag indicating whether the tested model is a new local user model i.e not yet part of medigan's official models
+        overwrite_existing_metadata: bool
+            in case of `is_local_model`, flag indicating whether existing metadata for this model in medigan's `config/global.json` should be overwritten.
+        store_new_config: bool
+            flag indicating whether the current model metadata should be stored on disk i.e. in config/
+        num_samples: int
+            the number of samples that will be generated
+
+        Returns
+        -------
+        bool
+            Returns flag indicating whether model test was successful
+        """
 
         if is_local_model:
             self.add_model_to_config(
@@ -979,7 +1095,44 @@ class Generators:
         creator_affiliation: str = "n.a.",
         model_description: str = "n.a.",
     ):
-        """TODO"""
+        """ Implements the full model contribution workflow inlcuding model metadata generation, model test, model Zenodo upload, and medigan github issue creation.
+
+        Parameters
+        ----------
+        model_id: str
+             The generative model's unique id
+        init_py_path: str
+            The path to the local model's __init__.py file needed for importing and running this model.
+        github_access_token: str
+            a personal access token linked to your github user account, used as means of authentication
+        zenodo_access_token: str
+            a personal access token in Zenodo linked to a user account for authentication
+        metadata_file_path: str
+            the path pointing to the metadata file
+        model_weights_name: str
+            the name of the checkpoint file containing the model's weights
+        model_weights_extension: str
+            the extension (e.g. .pt) of the checkpoint file containing the model's weights
+        generate_method_name: str
+            the name of the sample generation method inside the models __init__.py file
+        dependencies: list
+            the list of dependencies that need to be installed via pip to run the model
+        fill_more_fields_interactively: bool
+            flag indicating whether a user will be interactively asked via command line for further input to fill out missing metadata content
+        output_path: str
+            the path where the created metadata json file will be stored
+        creator_name: str
+            the creator name that will appear on the corresponding github issue
+        creator_affiliation: str
+            the creator affiliation that will appear on the corresponding github issue
+        model_description: list
+            the model_description that will appear on the corresponding github issue
+
+         Returns
+         -------
+         str
+             Returns the url pointing to the corresponding issue on github
+         """
 
         # Create model contributor
         self.add_model_contributor(model_id=model_id, init_py_path=init_py_path)

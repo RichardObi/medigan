@@ -182,9 +182,29 @@ class ZenodoModelUploader(BaseModelUploader):
         creator_affiliation: str,
         model_description: str = "",
     ):
-        """TODO
+        """ Upload the model files as zip archive to a public Zenodo repository where the model will be persistently stored.
 
-        Get zenodo access token from https://zenodo.org/account/settings/applications/tokens/new/
+        Get your Zenodo access token here: https://zenodo.org/account/settings/applications/tokens/new/ (Enable scopes `deposit:actions` and `deposit:write`)
+
+        Parameters
+        ----------
+        metadata: dict
+            The model's corresponding medigan metadata
+        package_path: dict
+            The path to the packaged model files
+        package_name: dict
+            The name of the packaged model files
+        creator_name: str
+            the creator name that will appear on the corresponding Zenodo model upload homepage
+        creator_affiliation: str
+            the creator affiliation that will appear on the corresponding Zenodo model upload homepage
+        model_description: list
+            the model_description that will appear on the corresponding Zenodo model upload homepage
+
+        Returns
+        -------
+        str
+            Returns the url pointing to the corresponding Zenodo model upload homepage
         """
 
         # Check if zip ffile exists, else create new one for upload.

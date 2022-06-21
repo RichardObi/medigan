@@ -46,8 +46,33 @@ class GithubModelUploader(BaseModelUploader):
         creator_affiliation: str = "n.a.",
         model_description: str = "n.a.",
     ):
-        """TODO"""
-        print
+        """ Upload the model's metadata inside a github issue to the medigan github repository.
+
+        To add your model to medigan, your metadata will be reviewed on Github and added to medigan's official model metadata
+
+        The medigan repository issues page: https://github.com/RichardObi/medigan/issues
+
+        Get your Github access token here: https://github.com/settings/tokens
+
+        Parameters
+        ----------
+        metadata: dict
+            The model's corresponding medigan metadata
+        package_link:
+            a package link
+        creator_name: str
+            the creator name that will appear on the corresponding github issue
+        creator_affiliation: str
+            the creator affiliation that will appear on the corresponding github issue
+        model_description: list
+            the model_description that will appear on the corresponding github issue
+
+        Returns
+        -------
+        str
+            Returns the url pointing to the corresponding issue on github
+        """
+
         # Check if the package_link is already in the metadata. If not, add it to metadata.
         metadata = self.add_package_link_to_metadata(
             metadata=metadata, package_link=package_link
@@ -71,7 +96,7 @@ class GithubModelUploader(BaseModelUploader):
         logging.info(
             f"{self.model_id}: Created a github issue in '{GITHUB_REPO}': {github_issue}"
         )
-        return github_issue
+        return github_issue.url
 
     def add_package_link_to_metadata(
         self, metadata: dict, package_link: str = None, is_update_forced: bool = False
