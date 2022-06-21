@@ -56,7 +56,7 @@ class ZenodoModelUploader(BaseModelUploader):
     def create_upload_description(
         self, metadata: dict, model_description: str = ""
     ) -> str:
-        """ Create a string containing the textual description that will accompany the upload model files.
+        """Create a string containing the textual description that will accompany the upload model files.
 
         The string contains tags and a text retrieved from the description subsection of the model metadata.
 
@@ -84,11 +84,10 @@ class ZenodoModelUploader(BaseModelUploader):
 
         return f"{model_description} {ZENODO_LINE_BREAK} Model: {self.model_id}. {ZENODO_LINE_BREAK} Upload via: API {tags} {ZENODO_LINE_BREAK} {ZENODO_GENERIC_MODEL_DESCRIPTION} {description_from_config}"
 
-
     def create_upload_json_data(
         self, creator_name: str, creator_affiliation: str, description: str = ""
     ) -> dict:
-        """ Create some descriptive data in dict format to be uploaded and stored alongside the model files.
+        """Create some descriptive data in dict format to be uploaded and stored alongside the model files.
 
         Parameters
         ----------
@@ -119,8 +118,10 @@ class ZenodoModelUploader(BaseModelUploader):
             }
         }
 
-    def locate_or_create_model_zip_file(self, package_path: str, package_name: str) -> (str, str):
-        """ If not possible to locate, create a zipped python package of the model.
+    def locate_or_create_model_zip_file(
+        self, package_path: str, package_name: str
+    ) -> (str, str):
+        """If not possible to locate, create a zipped python package of the model.
 
         Parameters
         ----------
@@ -152,9 +153,8 @@ class ZenodoModelUploader(BaseModelUploader):
 
         return filename, file_path
 
-
     def empty_upload(self) -> dict:
-        """ Upload an empty placeholder entry to Zenodo as is required to retrieve a `deposition_id` and `bucket_url`.
+        """Upload an empty placeholder entry to Zenodo as is required to retrieve a `deposition_id` and `bucket_url`.
 
         deposition_id and bucket_url aare needed for file upload and publishing in the subsequent upload steps.
 
@@ -176,9 +176,8 @@ class ZenodoModelUploader(BaseModelUploader):
             )
         return r
 
-
     def upload(self, file_path: str, filename: str, bucket_url: str) -> dict:
-        """ Upload a file to Zenodo entry of the uploaded model files.
+        """Upload a file to Zenodo entry of the uploaded model files.
 
         Parameters
         ----------
@@ -209,7 +208,7 @@ class ZenodoModelUploader(BaseModelUploader):
         return r
 
     def upload_descriptive_data(self, deposition_id: str, data: dict) -> dict:
-        """ Upload textual descriptive data to be associated and added to the Zenodo entry of the uploaded model files.
+        """Upload textual descriptive data to be associated and added to the Zenodo entry of the uploaded model files.
 
         Parameters
         ----------
@@ -237,7 +236,7 @@ class ZenodoModelUploader(BaseModelUploader):
         return r
 
     def publish(self, deposition_id: str) -> dict:
-        """ Publish a zenodo upload.
+        """Publish a zenodo upload.
 
         This makes the upload official, as it will then be publicly accessible and persistently stored on Zenodo with associated DOI.
 
@@ -289,7 +288,7 @@ class ZenodoModelUploader(BaseModelUploader):
         creator_affiliation: str,
         model_description: str = "",
     ):
-        """ Upload the model files as zip archive to a public Zenodo repository where the model will be persistently stored.
+        """Upload the model files as zip archive to a public Zenodo repository where the model will be persistently stored.
 
         Get your Zenodo access token here: https://zenodo.org/account/settings/applications/tokens/new/ (Enable scopes `deposit:actions` and `deposit:write`)
 

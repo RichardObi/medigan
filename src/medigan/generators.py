@@ -858,7 +858,7 @@ class Generators:
         return None
 
     def add_metadata_from_file(self, model_id: str, metadata_file_path: str) -> dict:
-        """ Read and parse the metadata of a local model, identified by `model_id`, from a metadata file in json format.
+        """Read and parse the metadata of a local model, identified by `model_id`, from a metadata file in json format.
 
         Parameters
         ----------
@@ -891,7 +891,7 @@ class Generators:
         fill_more_fields_interactively: bool = True,
         output_path: str = "config",
     ) -> dict:
-        """ Create a metadata dict for a local model, identified by `model_id`, given the necessary minimum metadata contents.
+        """Create a metadata dict for a local model, identified by `model_id`, given the necessary minimum metadata contents.
 
         Parameters
         ----------
@@ -937,7 +937,7 @@ class Generators:
         creator_affiliation: str,
         model_description: str = "",
     ) -> str:
-        """ Upload the model files as zip archive to a public Zenodo repository where the model will be persistently stored.
+        """Upload the model files as zip archive to a public Zenodo repository where the model will be persistently stored.
 
         Get your Zenodo access token here: https://zenodo.org/account/settings/applications/tokens/new/ (Enable scopes `deposit:actions` and `deposit:write`)
 
@@ -981,7 +981,7 @@ class Generators:
         creator_affiliation: str = "n.a.",
         model_description: str = "n.a.",
     ):
-        """ Upload the model's metadata inside a github issue to the medigan github repository.
+        """Upload the model's metadata inside a github issue to the medigan github repository.
 
         To add your model to medigan, your metadata will be reviewed on Github and added to medigan's official model metadata
 
@@ -1031,7 +1031,7 @@ class Generators:
         store_new_config: bool = True,
         num_samples: int = 3,
     ):
-        """ Test if a model generates and returns a specific number of samples in the correct format
+        """Test if a model generates and returns a specific number of samples in the correct format
 
         Parameters
         ----------
@@ -1095,7 +1095,7 @@ class Generators:
         creator_affiliation: str = "n.a.",
         model_description: str = "n.a.",
     ):
-        """ Implements the full model contribution workflow including model metadata generation, model test, model Zenodo upload, and medigan github issue creation.
+        """Implements the full model contribution workflow including model metadata generation, model test, model Zenodo upload, and medigan github issue creation.
 
         Parameters
         ----------
@@ -1132,7 +1132,7 @@ class Generators:
          -------
          str
              Returns the url pointing to the corresponding issue on github
-         """
+        """
 
         # Create model contributor
         self.add_model_contributor(model_id=model_id, init_py_path=init_py_path)

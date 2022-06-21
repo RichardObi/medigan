@@ -30,7 +30,7 @@ try:
 
     # Testing init of contributor with correct params
     init_py_path = "models/00100_WGANGP_MMG_MASS_ROI/__init__.py"
-    metadata_file_path = ("models/00100_WGANGP_MMG_MASS_ROI/metadata.json")
+    metadata_file_path = "models/00100_WGANGP_MMG_MASS_ROI/metadata.json"
     model_id = "00100_WGANGP_MMG_MASS_ROI"
 
     zenodo_access_token = "ACCESS_TOKEN"
@@ -63,17 +63,16 @@ try:
     # generators._add_model_to_config(model_id=model_id, metadata=metadata, metadata_file_path=metadata_file_path,
     #                               overwrite_existing_metadata=True)
 
-
     # Zenodo upload test
-    #generators.push_to_zenodo(
+    # generators.push_to_zenodo(
     #    model_id=model_id,
     #    access_token=zenodo_access_token,
     #    creator_name="test",
     #    creator_affiliation="test affiliation",
-    #)
+    # )
 
     # Manual Zenodo Test 1
-    #import requests
+    # import requests
     # r = requests.get('https://zenodo.org/api/deposit/depositions', params = {'access_token': zenodo_access_token})
     # print(r.status_code)
     # print(r.json())
@@ -94,11 +93,10 @@ try:
     generators.push_to_github(
         model_id=model_id,
         github_access_token=github_access_token,
-        package_link= None,
+        package_link=None,
         creator_name="test",
         creator_affiliation="test affiliation",
         model_description="test description",
-
     )
 
 except Exception as e:

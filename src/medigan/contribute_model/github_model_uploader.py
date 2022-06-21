@@ -58,7 +58,7 @@ class GithubModelUploader(BaseModelUploader):
         creator_affiliation: str = "n.a.",
         model_description: str = "n.a.",
     ):
-        """ Upload the model's metadata inside a github issue to the medigan github repository.
+        """Upload the model's metadata inside a github issue to the medigan github repository.
 
         To add your model to medigan, your metadata will be reviewed on Github and added to medigan's official model metadata
 
@@ -113,7 +113,7 @@ class GithubModelUploader(BaseModelUploader):
     def add_package_link_to_metadata(
         self, metadata: dict, package_link: str = None, is_update_forced: bool = False
     ) -> dict:
-        """ Update `package_link` in the model's metadata if current `package_link` does not containing a valid url.
+        """Update `package_link` in the model's metadata if current `package_link` does not containing a valid url.
 
         Parameters
         ----------

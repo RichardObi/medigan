@@ -79,7 +79,7 @@ class ModelContributor:
     def validate_model_id(
         self, model_id: str, max_chars: int = 30, min_chars: int = 13
     ) -> bool:
-        """ Asserts if the `model_id` is in the correct format and has a valid length
+        """Asserts if the `model_id` is in the correct format and has a valid length
 
         Parameters
         ----------
@@ -110,7 +110,7 @@ class ModelContributor:
         return True
 
     def validate_init_py_path(self, init_py_path):
-        """ Asserts whether the `init_py_path` exists and points to a valid `__init__.py` correct file.
+        """Asserts whether the `init_py_path` exists and points to a valid `__init__.py` correct file.
 
         Parameters
         ----------
@@ -194,7 +194,7 @@ class ModelContributor:
         )
 
     def validate_local_model_import(self):
-        """ Check if the model package in the `package_path` can be imported as python library using importlib. """
+        """Check if the model package in the `package_path` can be imported as python library using importlib."""
 
         # Validation: Import module as python library to check if generate function is inside the
         # path_to_script_w_generate_function python file and no errors occur.
@@ -217,7 +217,7 @@ class ModelContributor:
         creator_affiliation: str,
         model_description: str = "",
     ):
-        """ Upload the model files as zip archive to a public Zenodo repository where the model will be persistently stored.
+        """Upload the model files as zip archive to a public Zenodo repository where the model will be persistently stored.
 
         Get your Zenodo access token here: https://zenodo.org/account/settings/applications/tokens/new/ (Enable scopes `deposit:actions` and `deposit:write`)
 
@@ -259,7 +259,7 @@ class ModelContributor:
         creator_affiliation: str = "n.a.",
         model_description: str = "n.a.",
     ):
-        """ Upload the model's metadata inside a github issue to the medigan github repository.
+        """Upload the model's metadata inside a github issue to the medigan github repository.
 
         To add your model to medigan, your metadata will be reviewed on Github and added to medigan's official model metadata
 
@@ -302,7 +302,7 @@ class ModelContributor:
     ############################ METADATA ############################
 
     def load_metadata_template(self) -> dict:
-        """ Loads and parses (json to dict) a default medigan metadata template.
+        """Loads and parses (json to dict) a default medigan metadata template.
 
         Returns
         -------
@@ -323,7 +323,7 @@ class ModelContributor:
         return metadata_template
 
     def add_metadata_from_file(self, metadata_file_path) -> dict:
-        """ Read and parse the metadata of a local model, identified by `model_id`, from a metadata file in json format.
+        """Read and parse the metadata of a local model, identified by `model_id`, from a metadata file in json format.
 
         Parameters
         ----------
@@ -363,7 +363,7 @@ class ModelContributor:
         fill_more_fields_interactively: bool = True,
         output_path: str = "config",
     ):
-        """ Create a metadata dict for a local model, identified by `model_id`, given the necessary minimum metadata contents.
+        """Create a metadata dict for a local model, identified by `model_id`, given the necessary minimum metadata contents.
 
         Parameters
         ----------
@@ -433,9 +433,10 @@ class ModelContributor:
 
         return self.metadata
 
-
-    def is_value_for_key_already_set(self, key: str, metadata: dict, nested_key) -> bool:
-        """ Check if the value of a `key` in a `metadata` dictionary is already set and e.g. not an empty string, dict or list.
+    def is_value_for_key_already_set(
+        self, key: str, metadata: dict, nested_key
+    ) -> bool:
+        """Check if the value of a `key` in a `metadata` dictionary is already set and e.g. not an empty string, dict or list.
 
         Parameters
         ----------
@@ -470,7 +471,7 @@ class ModelContributor:
     def _recursively_fill_metadata(
         self, metadata_template: dict = None, metadata: dict = {}, nested_key: str = ""
     ) -> dict:
-        """ Filling a model metadata template with values retrieved via user input prompts and by traversing nested dicts and list recursively.
+        """Filling a model metadata template with values retrieved via user input prompts and by traversing nested dicts and list recursively.
 
         Parameters
         ----------
