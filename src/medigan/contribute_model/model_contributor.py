@@ -26,8 +26,8 @@ from ..constants import (
     TEMPLATE_FOLDER,
 )
 from ..utils import Utils
-from .zenodo_model_uploader import ZenodoModelUploader
 from .github_model_uploader import GithubModelUploader
+from .zenodo_model_uploader import ZenodoModelUploader
 
 
 class ModelContributor:
@@ -190,9 +190,9 @@ class ModelContributor:
         self,
         access_token: str,
         package_link: str = None,
-        creator_name: str = 'n.a.',
-        creator_affiliation: str = 'n.a.',
-        model_description: str = 'n.a.',
+        creator_name: str = "n.a.",
+        creator_affiliation: str = "n.a.",
+        model_description: str = "n.a.",
     ):
         """TODO
 
@@ -200,7 +200,8 @@ class ModelContributor:
         """
         if self.github_model_uploader is None:
             self.github_model_uploader = GithubModelUploader(
-                model_id=self.model_id, access_token=access_token)
+                model_id=self.model_id, access_token=access_token
+            )
 
         return self.github_model_uploader.push(
             metadata=self.metadata,

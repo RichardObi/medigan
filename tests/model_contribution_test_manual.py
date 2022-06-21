@@ -28,17 +28,18 @@ try:
 
     generators = Generators()
 
+    # Testing init of contributor with correct params
+    init_py_path = "models/00100_WGANGP_MMG_MASS_ROI/__init__.py"
+    metadata_file_path = ("models/00100_WGANGP_MMG_MASS_ROI/metadata.json")
+    model_id = "00100_WGANGP_MMG_MASS_ROI"
+
+    zenodo_access_token = "ACCESS_TOKEN"
+    github_access_token = "ACCESS_TOKEN"
+
     # Testing init of contributor with erroneous params
     # contributor = generators.add_model_contributor(model_id ='Some model id', init_py_path="somePath")
     # contributor = generators.add_model_contributor(model_id ='00008_WGANGP_MMG_MASS_ROI', init_py_path="somePath")
-    # contributor = generators.add_model_contributor(model_id ='Some model id', init_py_path="/Users/richardosuala/Desktop/00008_WGANGP_MMG_MASS_ROI")
-
-    # Testing init of contributor with correct params
-    init_py_path = "/Users/richardosuala/Desktop/00100_WGANGP_MMG_MASS_ROI/__init__.py"
-    metadata_file_path = (
-        "/Users/richardosuala/Desktop/00100_WGANGP_MMG_MASS_ROI/metadata.json"
-    )
-    model_id = "00100_WGANGP_MMG_MASS_ROI"
+    # contributor = generators.add_model_contributor(model_id ='Some model id', init_py_path="init_py_path")
 
     # Creating the model contributor
     generators.add_model_contributor(model_id=model_id, init_py_path=init_py_path)
@@ -62,7 +63,6 @@ try:
     # generators._add_model_to_config(model_id=model_id, metadata=metadata, metadata_file_path=metadata_file_path,
     #                               overwrite_existing_metadata=True)
 
-    #zenodo_access_token = "ACCESS_TOKEN"
 
     # Zenodo upload test
     #generators.push_to_zenodo(
@@ -90,8 +90,6 @@ try:
     # print(r.json())
     # print(r.status_code)
 
-    github_access_token = ""
-
     # Github upload test
     generators.push_to_github(
         model_id=model_id,
@@ -102,7 +100,6 @@ try:
         model_description="test description",
 
     )
-
 
 except Exception as e:
     logging.error(f"test_init_generators error: {e}")

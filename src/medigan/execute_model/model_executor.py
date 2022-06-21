@@ -38,7 +38,6 @@ from ..constants import (
     DEFAULT_OUTPUT_FOLDER,
     MODEL_FOLDER,
     PACKAGE_EXTENSION,
-    MODEL_FOLDER
 )
 from ..utils import Utils
 from .install_model_dependencies import install_model

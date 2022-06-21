@@ -902,7 +902,6 @@ class Generators:
             model_description=model_description,
         )
 
-
     def push_to_github(
         self,
         model_id: str,
@@ -921,44 +920,66 @@ class Generators:
 
         return model_contributor.push_to_github(
             access_token=github_access_token,
-            package_link = package_link,
+            package_link=package_link,
             creator_name=creator_name,
             creator_affiliation=creator_affiliation,
             model_description=model_description,
         )
 
-    def test_model(self, model_id: str, is_local_model: bool = True, overwrite_existing_metadata: bool = False, store_new_config:bool = True, num_samples: int = 3):
-        """ TODO """
+    def test_model(
+        self,
+        model_id: str,
+        is_local_model: bool = True,
+        overwrite_existing_metadata: bool = False,
+        store_new_config: bool = True,
+        num_samples: int = 3,
+    ):
+        """TODO"""
 
         if is_local_model:
-            self.add_model_to_config(model_id=model_id, overwrite_existing_metadata=overwrite_existing_metadata, store_new_config = store_new_config)
-        samples = self.generate(model_id=model_id, save_images=False, install_dependencies=True, num_samples=num_samples)
-        if samples is not None and isinstance(samples, list) and (len(samples) == num_samples):
-            logging.info(f"{model_id}: The test of "
-                         f"{'this new local user model' if is_local_model else 'this existing medigan model'} "
-                         f"was successful, as model created the expected number ({num_samples}) of synthetic "
-                         f"samples.")
+            self.add_model_to_config(
+                model_id=model_id,
+                overwrite_existing_metadata=overwrite_existing_metadata,
+                store_new_config=store_new_config,
+            )
+        samples = self.generate(
+            model_id=model_id,
+            save_images=False,
+            install_dependencies=True,
+            num_samples=num_samples,
+        )
+        if (
+            samples is not None
+            and isinstance(samples, list)
+            and (len(samples) == num_samples)
+        ):
+            logging.info(
+                f"{model_id}: The test of "
+                f"{'this new local user model' if is_local_model else 'this existing medigan model'} "
+                f"was successful, as model created the expected number ({num_samples}) of synthetic "
+                f"samples."
+            )
             return True
         return False
 
-
-    def contribute(self,
-                   model_id: str,
-                   init_py_path: str,
-                   github_access_token: str,
-                   zenodo_access_token: str,
-                   metadata_file_path: str = None,
-                   model_weights_name: str = None,
-                   model_weights_extension: str = None,
-                   generate_method_name: str = None,
-                   dependencies: list = None,
-                   fill_more_fields_interactively: bool = True,
-                   output_path: str = "config",
-                   creator_name: str = 'n.a.',
-                   creator_affiliation: str = 'n.a.',
-                   model_description: str = 'n.a.'
-                   ):
-        """ TODO """
+    def contribute(
+        self,
+        model_id: str,
+        init_py_path: str,
+        github_access_token: str,
+        zenodo_access_token: str,
+        metadata_file_path: str = None,
+        model_weights_name: str = None,
+        model_weights_extension: str = None,
+        generate_method_name: str = None,
+        dependencies: list = None,
+        fill_more_fields_interactively: bool = True,
+        output_path: str = "config",
+        creator_name: str = "n.a.",
+        creator_affiliation: str = "n.a.",
+        model_description: str = "n.a.",
+    ):
+        """TODO"""
 
         # Create model contributor
         self.add_model_contributor(model_id=model_id, init_py_path=init_py_path)
@@ -970,23 +991,27 @@ class Generators:
                 model_id=model_id, metadata_file_path=metadata_file_path
             )
         else:
-            # Creating the metadata json 
+            # Creating the metadata json
             metadata = self.add_metadata_from_input(
-                model_weights_name = model_weights_name,
+                model_weights_name=model_weights_name,
                 model_weights_extension=model_weights_extension,
-                generate_method_name = generate_method_name,
+                generate_method_name=generate_method_name,
                 dependencies=dependencies,
                 fill_more_fields_interactively=fill_more_fields_interactively,
                 output_path=output_path,
             )
-        logging.debug(f"{self.model_id}: The following model metadata was created: {metadata}")
+        logging.debug(
+            f"{self.model_id}: The following model metadata was created: {metadata}"
+        )
 
         try:
             if not self.test_model(model_id=model_id, is_local_model=True):
                 raise Exception
         except Exception as e:
-            logging.error(f"{model_id}: Error while testing this local model. "
-                          f"Please revise and run model contribute() again. {e}")
+            logging.error(
+                f"{model_id}: Error while testing this local model. "
+                f"Please revise and run model contribute() again. {e}"
+            )
 
         # Model Upload to Zenodo
         zenodo_record_url = self.push_to_zenodo(
@@ -1000,13 +1025,12 @@ class Generators:
         # Creating and returning an issue with model metadata in medigan's Github
         return self.push_to_github(
             model_id=model_id,
-            package_link = zenodo_record_url,
+            package_link=zenodo_record_url,
             github_access_token=github_access_token,
             creator_name=creator_name,
             creator_affiliation=creator_affiliation,
             model_description=model_description,
         )
-
 
     ############################ OTHER METHODS ############################
 
