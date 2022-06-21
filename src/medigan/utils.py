@@ -24,7 +24,7 @@ from tqdm import tqdm
 
 
 class Utils:
-    """Utils class."""
+    """ Utils class containing reusable static methods. """
 
     def __init__(
         self,
@@ -33,7 +33,7 @@ class Utils:
 
     @staticmethod
     def mkdirs(path_as_string: str) -> bool:
-        """create folder in `path_as_string` if not already created."""
+        """ create folder in `path_as_string` if not already created."""
 
         if not os.path.exists(path_as_string):
             try:
@@ -54,7 +54,7 @@ class Utils:
         is_new_download_forced: bool = False,
         allow_local_path_as_url: bool = True,
     ) -> bool:
-        """check if is file in `path_as_string` and optionally download the file (again)."""
+        """ check if is file in `path_as_string` and optionally download the file (again)."""
 
         if not path_as_string.is_file() or is_new_download_forced:
             if not download_if_not_found:
@@ -89,7 +89,7 @@ class Utils:
     def download_file(
         download_link: str, path_as_string: str, file_extension: str = ".json"
     ):
-        """download a file using the `requests` lib and store in `path_as_string`"""
+        """ download a file using the `requests` lib and store in `path_as_string`"""
 
         logging.debug(f"Now downloading file {path_as_string} from {download_link} ...")
         try:
@@ -238,6 +238,8 @@ class Utils:
 
     @staticmethod
     def is_url_valid(the_url: str) -> bool:
+        """ Checks if a url is valid using urllib.parse.urlparse """
+
         try:
             result = urlparse(the_url)
             # testing if both result.scheme and result.netloc are non-empty strings (empty strings evaluate to False).
@@ -373,7 +375,9 @@ class Utils:
         return dict_list
 
     @staticmethod
-    def is_file_in(folder_path: str, filename: str):
+    def is_file_in(folder_path: str, filename: str) -> bool:
+        """ Checks if a file is inside a folder """
+
         try:
             if (
                 Path(folder_path).is_dir()

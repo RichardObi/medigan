@@ -9,9 +9,21 @@ from __future__ import absolute_import
 
 
 class BaseModelUploader:
-    """`BaseModelUploader` class: Uploads user's model to third party storage to allow its inclusion into medigan
+    """`BaseModelUploader` class: Uploads a user's model and metadata to third party storage to allow its inclusion into the medigan library.
 
-    TODO
+    Parameters
+    ----------
+    model_id: str
+        The generative model's unique id
+    metadata: dict
+        The model's corresponding metadata
+
+    Attributes
+    ----------
+    model_id: str
+        The generative model's unique id
+    metadata: dict
+        The model's corresponding metadata
     """
 
     def __init__(
@@ -22,11 +34,7 @@ class BaseModelUploader:
         self.model_id = model_id
         self.metadata = metadata
 
-    ############################ UPLOAD ############################
-
     def push(self):
-        """TODO"""
-
         raise NotImplementedError
 
     def __repr__(self):

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # ! /usr/bin/env python
-"""Github Model uploader class that uploads the metadata of a new model to medigan github repository.
+"""Github Model uploader class that uploads the metadata of a new model to the medigan github repository.
 
 .. codeauthor:: Richard Osuala <richard.osuala@gmail.com>
 """
@@ -27,7 +27,19 @@ class GithubModelUploader(BaseModelUploader):
     """`GithubModelUploader` class: Pushes the metadata of a user's model to the medigan repo, where it creates a
     dedicated github issue.
 
-    TODO
+    Parameters
+    ----------
+    model_id: str
+        The generative model's unique id
+    access_token: str
+        a personal access token linked to your github user account, used as means of authentication
+
+    Attributes
+    ----------
+    model_id: str
+        The generative model's unique id
+    access_token: str
+        a personal access token linked to your github user account, used as means of authentication
     """
 
     def __init__(
@@ -57,7 +69,7 @@ class GithubModelUploader(BaseModelUploader):
         Parameters
         ----------
         metadata: dict
-            The model's corresponding medigan metadata
+            The model's corresponding metadata
         package_link:
             a package link
         creator_name: str
@@ -101,11 +113,26 @@ class GithubModelUploader(BaseModelUploader):
     def add_package_link_to_metadata(
         self, metadata: dict, package_link: str = None, is_update_forced: bool = False
     ) -> dict:
-        """TODO"""
+        """ Update `package_link` in the model's metadata if current `package_link` does not containing a valid url.
 
-        # Get the package link from the metadata object
+        Parameters
+        ----------
+        metadata: dict
+            The model's corresponding metadata
+        package_link: str
+            the new package link to used to replace the old one
+        is_update_forced: bool
+            flag to update metadata even though metadata already contains a valid url in its `package_link`
+
+        Returns
+        -------
+        dict
+            Returns the updated metadata dict with replaced `package_link` if replacement was applicable.
+        """
+
         current_pl = None
         try:
+            # Get the package link from the metadata object
             current_pl = metadata[self.model_id][CONFIG_FILE_KEY_EXECUTION][
                 CONFIG_FILE_KEY_PACKAGE_LINK
             ]

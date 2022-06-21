@@ -1095,7 +1095,7 @@ class Generators:
         creator_affiliation: str = "n.a.",
         model_description: str = "n.a.",
     ):
-        """ Implements the full model contribution workflow inlcuding model metadata generation, model test, model Zenodo upload, and medigan github issue creation.
+        """ Implements the full model contribution workflow including model metadata generation, model test, model Zenodo upload, and medigan github issue creation.
 
         Parameters
         ----------

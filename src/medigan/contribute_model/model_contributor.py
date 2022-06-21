@@ -79,7 +79,22 @@ class ModelContributor:
     def validate_model_id(
         self, model_id: str, max_chars: int = 30, min_chars: int = 13
     ) -> bool:
-        """TODO"""
+        """ Asserts if the `model_id` is in the correct format and has a valid length
+
+        Parameters
+        ----------
+        model_id: str
+            The generative model's unique id
+        max_chars: int
+            the maximum of chars allowed in the model_id
+        min_chars: int
+            the minimum of chars allowed in the model_id
+
+        Returns
+        -------
+        bool
+            Returns flag indicating whether the `model_id` is correctly formatted.
+        """
 
         num_chars = len(model_id)
         assert (
@@ -95,7 +110,13 @@ class ModelContributor:
         return True
 
     def validate_init_py_path(self, init_py_path):
-        """TODO"""
+        """ Asserts whether the `init_py_path` exists and points to a valid `__init__.py` correct file.
+
+        Parameters
+        ----------
+        init_py_path: str
+            The path to the local model's __init__.py file needed for importing and running this model.
+        """
 
         assert (
             Path(init_py_path).exists() and Path(init_py_path).is_file()
@@ -111,7 +132,10 @@ class ModelContributor:
         Ideally, the user provided `package_path` and the `path_to_metadata` should both point to the same model package
         containing weights, config, license, etc. Here we check both of these paths to find the model weights.
 
-        TODO Further docstring
+        Returns
+        -------
+        dict
+            Returns the metadata after updating the path to the model's checkpoint's weights
         """
 
         metadata_dir_path = Path(self.metadata_file_path).parent
@@ -170,7 +194,7 @@ class ModelContributor:
         )
 
     def validate_local_model_import(self):
-        """TODO"""
+        """ Check if the model package in the `package_path` can be imported as python library using importlib. """
 
         # Validation: Import module as python library to check if generate function is inside the
         # path_to_script_w_generate_function python file and no errors occur.
@@ -179,7 +203,9 @@ class ModelContributor:
             importlib.import_module(name=self.package_name)
         except Exception as e:
             raise Exception(
-                f"{self.model_id}: Error while testing importlib model import. Is your {INIT_PY_FILE} erroneous? Please revise if the provided path ({self.init_py_path}) is valid and accessible and try again."
+                f"{self.model_id}: Error while testing importlib model import. Is your {INIT_PY_FILE} erroneous? "
+                f"Please revise if the provided path ({self.init_py_path}) is valid and accessible and try again. "
+                f"Exception: {e}"
             ) from e
 
     ############################ UPLOAD ############################
@@ -275,8 +301,14 @@ class ModelContributor:
 
     ############################ METADATA ############################
 
-    def load_metadata_template(self):
-        """TODO"""
+    def load_metadata_template(self) -> dict:
+        """ Loads and parses (json to dict) a default medigan metadata template.
+
+        Returns
+        -------
+        dict
+            Returns the metadata template as dict
+        """
 
         path_to_metadata_template = Path(
             f"{TEMPLATE_FOLDER}/{CONFIG_TEMPLATE_FILE_NAME_AND_EXTENSION}"
@@ -290,7 +322,7 @@ class ModelContributor:
             del metadata_template[list(metadata_template)[0]]
         return metadata_template
 
-    def add_metadata_from_file(self, metadata_file_path):
+    def add_metadata_from_file(self, metadata_file_path) -> dict:
         """ Read and parse the metadata of a local model, identified by `model_id`, from a metadata file in json format.
 
         Parameters
@@ -401,8 +433,24 @@ class ModelContributor:
 
         return self.metadata
 
-    def is_key_value_set_or_dict(self, key: str, metadata: dict, nested_key) -> bool:
-        """TODO"""
+
+    def is_value_for_key_already_set(self, key: str, metadata: dict, nested_key) -> bool:
+        """ Check if the value of a `key` in a `metadata` dictionary is already set and e.g. not an empty string, dict or list.
+
+        Parameters
+        ----------
+        key: str
+            The key in the currently traversed part of the model's metadata dictionary
+        metadata: dict
+            The currently traversed part of the model's metadata dictionary
+        nested_key: str
+            the `nested_key` indicates which subpart of the model's metadata we are currently traversing
+
+        Returns
+        -------
+        bool
+            Flag indicating whether a value exists for the `key` in the dict
+        """
 
         if (
             metadata.get(key) is None
@@ -422,7 +470,22 @@ class ModelContributor:
     def _recursively_fill_metadata(
         self, metadata_template: dict = None, metadata: dict = {}, nested_key: str = ""
     ) -> dict:
-        """TODO"""
+        """ Filling a model metadata template with values retrieved via user input prompts and by traversing nested dicts and list recursively.
+
+        Parameters
+        ----------
+        metadata_template: dict
+            The template containing all keys expected in a model's metadata dictionary.
+        metadata: dict
+            The currently traversed part of the model's metadata dictionary
+        nested_key: str
+            the `nested_key` indicates which subpart of the model's metadata we are currently traversing
+
+        Returns
+        -------
+        dict
+            The final fully filled metadata dictionary.
+        """
 
         if metadata_template is None:
             metadata_template = self.metadata_template
@@ -433,7 +496,7 @@ class ModelContributor:
             nested_key = (
                 key if retrieved_nested_key == "" else f"{retrieved_nested_key}.{key}"
             )
-            if not self.is_key_value_set_or_dict(
+            if not self.is_value_for_key_already_set(
                 key=key, metadata=metadata, nested_key=nested_key
             ):
                 value_template = metadata_template.get(key)

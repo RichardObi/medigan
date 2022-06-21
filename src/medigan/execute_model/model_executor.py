@@ -87,7 +87,7 @@ class ModelExecutor:
     serialised_model_file_path: str
         Path as string to the generative model's weights file
     package_path: str
-        Path as string to the generative model's python package
+        Path as string to the generative model's python package containing an `__init__.py` file
     deserialized_model_as_lib
         The generative model's package imported as python library. Generate method inside this library can be called.
     """

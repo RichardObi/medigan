@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # ! /usr/bin/env python
-"""Zenodo Model uploader class that uploads models to medigan associated data storage services: Zenodo
+"""Zenodo Model uploader class that uploads models to medigan associated data storage on Zenodo
 
 .. codeauthor:: Richard Osuala <richard.osuala@gmail.com>
 """
@@ -29,7 +29,19 @@ from .base_model_uploader import BaseModelUploader
 class ZenodoModelUploader(BaseModelUploader):
     """`ZenodoModelUploader` class: Uploads a user's model via API to Zenodo, here it is permanently stored with DOI.
 
-    TODO
+    Parameters
+    ----------
+    model_id: str
+        The generative model's unique id
+    access_token: str
+        a personal access token in Zenodo linked to a user account for authentication
+
+    Attributes
+    ----------
+    model_id: str
+        The generative model's unique id
+    access_token: str
+        a personal access token in Zenodo linked to a user account for authentication
     """
 
     def __init__(
@@ -44,7 +56,22 @@ class ZenodoModelUploader(BaseModelUploader):
     def create_upload_description(
         self, metadata: dict, model_description: str = ""
     ) -> str:
-        """TODO"""
+        """ Create a string containing the textual description that will accompany the upload model files.
+
+        The string contains tags and a text retrieved from the description subsection of the model metadata.
+
+        Parameters
+        ----------
+        metadata: dict
+            The model's corresponding metadata
+        model_description: str
+            the model_description that will appear on the corresponding Zenodo model upload homepage
+
+        Returns
+        -------
+        str
+            Returns the textual description of the model upload
+        """
 
         try:
             tags = f"{ZENODO_LINE_BREAK} Tags: {metadata[self.model_id][CONFIG_FILE_KEY_SELECTION][CONFIG_FILE_KEY_TAGS]}"
@@ -57,10 +84,26 @@ class ZenodoModelUploader(BaseModelUploader):
 
         return f"{model_description} {ZENODO_LINE_BREAK} Model: {self.model_id}. {ZENODO_LINE_BREAK} Upload via: API {tags} {ZENODO_LINE_BREAK} {ZENODO_GENERIC_MODEL_DESCRIPTION} {description_from_config}"
 
+
     def create_upload_json_data(
         self, creator_name: str, creator_affiliation: str, description: str = ""
     ) -> dict:
-        """TODO"""
+        """ Create some descriptive data in dict format to be uploaded and stored alongside the model files.
+
+        Parameters
+        ----------
+        creator_name: str
+            the creator name that will appear on the corresponding Zenodo model upload homepage
+        creator_affiliation: str
+            the creator affiliation that will appear on the corresponding Zenodo model upload homepage
+        description: str
+            the model_description that will appear on the corresponding Zenodo model upload homepage
+
+        Returns
+        -------
+        dict
+            Returns the descriptive data in dictionary structure describing the model upload.
+        """
 
         return {
             "metadata": {
@@ -76,8 +119,21 @@ class ZenodoModelUploader(BaseModelUploader):
             }
         }
 
-    def locate_model_zip_file(self, package_path: str, package_name: str) -> (str, str):
-        """TODO"""
+    def locate_or_create_model_zip_file(self, package_path: str, package_name: str) -> (str, str):
+        """ If not possible to locate, create a zipped python package of the model.
+
+        Parameters
+        ----------
+        package_path: str
+            Path as string to the generative model's python package containing an `__init__.py` file
+        package_name: str
+            Name of the model's python package i.e. the name of the model's zip file and unzipped package folder
+
+        Returns
+        -------
+        tuple
+            Returns a tuple containing two strings: The `filename` and the `file_path` of and to the zipped python package
+        """
 
         # Check if zip file already exists
         if not (Path(package_path).is_file() and package_path.endswith(".zip")):
@@ -96,8 +152,17 @@ class ZenodoModelUploader(BaseModelUploader):
 
         return filename, file_path
 
+
     def empty_upload(self) -> dict:
-        """TODO"""
+        """ Upload an empty placeholder entry to Zenodo as is required to retrieve a `deposition_id` and `bucket_url`.
+
+        deposition_id and bucket_url aare needed for file upload and publishing in the subsequent upload steps.
+
+        Returns
+        -------
+        dict
+            Returns the response retrieved via the Zenodo API
+        """
 
         r = requests.post(
             ZENODO_API_URL,
@@ -111,8 +176,24 @@ class ZenodoModelUploader(BaseModelUploader):
             )
         return r
 
+
     def upload(self, file_path: str, filename: str, bucket_url: str) -> dict:
-        """TODO"""
+        """ Upload a file to Zenodo entry of the uploaded model files.
+
+        Parameters
+        ----------
+        file_path: str
+            The path of the file that is uploaded to Zenodo
+        filename: str
+            The name of the file that is uploaded to Zenodo
+        bucket_url: str
+            The bucket url used in the PUT request to upload the data file.
+
+        Returns
+        -------
+        dict
+            Returns the response retrieved via the Zenodo API
+        """
 
         with open(file_path, "rb") as fp:
             r = requests.put(
@@ -128,7 +209,20 @@ class ZenodoModelUploader(BaseModelUploader):
         return r
 
     def upload_descriptive_data(self, deposition_id: str, data: dict) -> dict:
-        """TODO"""
+        """ Upload textual descriptive data to be associated and added to the Zenodo entry of the uploaded model files.
+
+        Parameters
+        ----------
+        deposition_id: str
+            The deposition id assigned by Zenodo to the uploaded model file
+        data: dict
+            The descriptive information that will to be uploaded to Zenodo and associated with the desposition_id
+
+        Returns
+        -------
+        dict
+            Returns the response retrieved via the Zenodo API
+        """
 
         r = requests.put(
             f"{ZENODO_API_URL}/{deposition_id}",
@@ -143,7 +237,20 @@ class ZenodoModelUploader(BaseModelUploader):
         return r
 
     def publish(self, deposition_id: str) -> dict:
-        """TODO"""
+        """ Publish a zenodo upload.
+
+        This makes the upload official, as it will then be publicly accessible and persistently stored on Zenodo with associated DOI.
+
+        Parameters
+        ----------
+        deposition_id: str
+            The deposition id assigned by Zenodo to the uploaded model file
+
+        Returns
+        -------
+        dict
+            Returns the response retrieved via the Zenodo API
+        """
 
         # Get explicit user approval to publish on Zenodo. Published files cannot be deleted.
         is_user_sure = str(
@@ -189,7 +296,7 @@ class ZenodoModelUploader(BaseModelUploader):
         Parameters
         ----------
         metadata: dict
-            The model's corresponding medigan metadata
+            The model's corresponding metadata
         package_path: dict
             The path to the packaged model files
         package_name: dict
@@ -208,7 +315,7 @@ class ZenodoModelUploader(BaseModelUploader):
         """
 
         # Check if zip ffile exists, else create new one for upload.
-        filename, file_path = self.locate_model_zip_file(
+        filename, file_path = self.locate_or_create_model_zip_file(
             package_path=package_path, package_name=package_name
         )
 
