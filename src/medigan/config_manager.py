@@ -137,7 +137,6 @@ class ConfigManager:
                 config_dict = config_dict[key]
         return config_dict
 
-
     def add_model_to_config(
         self,
         model_id: str,
@@ -174,7 +173,10 @@ class ConfigManager:
                 f"{model_id}: Metadata was not added to config. Reason: metadata was not valid. Please revise and try again."
             )
             return False
-        if self.is_model_in_config(model_id=model_id) and not overwrite_existing_metadata:
+        if (
+            self.is_model_in_config(model_id=model_id)
+            and not overwrite_existing_metadata
+        ):
             logging.warning(
                 f"{model_id}: Metadata was not added to config. Reason: For {model_id} there is already an entry in the metadata and 'overwrite_existing_metadata' was set to {overwrite_existing_metadata}."
             )
@@ -195,7 +197,7 @@ class ConfigManager:
         return True
 
     def is_model_in_config(self, model_id: str) -> bool:
-        """ Checking if a `model_id` is present in the global model metadata file 
+        """Checking if a `model_id` is present in the global model metadata file
 
         Parameters
         ----------
@@ -220,7 +222,7 @@ class ConfigManager:
         metadata: dict,
         is_local_model: bool = True,
     ) -> bool:
-        """ Checking if a model's corresponding metadata is valid.
+        """Checking if a model's corresponding metadata is valid.
 
         Specific fields in the model's metadata are mandatory. It is asserted if these key value pairs are present.
 

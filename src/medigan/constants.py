@@ -113,16 +113,18 @@ TEMPLATE_FOLDER = "templates"
 ZENODO_LINE_BREAK = "<p>&nbsp;</p>"
 
 """ A generic description appended to model uploads that are automatically uploaded to zenodo via Zenodo API call in medigan"""
-ZENODO_GENERIC_MODEL_DESCRIPTION = f"<p><strong>Usage:</strong></p> <p>This GAN is used as part of&nbsp;the <strong><em>medigan</em></strong> library. " \
-                                   f"This GANs metadata is therefore stored in and retrieved from&nbsp;<em>medigan&#39;s</em> " \
-                                   f"<a href='https://raw.githubusercontent.com/RichardObi/medigan/main/config/global.json'>config&nbsp;file</a>.&nbsp;<em>medigan </em>" \
-                                   f"is an open-source Python&nbsp;library&nbsp;on <a href='https://github.com/RichardObi/medigan'>Github</a> that allows developers and " \
-                                   f"researchers to easily add synthetic imaging data&nbsp;into their model training pipelines. <em>medigan</em> is documented " \
-                                   f"<a href='https://readthedocs.org/projects/medigan/'>here</a> and can be used via pip install:</p> " \
-                                   f"<pre><code class='language-python'>pip install medigan</code></pre> <p>To run this model in medigan,&nbsp;use the following commands.</p> " \
-                                   f"<pre> <code class='language-python'> from medigan import Generators  </code></pre>" \
-                                   f"<pre> <code class='language-python'> generators = Generators() </code></pre>" \
-                                   f"<pre> <code class='language-python'> generators.generate(model_id='YOUR_MODEL_ID',num_samples=10)</code></pre><p>&nbsp;</p>"
+ZENODO_GENERIC_MODEL_DESCRIPTION = (
+    f"<p><strong>Usage:</strong></p> <p>This GAN is used as part of&nbsp;the <strong><em>medigan</em></strong> library. "
+    f"This GANs metadata is therefore stored in and retrieved from&nbsp;<em>medigan&#39;s</em> "
+    f"<a href='https://raw.githubusercontent.com/RichardObi/medigan/main/config/global.json'>config&nbsp;file</a>.&nbsp;<em>medigan </em>"
+    f"is an open-source Python&nbsp;library&nbsp;on <a href='https://github.com/RichardObi/medigan'>Github</a> that allows developers and "
+    f"researchers to easily add synthetic imaging data&nbsp;into their model training pipelines. <em>medigan</em> is documented "
+    f"<a href='https://readthedocs.org/projects/medigan/'>here</a> and can be used via pip install:</p> "
+    f"<pre><code class='language-python'>pip install medigan</code></pre> <p>To run this model in medigan,&nbsp;use the following commands.</p> "
+    f"<pre> <code class='language-python'> from medigan import Generators  </code></pre>"
+    f"<pre> <code class='language-python'> generators = Generators() </code></pre>"
+    f"<pre> <code class='language-python'> generators.generate(model_id='YOUR_MODEL_ID',num_samples=10)</code></pre><p>&nbsp;</p>"
+)
 
 """ The REST API to interact with Zenodo """
 ZENODO_API_URL = "https://sandbox.zenodo.org/api/deposit/depositions"  # "https://zenodo.org/api/deposit/depositions" # https://sandbox.zenodo.org/api/deposit/depositions

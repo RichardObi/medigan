@@ -141,9 +141,9 @@ class ZenodoModelUploader(BaseModelUploader):
             # Create a zip archive containing the model package and store that zip file inside the
             # folder of the model package
             filename = shutil.make_archive(
-                base_name= package_path + "/" + package_name,
+                base_name=package_path + "/" + package_name,
                 format="zip",
-                root_dir=package_path
+                root_dir=package_path,
             )
             file_path = filename
             filename = Path(file_path).name
@@ -151,7 +151,6 @@ class ZenodoModelUploader(BaseModelUploader):
             filename = Path(package_path).name
             file_path = package_path
         return filename, file_path
-
 
     def empty_upload(self) -> dict:
         """Upload an empty placeholder entry to Zenodo as is required to retrieve a `deposition_id` and `bucket_url`.

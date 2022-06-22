@@ -18,7 +18,6 @@ from ..constants import (
     GITHUB_ASSIGNEE,
     GITHUB_REPO,
     GITHUB_TITLE,
-
 )
 from ..utils import Utils
 from .base_model_uploader import BaseModelUploader
@@ -98,11 +97,13 @@ class GithubModelUploader(BaseModelUploader):
         # Create metadata for github issue
         title = f"{GITHUB_TITLE}: {self.model_id}"
         line_break = "\n"
-        body = f"{line_break + '**Creator:** ' if creator_name != '' else ''}{creator_name}" \
-            f"{line_break + '**Affiliation:** ' if creator_affiliation != '' else ''}{creator_affiliation}" \
-            f"{line_break + '**Description:** ' if model_description != '' else ''}{model_description}" \
-            f"{line_break} **Stored in:** {package_link}" \
+        body = (
+            f"{line_break + '**Creator:** ' if creator_name != '' else ''}{creator_name}"
+            f"{line_break + '**Affiliation:** ' if creator_affiliation != '' else ''}{creator_affiliation}"
+            f"{line_break + '**Description:** ' if model_description != '' else ''}{model_description}"
+            f"{line_break} **Stored in:** {package_link}"
             f"{line_break} ### Model Metadata: {line_break} ```json{json.dumps(metadata, indent=3)}"
+        )
 
         # As a logged-in github user, let's now push to medigan repo using pyGithub
         github_issue = repo.create_issue(
