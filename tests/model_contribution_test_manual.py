@@ -33,8 +33,8 @@ try:
     metadata_file_path = "models/00100_WGANGP_MMG_MASS_ROI/metadata.json"
     model_id = "00100_WGANGP_MMG_MASS_ROI"
 
-    zenodo_access_token = "6eXqQ2zu1LWfgZWZOMu9KtnReZAA8hGrWBL6SowEGrtXps327cRDCE6Srm0p"
-    github_access_token = "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"
+    zenodo_access_token = "ACCESS_TOKEN"
+    github_access_token = "ACCESS_TOKEN"
 
     # Testing full model contribution workflow.
     generators.contribute(

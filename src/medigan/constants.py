@@ -127,7 +127,7 @@ ZENODO_GENERIC_MODEL_DESCRIPTION = (
 )
 
 """ The REST API to interact with Zenodo """
-ZENODO_API_URL = "https://sandbox.zenodo.org/api/deposit/depositions"  # "https://zenodo.org/api/deposit/depositions" # https://sandbox.zenodo.org/api/deposit/depositions
+ZENODO_API_URL = "https://zenodo.org/api/deposit/depositions"  # "https://sandbox.zenodo.org/api/deposit/depositions"
 
 """ The HEADER for Zenodo REST API requests"""
 ZENODO_HEADERS = {"Content-Type": "application/json"}
@@ -136,7 +136,7 @@ ZENODO_HEADERS = {"Content-Type": "application/json"}
 GITHUB_TITLE = "Model Integration Request for medigan"
 
 """ The repository of the Github Issue when adding a model to medigan"""
-GITHUB_REPO = "RichardObi/medigan-models"
+GITHUB_REPO = "RichardObi/medigan"  # "RichardObi/medigan-models"
 
 """ The assignee of the Github Issue when adding a model to medigan"""
 GITHUB_ASSIGNEE = "RichardObi"
