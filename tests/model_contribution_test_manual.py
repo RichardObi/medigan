@@ -33,8 +33,15 @@ try:
     metadata_file_path = "models/00100_WGANGP_MMG_MASS_ROI/metadata.json"
     model_id = "00100_WGANGP_MMG_MASS_ROI"
 
-    zenodo_access_token = "ACCESS_TOKEN"
-    github_access_token = "ACCESS_TOKEN"
+    zenodo_access_token = "6eXqQ2zu1LWfgZWZOMu9KtnReZAA8hGrWBL6SowEGrtXps327cRDCE6Srm0p"
+    github_access_token = "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"
+
+    # Testing full model contribution workflow.
+    generators.contribute(model_id=model_id,
+                          init_py_path=init_py_path,
+                          zenodo_access_token=zenodo_access_token,
+                          github_access_token=github_access_token,
+                          metadata_file_path=metadata_file_path)
 
     # Testing init of contributor with erroneous params
     # contributor = generators.add_model_contributor(model_id ='Some model id', init_py_path="somePath")
@@ -42,12 +49,12 @@ try:
     # contributor = generators.add_model_contributor(model_id ='Some model id', init_py_path="init_py_path")
 
     # Creating the model contributor
-    generators.add_model_contributor(model_id=model_id, init_py_path=init_py_path)
+    #generators.add_model_contributor(model_id=model_id, init_py_path=init_py_path)
 
     # Adding the metadata of the model from input
-    generators.add_metadata_from_file(
-        model_id=model_id, metadata_file_path=metadata_file_path
-    )
+    #generators.add_metadata_from_file(
+    #    model_id=model_id, metadata_file_path=metadata_file_path
+    #)
 
     #  Alternatively, Adding the metadata of the model from file
     # metadata = contributor.add_metadata_from_input(
@@ -57,7 +64,7 @@ try:
     #                                               dependencies=["numpy", "torch", "opencv-contrib-python-headless"])
 
     # Add metadata to global.json config
-    generators.test_model(model_id=model_id)
+    #generators.test_model(model_id=model_id)
 
     # Alternatively, explicitely providing model metadata to add the metadata to config
     # generators._add_model_to_config(model_id=model_id, metadata=metadata, metadata_file_path=metadata_file_path,
@@ -90,14 +97,14 @@ try:
     # print(r.status_code)
 
     # Github upload test
-    generators.push_to_github(
-        model_id=model_id,
-        github_access_token=github_access_token,
-        package_link=None,
-        creator_name="test",
-        creator_affiliation="test affiliation",
-        model_description="test description",
-    )
+    #generators.push_to_github(
+    #    model_id=model_id,
+    #    github_access_token=github_access_token,
+    #    package_link=None,
+    #    creator_name="test",
+    #    creator_affiliation="test affiliation",
+    #    model_description="test description",
+    #)
 
 except Exception as e:
     logging.error(f"test_init_generators error: {e}")

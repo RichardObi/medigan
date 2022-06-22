@@ -312,7 +312,7 @@ class ModelExecutor:
                 save_images=save_images,
                 **kwargs,
             )
-            logging.info(f"The generate function's parameters are: {prepared_kwargs}")
+            logging.debug(f"The generate function's parameters are: {prepared_kwargs}")
             if is_gen_function_returned:
 
                 def gen(**some_other_kwargs):

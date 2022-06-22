@@ -933,8 +933,8 @@ class Generators:
         self,
         model_id: str,
         zenodo_access_token: str,
-        creator_name: str,
-        creator_affiliation: str,
+        creator_name: str = "unknown name",
+        creator_affiliation: str = "unknown affiliation",
         model_description: str = "",
     ) -> str:
         """Upload the model files as zip archive to a public Zenodo repository where the model will be persistently stored.
@@ -977,9 +977,9 @@ class Generators:
         model_id: str,
         github_access_token: str,
         package_link: str = None,
-        creator_name: str = "n.a.",
-        creator_affiliation: str = "n.a.",
-        model_description: str = "n.a.",
+        creator_name: str = "",
+        creator_affiliation: str = "",
+        model_description: str = "",
     ):
         """Upload the model's metadata inside a github issue to the medigan github repository.
 
@@ -1091,9 +1091,9 @@ class Generators:
         dependencies: list = None,
         fill_more_fields_interactively: bool = True,
         output_path: str = "config",
-        creator_name: str = "n.a.",
-        creator_affiliation: str = "n.a.",
-        model_description: str = "n.a.",
+        creator_name: str = "unknown name",
+        creator_affiliation: str = "unknown affiliation",
+        model_description: str = "",
     ):
         """Implements the full model contribution workflow including model metadata generation, model test, model Zenodo upload, and medigan github issue creation.
 
@@ -1154,7 +1154,7 @@ class Generators:
                 output_path=output_path,
             )
         logging.debug(
-            f"{self.model_id}: The following model metadata was created: {metadata}"
+            f"{model_id}: The following model metadata was created: {metadata}"
         )
 
         try:
@@ -1165,6 +1165,7 @@ class Generators:
                 f"{model_id}: Error while testing this local model. "
                 f"Please revise and run model contribute() again. {e}"
             )
+            raise e
 
         # Model Upload to Zenodo
         zenodo_record_url = self.push_to_zenodo(

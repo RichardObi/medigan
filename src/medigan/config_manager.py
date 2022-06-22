@@ -154,9 +154,9 @@ class ConfigManager:
                 f"{model_id}: Metadata was not added to config. Reason: metadata was not valid. Please revise and try again."
             )
             return False
-        if self.is_model_in_config and not overwrite_existing_metadata:
+        if self.is_model_in_config(model_id=model_id) and not overwrite_existing_metadata:
             logging.warning(
-                f"{model_id}: Metadata was not added to coonfig. Reason: For {model_id} there is already an entry in the metadata and 'overwrite_existing_metadata' was set to {overwrite_existing_metadata}."
+                f"{model_id}: Metadata was not added to config. Reason: For {model_id} there is already an entry in the metadata and 'overwrite_existing_metadata' was set to {overwrite_existing_metadata}."
             )
             return False
         self.config_dict.update(metadata)

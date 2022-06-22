@@ -74,15 +74,15 @@ class ZenodoModelUploader(BaseModelUploader):
         """
 
         try:
-            tags = f"{ZENODO_LINE_BREAK} Tags: {metadata[self.model_id][CONFIG_FILE_KEY_SELECTION][CONFIG_FILE_KEY_TAGS]}"
+            tags = f"{ZENODO_LINE_BREAK} <p><strong>Tags:</strong></p> {metadata[self.model_id][CONFIG_FILE_KEY_SELECTION][CONFIG_FILE_KEY_TAGS]}"
         except:
             tags = ""
         try:
-            description_from_config = f"{ZENODO_LINE_BREAK} Description from model config: {json.dumps(self.metadata[self.model_id][CONFIG_FILE_KEY_DESCRIPTION])}"
+            description_from_config = f"<p><strong> Description from model config:</strong></p>: {json.dumps(metadata[self.model_id][CONFIG_FILE_KEY_DESCRIPTION])}"
         except:
             description_from_config = ""
 
-        return f"{model_description} {ZENODO_LINE_BREAK} Model: {self.model_id}. {ZENODO_LINE_BREAK} Upload via: API {tags} {ZENODO_LINE_BREAK} {ZENODO_GENERIC_MODEL_DESCRIPTION} {description_from_config}"
+        return f"{model_description} <p><strong>Model ID:</strong></p> {self.model_id}. {ZENODO_LINE_BREAK} <p><strong>Uploaded via:</strong></p> API {tags} {ZENODO_LINE_BREAK} {ZENODO_GENERIC_MODEL_DESCRIPTION.replace('YOUR_MODEL_ID', self.model_id)} {description_from_config} {ZENODO_LINE_BREAK}"
 
     def create_upload_json_data(
         self, creator_name: str, creator_affiliation: str, description: str = ""
@@ -106,7 +106,7 @@ class ZenodoModelUploader(BaseModelUploader):
 
         return {
             "metadata": {
-                "title": f"{self.model_id}",
+                "title": f"MEDIGAN MODEL UPLOAD: {self.model_id}",
                 "upload_type": "software",
                 "description": description,
                 "creators": [
@@ -138,20 +138,20 @@ class ZenodoModelUploader(BaseModelUploader):
 
         # Check if zip file already exists
         if not (Path(package_path).is_file() and package_path.endswith(".zip")):
-            # Create a zip archive for the model in the parent of the model root folder
-            root_dir = str(Path(package_path).parent)
+            # Create a zip archive containing the model package and store that zip file inside the
+            # folder of the model package
             filename = shutil.make_archive(
-                base_name=root_dir + "/" + package_name,
+                base_name= package_path + "/" + package_name,
                 format="zip",
-                base_dir=package_path,
-                root_dir=root_dir,
+                root_dir=package_path
             )
-            file_path = root_dir + "/" + str(Path(filename).name)
+            file_path = filename
+            filename = Path(file_path).name
         else:
             filename = Path(package_path).name
             file_path = package_path
-
         return filename, file_path
+
 
     def empty_upload(self) -> dict:
         """Upload an empty placeholder entry to Zenodo as is required to retrieve a `deposition_id` and `bucket_url`.
@@ -254,7 +254,7 @@ class ZenodoModelUploader(BaseModelUploader):
         # Get explicit user approval to publish on Zenodo. Published files cannot be deleted.
         is_user_sure = str(
             input(
-                f"You are about to publish your model ({self.model_id}) on Zenodo ({ZENODO_API_URL}/{deposition_id}/actions/publish). If you are sure you would like to proceed, type 'Yes': "
+                f"You are about to publish model {self.model_id} with Zenodo-ID {deposition_id} permanently on {ZENODO_API_URL.replace('/api/deposit/depositions','')}. To proceed, type 'Yes': "
             )
         )
         if is_user_sure == "Yes":
@@ -271,8 +271,7 @@ class ZenodoModelUploader(BaseModelUploader):
                 f"{self.model_id}: Error ({r.status_code}!=202) during Zenodo upload (step 4: publishing uploaded model): {r.json()}"
             )
         logging.info(
-            f"{self.model_id}: Congratulations! Your model was successfully pushed to Zenodo with DOI '{r.json()['doi']}'. "
-            f"Find it here: '{r.json()['links']['record_html']}"
+            f"{self.model_id}: Successfully pushed model to Zenodo with DOI '{r.json()['doi']}': '{r.json()['links']['record_html']}"
         )
         logging.debug(
             f"{self.model_id}: Full Zenodo API response after successful publishing of model: {r.json()}"
@@ -313,7 +312,7 @@ class ZenodoModelUploader(BaseModelUploader):
             Returns the url pointing to the corresponding Zenodo model upload homepage
         """
 
-        # Check if zip ffile exists, else create new one for upload.
+        # Check if zip file exists, else create new one for upload.
         filename, file_path = self.locate_or_create_model_zip_file(
             package_path=package_path, package_name=package_name
         )

@@ -120,7 +120,7 @@ class ModelContributor:
 
         assert (
             Path(init_py_path).exists() and Path(init_py_path).is_file()
-        ), f"{self.model_id}: The path to your model's __init__.py function does not exist or does not point to a file. Please revise path {init_py_path}. Note: You can find an __init__.py example in /templates in https://github.com/RichardObi/medigan"
+        ), f"{self.model_id}: The path to your model's __init__.py function does not exist or does not point to a file. Please revise path {init_py_path}. Note: You can find an __init__.py example in https://github.com/RichardObi/medigan/tree/main/templates"
         assert Utils.is_file_in(
             folder_path=self.init_py_path.replace(f"/{INIT_PY_FILE}", ""),
             filename=INIT_PY_FILE,
@@ -255,9 +255,9 @@ class ModelContributor:
         self,
         access_token: str,
         package_link: str = None,
-        creator_name: str = "n.a.",
-        creator_affiliation: str = "n.a.",
-        model_description: str = "n.a.",
+        creator_name: str = "",
+        creator_affiliation: str = "",
+        model_description: str = "",
     ):
         """Upload the model's metadata inside a github issue to the medigan github repository.
 

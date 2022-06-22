@@ -18,6 +18,7 @@ from ..constants import (
     GITHUB_ASSIGNEE,
     GITHUB_REPO,
     GITHUB_TITLE,
+
 )
 from ..utils import Utils
 from .base_model_uploader import BaseModelUploader
@@ -96,19 +97,21 @@ class GithubModelUploader(BaseModelUploader):
 
         # Create metadata for github issue
         title = f"{GITHUB_TITLE}: {self.model_id}"
-        body = (
-            f"### Model: {self.model_id} \n\n**Creator:** {creator_name} \n\n**Affiliation:** {creator_affiliation} \n\n**Description:** {model_description} "
-            f"\n\n**Package stored in:** {package_link} \n\n**Model Metadata:** \n\n{json.dumps(metadata, indent=3)}"
-        )
+        line_break = "\n"
+        body = f"{line_break + '**Creator:** ' if creator_name != '' else ''}{creator_name}" \
+            f"{line_break + '**Affiliation:** ' if creator_affiliation != '' else ''}{creator_affiliation}" \
+            f"{line_break + '**Description:** ' if model_description != '' else ''}{model_description}" \
+            f"{line_break} **Stored in:** {package_link}" \
+            f"{line_break} ### Model Metadata: {line_break} ```json{json.dumps(metadata, indent=3)}"
 
-        # As logged in pyGithub user, let's now push to medigan repo
+        # As a logged-in github user, let's now push to medigan repo using pyGithub
         github_issue = repo.create_issue(
             title=title, body=body, assignee=GITHUB_ASSIGNEE
         )
         logging.info(
-            f"{self.model_id}: Created a github issue in '{GITHUB_REPO}': {github_issue}"
+            f"{self.model_id}: Successfully created github issue in '{GITHUB_REPO}': '{github_issue.html_url}'"
         )
-        return github_issue.url
+        return github_issue.html_url
 
     def add_package_link_to_metadata(
         self, metadata: dict, package_link: str = None, is_update_forced: bool = False
@@ -166,7 +169,7 @@ class GithubModelUploader(BaseModelUploader):
                 logging.warning(
                     f"{self.model_id}: Package Link could not be update in metadata for key {self.model_id}.{CONFIG_FILE_KEY_EXECUTION}.{CONFIG_FILE_KEY_PACKAGE_LINK}: {e}"
                 )
-            logging.info(
+            logging.debug(
                 f"{self.model_id}: Before creating github issue, updated package link from '{current_pl}' to '{package_link}'"
             )
         return metadata
