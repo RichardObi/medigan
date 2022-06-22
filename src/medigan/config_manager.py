@@ -137,6 +137,7 @@ class ConfigManager:
                 config_dict = config_dict[key]
         return config_dict
 
+
     def add_model_to_config(
         self,
         model_id: str,
@@ -145,7 +146,26 @@ class ConfigManager:
         overwrite_existing_metadata: bool = False,
         store_new_config: bool = True,
     ) -> bool:
-        """TODO"""
+        """Adding or updating a model entry in the global metadata.
+
+        Parameters
+        ----------
+        model_id: str
+            The generative model's unique id
+        metadata: dict
+            The model's corresponding metadata
+        metadata_file_path: dict
+            The path to the file in which the corresponding model's metadata is stored
+        overwrite_existing_metadata: bool
+            in case of `is_local_model`, flag indicating whether existing metadata for this model in medigan's `config/global.json` should be overwritten.
+        store_new_config: bool
+            flag indicating whether the current model metadata should be stored on disk i.e. in config/
+
+        Returns
+        -------
+        bool
+            Flag indicating whether model metadata update was successfully concluded
+        """
 
         if not self.is_model_metadata_valid(
             model_id=model_id, metadata=metadata, metadata_file_path=metadata_file_path
@@ -175,7 +195,18 @@ class ConfigManager:
         return True
 
     def is_model_in_config(self, model_id: str) -> bool:
-        """TODO"""
+        """ Checking if a `model_id` is present in the global model metadata file 
+
+        Parameters
+        ----------
+        model_id: str
+            The generative model's unique id
+
+        Returns
+        -------
+        bool
+            Flag indicating whether a `model_id` is present in global model metadata
+        """
 
         try:
             self.get_config_by_id(model_id)
@@ -188,9 +219,25 @@ class ConfigManager:
         model_id: str,
         metadata: dict,
         is_local_model: bool = True,
-        metadata_file_path: str = "",
     ) -> bool:
-        """TODO"""
+        """ Checking if a model's corresponding metadata is valid.
+
+        Specific fields in the model's metadata are mandatory. It is asserted if these key value pairs are present.
+
+        Parameters
+        ----------
+        model_id: str
+            The generative model's unique id
+        metadata: dict
+            The model's corresponding metadata
+        is_local_model: bool
+            flag indicating whether the tested model is a new local user model i.e not yet part of medigan's official models
+
+        Returns
+        -------
+        bool
+            Flag indicating whether the specific model's metadata format and fields are valid
+        """
 
         try:
             # Assert metadata not None and the existence of the most important entries of the metadata nested below model_id
