@@ -131,32 +131,34 @@ plt.show()
 
 Create an [__init__.py](templates/examples/__init__.py) file in your model's root folder. 
 
-Next, run the following code to push your model to Zenodo.
+Next, run the following code to contribute your model to medigan.
+
+- Your model will be stored on [Zenodo](https://zenodo.org/). 
+
+- Also, a Github [issue](https://github.com/RichardObi/medigan/issues) will be created to add your model's metadata to medigan's [global.json](https://github.com/RichardObi/medigan/blob/main/config/global.json).
+
+- To do so, please provide a github access token ([get one here](https://github.com/settings/tokens)) and a zenodo access token ([get one here](https://zenodo.org/account/settings/applications/tokens/new/)), as shown below.
 
 ```python
 from medigan import Generators
 generators = Generators()
 
-# The model contributor handles 
-generators.add_model_contributor(
-        model_id="00010_YOUR_MODEL", 
-        init_py_path="path/ending/with/__init__.py")
-
-# Input some metadata information for your model.
-generators.add_metadata_from_input(
-        model_id="00010_YOUR_MODEL", 
-        model_weights_name = "10000",
-        model_weights_extension=".pt", 
-        generate_method_name = "generate", 
-        dependencies=["numpy", "torch"])
-
-# Get Zenodo access token: https://zenodo.org/account/settings/applications/tokens/new/
-generators.push_to_zenodo(
-        model_id="00010_YOUR_MODEL",
-        access_token="ACCESS_TOKEN",
-        creator_name="NAME",
-        creator_affiliation="AFFILIATION")
+# Contribute your model
+generators.contribute(
+    model_id = "00100_YOUR_MODEL", # assign an ID
+    init_py_path ="path/ending/with/__init__.py",
+    model_weights_name = "10000",
+    model_weights_extension = ".pt",
+    generate_method_name = "generate", # in __init__.py
+    dependencies = ["numpy", "torch"], 
+    creator_name = "YOUR_NAME",
+    creator_affiliation = "YOUR_AFFILIATION",
+    zenodo_access_token = 'ZENODO_ACCESS_TOKEN',
+    github_access_token = 'GITHUB_ACCESS_TOKEN',
 ```
+Thank you for your contribution! 
+
+You will soon receive a reply in the Github [issue](https://github.com/RichardObi/medigan/issues) that you created for your model by running ```generators.contribute()```.
 
 ## Contributions in General
-We welcome contributions to medigan. Please send us an email or read the [contributing guidelines](CONTRIBUTING.md) on how to contribute to the medigan project.
+We welcome contributions to medigan. Please send us an email or read the [contributing guidelines](CONTRIBUTING.md) regarding contributing to the medigan project.
