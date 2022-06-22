@@ -10,12 +10,8 @@ from pathlib import Path
 import cv2
 import numpy as np
 import torch
-
-
-import torch
 import torch.nn as nn
 import torch.nn.parallel
-import logging
 
 
 class BaseGenerator(nn.Module):
@@ -54,7 +50,7 @@ class Generator(BaseGenerator):
         bias: bool = False,
         n_cond: int = 10,
         is_condition_categorical: bool = False,
-        num_embedding_dimensions: int = 50
+        num_embedding_dimensions: int = 50,
     ):
         super(Generator, self).__init__(
             nz=nz,
@@ -84,23 +80,31 @@ class Generator(BaseGenerator):
         if self.image_size == 128:
             self.first_layers = nn.Sequential(
                 # input is Z, going into a convolution
-                nn.ConvTranspose2d(self.nz * self.nc, self.ngf * 16, 4, 1, 0, bias=self.bias),
+                nn.ConvTranspose2d(
+                    self.nz * self.nc, self.ngf * 16, 4, 1, 0, bias=self.bias
+                ),
                 nn.BatchNorm2d(self.ngf * 16),
                 nn.ReLU(True),
                 # state size. (ngf*16) x 4 x 4
-                nn.ConvTranspose2d(self.ngf * 16, self.ngf * 8, 4, 2, 1, bias=self.bias),
+                nn.ConvTranspose2d(
+                    self.ngf * 16, self.ngf * 8, 4, 2, 1, bias=self.bias
+                ),
                 nn.BatchNorm2d(self.ngf * 8),
                 nn.ReLU(True),
             )
         elif self.image_size == 64:
             self.first_layers = nn.Sequential(
                 # input is Z, going into a convolution
-                nn.ConvTranspose2d(self.nz * self.nc, self.ngf * 8, 4, 1, 0, bias=self.bias),
+                nn.ConvTranspose2d(
+                    self.nz * self.nc, self.ngf * 8, 4, 1, 0, bias=self.bias
+                ),
                 nn.BatchNorm2d(self.ngf * 8),
                 nn.ReLU(True),
             )
         else:
-            raise ValueError(f"Allowed image sizes are 128 and 64. You provided {self.image_size}. Please adjust.")
+            raise ValueError(
+                f"Allowed image sizes are 128 and 64. You provided {self.image_size}. Please adjust."
+            )
 
         self.main = nn.Sequential(
             *self.first_layers.children(),
@@ -119,8 +123,14 @@ class Generator(BaseGenerator):
             # state size. (ngf) x 64 x 64
             # Note that out_channels=1 instead of out_channels=self.nc.
             # This is due to conditional input channel of our grayscale images
-            nn.ConvTranspose2d(in_channels=self.ngf, out_channels=1, kernel_size=4, stride=2, padding=1,
-                               bias=self.bias),
+            nn.ConvTranspose2d(
+                in_channels=self.ngf,
+                out_channels=1,
+                kernel_size=4,
+                stride=2,
+                padding=1,
+                bias=self.bias,
+            ),
             nn.Tanh()
             # state size. (nc) x 128 x 128
         )
@@ -135,7 +145,9 @@ class Generator(BaseGenerator):
                 ),
                 # target output dim of dense layer is batch_size x self.nz x 1 x 1
                 # input is dimension of the embedding layer output
-                nn.Linear(in_features=self.num_embedding_dimensions, out_features=self.nz),
+                nn.Linear(
+                    in_features=self.num_embedding_dimensions, out_features=self.nz
+                ),
                 # nn.BatchNorm1d(self.nz),
                 nn.LeakyReLU(self.leakiness, inplace=True),
             )
@@ -163,9 +175,12 @@ class Generator(BaseGenerator):
 
                 conditions = conditions.view(conditions.size(0), -1).float()
             embedded_conditions = self.embed_nn(conditions)
-            embedded_conditions_with_random_noise_dim = embedded_conditions.view(-1, self.nz, 1, 1)
+            embedded_conditions_with_random_noise_dim = embedded_conditions.view(
+                -1, self.nz, 1, 1
+            )
             x = torch.cat([x, embedded_conditions_with_random_noise_dim], 1)
         return self.main(x)
+
 
 def interval_mapping(image, from_min, from_max, to_min, to_max):
     # map values from [from_min, from_max] to [to_min, to_max]
@@ -200,8 +215,10 @@ def image_generator(model_path, device, nz, ngf, nc, ngpu, num_samples):
     try:
         netG.load_state_dict(state_dict=checkpoint["generator"])
     except KeyError:
-        raise KeyError(f"checkpoint['generator_state_dict'] was not found.") #checkpoint={checkpoint}")
-    logging.debug(f'Using retrieved model from generator_state_dict checkpoint')
+        raise KeyError(
+            f"checkpoint['generator_state_dict'] was not found."
+        )  # checkpoint={checkpoint}")
+    logging.debug(f"Using retrieved model from generator_state_dict checkpoint")
     netG.eval()
 
     # generate the images
@@ -226,7 +243,7 @@ def save_generated_images(image_list, path):
 
 
 def return_images(image_list):
-    #logging.debug(f"Returning generated images as {type(image_list)}.")
+    # logging.debug(f"Returning generated images as {type(image_list)}.")
     processed_image_list = []
     for i, img_ in enumerate(image_list):
         img_ = interval_mapping(img_.transpose(1, 2, 0), -1.0, 0.0, 0, 255)
@@ -236,7 +253,7 @@ def return_images(image_list):
 
 
 def generate(model_file, num_samples, output_path, save_images: bool):
-    """ This function generates synthetic images of mammography regions of interest """
+    """This function generates synthetic images of mammography regions of interest"""
     try:
         device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         ngpu = 0
@@ -248,6 +265,7 @@ def generate(model_file, num_samples, output_path, save_images: bool):
         else:
             return return_images(image_list)
     except Exception as e:
-        logging.error(f"Error while trying to generate {num_samples} images with model {model_file}: {e}")
+        logging.error(
+            f"Error while trying to generate {num_samples} images with model {model_file}: {e}"
+        )
         raise e
-
