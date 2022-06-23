@@ -1,40 +1,61 @@
 import matplotlib.pyplot as plt
 import numpy as np
-from matplotlib.widgets import Button, Slider, TextBox
-
-from medigan import Generators
+from matplotlib.widgets import Button, Slider
 
 
 class ModelVisualizer:
-    """`ModelVisualizer` class: Visualises synthetic data through a user interface.
+    """`ModelVisualizer` class: Visualises synthetic data through a user interface. Depending on a model,
+    it is possible to control the input latent vector values and conditional input.
 
     Parameters
     ----------
-    model_id: str
-        Indentifier of the model to be visualised.
+    model_executor: ModelExecutor
+        The generative model's executor object
 
+
+    Attributes
+    ----------
+    model_executor: ModelExecutor
+        The generative model's executor object
+    input_latent_vector_size: int
+        Size of the latent vector used as an input for generation
+    conditional: bool
+        Flag for models with conditional input
+    condition: Union[int, float]
+        Value of the conditinal input to the model
+    max_input_value: float
+        Absolute value used for setting latent values input range
     """
 
-    def __init__(self, model_id):
+    def __init__(self, model_executor):
 
-        self.model_id = model_id
-        num_samples = 1
+        self.model_executor = model_executor
+        self.model_id = self.model_executor.model_id
+        self.num_samples = 1
         self.max_input_value = 3
         self.conditional = False
         self.condition = None
 
-        generators = Generators()
-        model_executor = generators.get_model_executor(self.model_id)
-
-        self.nz = model_executor.generate_method_input_latent_vector_size
-        self.gen_function = generators.get_generate_function(
-            model_id=self.model_id, num_samples=num_samples, save_images=False
+        self.input_latent_vector_size = (
+            self.model_executor.generate_method_input_latent_vector_size
         )
-        if "condition" in model_executor.generate_method_args["custom"]:
-            self.conditional = True
-            self.condition = model_executor.generate_method_args["custom"]["condition"]
+        if not self.input_latent_vector_size:
+            raise ValueError("Visualization of this model is not supported")
 
-        z = np.random.randn(num_samples, self.nz, 1, 1).astype(np.float32)
+        self.gen_function = self.model_executor.generate(
+            num_samples=1, save_images=False, is_gen_function_returned=True,
+        )
+        if "condition" in self.model_executor.generate_method_args["custom"]:
+            self.conditional = True
+            self.condition = self.model_executor.generate_method_args["custom"][
+                "condition"
+            ]
+
+    def visualize(self):
+
+        z = np.random.randn(
+            self.num_samples, self.input_latent_vector_size, 1, 1
+        ).astype(np.float32)
         if self.conditional:
             gen_images = self.gen_function(
                 condition=self.condition, input_latent_vector=z
@@ -48,7 +69,7 @@ class ModelVisualizer:
 
         fig, ax = plt.subplots()
         fig.suptitle(
-            "Model " + model_id,
+            "Model " + self.model_id,
             fontsize=15,
             # fontweight="bold",
         )
@@ -94,8 +115,8 @@ class ModelVisualizer:
             initcolor="none",
             valfmt="%.2f",
         )
-        # for i in range(int(self.nz)):
-        for i in range(int(self.nz / 10)):
+        # for i in range(int(self.input_latent_vector_size)):
+        for i in range(int(self.input_latent_vector_size / 10)):
             axfreq = plt.axes(
                 (
                     sliders_x,
@@ -174,7 +195,9 @@ class ModelVisualizer:
                 slider.reset()
 
         def new_seed(event):
-            z = np.random.randn(num_samples, self.nz, 1, 1).astype(np.float32)
+            z = np.random.randn(
+                self.num_samples, self.input_latent_vector_size, 1, 1
+            ).astype(np.float32)
             for slider in sliders:
                 slider.valinit = z[0][sliders.index(slider)]
             reset(event)
@@ -183,10 +206,3 @@ class ModelVisualizer:
         seed_button.on_clicked(new_seed)
         update(0)
         plt.show()
-
-
-# ModelVisualizer("00001_DCGAN_MMG_CALC_ROI")
-# ModelVisualizer("00002_DCGAN_MMG_MASS_ROI")
-# ModelVisualizer("00005_DCGAN_MMG_MASS_ROI")
-# ModelVisualizer("00006_WGANGP_MMG_MASS_ROI")
-ModelVisualizer("00008_C-DCGAN_MMG_MASSES")

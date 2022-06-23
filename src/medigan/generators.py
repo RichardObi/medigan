@@ -18,6 +18,7 @@ from .config_manager import ConfigManager
 from .constants import CONFIG_FILE_KEY_EXECUTION, MODEL_ID
 from .model_executor import ModelExecutor
 from .model_selector import ModelSelector
+from .model_visualizer import ModelVisualizer
 from .synthetic_dataset import SyntheticDataset
 from .utils import Utils
 
@@ -653,8 +654,7 @@ class Generators:
 
         try:
             self.add_model_executor(
-                model_id=model_id,
-                install_dependencies=install_dependencies,
+                model_id=model_id, install_dependencies=install_dependencies,
             )  # only adds after checking that is not already added
             return self.find_model_executor_by_id(model_id=model_id)
         except Exception as e:
@@ -913,6 +913,11 @@ class Generators:
         return SyntheticDataset(
             samples=samples, masks=masks, labels=labels, transform=transform
         )
+
+    def visualize(self, model_id: str):
+        model_executor = self.get_model_executor(model_id)
+
+        ModelVisualizer(model_executor).visualize()
 
     def __repr__(self):
         return (
