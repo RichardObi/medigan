@@ -19,9 +19,8 @@ from .constants import CONFIG_FILE_KEY_EXECUTION, MODEL_ID
 from .contribute_model.model_contributor import ModelContributor
 from .execute_model.model_executor import ModelExecutor
 from .execute_model.synthetic_dataset import SyntheticDataset
-from .select_model.model_selector import ModelSelector
 from .model_visualizer import ModelVisualizer
-
+from .select_model.model_selector import ModelSelector
 from .utils import Utils
 
 # Import pypi libs
@@ -710,7 +709,8 @@ class Generators:
 
         try:
             self.add_model_executor(
-                model_id=model_id, install_dependencies=install_dependencies,
+                model_id=model_id,
+                install_dependencies=install_dependencies,
             )  # only adds after checking that is not already added
             return self.find_model_executor_by_id(model_id=model_id)
         except Exception as e:
@@ -808,7 +808,9 @@ class Generators:
     ############################ MODEL CONTRIBUTOR METHODS ############################
 
     def add_model_contributor(
-        self, model_id: str, init_py_path: str = None,
+        self,
+        model_id: str,
+        init_py_path: str = None,
     ) -> ModelContributor:
         """Add a `ModelContributor` instance of this model_id to the `self.model_contributors` list.
 
