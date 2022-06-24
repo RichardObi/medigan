@@ -156,7 +156,14 @@ class ModelVisualizer:
               \nSeed: Initialize new random seed for latent vector \
               \nReset: Revert user changes to initial seed values"
 
-        ax_legend = plt.axes((0.45, 0.18, 0.5, 0.5,))
+        ax_legend = plt.axes(
+            (
+                0.45,
+                0.18,
+                0.5,
+                0.5,
+            )
+        )
         ax_legend.axis("off")
 
         ax_legend.text(0.0, 0.0, text, fontsize=8, va="top", linespacing=2)
