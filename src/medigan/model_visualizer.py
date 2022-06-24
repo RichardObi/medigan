@@ -56,28 +56,41 @@ class ModelVisualizer:
         z = np.random.randn(
             self.num_samples, self.input_latent_vector_size, 1, 1
         ).astype(np.float32)
-        if self.conditional:
-            gen_images = self.gen_function(
-                condition=self.condition, input_latent_vector=z
-            )
-        else:
-            gen_images = self.gen_function(input_latent_vector=z)
-        if type(gen_images[0]) is tuple:
-            image = gen_images[0][0].squeeze()
-        else:
-            image = gen_images[0].squeeze()
 
-        fig, ax = plt.subplots()
+        mask = None
+
+        if self.conditional:
+            output = self.gen_function(condition=self.condition, input_latent_vector=z)
+        else:
+            output = self.gen_function(input_latent_vector=z)
+
+        image, mask = self._unpack_output(output)
+
+        images_to_show = 1
+        if mask is not None:
+            images_to_show += 1
+
+        fig, ax = plt.subplots(ncols=images_to_show)
+
+        if images_to_show == 1:
+            ax.axis("off")
+            ax.set_title("Generated image")
+            display = ax.imshow(image, cmap="gray", vmin=0, vmax=255)
+        if images_to_show == 2:
+            ax[0].axis("off")
+            ax[0].set_title("Generated image")
+            display = ax[0].imshow(image, cmap="gray", vmin=0, vmax=255)
+            ax[1].axis("off")
+            ax[1].set_title("Generated mask")
+            display_mask = ax[1].imshow(mask, cmap="gray", vmin=0, vmax=255)
+
         fig.suptitle(
             "Model " + self.model_id,
             fontsize=15,
             # fontweight="bold",
         )
-        ax.axis("off")
-        ax.set_title("Generated image")
-        display = ax.imshow(image, cmap="gray", vmin=0, vmax=255)
         # adjust the main plot to make room for the sliders
-        plt.subplots_adjust(left=0.45, bottom=0.2)
+        plt.subplots_adjust(left=0.45, bottom=0.3)
 
         padding = 0.03
         sliders_x = 0.1
@@ -100,7 +113,7 @@ class ModelVisualizer:
                 initcolor="none",
                 # valfmt="%.2f",
             )
-            condition_ax.set_title("Input condition: " + gen_images[0][1])
+            condition_ax.set_title("Input condition: " + output[0][1])
 
         offset_ax = plt.axes(
             (sliders_x, sliders_y - 5 * padding, sliders_width, sliders_height)
@@ -136,6 +149,16 @@ class ModelVisualizer:
             )
             sliders.append(slider)
 
+        text = "Offset: Add constant value to each latent variable \
+             \nInput vector: Modify latent vector values used to generate the image \
+              \nSeed: Initialize new random seed for latent vector \
+              \nReset: Revert user changes to initial seed values"
+
+        ax_legend = plt.axes((0.45, 0.18, 0.5, 0.5,))
+        ax_legend.axis("off")
+
+        ax_legend.text(0.0, 0.0, text, fontsize=8, va="top", linespacing=2)
+
         # The function to be called anytime a slider's value changes
         def update(val):
             for i, slider in enumerate(sliders):
@@ -144,17 +167,16 @@ class ModelVisualizer:
 
             if self.conditional:
                 self.condition = condition_slider.val
-                gen_images = self.gen_function(
+                output = self.gen_function(
                     condition=self.condition, input_latent_vector=z
                 )
-                condition_ax.set_title("Input condition: " + gen_images[0][1])
+                condition_ax.set_title("Input condition: " + output[0][1])
             else:
-                gen_images = self.gen_function(input_latent_vector=z)
+                output = self.gen_function(input_latent_vector=z)
 
-            if type(gen_images[0]) is tuple:
-                image = gen_images[0][0].squeeze()
-            else:
-                image = gen_images[0].squeeze()
+            image, mask = self._unpack_output(output)
+            if mask is not None:
+                display_mask.set_data(mask)
             display.set_data(image)
             fig.canvas.draw_idle()
 
@@ -184,9 +206,9 @@ class ModelVisualizer:
         offset_slider.on_changed(update_offset)
 
         # Create a `matplotlib.widgets.Button` to reset the sliders to initial values.
-        resetax = plt.axes([0.77, 0.155, 0.1, 0.04])
+        resetax = plt.axes([0.77, 0.220, 0.1, 0.04])
         reset_button = Button(resetax, "Reset", hovercolor="0.975")
-        seedax = plt.axes([0.62, 0.155, 0.1, 0.04])
+        seedax = plt.axes([0.62, 0.220, 0.1, 0.04])
         seed_button = Button(seedax, "Seed", hovercolor="0.975")
 
         def reset(event):
@@ -206,3 +228,14 @@ class ModelVisualizer:
         seed_button.on_clicked(new_seed)
         update(0)
         plt.show()
+
+    def _unpack_output(self, output) -> tuple:
+        mask = None
+        if type(output[0]) is tuple:
+            image = output[0][0].squeeze()
+            if len(output[0][1].size()) > 1000:
+                mask = output[0][1].squeeze()
+        else:
+            image = output[0].squeeze()
+
+        return image, mask
