@@ -43,9 +43,7 @@ class ModelVisualizer:
             raise ValueError("Visualization of this model is not supported")
 
         self.gen_function = self.model_executor.generate(
-            num_samples=1,
-            save_images=False,
-            is_gen_function_returned=True,
+            num_samples=1, save_images=False, is_gen_function_returned=True,
         )
         if "condition" in self.model_executor.generate_method_args["custom"]:
             self.conditional = True
@@ -156,14 +154,7 @@ class ModelVisualizer:
               \nSeed: Initialize new random seed for latent vector \
               \nReset: Revert user changes to initial seed values"
 
-        ax_legend = plt.axes(
-            (
-                0.45,
-                0.18,
-                0.5,
-                0.5,
-            )
-        )
+        ax_legend = plt.axes((0.45, 0.18, 0.5, 0.5,))
         ax_legend.axis("off")
 
         ax_legend.text(0.0, 0.0, text, fontsize=8, va="top", linespacing=2)
@@ -242,7 +233,7 @@ class ModelVisualizer:
         mask = None
         if type(output[0]) is tuple:
             image = output[0][0].squeeze()
-            if len(output[0][1].size()) > 1000:
+            if len(output[0][1].size()) > 1:
                 mask = output[0][1].squeeze()
         else:
             image = output[0].squeeze()
