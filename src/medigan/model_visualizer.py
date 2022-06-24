@@ -43,7 +43,9 @@ class ModelVisualizer:
             raise ValueError("Visualization of this model is not supported")
 
         self.gen_function = self.model_executor.generate(
-            num_samples=1, save_images=False, is_gen_function_returned=True,
+            num_samples=1,
+            save_images=False,
+            is_gen_function_returned=True,
         )
         if "condition" in self.model_executor.generate_method_args["custom"]:
             self.conditional = True
