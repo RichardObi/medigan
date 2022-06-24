@@ -4,13 +4,9 @@
 
 .. codeauthor:: Richard Osuala <richard.osuala@gmail.com>
 """
-# run with python -m tests.model_integration_test
+# run with python -m tests.model_integration_test_manual
 
-import glob
 import logging
-import shutil
-import sys
-import unittest
 
 MODEL_ID = "YOUR_MODEL_ID_HERE"
 # MODEL_ID = "00007_BEZIERCURVE_TUMOUR_MASK" #"00002_DCGAN_MMG_MASS_ROI" #

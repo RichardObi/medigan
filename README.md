@@ -36,6 +36,7 @@ While being extendable to any modality and generative model, medigan focuses on 
 | Breast Mass (Mal/Benign)    |   x-ray  |    c-dcgan     |  128x128 |     CBIS-DDSM     |  ![sample](docs/source/_static/samples/00008.png) | <sub> 00008_C-DCGAN_MMG_MASSES </sub>        | 
 | Polyp with Mask             |   endoscopy  |    pggan   |  256x256 |     HyperKvasir     |  ![sample](docs/source/_static/samples/00009.png)![sample](docs/source/_static/samples/00009_mask.png) | <sub> 00009_PGGAN_POLYP_PATCHES_W_MASKS </sub>        | 
 | Polyp with Mask             |   endoscopy  |    fastgan |  256x256 |     HyperKvasir     |  ![sample](docs/source/_static/samples/00010.png)![sample](docs/source/_static/samples/00010_mask.png) | <sub> 00010_FASTGAN_POLYP_PATCHES_W_MASKS </sub>      | 
+| Polyp with Mask             |   endoscopy  |    singan |  250x??? |     HyperKvasir     |  ![sample](docs/source/_static/samples/00011.png)![sample](docs/source/_static/samples/00011_mask.png) | <sub> 00011_SINGAN_POLYP_PATCHES_W_MASKS </sub>      | 
 
 [comment]: <> (| Spine Bone Cement Injection |    CT    |    biceps     |  128x128 |     VerSe    | <sub> to be announced </sub>                  |        |)
 
@@ -103,7 +104,6 @@ results = generators.find_matching_models_by_values(keywords)
 ### Get Model as Dataloader 
 We can directly receive a [torch.utils.data.DataLoader](https://pytorch.org/docs/stable/data.html#torch.utils.data.DataLoader) object for any of medigan's generative models.
 ```python
-# import medigan and initialize Generators
 from medigan import Generators
 generators = Generators()
 dataloader = generators.get_as_torch_dataloader(model_id="00004_PIX2PIX_MASKTOMASS_BREAST_MG_SYNTHESIS", num_samples=3)
@@ -127,5 +127,38 @@ plt.show()
 ```
 ![sample](docs/source/_static/samples/gan_sample_00004_dataloader.png)
 
-## Contributing
-We welcome contributions to medigan. Please send us an email or read the [contributing guidelines](CONTRIBUTING.md) on how to contribute to medigan project.
+## Contribute A Model
+
+Create an [__init__.py](templates/examples/__init__.py) file in your model's root folder. 
+
+Next, run the following code to contribute your model to medigan.
+
+- Your model will be stored on [Zenodo](https://zenodo.org/). 
+
+- Also, a Github [issue](https://github.com/RichardObi/medigan/issues) will be created to add your model's metadata to medigan's [global.json](https://github.com/RichardObi/medigan/blob/main/config/global.json).
+
+- To do so, please provide a github access token ([get one here](https://github.com/settings/tokens)) and a zenodo access token ([get one here](https://zenodo.org/account/settings/applications/tokens/new/)), as shown below.
+
+```python
+from medigan import Generators
+generators = Generators()
+
+# Contribute your model
+generators.contribute(
+    model_id = "00100_YOUR_MODEL", # assign an ID
+    init_py_path ="path/ending/with/__init__.py",
+    model_weights_name = "10000",
+    model_weights_extension = ".pt",
+    generate_method_name = "generate", # in __init__.py
+    dependencies = ["numpy", "torch"], 
+    creator_name = "YOUR_NAME",
+    creator_affiliation = "YOUR_AFFILIATION",
+    zenodo_access_token = 'ZENODO_ACCESS_TOKEN',
+    github_access_token = 'GITHUB_ACCESS_TOKEN',
+```
+Thank you for your contribution! 
+
+You will soon receive a reply in the Github [issue](https://github.com/RichardObi/medigan/issues) that you created for your model by running ```generators.contribute()```.
+
+## Contributions in General
+We welcome contributions to medigan. Please send us an email or read the [contributing guidelines](CONTRIBUTING.md) regarding contributing to the medigan project.

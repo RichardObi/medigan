@@ -24,7 +24,7 @@ from tqdm import tqdm
 
 
 class Utils:
-    """Utils class."""
+    """Utils class containing reusable static methods."""
 
     def __init__(
         self,
@@ -166,6 +166,28 @@ class Utils:
             raise e
 
     @staticmethod
+    def unzip_and_return_unzipped_path(package_path: str):
+        """if not already dir, unzip an archive with `Utils.unzip_archive`. Return path to unzipped dir/file"""
+
+        if Path(package_path).is_file() and package_path.endswith(".zip"):
+            # Get the source_path without .zip extension to unzip.
+            package_path_unzipped = package_path[0:-4]
+            # We have a zip. Let's unzip and do the same operation (with new path)
+            Utils.unzip_archive(
+                source_path=package_path, target_path_as_string=package_path_unzipped
+            )
+            return package_path_unzipped
+        elif Path(package_path).is_dir():
+            logging.info(
+                f"Your package path ({package_path}) does already point to a directory. It was not unzipped."
+            )
+            return package_path
+        else:
+            raise Exception(
+                f"Your package path ({package_path}) does not point to a zip file nor directory. Please adjust and try again."
+            )
+
+    @staticmethod
     def copy(source_path: Path, target_path: str = "./"):
         """copy a folder or file from `source_path` to `target_path`"""
 
@@ -216,6 +238,8 @@ class Utils:
 
     @staticmethod
     def is_url_valid(the_url: str) -> bool:
+        """Checks if a url is valid using urllib.parse.urlparse"""
+
         try:
             result = urlparse(the_url)
             # testing if both result.scheme and result.netloc are non-empty strings (empty strings evaluate to False).
@@ -349,6 +373,38 @@ class Utils:
                             dict_list[j][key],
                         )
         return dict_list
+
+    @staticmethod
+    def is_file_in(folder_path: str, filename: str) -> bool:
+        """Checks if a file is inside a folder"""
+
+        try:
+            if (
+                Path(folder_path).is_dir()
+                and Path(f"{folder_path}/{filename}").is_file()
+            ):
+                return True
+        except Exception as e:
+            logging.warning(f"File ({filename}) was not found in {folder_path}: {e}")
+            return False
+
+    @staticmethod
+    def store_dict_as(
+        dictionary,
+        extension: str = ".json",
+        output_path: str = "config/",
+        filename: str = "metadata.json",
+    ):
+        """store a Python dictionary in file system as variable filetype."""
+
+        if extension not in output_path:
+            Utils.mkdirs(path_as_string=output_path)
+            if extension not in filename:
+                filename = filename + extension
+            output_path = f"{output_path}/{filename}"
+        json_object = json.dumps(dictionary, indent=4)
+        with open(output_path, "w") as outfile:
+            outfile.write(json_object)
 
     def __len__(self):
         raise NotImplementedError

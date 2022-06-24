@@ -86,7 +86,7 @@ jobs:
 
     - name: Install model dependencies
       run: |
-        python src/medigan/install_model_dependencies.py
+        python src/medigan/execute_model/install_model_dependencies.py
 
   lint:
     needs: build
@@ -142,7 +142,7 @@ jobs:
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
         pip install pytest
         pip install -e .
-        python src/medigan/install_model_dependencies.py
+        python src/medigan/execute_model/install_model_dependencies.py
 
     - name: Test with pytest
       run: |
