@@ -193,15 +193,15 @@ class ModelExecutor:
         )
 
     def is_model_already_unpacked(self) -> bool:
-        """Check if a valid path to the model files exists and, if so, set the `package_path` """
+        """Check if a valid path to the model files exists and, if so, set the `package_path`"""
 
         path_option_1 = Path(
-                f"{MODEL_FOLDER}/{self.model_id}/{self.package_name}/{self.model_name}{self.model_extension}"
-            )
+            f"{MODEL_FOLDER}/{self.model_id}/{self.package_name}/{self.model_name}{self.model_extension}"
+        )
 
         path_option_2 = Path(
-                f"{MODEL_FOLDER}/{self.model_id}/{self.model_name}{self.model_extension}"
-            )
+            f"{MODEL_FOLDER}/{self.model_id}/{self.model_name}{self.model_extension}"
+        )
 
         if path_option_1.is_file():
             self.package_path = path_option_1
@@ -273,7 +273,6 @@ class ModelExecutor:
                     f"{self.model_id}: Error while importing {self.package_name} from /{self.model_id}: {e}"
                 )
                 raise e
-
 
     def generate(
         self,
