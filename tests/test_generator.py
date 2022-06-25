@@ -21,7 +21,16 @@ models = [
     ("00001_DCGAN_MMG_CALC_ROI", {}, 3),
     ("00002_DCGAN_MMG_MASS_ROI", {}, 3),
     ("00003_CYCLEGAN_MMG_DENSITY_FULL", {"translate_all_images": False}, 2),
-    ("00004_PIX2PIX_MASKTOMASS_BREAST_MG_SYNTHESIS", {"shapes": ["oval"], "ssim_threshold": 0.18, "image_size": [128, 128], "patch_size": [30, 30]}, 3),
+    (
+        "00004_PIX2PIX_MASKTOMASS_BREAST_MG_SYNTHESIS",
+        {
+            "shapes": ["oval"],
+            "ssim_threshold": 0.18,
+            "image_size": [128, 128],
+            "patch_size": [30, 30],
+        },
+        3,
+    ),
     ("00005_DCGAN_MMG_MASS_ROI", {}, 3),
     ("00006_WGANGP_MMG_MASS_ROI", {}, 3),
     ("00007_BEZIERCURVE_TUMOUR_MASK", {"shapes": ["oval"]}, 3),
