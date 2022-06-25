@@ -426,7 +426,7 @@ class Generators:
         num_samples: int = 30,
         output_path: str = None,
         is_gen_function_returned: bool = False,
-        install_dependencies: bool = True,
+        install_dependencies: bool = False,
         **kwargs,
     ):
         """Search for values (and keys) in model configs, rank results to generate samples with highest ranked model.
@@ -504,7 +504,7 @@ class Generators:
         num_samples: int = 30,
         output_path: str = None,
         is_gen_function_returned: bool = False,
-        install_dependencies: bool = True,
+        install_dependencies: bool = False,
         **kwargs,
     ):
         """Search for values (and keys) in model configs to generate samples with the found model.
@@ -592,7 +592,7 @@ class Generators:
                 model_id=model_id, execution_config=execution_config
             )
 
-    def add_model_executor(self, model_id: str, install_dependencies: bool = True):
+    def add_model_executor(self, model_id: str, install_dependencies: bool = False):
         """Add one `ModelExecutor` class instance corresponding to the specified `model_id`.
 
         Parameters
@@ -619,7 +619,7 @@ class Generators:
             )
 
     def _add_model_executor(
-        self, model_id: str, execution_config: dict, install_dependencies: bool = True
+        self, model_id: str, execution_config: dict, install_dependencies: bool = False
     ):
         """Add one `ModelExecutor` class instance corresponding to the specified `model_id` and `execution_config`.
 
@@ -687,7 +687,7 @@ class Generators:
         return None
 
     def get_model_executor(
-        self, model_id: str, install_dependencies: bool = True
+        self, model_id: str, install_dependencies: bool = False
     ) -> ModelExecutor:
         """Add and return the `ModelExecutor` instance of this model_id from the `self.model_executors` list.
 
@@ -725,7 +725,7 @@ class Generators:
         output_path: str = None,
         save_images: bool = True,
         is_gen_function_returned: bool = False,
-        install_dependencies: bool = True,
+        install_dependencies: bool = False,
         **kwargs,
     ):
         """Generate samples with the model corresponding to the `model_id` or return the model's generate function.
@@ -769,7 +769,7 @@ class Generators:
         model_id: str,
         num_samples: int = 30,
         output_path: str = None,
-        install_dependencies: bool = True,
+        install_dependencies: bool = False,
         **kwargs,
     ):
         """Return the model's generate function.
@@ -1061,7 +1061,7 @@ class Generators:
         samples = self.generate(
             model_id=model_id,
             save_images=False,
-            install_dependencies=True,
+            install_dependencies=False,
             num_samples=num_samples,
         )
         if (
@@ -1193,7 +1193,7 @@ class Generators:
         dataset=None,
         model_id: str = None,
         num_samples: int = 1000,
-        install_dependencies: bool = True,
+        install_dependencies: bool = False,
         transform=None,
         batch_size=1,
         shuffle=False,
@@ -1306,7 +1306,7 @@ class Generators:
         self,
         model_id: str,
         num_samples: int = 1000,
-        install_dependencies: bool = True,
+        install_dependencies: bool = False,
         transform=None,
         **kwargs,
     ) -> Dataset:
