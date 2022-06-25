@@ -22,6 +22,13 @@ models = [
     ("00002_DCGAN_MMG_MASS_ROI", {}, 3),
     ("00003_CYCLEGAN_MMG_DENSITY_FULL", {"translate_all_images": False}, 2),
     ("00004_PIX2PIX_MASKTOMASS_BREAST_MG_SYNTHESIS", {}, 3),
+    ("00005_DCGAN_MMG_MASS_ROI", {}, 3),
+    ("00006_WGANGP_MMG_MASS_ROI", {}, 3),
+    ("00007_BEZIERCURVE_TUMOUR_MASK", {"shapes": ["oval"]}, 3),
+    ("00008_C-DCGAN_MMG_MASSES", {"condition": 0}, 3),
+    ("00009_PGGAN_POLYP_PATCHES_W_MASKS", {"save_option": "image_only"}, 3),
+    ("00010_FASTGAN_POLYP_PATCHES_W_MASKS", {"save_option": "image_only"}, 3),
+    ("00011_SINGAN_POLYP_PATCHES_W_MASKS", {"checkpoint_ids": ["999"]}, 3),
 ]
 
 # class TestMediganMethods(unittest.TestCase):
