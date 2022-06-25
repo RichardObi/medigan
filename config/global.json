@@ -928,7 +928,7 @@
   "00008_C-DCGAN_MMG_MASSES": {
     "execution": {
       "package_name": "C-DCGAN_MMG_MASSES_CBISDDSM_MAL_BEN",
-      "package_link": "https://zenodo.org/record/6736643/files/C-DCGAN_MMG_MASSES_CBISDDSM_MAL_BEN.zip?download=1",
+      "package_link": "https://zenodo.org/record/6671380/files/C-DCGAN_MMG_MASSES_CBISDDSM_MAL_BEN.zip?download=1",
       "model_name": "1750",
       "extension": ".pt",
       "image_size": [
@@ -1323,8 +1323,8 @@
     "execution": {
       "package_name": "singan-seg-polyp",
       "package_link": "https://zenodo.org/record/6667945/files/singan-seg-polyp.zip?download=1",
-      "model_name": "",
-      "extension": "",
+      "model_name": "singan_seg_polyp/SinGAN-Generated/TrainedModels_1_clean/1/Gs",
+      "extension": ".pth",
       "image_size": [
         250,
         250,

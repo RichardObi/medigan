@@ -133,7 +133,8 @@ class ModelExecutor:
         ]
 
         self._check_package_resources()
-        self._get_and_store_package()
+        if not self.is_model_already_unpacked():
+            self._get_and_store_package()
         self._import_package_as_lib()
 
     def _check_package_resources(self):
@@ -191,6 +192,27 @@ class ModelExecutor:
             f"{self.model_id}: Model package should now be available in: {self.package_path}."
         )
 
+    def is_model_already_unpacked(self) -> bool:
+        """Check if a valid path to the model files exists and, if so, set the `package_path` """
+
+        path_option_1 = Path(
+                f"{MODEL_FOLDER}/{self.model_id}/{self.package_name}/{self.model_name}{self.model_extension}"
+            )
+
+        path_option_2 = Path(
+                f"{MODEL_FOLDER}/{self.model_id}/{self.model_name}{self.model_extension}"
+            )
+
+        if path_option_1.is_file():
+            self.package_path = path_option_1
+            return True
+
+        if path_option_2.is_file():
+            self.package_path = path_option_2
+            return True
+
+        return False
+
     def _import_package_as_lib(self):
         """Unzip and import the generative model's python package using importlib."""
 
@@ -198,15 +220,9 @@ class ModelExecutor:
             f"{self.model_id}: Now importing model package ({self.package_name}) as lib using "
             f"importlib from {self.package_path}."
         )
-        is_model_already_unpacked = (
-            Path(
-                f"{MODEL_FOLDER}/{self.model_id}/{self.package_name}/{self.model_name}{self.model_extension}"
-            ).is_file()
-            or Path(
-                f"{MODEL_FOLDER}/{self.model_id}/{self.model_name}{self.model_extension}"
-            ).is_file()
-        )
+        is_model_already_unpacked = self.is_model_already_unpacked()
         # if is_model_already_unpacked == True, then the package was already unzipped previously.
+
         if (
             self.package_path.is_file()
             and PACKAGE_EXTENSION == ".zip"
@@ -257,6 +273,7 @@ class ModelExecutor:
                     f"{self.model_id}: Error while importing {self.package_name} from /{self.model_id}: {e}"
                 )
                 raise e
+
 
     def generate(
         self,
