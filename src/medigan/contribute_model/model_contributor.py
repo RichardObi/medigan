@@ -315,7 +315,10 @@ class ModelContributor:
             f"{TEMPLATE_FOLDER}/{CONFIG_TEMPLATE_FILE_NAME_AND_EXTENSION}"
         )
         Utils.mkdirs(TEMPLATE_FOLDER)
-        Utils.is_file_located_or_downloaded(download_link=CONFIG_TEMPLATE_FILE_URL, path_as_string=path_to_metadata_template)
+        Utils.is_file_located_or_downloaded(
+            download_link=CONFIG_TEMPLATE_FILE_URL,
+            path_as_string=path_to_metadata_template,
+        )
         metadata_template = Utils.read_in_json(path_as_string=path_to_metadata_template)
         if self.model_id is not None:
             # Replacing the placeholder id of template with model_id
