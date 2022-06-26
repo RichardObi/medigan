@@ -928,7 +928,7 @@
   "00008_C-DCGAN_MMG_MASSES": {
     "execution": {
       "package_name": "C-DCGAN_MMG_MASSES_CBISDDSM_MAL_BEN",
-      "package_link": "https://zenodo.org/record/6736643/files/C-DCGAN_MMG_MASSES_CBISDDSM_MAL_BEN.zip?download=1",
+      "package_link": "https://zenodo.org/record/6671380/files/C-DCGAN_MMG_MASSES_CBISDDSM_MAL_BEN.zip?download=1",
       "model_name": "1750",
       "extension": ".pt",
       "image_size": [
@@ -950,8 +950,7 @@
             "save_images"
           ],
           "custom": {
-            "condition": 1,
-            "z": null
+            "condition": 1
           }
         },
         "input_latent_vector_size": 100
@@ -1322,7 +1321,7 @@
   "00011_SINGAN_POLYP_PATCHES_W_MASKS": {
     "execution": {
       "package_name": "singan-seg-polyp",
-      "package_link": "https://zenodo.org/record/6739534/files/singan-seg-polyp.zip?download=1",
+      "package_link": "https://zenodo.org/record/6667945/files/singan-seg-polyp.zip?download=1",
       "model_name": "singan_seg_polyp/SinGAN-Generated/TrainedModels_1_clean/1/Gs",
       "extension": ".pth",
       "image_size": [
@@ -1447,6 +1446,135 @@
       "doi": ["https://doi.org/10.1371/journal.pone.0267976"],
       "inputs": "model_files: the folder where the checkpoints are stored | gen_start_scale: The start for scaling in SinGAN. | checkpoint_ids: A list of checkpoint ids that will be used for polyp generation. | multiple_checkpoints: A boolean indicating if all checkpoint_ids or one random one is used for generating images, but only in case 'checkpoint_ids'==None",
       "comment": "A SinGAN generative adversarial network that generates a 2dimensional output image tuple containing a 3-channel RGB image and a 3-channel segmentation mask. SinGAN is from the paper 'SinGAN: Learning a Generative Model from a Single Natural Image' in ICCV 2019. The width of the outputted images varies depending on the corresponding original image. The RGB images are images of polyps and the segmentation mask indicates the location and shape of the polyp on the image. Pixel dimensions are 213x256. The model was trained on gastrointestinal endoscopy imaging data from the HyperKvasir dataset by Borgli et al (2020, 'https://doi.org/10.1038/s41597-020-00622-y'). The uploaded ZIP file contains the checkpoints in folder 'SinGAN-Generated' (model weights), __init__.py (image generation method and utils), a requirements.txt, a LICENSE file, the MEDIGAN metadata, the source code from the repository ('https://github.com/vlbthambawita/singan-seg-polyp'), and a test.sh file to run the model, and a folder 'examples/' with a few generated images."
+    }
+  },
+  "00012_C-DCGAN_MMG_MASSES": {
+    "execution": {
+      "package_name": "C-DCGAN_MMG_MASSES_BCDR_MAL_BEN",
+      "package_link": "https://zenodo.org/record/6755694/files/C-DCGAN_MMG_MASSES_BCDR_MAL_BEN.zip?download=1",
+      "model_name": "1250",
+      "extension": ".pt",
+      "image_size": [
+        128,
+        128
+      ],
+      "dependencies": [
+        "numpy",
+        "torch",
+        "opencv-contrib-python-headless"
+      ],
+      "generate_method": {
+        "name": "generate",
+        "args": {
+          "base": [
+            "model_file",
+            "num_samples",
+            "output_path",
+            "save_images"
+          ],
+          "custom": {
+            "condition": null,
+            "z": null
+          }
+        },
+        "input_latent_vector_size": 100
+      }
+    },
+    "selection": {
+      "performance": {
+        "SSIM": null,
+        "MSE": null,
+        "NSME": null,
+        "PSNR": null,
+        "IS": null,
+        "FID": null,
+        "turing_test": null,
+        "downstream_task": {
+          "CLF": {}
+        }
+      },
+      "use_cases": [
+        "classification",
+        "malignant versus benign classification"
+      ],
+      "organ": [
+        "breast",
+        "breasts",
+        "chest"
+      ],
+      "modality": [
+        "MMG",
+        "Mammography",
+        "Mammogram",
+        "full-field digital",
+        "full-field digital MMG",
+        "full-field MMG",
+        "full-field Mammography",
+        "digital Mammography",
+        "digital MMG",
+        "x-ray mammography"
+      ],
+      "vendors": [],
+      "centres": [],
+      "function": [
+        "noise to image",
+        "image generation",
+        "unconditional generation",
+        "data augmentation"
+      ],
+      "condition": [],
+      "dataset": [
+        "CBIS-DDSM"
+      ],
+      "augmentations": [
+        "horizontal flip",
+        "vertical flip"
+      ],
+      "generates": [
+        "mass",
+        "masses",
+        "mass roi",
+        "mass ROI",
+        "mass images",
+        "mass region of interest",
+        "nodule",
+        "nodule",
+        "nodule roi",
+        "nodule ROI",
+        "nodule images",
+        "nodule region of interest"
+      ],
+      "height": 128,
+      "width": 128,
+      "depth": null,
+      "type": "Conditional DCGAN",
+      "license": "MIT",
+      "dataset_type": "public",
+      "privacy_preservation": null,
+      "tags": [
+        "Breast",
+        "Mammogram",
+        "Mammography",
+        "Digital Mammography",
+        "Full field Mammography",
+        "Full-field Mammography",
+        "128x128",
+        "128 x 128",
+        "MammoGANs",
+        "Masses",
+        "Nodules"
+      ],
+      "year": "2022"
+    },
+    "description": {
+      "title": "Conditional DCGAN Model for Patch Generation of Mammogram Masses Conditioned on Biopsy Proven Malignancy Status (Trained on BCDR)",
+      "provided_date": "June 2022",
+      "trained_date": "June 2022",
+      "provided_after_epoch": 1250,
+      "version": "1.0.0",
+      "publication": null,
+      "doi": [],
+      "comment": "A class-conditional deep convolutional generative adversarial network that generates mass patches of mammograms that are conditioned to either be benign (1) or malignant (0). Pixel dimensions are 128x128. The Cond-DCGAN was trained on MMG patches from the BCDR dataset (Lopez et al, 2012). The uploaded ZIP file contains the files 1250.pt (model weight), __init__.py (image generation method and utils), a requirements.txt, a LICENSE file, the MEDIGAN metadata, the used GAN training config file, a test.sh file to run the model, and two folders with a few generated images."
     }
   }
 }
