@@ -169,7 +169,9 @@ class Generators:
 
         if is_local_model is None:
             # if no model contributor can be found the model is assumed to be not a local model.
-            is_local_model = not is_local_model == self.get_model_contributor_by_id(model_id=model_id)
+            is_local_model = not is_local_model == self.get_model_contributor_by_id(
+                model_id=model_id
+            )
 
         return self.config_manager.add_model_to_config(
             model_id=model_id,
@@ -1069,10 +1071,10 @@ class Generators:
         if is_local_model:
             model_contributor = self.get_model_contributor_by_id(model_id=model_id)
 
-            assert (
-                    model_contributor is not None
-            ), f"{model_id}: No model_contributor is initialized for this model_id. Try to set 'is_local_model=False'" \
-               f"or add a model_contributor first by running 'add_model_contributor(model_id, init_py_path)' ."
+            assert model_contributor is not None, (
+                f"{model_id}: No model_contributor is initialized for this model_id. Try to set 'is_local_model=False'"
+                f"or add a model_contributor first by running 'add_model_contributor(model_id, init_py_path)' ."
+            )
 
             self.add_model_to_config(
                 model_id=model_id,
@@ -1090,17 +1092,21 @@ class Generators:
         assert (
             samples is not None
             and isinstance(samples, list)
-            and ((len(samples) == num_samples) or (len(samples) == num_samples + 1))  # + 1 as sample generation can be restricted to be balanced among classes
-        ), f"{model_id}: Model test was not successful. The generated samples {'is None, but ' if samples is None else ''}" \
-            f"should be a list (actual type: {type(samples)}) and of length {num_samples} (actual length: " \
-            f"{'None' if samples is None else len(samples)})." #{f'Generated samples: {samples}' if samples is not None else ''}"
+            and (
+                (len(samples) == num_samples) or (len(samples) == num_samples + 1)
+            )  # + 1 as sample generation can be restricted to be balanced among classes
+        ), (
+            f"{model_id}: Model test was not successful. The generated samples {'is None, but ' if samples is None else ''}"
+            f"should be a list (actual type: {type(samples)}) and of length {num_samples} (actual length: "
+            f"{'None' if samples is None else len(samples)})."
+        )  # {f'Generated samples: {samples}' if samples is not None else ''}"
 
         logging.info(
-                f"{model_id}: The test of "
-                f"{'this new local user model' if is_local_model else 'this existing medigan model'} "
-                f"was successful, as model created the expected number ({num_samples}) of synthetic "
-                f"samples."
-            )
+            f"{model_id}: The test of "
+            f"{'this new local user model' if is_local_model else 'this existing medigan model'} "
+            f"was successful, as model created the expected number ({num_samples}) of synthetic "
+            f"samples."
+        )
 
     def contribute(
         self,
