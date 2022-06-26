@@ -1090,10 +1090,10 @@ class Generators:
         assert (
             samples is not None
             and isinstance(samples, list)
-            and (len(samples) == num_samples)
+            and ((len(samples) == num_samples) or (len(samples) == num_samples + 1))  # + 1 as sample generation can be restricted to be balanced among classes
         ), f"{model_id}: Model test was not successful. The generated samples {'is None, but ' if samples is None else ''}" \
             f"should be a list (actual type: {type(samples)}) and of length {num_samples} (actual length: " \
-            f"{'None' if samples is None else len(samples)}). {f'Generated samples: {samples}' if samples is not None else ''}"
+            f"{'None' if samples is None else len(samples)})." #{f'Generated samples: {samples}' if samples is not None else ''}"
 
         logging.info(
                 f"{model_id}: The test of "
