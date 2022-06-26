@@ -35,21 +35,26 @@ def save_generated_masks(images_to_save, output_dir):
 
 def generate(model_file, image_size, num_samples, save_images, output_path, shapes):
     """Generating and returning the bezier curve based masks"""
-    if image_size < 256:
-        logging.warning(
-            f"You provided an image size of {image_size}. "
-            f"This will affect the output masks as the bezier curve model is optimized to "
-            f"create masks for an image size of 256. Please revise."
-        )
+
     try:
         logging.debug("Generating masks...")
-
         # Using default image size
         if isinstance(image_size, int):
             patch_size = (image_size, image_size)
-
+            if image_size < 256:
+                logging.warning(
+                    f"You provided an image size of {image_size}. "
+                    f"This might affect the output masks as the bezier curve model is optimized to "
+                    f"create masks for an image size of (256, 256). Please revise image size if need be."
+                )
         elif isinstance(image_size, list) and len(image_size) == 2:
             patch_size = (image_size[0], image_size[1])
+            if image_size[0] < 256 or image_size[1] < 256:
+                logging.warning(
+                    f"You provided an image size of {image_size}. "
+                    f"This might affect the output masks as the bezier curve model is optimized to "
+                    f"create masks for an image size of (256, 256). Please revise image size if need be."
+                )
         else:
             raise Exception(
                 f"image_size needs to be either of type int or of type list with len==2. You provided {image_size}."
