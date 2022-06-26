@@ -115,47 +115,66 @@ class Generators:
     def is_model_metadata_valid(
         self, model_id: str, metadata: dict, is_local_model: bool = True
     ) -> bool:
-        """TODO"""
+        """Checking if a model's corresponding metadata is valid.
+
+        Specific fields in the model's metadata are mandatory. It is asserted if these key value pairs are present.
+
+        Parameters
+        ----------
+        model_id: str
+            The generative model's unique id
+        metadata: dict
+            The model's corresponding metadata
+        is_local_model: bool
+            flag indicating whether the tested model is a new local user model i.e not yet part of medigan's official models
+
+        Returns
+        -------
+        bool
+            Flag indicating whether the specific model's metadata format and fields are valid
+        """
+
         return self.config_manager.is_model_metadata_valid(
             model_id=model_id, metadata=metadata, is_local_model=is_local_model
-        )
-
-    def _add_model_to_config(
-        self,
-        model_id: str,
-        metadata: dict,
-        metadata_file_path: str = "",
-        overwrite_existing_metadata: bool = False,
-        store_new_config: bool = True,
-    ) -> bool:
-        """TODO"""
-
-        return self.config_manager.add_model_to_config(
-            model_id=model_id,
-            metadata=metadata,
-            overwrite_existing_metadata=overwrite_existing_metadata,
-            store_new_config=store_new_config,
-            metadata_file_path=metadata_file_path,
         )
 
     def add_model_to_config(
         self,
         model_id: str,
+        metadata: dict,
+        is_local_model: bool = None,
         overwrite_existing_metadata: bool = False,
         store_new_config: bool = True,
     ) -> bool:
-        """TODO"""
+        """Adding or updating a model entry in the global metadata.
 
-        model_contributor = self.get_model_contributor_by_id(model_id=model_id)
+        Parameters
+        ----------
+        model_id: str
+            The generative model's unique id
+        metadata: dict
+            The model's corresponding metadata
+        is_local_model: bool
+            flag indicating whether the tested model is a new local user model i.e not yet part of medigan's official models
+        overwrite_existing_metadata: bool
+            in case of `is_local_model`, flag indicating whether existing metadata for this model in medigan's `config/global.json` should be overwritten.
+        store_new_config: bool
+            flag indicating whether the current model metadata should be stored on disk i.e. in config/
 
-        assert (
-            model_contributor is not None
-        ), f"{model_id}: No model_contributor is initialized for this model_id in Generators. Either run '_add_model_to_config()' instead or add a model_contributor first by running 'add_model_contributor()'."
+        Returns
+        -------
+        bool
+            Flag indicating whether model metadata update was successfully concluded
+        """
+
+        if is_local_model is None:
+            # if no model contributor can be found the model is assumed to be not a local model.
+            is_local_model = not is_local_model == self.get_model_contributor_by_id(model_id=model_id)
 
         return self.config_manager.add_model_to_config(
-            model_id=model_contributor.model_id,
-            metadata=model_contributor.metadata,
-            metadata_file_path=model_contributor.metadata_file_path,
+            model_id=model_id,
+            metadata=metadata,
+            is_local_model=is_local_model,
             overwrite_existing_metadata=overwrite_existing_metadata,
             store_new_config=store_new_config,
         )
@@ -1045,16 +1064,20 @@ class Generators:
             flag indicating whether the current model metadata should be stored on disk i.e. in config/
         num_samples: int
             the number of samples that will be generated
-
-        Returns
-        -------
-        bool
-            Returns flag indicating whether model test was successful
         """
 
         if is_local_model:
+            model_contributor = self.get_model_contributor_by_id(model_id=model_id)
+
+            assert (
+                    model_contributor is not None
+            ), f"{model_id}: No model_contributor is initialized for this model_id. Try to set 'is_local_model=False'" \
+               f"or add a model_contributor first by running 'add_model_contributor(model_id, init_py_path)' ."
+
             self.add_model_to_config(
                 model_id=model_id,
+                metadata=model_contributor.metadata,
+                is_local_model=is_local_model,
                 overwrite_existing_metadata=overwrite_existing_metadata,
                 store_new_config=store_new_config,
             )
@@ -1064,19 +1087,20 @@ class Generators:
             install_dependencies=False,
             num_samples=num_samples,
         )
-        if (
+        assert (
             samples is not None
             and isinstance(samples, list)
             and (len(samples) == num_samples)
-        ):
-            logging.info(
+        ), f"{model_id}: Model test was not successful. The generated samples {'is None, but ' if samples is None else ''}" \
+            f"should be a list (actual type: {type(samples)}) and of length {num_samples} (actual length: " \
+            f"{'None' if samples is None else len(samples)}). {f'Generated samples: {samples}' if samples is not None else ''}"
+
+        logging.info(
                 f"{model_id}: The test of "
                 f"{'this new local user model' if is_local_model else 'this existing medigan model'} "
                 f"was successful, as model created the expected number ({num_samples}) of synthetic "
                 f"samples."
             )
-            return True
-        return False
 
     def contribute(
         self,
@@ -1146,6 +1170,7 @@ class Generators:
         else:
             # Creating the metadata json
             metadata = self.add_metadata_from_input(
+                model_id=model_id,
                 model_weights_name=model_weights_name,
                 model_weights_extension=model_weights_extension,
                 generate_method_name=generate_method_name,
@@ -1158,8 +1183,7 @@ class Generators:
         )
 
         try:
-            if not self.test_model(model_id=model_id, is_local_model=True):
-                raise Exception
+            self.test_model(model_id=model_id, is_local_model=True)
         except Exception as e:
             logging.error(
                 f"{model_id}: Error while testing this local model. "

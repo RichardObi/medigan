@@ -106,6 +106,11 @@ INIT_PY_FILE = "__init__.py"
 """ Name and extensions of template of config file. """
 CONFIG_TEMPLATE_FILE_NAME_AND_EXTENSION = "template.json"
 
+""" Download link to template.json file. """
+CONFIG_TEMPLATE_FILE_URL = (
+    "https://raw.githubusercontent.com/RichardObi/medigan/main/templates/template.json"
+)
+
 """ Name and extensions of template of config file. """
 TEMPLATE_FOLDER = "templates"
 
