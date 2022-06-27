@@ -1456,7 +1456,7 @@
     "00012_C-DCGAN_MMG_MASSES": {
         "execution": {
             "package_name": "C-DCGAN_MMG_MASSES_BCDR_MAL_BEN",
-            "package_link": "https://zenodo.org/record/6757618/files/C-DCGAN_MMG_MASSES_BCDR_MAL_BEN.zip?download=1",
+            "package_link": "https://zenodo.org/record/6757635/files/C-DCGAN_MMG_MASSES_BCDR_MAL_BEN.zip?download=1",
             "model_name": "1250",
             "extension": ".pt",
             "image_size": [
