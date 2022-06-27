@@ -239,7 +239,9 @@ class TestMediganMethods:
 
         if should_sample_be_generated:
             assert (
-                len(file_list) == num_samples or len(file_list) == num_samples * 2 or len(file_list) == num_samples + 1
+                len(file_list) == num_samples
+                or len(file_list) == num_samples * 2
+                or len(file_list) == num_samples + 1
             )  # Temporary fix for different outputs per model.
             # Some models are balanced per label by default: If num_samples is odd, then len(file_list)==num_samples +1
         else:
