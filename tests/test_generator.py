@@ -38,6 +38,7 @@ models = [
     ("00009_PGGAN_POLYP_PATCHES_W_MASKS", {"save_option": "image_only"}, 3),
     ("00010_FASTGAN_POLYP_PATCHES_W_MASKS", {"save_option": "image_only"}, 3),
     ("00011_SINGAN_POLYP_PATCHES_W_MASKS", {"checkpoint_ids": [999]}, 3),
+    ("00012_C-DCGAN_MMG_MASSES", {"condition": 0}, 3),
 ]
 
 # class TestMediganMethods(unittest.TestCase):
@@ -238,8 +239,11 @@ class TestMediganMethods:
 
         if should_sample_be_generated:
             assert (
-                len(file_list) == num_samples or len(file_list) == num_samples * 2
-            )  # Temporary fix for different outputs per model
+                len(file_list) == num_samples
+                or len(file_list) == num_samples * 2
+                or len(file_list) == num_samples + 1
+            )  # Temporary fix for different outputs per model.
+            # Some models are balanced per label by default: If num_samples is odd, then len(file_list)==num_samples +1
         else:
             assert len(file_list) == 0
 

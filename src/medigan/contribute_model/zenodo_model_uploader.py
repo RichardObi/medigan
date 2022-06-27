@@ -171,7 +171,7 @@ class ZenodoModelUploader(BaseModelUploader):
         )
         if not r.status_code == 201:
             raise Exception(
-                f"{self.model_id}: Error ({r.status_code}!=201) during Zenodo upload (step 1: creating empty upload template): {r.json()}"
+                f"{self.model_id}: Error ({r.status_code}!=201) during Zenodo ('{ZENODO_API_URL}') upload (step 1: creating empty upload template): {r.json()}"
             )
         return r
 
@@ -192,7 +192,6 @@ class ZenodoModelUploader(BaseModelUploader):
         dict
             Returns the response retrieved via the Zenodo API
         """
-
         with open(file_path, "rb") as fp:
             r = requests.put(
                 "%s/%s" % (bucket_url, filename),
@@ -202,7 +201,7 @@ class ZenodoModelUploader(BaseModelUploader):
 
         if not r.status_code == 200:
             raise Exception(
-                f"{self.model_id}: Error ({r.status_code}!=200) during Zenodo upload (step 2: uploading model as zip file): {r.json()}"
+                f"{self.model_id}: Error ({r.status_code}!=200) during Zenodo ('{bucket_url}') upload (step 2: uploading model as zip file): {r.json()}"
             )
         return r
 
@@ -221,16 +220,16 @@ class ZenodoModelUploader(BaseModelUploader):
         dict
             Returns the response retrieved via the Zenodo API
         """
-
+        deposition_url = f"{ZENODO_API_URL}/{deposition_id}"
         r = requests.put(
-            f"{ZENODO_API_URL}/{deposition_id}",
+            deposition_url,
             params=self.params,
             data=json.dumps(data),
             headers=ZENODO_HEADERS,
         )
         if not r.status_code == 200:
             raise Exception(
-                f"{self.model_id}: Error ({r.status_code}!=200) during Zenodo upload (step 3: updating metadata): {r.json()}"
+                f"{self.model_id}: Error ({r.status_code}!=200) during Zenodo ('{deposition_url}') upload (step 3: updating metadata): {r.json()}"
             )
         return r
 
@@ -256,18 +255,19 @@ class ZenodoModelUploader(BaseModelUploader):
                 f"You are about to publish model {self.model_id} with Zenodo-ID {deposition_id} permanently on {ZENODO_API_URL.replace('/api/deposit/depositions','')}. To proceed, type 'Yes': "
             )
         )
+        publish_url = f"{ZENODO_API_URL}/{deposition_id}/actions/publish"
         if is_user_sure == "Yes":
             r = requests.post(
-                f"{ZENODO_API_URL}/{deposition_id}/actions/publish",
+                publish_url,
                 params=self.params,
             )
         else:
             raise Exception(
-                f"{self.model_id}: Error during Zenodo upload (step 4: publishing uploaded model) due to user opt-out: You typed '{is_user_sure}' instead of 'Yes'. Model was not published. Try again. Your Zenodo deposition ID (if retrieved): '{deposition_id}'."
+                f"{self.model_id}: Error during Zenodo ('{publish_url}') upload (step 4: publishing uploaded model) due to user opt-out: You typed '{is_user_sure}' instead of 'Yes'. Model was not published. Try again. Your Zenodo deposition ID (if retrieved): '{deposition_id}'."
             )
         if not r.status_code == 202:
             raise Exception(
-                f"{self.model_id}: Error ({r.status_code}!=202) during Zenodo upload (step 4: publishing uploaded model): {r.json()}"
+                f"{self.model_id}: Error ({r.status_code}!=202) during Zenodo ('{publish_url}') upload (step 4: publishing uploaded model): {r.json()}"
             )
         logging.info(
             f"{self.model_id}: Successfully pushed model to Zenodo with DOI '{r.json()['doi']}': '{r.json()['links']['record_html']}"

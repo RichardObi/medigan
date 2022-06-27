@@ -22,6 +22,7 @@ from ..constants import (
     CONFIG_FILE_KEY_PACKAGE_LINK,
     CONFIG_FILE_KEY_PACKAGE_NAME,
     CONFIG_TEMPLATE_FILE_NAME_AND_EXTENSION,
+    CONFIG_TEMPLATE_FILE_URL,
     INIT_PY_FILE,
     TEMPLATE_FOLDER,
 )
@@ -312,6 +313,11 @@ class ModelContributor:
 
         path_to_metadata_template = Path(
             f"{TEMPLATE_FOLDER}/{CONFIG_TEMPLATE_FILE_NAME_AND_EXTENSION}"
+        )
+        Utils.mkdirs(TEMPLATE_FOLDER)
+        Utils.is_file_located_or_downloaded(
+            download_link=CONFIG_TEMPLATE_FILE_URL,
+            path_as_string=path_to_metadata_template,
         )
         metadata_template = Utils.read_in_json(path_as_string=path_to_metadata_template)
         if self.model_id is not None:

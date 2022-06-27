@@ -141,7 +141,7 @@ class ConfigManager:
         self,
         model_id: str,
         metadata: dict,
-        metadata_file_path: str = "",
+        is_local_model: bool = True,
         overwrite_existing_metadata: bool = False,
         store_new_config: bool = True,
     ) -> bool:
@@ -153,8 +153,8 @@ class ConfigManager:
             The generative model's unique id
         metadata: dict
             The model's corresponding metadata
-        metadata_file_path: dict
-            The path to the file in which the corresponding model's metadata is stored
+        is_local_model: bool
+            flag indicating whether the tested model is a new local user model i.e not yet part of medigan's official models
         overwrite_existing_metadata: bool
             in case of `is_local_model`, flag indicating whether existing metadata for this model in medigan's `config/global.json` should be overwritten.
         store_new_config: bool
@@ -167,7 +167,7 @@ class ConfigManager:
         """
 
         if not self.is_model_metadata_valid(
-            model_id=model_id, metadata=metadata, metadata_file_path=metadata_file_path
+            model_id=model_id, metadata=metadata, is_local_model=is_local_model
         ):
             logging.debug(
                 f"{model_id}: Metadata was not added to config. Reason: metadata was not valid. Please revise and try again."

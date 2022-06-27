@@ -93,6 +93,7 @@ class GithubModelUploader(BaseModelUploader):
         # First use pyGithub to create a Github instance based on san access token
         g = Github(self.access_token)
         repo = g.get_repo(GITHUB_REPO)
+        logging.debug(f"Repo: {repo}")
 
         # Create metadata for github issue
         title = f"{GITHUB_TITLE}: {self.model_id}"
