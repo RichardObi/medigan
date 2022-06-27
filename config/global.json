@@ -928,7 +928,7 @@
     "00008_C-DCGAN_MMG_MASSES": {
         "execution": {
             "package_name": "C-DCGAN_MMG_MASSES_CBISDDSM_MAL_BEN",
-            "package_link": "https://zenodo.org/record/6759291/files/C-DCGAN_MMG_MASSES_CBISDDSM_MAL_BEN.zip?download=1",
+            "package_link": "https://zenodo.org/record/6759489/files/C-DCGAN_MMG_MASSES_CBISDDSM_MAL_BEN.zip?download=1",
             "model_name": "1750",
             "extension": ".pt",
             "image_size": [
