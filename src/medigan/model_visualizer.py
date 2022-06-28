@@ -40,7 +40,9 @@ class ModelVisualizer:
             self.model_executor.generate_method_input_latent_vector_size
         )
         if not self.input_latent_vector_size:
-            raise ValueError(f"{self.model_id}: Visualization of this model is not supported. Reason: This model does not use a random vector 'z' as input, which is needed for visualization. This is determined via the absence of the 'input_latent_vector_size' variable in this model's metadata in config/global.json.")
+            raise ValueError(
+                f"{self.model_id}: Visualization of this model is not supported. Reason: This model does not use a random vector 'z' as input, which is needed for visualization. This is determined via the absence of the 'input_latent_vector_size' variable in this model's metadata in config/global.json."
+            )
 
         self.gen_function = self.model_executor.generate(
             num_samples=1,
