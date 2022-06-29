@@ -11,6 +11,8 @@ class ModelVisualizer:
     ----------
     model_executor: ModelExecutor
         The generative model's executor object
+    config: dict
+        The config dict containing the model metadata
 
 
     Attributes
@@ -27,10 +29,11 @@ class ModelVisualizer:
         Absolute value used for setting latent values input range
     """
 
-    def __init__(self, model_executor):
+    def __init__(self, model_executor, config: None):
 
         self.model_executor = model_executor
         self.model_id = self.model_executor.model_id
+        self.config = config
         self.num_samples = 1
         self.max_input_value = 3
         self.conditional = False
@@ -45,9 +48,7 @@ class ModelVisualizer:
             )
 
         self.gen_function = self.model_executor.generate(
-            num_samples=1,
-            save_images=False,
-            is_gen_function_returned=True,
+            num_samples=1, save_images=False, is_gen_function_returned=True,
         )
         if "condition" in self.model_executor.generate_method_args["custom"]:
             self.conditional = True
@@ -93,6 +94,16 @@ class ModelVisualizer:
             fontsize=15,
             # fontweight="bold",
         )
+        if self.config:
+            plt.text(
+                x=0.5,
+                y=0.87,
+                s=self.config["description"]["title"],
+                fontsize=8,
+                ha="center",
+                transform=fig.transFigure,
+                wrap=True,
+            )
         # adjust the main plot to make room for the sliders
         plt.subplots_adjust(left=0.45, bottom=0.3)
 
@@ -158,14 +169,7 @@ class ModelVisualizer:
               \nSeed: Initialize new random seed for latent vector \
               \nReset: Revert user changes to initial seed values"
 
-        ax_legend = plt.axes(
-            (
-                0.45,
-                0.18,
-                0.5,
-                0.5,
-            )
-        )
+        ax_legend = plt.axes((0.45, 0.18, 0.5, 0.5,))
         ax_legend.axis("off")
 
         ax_legend.text(0.0, 0.0, text, fontsize=8, va="top", linespacing=2)

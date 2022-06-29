@@ -1359,9 +1359,10 @@ class Generators:
         model_id: str
             The generative model's unique id to visualize.
         """
+        config = self.get_config_by_id(model_id)
         model_executor = self.get_model_executor(model_id)
 
-        ModelVisualizer(model_executor).visualize()
+        ModelVisualizer(model_executor, config).visualize()
 
     def __repr__(self):
         return (
