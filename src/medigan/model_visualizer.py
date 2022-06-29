@@ -48,9 +48,7 @@ class ModelVisualizer:
             )
 
         self.gen_function = self.model_executor.generate(
-            num_samples=1,
-            save_images=False,
-            is_gen_function_returned=True,
+            num_samples=1, save_images=False, is_gen_function_returned=True,
         )
         if "condition" in self.model_executor.generate_method_args["custom"]:
             self.conditional = True
@@ -59,7 +57,14 @@ class ModelVisualizer:
             ]
 
     def visualize(self):
+        """
+        Visualize the model's output. This method is called by the user. 
+        It opens up a user interface with available controls.
 
+        Returns
+        -------
+        None
+        """
         z = np.random.randn(
             self.num_samples, self.input_latent_vector_size, 1, 1
         ).astype(np.float32)
@@ -99,7 +104,7 @@ class ModelVisualizer:
         if self.config:
             plt.text(
                 x=0.5,
-                y=0.87,
+                y=0.88,
                 s=self.config["description"]["title"],
                 fontsize=8,
                 ha="center",
@@ -107,14 +112,15 @@ class ModelVisualizer:
                 wrap=True,
             )
         # adjust the main plot to make room for the sliders
-        plt.subplots_adjust(left=0.45, bottom=0.3)
+        plt.subplots_adjust(left=0.45, bottom=0.3, top=0.8)
 
         padding = 0.03
         sliders_x = 0.1
-        sliders_y = 0.80
+        sliders_y = 0.75
         sliders_width = 0.25
         sliders_height = 0.02
         sliders = []
+        row_index = 0
 
         if self.conditional:
             condition_ax = plt.axes(
@@ -131,9 +137,10 @@ class ModelVisualizer:
                 # valfmt="%.2f",
             )
             condition_ax.set_title("Input condition: " + output[0][1])
+            row_index += 5
 
         offset_ax = plt.axes(
-            (sliders_x, sliders_y - 5 * padding, sliders_width, sliders_height)
+            (sliders_x, sliders_y - row_index * padding, sliders_width, sliders_height)
         )
         offset_ax.set_title("Input latent vector")
         offset_slider = Slider(
@@ -145,12 +152,13 @@ class ModelVisualizer:
             initcolor="none",
             valfmt="%.2f",
         )
+        row_index += 2
         # for i in range(int(self.input_latent_vector_size)):
         for i in range(int(self.input_latent_vector_size / 10)):
             axfreq = plt.axes(
                 (
                     sliders_x,
-                    sliders_y - (i + 7) * padding,
+                    sliders_y - (i + row_index) * padding,
                     sliders_width,
                     sliders_height,
                 )
@@ -171,14 +179,7 @@ class ModelVisualizer:
               \nSeed: Initialize new random seed for latent vector \
               \nReset: Revert user changes to initial seed values"
 
-        ax_legend = plt.axes(
-            (
-                0.45,
-                0.18,
-                0.5,
-                0.5,
-            )
-        )
+        ax_legend = plt.axes((0.45, 0.18, 0.5, 0.5,))
         ax_legend.axis("off")
 
         ax_legend.text(0.0, 0.0, text, fontsize=8, va="top", linespacing=2)
@@ -254,10 +255,23 @@ class ModelVisualizer:
         plt.show()
 
     def _unpack_output(self, output) -> tuple:
+        """
+        Unpack the output of the generator function
+
+        Parameters
+        ----------
+        output: Union[tuple, np.ndarray]
+            Output of the generator function to unpack into an image and optional mask
+
+        Returns
+        ----------
+        tuple[image, mask]
+            Tuple of the image and mask. Mask is None if no mask was available
+        """
         mask = None
         if type(output[0]) is tuple:
             image = output[0][0].squeeze()
-            if len(output[0][1].size()) > 1:
+            if type(output[0][1]) is not str:
                 mask = output[0][1].squeeze()
         else:
             image = output[0].squeeze()
