@@ -56,10 +56,15 @@ class ModelVisualizer:
                 "condition"
             ]
 
-    def visualize(self):
+    def visualize(self, auto_close=False):
         """
         Visualize the model's output. This method is called by the user. 
         It opens up a user interface with available controls.
+
+        Parameters
+        ----------
+        auto_close: bool
+            Flag for closing the user interface automatically after time. Used while testing.
 
         Returns
         -------
@@ -252,7 +257,12 @@ class ModelVisualizer:
         reset_button.on_clicked(reset)
         seed_button.on_clicked(new_seed)
         update(0)
-        plt.show()
+        if auto_close:
+            plt.show(block=False)
+            plt.pause(1)
+            plt.close()
+        else:
+            plt.show()
 
     def _unpack_output(self, output) -> tuple:
         """
