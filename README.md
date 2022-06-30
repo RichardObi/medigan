@@ -127,6 +127,11 @@ plt.show()
 ```
 ![sample](docs/source/_static/samples/gan_sample_00004_dataloader.png)
 
+## Interface for custom generation
+It is possible to generate sample by manually setting the conditional inputs or latent vector values. The sample is updated in realtime, so it's possible to observe how the images changes when the parameters are modified. The visualization is avaialble only for models with accessible input latent vector. Depending on a model, a conditional input may be also available or synthetic segmentation mask.
+
+![sample](docs/source/_static/interface.png)
+
 ## Contribute A Model
 
 Create an [__init__.py](templates/examples/__init__.py) file in your model's root folder. 
@@ -159,12 +164,6 @@ generators.contribute(
 Thank you for your contribution! 
 
 You will soon receive a reply in the Github [issue](https://github.com/RichardObi/medigan/issues) that you created for your model by running ```generators.contribute()```.
-
-## Visualization interface for custom generation
-It is possible to generate sample by manually setting the conditional inputs or latent vector values. The sample is updated in realtime, so it's possible to observe how the images changes when the parameters are modified. The visualization is avaialble only for models with accessible input latent vector. Depending on a model, a conditional input may be also available or synthetic segmentation mask.
-
-![sample](docs/source/_static/interface.png)
-
 
 ## Contributions in General
 We welcome contributions to medigan. Please send us an email or read the [contributing guidelines](CONTRIBUTING.md) regarding contributing to the medigan project.
