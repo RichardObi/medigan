@@ -48,9 +48,7 @@ class ModelVisualizer:
             )
 
         self.gen_function = self.model_executor.generate(
-            num_samples=1,
-            save_images=False,
-            is_gen_function_returned=True,
+            num_samples=1, save_images=False, is_gen_function_returned=True,
         )
         if "condition" in self.model_executor.generate_method_args["custom"]:
             self.conditional = True
@@ -161,7 +159,7 @@ class ModelVisualizer:
         )
         row_index += 2
         # for i in range(int(self.input_latent_vector_size)):
-        for i in range(int(self.input_latent_vector_size / 10)):
+        for i in range(int(self.input_latent_vector_size / 25)):
             axfreq = plt.axes(
                 (
                     sliders_x,
@@ -182,18 +180,11 @@ class ModelVisualizer:
             sliders.append(slider)
 
         text = "Offset: Add constant value to each latent variable \
-             \nInput vector: Modify latent vector values used to generate the image \
+             \nInput vector: Modify latent values used to generate image \
               \nSeed: Initialize new random seed for latent vector \
               \nReset: Revert user changes to initial seed values"
 
-        ax_legend = plt.axes(
-            (
-                0.45,
-                0.18,
-                0.5,
-                0.5,
-            )
-        )
+        ax_legend = plt.axes((0.45, 0.19, 0.5, 0.5,))
         ax_legend.axis("off")
 
         ax_legend.text(0.0, 0.0, text, fontsize=8, va="top", linespacing=2)
