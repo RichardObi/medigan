@@ -129,6 +129,12 @@ plt.show()
 
 ## Interface for custom generation
 It is possible to generate sample by manually setting the conditional inputs or latent vector values. The sample is updated in realtime, so it's possible to observe how the images changes when the parameters are modified. The visualization is avaialble only for models with accessible input latent vector. Depending on a model, a conditional input may be also available or synthetic segmentation mask.
+```
+from medigan import Generators
+
+generators = Generators()
+generators.visualize("00010_FASTGAN_POLYP_PATCHES_W_MASKS")
+```
 
 ![sample](docs/source/_static/interface.png)
 
