@@ -88,6 +88,9 @@ CONFIG_FILE_KEY_GENERATE_ARGS_OUTPUT_PATH = "output_path"
 """ Below the execution dict, the key under which the save images boolean flag argument value of any model's generate() function is present. """
 CONFIG_FILE_KEY_GENERATE_ARGS_SAVE_IMAGES = "save_images"
 
+""" Below the execution dict, the key under which the random input_latent_vector_size argument value of model's generate() function is present. """
+CONFIG_FILE_KEY_GENERATE_ARGS_INPUT_LATENT_VECTOR_SIZE = "input_latent_vector_size"
+
 """ Below the selectoin dict, the key under which the tags (list of strings) is present. """
 CONFIG_FILE_KEY_TAGS = "tags"
 
