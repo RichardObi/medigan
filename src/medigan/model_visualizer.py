@@ -56,13 +56,15 @@ class ModelVisualizer:
                 "condition"
             ]
 
-    def visualize(self, auto_close=False):
+    def visualize(self, slider_grouper: int = 10, auto_close=False):
         """
         Visualize the model's output. This method is called by the user.
         It opens up a user interface with available controls.
 
         Parameters
         ----------
+        slider_grouper: int
+            Number of input parameters to group together within one slider.
         auto_close: bool
             Flag for closing the user interface automatically after time. Used while testing.
 
@@ -159,7 +161,7 @@ class ModelVisualizer:
         )
         row_index += 2
         # for i in range(int(self.input_latent_vector_size)):
-        for i in range(int(self.input_latent_vector_size / 25)):
+        for i in range(int(self.input_latent_vector_size / slider_grouper)):
             axfreq = plt.axes(
                 (
                     sliders_x,

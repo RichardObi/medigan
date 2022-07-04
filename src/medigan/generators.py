@@ -709,8 +709,7 @@ class Generators:
 
         try:
             self.add_model_executor(
-                model_id=model_id,
-                install_dependencies=install_dependencies,
+                model_id=model_id, install_dependencies=install_dependencies,
             )  # only adds after checking that is not already added
             return self.find_model_executor_by_id(model_id=model_id)
         except Exception as e:
@@ -808,9 +807,7 @@ class Generators:
     ############################ MODEL CONTRIBUTOR METHODS ############################
 
     def add_model_contributor(
-        self,
-        model_id: str,
-        init_py_path: str = None,
+        self, model_id: str, init_py_path: str = None,
     ) -> ModelContributor:
         """Add a `ModelContributor` instance of this model_id to the `self.model_contributors` list.
 
@@ -1352,7 +1349,9 @@ class Generators:
             samples=samples, masks=masks, labels=labels, transform=transform
         )
 
-    def visualize(self, model_id: str, auto_close: bool = False) -> None:
+    def visualize(
+        self, model_id: str, slider_grouper: int = 10, auto_close: bool = False
+    ) -> None:
         """Initialize and run `ModelVisualizer` of this model_id if it is available.
         It allows to visualize a sample from the model's output.
         UI window will pop up allowing the user to control the generation parameters (conditional and unconditional ones).
@@ -1361,13 +1360,15 @@ class Generators:
         ----------
         model_id: str
             The generative model's unique id to visualize.
+        slider_grouper: int
+            Number of input parameters to group together within one slider.
         auto_close: bool
             Flag for closing the user interface automatically after time. Used while testing.
         """
         config = self.get_config_by_id(model_id)
         model_executor = self.get_model_executor(model_id)
 
-        ModelVisualizer(model_executor, config).visualize(auto_close)
+        ModelVisualizer(model_executor, config).visualize(slider_grouper, auto_close)
 
     def __repr__(self):
         return (
