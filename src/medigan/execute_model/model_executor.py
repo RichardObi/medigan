@@ -12,6 +12,9 @@ from __future__ import absolute_import
 import importlib
 import logging
 import time
+from tqdm import tqdm
+import matplotlib.pyplot as plt
+import os
 
 # Import pypi libs
 from pathlib import Path
@@ -279,6 +282,7 @@ class ModelExecutor:
         output_path: str = None,
         save_images: bool = True,
         is_gen_function_returned: bool = False,
+        batch_size: int = 32,
         **kwargs,
     ):
         """Generate samples using the generative model or return the model's generate function.
@@ -316,15 +320,19 @@ class ModelExecutor:
         assert Utils.mkdirs(
             path_as_string=output_path
         ), f"{self.model_id}: The output folder was not found nor created in {output_path}."
+        if batch_size > num_samples:
+            batch_size = num_samples
+        else:
+            save_images_one_batch = False
         try:
             generate_method = getattr(
                 self.deserialized_model_as_lib, f"{self.generate_method_name}"
             )
             prepared_kwargs = self._prepare_generate_method_args(
                 model_file=self.serialised_model_file_path,
-                num_samples=num_samples,
+                num_samples=batch_size,
                 output_path=output_path,
-                save_images=save_images,
+                save_images=save_images_one_batch,
                 **kwargs,
             )
             logging.debug(f"The generate function's parameters are: {prepared_kwargs}")
@@ -339,6 +347,22 @@ class ModelExecutor:
 
                 return gen
             else:
+                if save_images and not save_images_one_batch:
+                    index = 1
+                    for batch_num in tqdm(range(0, num_samples // batch_size + 1)):
+                        if batch_num == num_samples // batch_size:
+                            batch_size = num_samples % batch_size
+                            prepared_kwargs.update({"num_samples": batch_size})
+
+                        batch = generate_method(**prepared_kwargs)
+
+                        for i, sample in enumerate(batch):
+                            # img = sample[0].numpy()
+                            img = sample[0]
+                            plt.imsave(
+                                os.path.join(output_path, "%d_img.png" % (index)), img,
+                            )
+                            index += 1
                 return generate_method(**prepared_kwargs)
         except Exception as e:
             logging.error(
