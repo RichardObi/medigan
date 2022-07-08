@@ -1193,7 +1193,7 @@
     "00010_FASTGAN_POLYP_PATCHES_W_MASKS": {
         "execution": {
             "package_name": "FastGAN-4ch",
-            "package_link": "https://zenodo.org/record/6794213/files/FastGAN-4ch.zip?download=1",
+            "package_link": "https://zenodo.org/record/6811020/files/FastGAN-4ch.zip?download=1",
             "model_name": "FastGAN_all_50000",
             "extension": ".pth",
             "image_size": [
