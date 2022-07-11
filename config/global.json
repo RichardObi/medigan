@@ -1948,7 +1948,7 @@
         "00016_CYCLEGAN_MMG_DENSITY_CSAW_CC": {
         "execution": {
             "package_name": "CycleGAN_high_density_CSAW_CC",
-            "package_link": "https://zenodo.org/record/6818108/files/CycleGAN_high_density_CSAW_CC.zip?download=1",
+            "package_link": "https://zenodo.org/record/6818378/files/CycleGAN_high_density_CSAW_CC.zip?download=1",
             "model_name": "latest_net_G_A",
             "extension": ".pth",
             "image_size": [
