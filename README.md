@@ -37,11 +37,15 @@ While being extendable to any modality and generative model, medigan focuses on 
 | Polyp with Mask             |   endoscopy  |    pggan   |  256x256 |     HyperKvasir     |  ![sample](docs/source/_static/samples/00009.png)![sample](docs/source/_static/samples/00009_mask.png) | <sub> 00009_PGGAN_POLYP_PATCHES_W_MASKS </sub>        | [Zenodo (6653743)](https://doi.org/10.5281/zenodo.6653743) | [Thambawita et al (2022)](https://doi.org/10.1371/journal.pone.0267976) | 
 | Polyp with Mask             |   endoscopy  |    fastgan |  256x256 |     HyperKvasir     |  ![sample](docs/source/_static/samples/00010.png)![sample](docs/source/_static/samples/00010_mask.png) | <sub> 00010_FASTGAN_POLYP_PATCHES_W_MASKS </sub>      | [Zenodo (6660711)](https://doi.org/10.5281/zenodo.6660711) | [Thambawita et al (2022)](https://doi.org/10.1371/journal.pone.0267976) | 
 | Polyp with Mask             |   endoscopy  |    singan |  250x??? |     HyperKvasir     |  ![sample](docs/source/_static/samples/00011.png)![sample](docs/source/_static/samples/00011_mask.png) | <sub> 00011_SINGAN_POLYP_PATCHES_W_MASKS </sub>      | [Zenodo (6667944)](https://doi.org/10.5281/zenodo.6667944) | [Thambawita et al (2022)](https://doi.org/10.1371/journal.pone.0267976) | 
-| Breast Mass (Mal/Benign)    |   x-ray  |    c-dcgan     |  128x128 |     BCDR     |  ![sample](docs/source/_static/samples/00012.png) | <sub> 00012_C-DCGAN_MMG_MASSES </sub>        | [Zenodo (6755693)](https://doi.org/10.5281/zenodo.6755693) | | 
+| Breast Mass (Mal/Benign)    |   x-ray  |    c-dcgan     |  128x128 |     BCDR     |  ![sample](docs/source/_static/samples/00012.png) | <sub> 00012_C-DCGAN_MMG_MASSES </sub>        | [Zenodo (6755693)](https://doi.org/10.5281/zenodo.6818095) | | 
+| Breast Density Transfer MLO |   x-ray  |    cyclegan   | 1332x800 |     OPTIMAM     |  ![sample](docs/source/_static/samples/00013.png) | <sub> 00013_CYCLEGAN_MMG_DENSITY_OPTIMAM_MLO </sub>  | [Zenodo (6818095)](https://doi.org/10.5281/zenodo.6818095) | | 
+| Breast Density Transfer CC  |   x-ray  |    cyclegan   | 1332x800 |     OPTIMAM     |  ![sample](docs/source/_static/samples/00014.png) | <sub> 00014_CYCLEGAN_MMG_DENSITY_OPTIMAM_CC </sub>  | [Zenodo (6818103)](https://doi.org/10.5281/zenodo.6818103) | | 
+| Breast Density Transfer MLO |   x-ray  |    cyclegan   | 1332x800 |     CSAW     |  ![sample](docs/source/_static/samples/00015.png) | <sub> 00015_CYCLEGAN_MMG_DENSITY_CSAW_MLO </sub>  | [Zenodo (6818105)](https://doi.org/10.5281/zenodo.6818105) | | 
+| Breast Density Transfer CC  |   x-ray  |    cyclegan   | 1332x800 |     CSAW     |  ![sample](docs/source/_static/samples/00016.png) | <sub> 00016_CYCLEGAN_MMG_DENSITY_CSAW_CC </sub>  | [Zenodo (6818107)](https://doi.org/10.5281/zenodo.6818107) | | 
 
 [comment]: <> (| Spine Bone Cement Injection |    CT    |    biceps     |  128x128 |     VerSe    | <sub> to be announced </sub>                  |        |)
 
-The metadata and links to the models in medigan are stored in: https://github.com/RichardObi/medigan-models
+Model information can be found in the [global.json](https://github.com/RichardObi/medigan/blob/main/config/global.json) model metadata file.
 
 ## Installation
 To install the current release, simply run:
