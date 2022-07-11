@@ -1581,5 +1581,489 @@
             "doi": [],
             "comment": "A class-conditional deep convolutional generative adversarial network that generates mass patches of mammograms that are conditioned to either be benign (1) or malignant (0). Pixel dimensions are 128x128. The Cond-DCGAN was trained on MMG patches from the BCDR dataset (Lopez et al, 2012). The uploaded ZIP file contains the files 1250.pt (model weight), __init__.py (image generation method and utils), a requirements.txt, a LICENSE file, the MEDIGAN metadata, the used GAN training config file, a test.sh file to run the model, and two folders with a few generated images."
         }
+    },
+    "00013_CYCLEGAN_MMG_DENSITY_OPTIMAM_MLO": {
+        "execution": {
+            "package_name": "CycleGAN_high_density_OPTIMAM_MLO",
+            "package_link": "https://zenodo.org/record/6818096/files/CycleGAN_high_density_OPTIMAM_MLO.zip?download=1",
+            "model_name": "latest_net_G_A",
+            "extension": ".pth",
+            "image_size": [
+                1332,
+                800
+            ],
+            "dependencies": [
+                "numpy",
+                "Path",
+                "Union",
+                "pyyaml",
+                "opencv-contrib-python-headless",
+                "torch",
+                "torchvision",
+                "dominate",
+                "visdom",
+                "Pillow"
+            ],
+            "generate_method": {
+                "name": "generate",
+                "args": {
+                    "base": [
+                        "model_file",
+                        "output_path",
+                        "save_images",
+                        "num_samples"
+                    ],
+                    "custom": {
+                        "translate_all_images": false,
+                        "input_path": "models/00013_CYCLEGAN_MMG_DENSITY_OPTIMAM_MLO/images",
+                        "image_size": [
+                            1332,
+                            800
+                        ],
+                        "gpu_id": 0,
+                        "low_to_high": true
+                    }
+                }
+            }
+        },
+        "selection": {
+            "performance": {},
+            "use_cases": [
+                "classification",
+                "detection",
+                "domain-translation"
+            ],
+            "organ": [
+                "breast",
+                "breasts",
+                "chest"
+            ],
+            "modality": [
+                "MMG",
+                "Mammography",
+                "Mammogram",
+                "full-field digital",
+                "full-field digital MMG",
+                "full-field MMG",
+                "full-field Mammography",
+                "digital Mammography",
+                "digital MMG",
+                "x-ray mammography"
+            ],
+            "vendors": [],
+            "centres": [],
+            "function": [
+                "image to image",
+                "image generation",
+                "data augmentation"
+            ],
+            "condition": [],
+            "dataset": [
+                "OPTIMAM"
+            ],
+            "augmentations": [
+                "resize"
+            ],
+            "generates": [
+                "full images",
+                "mammograms",
+                "full-field digital mammograms"
+            ],
+            "height": 1332,
+            "width": 800,
+            "depth": null,
+            "type": "CycleGAN",
+            "license": "BSD",
+            "dataset_type": "public",
+            "privacy_preservation": null,
+            "tags": [
+                "Mammogram",
+                "Mammography",
+                "Digital Mammography",
+                "Full field Mammography",
+                "Full-field Mammography",
+                "CycleGANs",
+                "CycleGAN",
+                "Density",
+                "Breast Density",
+                "High Density",
+                "Low Density",
+                "ACR"
+            ],
+            "year": "2021"
+        },
+        "description": {
+            "title": "CycleGAN Model for Low-to-High Brest Density Mammograms Translation of MLO VIEW (Trained on OPTIMAM)",
+            "provided_date": "2022",
+            "trained_date": "2022",
+            "provided_after_epoch": null,
+            "version": "0.0.1",
+            "publication": null,
+            "doi": [],
+            "comment": "A cycle generative adversarial network (CycleGAN) that generates mammograms with high breast density from an original mammogram e.g. with low-breast density. The CycleGAN was trained using normal (without pathologies) digital mammograms from OPTIMAM dataset (Halling-Brown et al, 2014). The uploaded ZIP file contains the files CycleGAN_high_density.pth (model weights), __init__.py (image generation method and utils) and the GAN model architecture (in pytorch) below the /src folder."
+        }
+    },
+        "00014_CYCLEGAN_MMG_DENSITY_OPTIMAM_CC": {
+        "execution": {
+            "package_name": "CycleGAN_high_density_OPTIMAM_CC",
+            "package_link": "https://zenodo.org/record/6818104/files/CycleGAN_high_density_OPTIMAM_CC.zip?download=1",
+            "model_name": "latest_net_G_A",
+            "extension": ".pth",
+            "image_size": [
+                1332,
+                800
+            ],
+            "dependencies": [
+                "numpy",
+                "Path",
+                "Union",
+                "pyyaml",
+                "opencv-contrib-python-headless",
+                "torch",
+                "torchvision",
+                "dominate",
+                "visdom",
+                "Pillow"
+            ],
+            "generate_method": {
+                "name": "generate",
+                "args": {
+                    "base": [
+                        "model_file",
+                        "output_path",
+                        "save_images",
+                        "num_samples"
+                    ],
+                    "custom": {
+                        "translate_all_images": false,
+                        "input_path": "models/00014_CYCLEGAN_MMG_DENSITY_OPTIMAM_CC/images",
+                        "image_size": [
+                            1332,
+                            800
+                        ],
+                        "gpu_id": 0,
+                        "low_to_high": true
+                    }
+                }
+            }
+        },
+        "selection": {
+            "performance": {},
+            "use_cases": [
+                "classification",
+                "detection",
+                "domain-translation"
+            ],
+            "organ": [
+                "breast",
+                "breasts",
+                "chest"
+            ],
+            "modality": [
+                "MMG",
+                "Mammography",
+                "Mammogram",
+                "full-field digital",
+                "full-field digital MMG",
+                "full-field MMG",
+                "full-field Mammography",
+                "digital Mammography",
+                "digital MMG",
+                "x-ray mammography"
+            ],
+            "vendors": [],
+            "centres": [],
+            "function": [
+                "image to image",
+                "image generation",
+                "data augmentation"
+            ],
+            "condition": [],
+            "dataset": [
+                "OPTIMAM"
+            ],
+            "augmentations": [
+                "resize"
+            ],
+            "generates": [
+                "full images",
+                "mammograms",
+                "full-field digital mammograms"
+            ],
+            "height": 1332,
+            "width": 800,
+            "depth": null,
+            "type": "CycleGAN",
+            "license": "BSD",
+            "dataset_type": "public",
+            "privacy_preservation": null,
+            "tags": [
+                "Mammogram",
+                "Mammography",
+                "Digital Mammography",
+                "Full field Mammography",
+                "Full-field Mammography",
+                "CycleGANs",
+                "CycleGAN",
+                "Density",
+                "Breast Density",
+                "High Density",
+                "Low Density",
+                "ACR"
+            ],
+            "year": "2021"
+        },
+        "description": {
+            "title": "CycleGAN Model for Low-to-High Brest Density Mammograms Translation of CC VIEW (Trained on OPTIMAM)",
+            "provided_date": "2022",
+            "trained_date": "2022",
+            "provided_after_epoch": null,
+            "version": "0.0.1",
+            "publication": null,
+            "doi": [],
+            "comment": "A cycle generative adversarial network (CycleGAN) that generates mammograms with high breast density from an original mammogram e.g. with low-breast density. The CycleGAN was trained using normal (without pathologies) digital mammograms from OPTIMAM dataset (Halling-Brown et al, 2014). The uploaded ZIP file contains the files CycleGAN_high_density.pth (model weights), __init__.py (image generation method and utils) and the GAN model architecture (in pytorch) below the /src folder."
+        }
+    },
+        "00015_CYCLEGAN_MMG_DENSITY_CSAW_MLO": {
+        "execution": {
+            "package_name": "CycleGAN_high_density_CSAW_MLO",
+            "package_link": "https://zenodo.org/record/6818106/files/CycleGAN_high_density_CSAW_MLO.zip?download=1",
+            "model_name": "latest_net_G_A",
+            "extension": ".pth",
+            "image_size": [
+                1332,
+                800
+            ],
+            "dependencies": [
+                "numpy",
+                "Path",
+                "Union",
+                "pyyaml",
+                "opencv-contrib-python-headless",
+                "torch",
+                "torchvision",
+                "dominate",
+                "visdom",
+                "Pillow"
+            ],
+            "generate_method": {
+                "name": "generate",
+                "args": {
+                    "base": [
+                        "model_file",
+                        "output_path",
+                        "save_images",
+                        "num_samples"
+                    ],
+                    "custom": {
+                        "translate_all_images": false,
+                        "input_path": "models/00015_CYCLEGAN_MMG_DENSITY_CSAW_MLO/images",
+                        "image_size": [
+                            1332,
+                            800
+                        ],
+                        "gpu_id": 0,
+                        "low_to_high": true
+                    }
+                }
+            }
+        },
+        "selection": {
+            "performance": {},
+            "use_cases": [
+                "classification",
+                "detection",
+                "domain-translation"
+            ],
+            "organ": [
+                "breast",
+                "breasts",
+                "chest"
+            ],
+            "modality": [
+                "MMG",
+                "Mammography",
+                "Mammogram",
+                "full-field digital",
+                "full-field digital MMG",
+                "full-field MMG",
+                "full-field Mammography",
+                "digital Mammography",
+                "digital MMG",
+                "x-ray mammography"
+            ],
+            "vendors": [],
+            "centres": [],
+            "function": [
+                "image to image",
+                "image generation",
+                "data augmentation"
+            ],
+            "condition": [],
+            "dataset": [
+                "CSAW"
+            ],
+            "augmentations": [
+                "resize"
+            ],
+            "generates": [
+                "full images",
+                "mammograms",
+                "full-field digital mammograms"
+            ],
+            "height": 1332,
+            "width": 800,
+            "depth": null,
+            "type": "CycleGAN",
+            "license": "BSD",
+            "dataset_type": "public",
+            "privacy_preservation": null,
+            "tags": [
+                "Mammogram",
+                "Mammography",
+                "Digital Mammography",
+                "Full field Mammography",
+                "Full-field Mammography",
+                "CycleGANs",
+                "CycleGAN",
+                "Density",
+                "Breast Density",
+                "High Density",
+                "Low Density",
+                "ACR"
+            ],
+            "year": "2021"
+        },
+        "description": {
+            "title": "CycleGAN Model for Low-to-High Brest Density Mammograms Translation of MLO VIEW (Trained on CSAW)",
+            "provided_date": "2022",
+            "trained_date": "2022",
+            "provided_after_epoch": null,
+            "version": "0.0.1",
+            "publication": null,
+            "doi": [],
+            "comment": "A cycle generative adversarial network (CycleGAN) that generates mammograms with high breast density from an original mammogram e.g. with low-breast density. The CycleGAN was trained using normal (without pathologies) digital mammograms from CSAW dataset (Dembrower et al., 2020, https://doi.org/10.1007/s10278-019-00278-0). The uploaded ZIP file contains the files CycleGAN_high_density.pth (model weights), __init__.py (image generation method and utils) and the GAN model architecture (in pytorch) below the /src folder."
+        }
+    },
+        "00016_CYCLEGAN_MMG_DENSITY_CSAW_CC": {
+        "execution": {
+            "package_name": "CycleGAN_high_density_CSAW_CC",
+            "package_link": "https://zenodo.org/record/6818378/files/CycleGAN_high_density_CSAW_CC.zip?download=1",
+            "model_name": "latest_net_G_A",
+            "extension": ".pth",
+            "image_size": [
+                1332,
+                800
+            ],
+            "dependencies": [
+                "numpy",
+                "Path",
+                "Union",
+                "pyyaml",
+                "opencv-contrib-python-headless",
+                "torch",
+                "torchvision",
+                "dominate",
+                "visdom",
+                "Pillow"
+            ],
+            "generate_method": {
+                "name": "generate",
+                "args": {
+                    "base": [
+                        "model_file",
+                        "output_path",
+                        "save_images",
+                        "num_samples"
+                    ],
+                    "custom": {
+                        "translate_all_images": false,
+                        "input_path": "models/00016_CYCLEGAN_MMG_DENSITY_CSAW_CC/images",
+                        "image_size": [
+                            1332,
+                            800
+                        ],
+                        "gpu_id": 0,
+                        "low_to_high": true
+                    }
+                }
+            }
+        },
+        "selection": {
+            "performance": {},
+            "use_cases": [
+                "classification",
+                "detection",
+                "domain-translation"
+            ],
+            "organ": [
+                "breast",
+                "breasts",
+                "chest"
+            ],
+            "modality": [
+                "MMG",
+                "Mammography",
+                "Mammogram",
+                "full-field digital",
+                "full-field digital MMG",
+                "full-field MMG",
+                "full-field Mammography",
+                "digital Mammography",
+                "digital MMG",
+                "x-ray mammography"
+            ],
+            "vendors": [],
+            "centres": [],
+            "function": [
+                "image to image",
+                "image generation",
+                "data augmentation"
+            ],
+            "condition": [],
+            "dataset": [
+                "CSAW"
+            ],
+            "augmentations": [
+                "resize"
+            ],
+            "generates": [
+                "full images",
+                "mammograms",
+                "full-field digital mammograms"
+            ],
+            "height": 1332,
+            "width": 800,
+            "depth": null,
+            "type": "CycleGAN",
+            "license": "BSD",
+            "dataset_type": "public",
+            "privacy_preservation": null,
+            "tags": [
+                "Mammogram",
+                "Mammography",
+                "Digital Mammography",
+                "Full field Mammography",
+                "Full-field Mammography",
+                "CycleGANs",
+                "CycleGAN",
+                "Density",
+                "Breast Density",
+                "High Density",
+                "Low Density",
+                "ACR"
+            ],
+            "year": "2021"
+        },
+        "description": {
+            "title": "CycleGAN Model for Low-to-High Brest Density Mammograms Translation of CC VIEW (Trained on CSAW)",
+            "provided_date": "2022",
+            "trained_date": "2022",
+            "provided_after_epoch": null,
+            "version": "0.0.1",
+            "publication": null,
+            "doi": [],
+            "comment": "A cycle generative adversarial network (CycleGAN) that generates mammograms with high breast density from an original mammogram e.g. with low-breast density. The CycleGAN was trained using normal (without pathologies) digital mammograms from CSAW dataset (Dembrower et al., 2020, https://doi.org/10.1007/s10278-019-00278-0). The uploaded ZIP file contains the files CycleGAN_high_density.pth (model weights), __init__.py (image generation method and utils) and the GAN model architecture (in pytorch) below the /src folder."
+        }
     }
 }
