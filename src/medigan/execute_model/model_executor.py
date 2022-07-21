@@ -11,16 +11,16 @@ from __future__ import absolute_import
 
 import importlib
 import logging
-import time
-from tqdm import tqdm
-import matplotlib.pyplot as plt
-import numpy as np
 import os
+import time
 
 # Import pypi libs
 from pathlib import Path
 
+import matplotlib.pyplot as plt
+import numpy as np
 import pkg_resources
+from tqdm import tqdm
 
 # Import library internal modules
 from ..constants import (
