@@ -14,6 +14,7 @@ import logging
 import time
 from tqdm import tqdm
 import matplotlib.pyplot as plt
+import numpy as np
 import os
 
 # Import pypi libs
@@ -357,10 +358,16 @@ class ModelExecutor:
                         batch = generate_method(**prepared_kwargs)
 
                         for i, sample in enumerate(batch):
-                            # img = sample[0].numpy()
-                            img = sample[0]
+                            if type(sample) == np.ndarray:
+                                img = sample
+                            else:
+                                img = sample[0]
+                            img = img.squeeze()
+
                             plt.imsave(
-                                os.path.join(output_path, "%d_img.png" % (index)), img,
+                                os.path.join(output_path, "%d_img.png" % (index)),
+                                img,
+                                cmap=plt.cm.gray,
                             )
                             index += 1
                 return generate_method(**prepared_kwargs)
