@@ -321,8 +321,10 @@ class ModelExecutor:
         assert Utils.mkdirs(
             path_as_string=output_path
         ), f"{self.model_id}: The output folder was not found nor created in {output_path}."
+
         if batch_size > num_samples:
             batch_size = num_samples
+            save_images_one_batch = True
         else:
             save_images_one_batch = False
         try:
