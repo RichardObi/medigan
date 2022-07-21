@@ -19,6 +19,7 @@ from .constants import CONFIG_FILE_KEY_EXECUTION, MODEL_ID
 from .contribute_model.model_contributor import ModelContributor
 from .execute_model.model_executor import ModelExecutor
 from .execute_model.synthetic_dataset import SyntheticDataset
+from .model_visualizer import ModelVisualizer
 from .select_model.model_selector import ModelSelector
 from .utils import Utils
 
@@ -1380,6 +1381,27 @@ class Generators:
         return SyntheticDataset(
             samples=samples, masks=masks, labels=labels, transform=transform
         )
+
+    def visualize(
+        self, model_id: str, slider_grouper: int = 10, auto_close: bool = False
+    ) -> None:
+        """Initialize and run `ModelVisualizer` of this model_id if it is available.
+        It allows to visualize a sample from the model's output.
+        UI window will pop up allowing the user to control the generation parameters (conditional and unconditional ones).
+
+        Parameters
+        ----------
+        model_id: str
+            The generative model's unique id to visualize.
+        slider_grouper: int
+            Number of input parameters to group together within one slider.
+        auto_close: bool
+            Flag for closing the user interface automatically after time. Used while testing.
+        """
+        config = self.get_config_by_id(model_id)
+        model_executor = self.get_model_executor(model_id)
+
+        ModelVisualizer(model_executor, config).visualize(slider_grouper, auto_close)
 
     def __repr__(self):
         return (

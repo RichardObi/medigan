@@ -29,6 +29,7 @@ from ..constants import (
     CONFIG_FILE_KEY_GENERATE_ARGS,
     CONFIG_FILE_KEY_GENERATE_ARGS_BASE,
     CONFIG_FILE_KEY_GENERATE_ARGS_CUSTOM,
+    CONFIG_FILE_KEY_GENERATE_ARGS_INPUT_LATENT_VECTOR_SIZE,
     CONFIG_FILE_KEY_GENERATE_ARGS_MODEL_FILE,
     CONFIG_FILE_KEY_GENERATE_ARGS_NUM_SAMPLES,
     CONFIG_FILE_KEY_GENERATE_ARGS_OUTPUT_PATH,
@@ -115,6 +116,7 @@ class ModelExecutor:
         self.package_link = None
         self.generate_method_name = None
         self.generate_method_args = None
+        self.generate_method_input_latent_vector_size = None
         self.serialised_model_file_path = None
         self.package_path = None
         self.deserialized_model_as_lib = None
@@ -135,6 +137,13 @@ class ModelExecutor:
         self.generate_method_args = self.execution_config[CONFIG_FILE_KEY_GENERATE][
             CONFIG_FILE_KEY_GENERATE_ARGS
         ]
+        if (
+            CONFIG_FILE_KEY_GENERATE_ARGS_INPUT_LATENT_VECTOR_SIZE
+            in self.execution_config[CONFIG_FILE_KEY_GENERATE]
+        ):
+            self.generate_method_input_latent_vector_size = self.execution_config[
+                CONFIG_FILE_KEY_GENERATE
+            ][CONFIG_FILE_KEY_GENERATE_ARGS_INPUT_LATENT_VECTOR_SIZE]
 
         self._check_package_resources()
         if not self.is_model_already_unpacked():
@@ -346,7 +355,8 @@ class ModelExecutor:
                         f"Generate method called with the following params. (i) default: {prepared_kwargs}, "
                         f"(ii) custom: {some_other_kwargs}"
                     )
-                    return generate_method(**prepared_kwargs, **some_other_kwargs)
+                    prepared_kwargs.update(some_other_kwargs)
+                    return generate_method(**prepared_kwargs)
 
                 return gen
             else:
