@@ -331,11 +331,13 @@ class ModelExecutor:
             path_as_string=output_path
         ), f"{self.model_id}: The output folder was not found nor created in {output_path}."
 
+        save_images_one_batch = False
+
         if batch_size > num_samples:
             batch_size = num_samples
-            save_images_one_batch = True
-        else:
-            save_images_one_batch = False
+            if save_images:
+                save_images_one_batch = True
+
         try:
             generate_method = getattr(
                 self.deserialized_model_as_lib, f"{self.generate_method_name}"
