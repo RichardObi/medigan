@@ -140,9 +140,10 @@ class ZenodoModelUploader(BaseModelUploader):
         if not (Path(package_path).is_file() and package_path.endswith(".zip")):
             # Create a zip archive containing the model package and store that zip file inside the
             # folder of the model package
-            logging.info(f"Archiving the model package as zip archive: base_name={package_path+ '/' + package_name}, root_dir={package_path} ")
+            package_parent_path = str(Path(package_path).parent)
+            logging.info(f"Archiving the model package as zip archive: base_name={package_parent_path+ '/' + package_name}, root_dir={package_path + '/'} ")
             filename = shutil.make_archive(
-                base_name=package_path + "/" + package_name,
+                base_name=package_parent_path + "/" + package_name,
                 format="zip",
                 root_dir=package_path,
             )
