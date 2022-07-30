@@ -42,6 +42,9 @@ While being extendable to any modality and generative model, medigan focuses on 
 | Breast Density Transfer CC  |   x-ray  |    cyclegan   | 1332x800 |     OPTIMAM     |  ![sample](docs/source/_static/samples/00014.png) | <sub> 00014_CYCLEGAN_MMG_DENSITY_OPTIMAM_CC </sub>  | [Zenodo (6818103)](https://doi.org/10.5281/zenodo.6818103) | | 
 | Breast Density Transfer MLO |   x-ray  |    cyclegan   | 1332x800 |     CSAW     |  ![sample](docs/source/_static/samples/00015.png) | <sub> 00015_CYCLEGAN_MMG_DENSITY_CSAW_MLO </sub>  | [Zenodo (6818105)](https://doi.org/10.5281/zenodo.6818105) | | 
 | Breast Density Transfer CC  |   x-ray  |    cyclegan   | 1332x800 |     CSAW     |  ![sample](docs/source/_static/samples/00016.png) | <sub> 00016_CYCLEGAN_MMG_DENSITY_CSAW_CC </sub>  | [Zenodo (6818107)](https://doi.org/10.5281/zenodo.6818107) | | 
+| Lung Nodules                |   x-ray  |    dcgan      | 128x128  |     NODE21     |  ![sample](docs/source/_static/samples/00017.png) | <sub> 00017_DCGAN_XRAY_LUNG_NODULES </sub>  | [Zenodo (6943691)](https://doi.org/10.5281/zenodo.6943691) | | 
+| Lung Nodules                |   x-ray  |    wgan-gp      | 128x128  |     NODE21     |  ![sample](docs/source/_static/samples/00018.png) | <sub> 00018_WGANGP_XRAY_LUNG_NODULES </sub>  | [Zenodo (6943761)](https://doi.org/10.5281/zenodo.6943761) | | 
+| Chest Xray Images           |   x-ray  |    pggan      | 1024x1024  |     NODE21     |  ![sample](docs/source/_static/samples/00019.png) | <sub> 00019_PGGAN_CHEST_XRAY </sub>  | [Zenodo (6943803)](https://doi.org/10.5281/zenodo.6943803) | | 
 
 [comment]: <> (| Spine Bone Cement Injection |    CT    |    biceps     |  128x128 |     VerSe    | <sub> to be announced </sub>                  |        |)
 
@@ -153,7 +156,7 @@ Next, run the following code to contribute your model to medigan.
 
 - Also, a Github [issue](https://github.com/RichardObi/medigan/issues) will be created to add your model's metadata to medigan's [global.json](https://github.com/RichardObi/medigan/blob/main/config/global.json).
 
-- To do so, please provide a github access token ([get one here](https://github.com/settings/tokens)) and a zenodo access token ([get one here](https://zenodo.org/account/settings/applications/tokens/new/)), as shown below.
+- To do so, please provide a github access token ([get one here](https://github.com/settings/tokens)) and a zenodo access token ([get one here](https://zenodo.org/account/settings/applications/tokens/new/)), as shown below. After creation, the zenodo access token may take a few minutes before being recognized in zenodo API calls.
 
 ```python
 from medigan import Generators
