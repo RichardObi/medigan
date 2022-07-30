@@ -175,7 +175,7 @@ class ZenodoModelUploader(BaseModelUploader):
         )
         if not r.status_code == 201:
             raise Exception(
-                f"{self.model_id}: Error ({r.status_code}!=201) during Zenodo ('{ZENODO_API_URL}') upload (step 1: creating empty upload template): {r.json()}"
+                f"{self.model_id}: Error ({r.status_code}!=201) during Zenodo ('{ZENODO_API_URL}') upload (step 1: creating empty upload template): {r.json()}."
             )
         return r
 

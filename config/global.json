@@ -1703,7 +1703,7 @@
             "comment": "A cycle generative adversarial network (CycleGAN) that generates mammograms with high breast density from an original mammogram e.g. with low-breast density. The CycleGAN was trained using normal (without pathologies) digital mammograms from OPTIMAM dataset (Halling-Brown et al, 2014). The uploaded ZIP file contains the files CycleGAN_high_density.pth (model weights), __init__.py (image generation method and utils) and the GAN model architecture (in pytorch) below the /src folder."
         }
     },
-        "00014_CYCLEGAN_MMG_DENSITY_OPTIMAM_CC": {
+    "00014_CYCLEGAN_MMG_DENSITY_OPTIMAM_CC": {
         "execution": {
             "package_name": "CycleGAN_high_density_OPTIMAM_CC",
             "package_link": "https://zenodo.org/record/6818104/files/CycleGAN_high_density_OPTIMAM_CC.zip?download=1",
@@ -1824,7 +1824,7 @@
             "comment": "A cycle generative adversarial network (CycleGAN) that generates mammograms with high breast density from an original mammogram e.g. with low-breast density. The CycleGAN was trained using normal (without pathologies) digital mammograms from OPTIMAM dataset (Halling-Brown et al, 2014). The uploaded ZIP file contains the files CycleGAN_high_density.pth (model weights), __init__.py (image generation method and utils) and the GAN model architecture (in pytorch) below the /src folder."
         }
     },
-        "00015_CYCLEGAN_MMG_DENSITY_CSAW_MLO": {
+    "00015_CYCLEGAN_MMG_DENSITY_CSAW_MLO": {
         "execution": {
             "package_name": "CycleGAN_high_density_CSAW_MLO",
             "package_link": "https://zenodo.org/record/6818106/files/CycleGAN_high_density_CSAW_MLO.zip?download=1",
@@ -1945,7 +1945,7 @@
             "comment": "A cycle generative adversarial network (CycleGAN) that generates mammograms with high breast density from an original mammogram e.g. with low-breast density. The CycleGAN was trained using normal (without pathologies) digital mammograms from CSAW dataset (Dembrower et al., 2020, https://doi.org/10.1007/s10278-019-00278-0). The uploaded ZIP file contains the files CycleGAN_high_density.pth (model weights), __init__.py (image generation method and utils) and the GAN model architecture (in pytorch) below the /src folder."
         }
     },
-        "00016_CYCLEGAN_MMG_DENSITY_CSAW_CC": {
+    "00016_CYCLEGAN_MMG_DENSITY_CSAW_CC": {
         "execution": {
             "package_name": "CycleGAN_high_density_CSAW_CC",
             "package_link": "https://zenodo.org/record/6818378/files/CycleGAN_high_density_CSAW_CC.zip?download=1",
@@ -2065,5 +2065,332 @@
             "doi": [],
             "comment": "A cycle generative adversarial network (CycleGAN) that generates mammograms with high breast density from an original mammogram e.g. with low-breast density. The CycleGAN was trained using normal (without pathologies) digital mammograms from CSAW dataset (Dembrower et al., 2020, https://doi.org/10.1007/s10278-019-00278-0). The uploaded ZIP file contains the files CycleGAN_high_density.pth (model weights), __init__.py (image generation method and utils) and the GAN model architecture (in pytorch) below the /src folder."
         }
+    },
+    "00017_DCGAN_XRAY_LUNG_NODULES": {
+      "execution": {
+        "package_name": "00017_DCGAN_NODE21",
+        "package_link": "https://zenodo.org/record/6943692/files/00017_DCGAN_NODE21.zip?download=1",
+        "model_name": "model",
+        "extension": ".pt",
+        "image_size": [
+          128,
+          128,
+          1
+        ],
+        "dependencies": [
+          "numpy",
+          "tqdm",
+          "torch"
+        ],
+        "generate_method": {
+          "name": "generate",
+          "args": {
+            "base": [
+              "model_file",
+              "num_samples",
+              "output_path",
+              "save_images"
+            ],
+            "custom": {
+            }
+          },
+          "input_latent_vector_size": 120
+        }
+      },
+      "selection": {
+      "performance": {
+        "SSIM": null,
+        "MSE": null,
+        "NSME": null,
+        "PSNR": null,
+        "IS": null,
+        "FID": null,
+        "turing_test": null,
+        "downstream_task": null
+      },
+      "use_cases": [
+        "classification"
+      ],
+      "organ": [
+        "lung",
+        "chest",
+        "thorax"
+      ],
+      "modality": [
+        "x-ray",
+        "xray",
+        "CXR"
+      ],
+      "vendors": [],
+      "centres": [],
+      "function": [
+        "noise to image",
+        "unconditional generation",
+        "data augmentation"
+      ],
+      "condition": [],
+      "dataset": [
+        "Node21"
+      ],
+      "augmentations": [
+        "horizontal flip",
+        "vertical flip"
+      ],
+      "generates": [
+        "lung nodules",
+        "nodules",
+        "lung roi",
+        "lung region of interest",
+        "patches"
+      ],
+      "height": 128,
+      "width": 128,
+      "depth": 1,
+      "type": "DCGAN",
+      "license": "MIT",
+      "dataset_type": "public",
+      "privacy_preservation": null,
+      "tags": [
+        "Thoracic xray",
+        "xray",
+        "x-ray",
+        "Thorax",
+        "Lung",
+        "Nodules",
+        "Lung Cancer",
+        "Lung Tumor"
+      ],
+      "year": "2022"
+    },
+    "description": {
+      "title": "DCGAN Model for Patch Generation of Lung Nodules (Trained on Node21)",
+      "provided_date": "June 2022",
+      "trained_date": "June 2022",
+      "provided_after_epoch": null,
+      "version": null,
+      "publication": null,
+      "doi": [],
+      "inputs": "",
+      "comment": "A unconditional deep convolutional generative adversarial network (DCGAN) that generates lung nodule regions-of-interest patches based on chest xray (CXR) images. The pixel dimension of the generated patches is 128x128. The WGANGP was trained on cropped patches from CXR images from the NODE21 dataset (Sogancioglu et al, 2021). The uploaded ZIP file contains the files model.pt (model weight), __init__.py (image generation method and utils), a requirements.txt, a LICENSE file, the MEDIGAN metadata.json file, the used GAN training config file, a test.sh file to run the model, and an /image folder with a few generated example images."
     }
+  },
+  "00018_WGANGP_XRAY_LUNG_NODULES": {
+    "execution": {
+      "package_name": "00018_WGANGP_NODE21",
+      "package_link": "https://zenodo.org/record/6943762/files/00018_WGANGP_NODE21.zip?download=1",
+      "model_name": "model",
+      "extension": ".pt",
+      "image_size": [
+        128,
+        128,
+        1
+      ],
+      "dependencies": [
+        "numpy",
+        "tqdm",
+        "torch"
+      ],
+      "generate_method": {
+        "name": "generate",
+        "args": {
+          "base": [
+            "model_file",
+            "num_samples",
+            "output_path",
+            "save_images"
+          ],
+          "custom": {
+          }
+        },
+        "input_latent_vector_size": 100
+      }
+    },
+      "selection": {
+      "performance": {
+        "SSIM": null,
+        "MSE": null,
+        "NSME": null,
+        "PSNR": null,
+        "IS": null,
+        "FID": null,
+        "turing_test": null,
+        "downstream_task": null
+      },
+      "use_cases": [
+        "classification"
+      ],
+      "organ": [
+        "lung",
+        "chest",
+        "thorax"
+      ],
+      "modality": [
+        "x-ray",
+        "xray",
+        "CXR"
+      ],
+      "vendors": [],
+      "centres": [],
+      "function": [
+        "noise to image",
+        "unconditional generation",
+        "data augmentation"
+      ],
+      "condition": [],
+      "dataset": [
+        "Node21"
+      ],
+      "augmentations": [
+        "horizontal flip",
+        "vertical flip"
+      ],
+      "generates": [
+        "lung nodules",
+        "nodules",
+        "lung roi",
+        "lung region of interest",
+        "patches"
+      ],
+      "height": 128,
+      "width": 128,
+      "depth": 1,
+      "type": "WGANGP",
+      "license": "MIT",
+      "dataset_type": "public",
+      "privacy_preservation": null,
+      "tags": [
+        "Thoracic xray",
+        "xray",
+        "x-ray",
+        "Thorax",
+        "Lung",
+        "Nodules",
+        "Lung Cancer",
+        "Lung Tumor"
+      ],
+      "year": "2022"
+    },
+    "description": {
+      "title": "WGANGP Model for Patch Generation of Lung Nodules (Trained on Node21)",
+      "provided_date": "June 2022",
+      "trained_date": "June 2022",
+      "provided_after_epoch": null,
+      "version": null,
+      "publication": null,
+      "doi": [],
+      "inputs": "",
+      "comment": "A unconditional wasserstein generative adversarial network with gradient penalty (WGAN_GP) that generates lung nodule regions-of-interest patches based on chest xray (CXR) images. The pixel dimension of the generated patches is 128x128. The WGANGP was trained on cropped patches from CXR images from the NODE21 dataset (Sogancioglu et al, 2021). The uploaded ZIP file contains the files model.pt (model weight), __init__.py (image generation method and utils), a requirements.txt, a LICENSE file, the MEDIGAN metadata.json file, the used GAN training config file, a test.sh file to run the model, and an /image folder with a few generated example images."
+    }
+  },
+  "00019_PGGAN_CHEST_XRAY": {
+    "execution": {
+      "package_name": "00019_PGGAN_NODE21",
+      "package_link": "https://zenodo.org/record/6943804/files/00019_PGGAN_NODE21.zip?download=1",
+      "model_name": "model",
+      "extension": ".pt",
+      "image_size": [
+        1024,
+        1024,
+        1
+      ],
+      "dependencies": [
+        "numpy",
+        "tqdm",
+        "torch"
+      ],
+      "generate_method": {
+        "name": "generate",
+        "args": {
+          "base": [
+            "model_file",
+            "num_samples",
+            "output_path",
+            "save_images"
+          ],
+          "custom": {
+            "image_size": 1024
+          }
+        },
+        "real_input_latent_vector_size": 512,
+        "input_latent_vector_size": 1024
+      }
+    },
+    "selection": {
+      "performance": {
+        "SSIM": null,
+        "MSE": null,
+        "NSME": null,
+        "PSNR": null,
+        "IS": null,
+        "FID": null,
+        "turing_test": null,
+        "downstream_task": null
+      },
+      "use_cases": [
+        "classification",
+        "detection"
+      ],
+      "organ": [
+        "lung",
+        "chest",
+        "thorax"
+      ],
+      "modality": [
+        "x-ray",
+        "xray",
+        "CXR"
+      ],
+      "vendors": [],
+      "centres": [],
+      "function": [
+        "noise to image",
+        "unconditional generation",
+        "data augmentation"
+      ],
+      "condition": [],
+      "dataset": [
+        "Node21"
+      ],
+      "augmentations": [
+        "horizontal flip",
+        "vertical flip"
+      ],
+      "generates": [
+        "chest xray",
+        "CXR",
+        "thoracic xray",
+        "lung xray",
+        "lung xray"
+      ],
+      "height": 128,
+      "width": 128,
+      "depth": 1,
+      "type": "WGANGP",
+      "license": "MIT",
+      "dataset_type": "public",
+      "privacy_preservation": null,
+      "tags": [
+        "Thoracic xray",
+        "xray",
+        "x-ray",
+        "Thorax",
+        "Lung",
+        "Nodules",
+        "Lung Cancer",
+        "Lung Tumor"
+      ],
+      "year": "2022"
+    },
+    "description": {
+      "title": "PGGAN Model for Generation of Chest XRAY (CXR) Images (Trained on Node21)",
+      "provided_date": "June 2022",
+      "trained_date": "June 2022",
+      "provided_after_epoch": null,
+      "version": null,
+      "publication": null,
+      "doi": [],
+      "inputs": "image_size: default=1024, help=the size if height and width of the generated images.",
+      "comment": "A unconditional Progressively-growing generative adversarial network (PGGAN) that generates chest xray (CXR) images with pixel dimensions 1024x1024. The PGGAN was trained on CXR images from the NODE21 dataset (Sogancioglu et al, 2021). The uploaded ZIP file contains the files model.pt (model weight), __init__.py (image generation method and utils), a requirements.txt, a LICENSE file, the MEDIGAN metadata.json file, the used GAN training config file, a test.sh file to run the model, and an /image folder with a few generated example images."
+    }
+  }
 }

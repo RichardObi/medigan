@@ -36,6 +36,9 @@ try:
     zenodo_access_token = "ACCESS_TOKEN"
     github_access_token = "ACCESS_TOKEN"
 
+    creator_name = "John Doe"
+    creator_affiliation = "University of Barcelona"
+
     # Testing full model contribution workflow.
     generators.contribute(
         model_id=model_id,
@@ -43,6 +46,8 @@ try:
         zenodo_access_token=zenodo_access_token,
         github_access_token=github_access_token,
         metadata_file_path=metadata_file_path,
+        creator_name=creator_name,
+        creator_affiliation=creator_affiliation,
     )
 
     # Testing init of contributor with erroneous params
