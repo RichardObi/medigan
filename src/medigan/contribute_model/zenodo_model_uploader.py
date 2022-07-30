@@ -141,7 +141,9 @@ class ZenodoModelUploader(BaseModelUploader):
             # Create a zip archive containing the model package and store that zip file inside the
             # folder of the model package
             package_parent_path = str(Path(package_path).parent)
-            logging.info(f"Archiving the model package as zip archive: base_name={package_parent_path+ '/' + package_name}, root_dir={package_path + '/'} ")
+            logging.info(
+                f"Archiving the model package as zip archive: base_name={package_parent_path+ '/' + package_name}, root_dir={package_path + '/'} "
+            )
             filename = shutil.make_archive(
                 base_name=package_parent_path + "/" + package_name,
                 format="zip",
@@ -153,7 +155,8 @@ class ZenodoModelUploader(BaseModelUploader):
             filename = Path(package_path).name
             file_path = package_path
         logging.info(
-            f"Model was successfully archived as zip archive: filename={filename}, file_path={file_path} ")
+            f"Model was successfully archived as zip archive: filename={filename}, file_path={file_path} "
+        )
         return filename, file_path
 
     def empty_upload(self) -> dict:
@@ -330,7 +333,9 @@ class ZenodoModelUploader(BaseModelUploader):
         # Using bucket as defined by Zenodo API for zip file model upload
         bucket_url = response.json()["links"]["bucket"]
 
-        logging.info(f"Starting Zenodo upload of model with deposition_id {deposition_id} to {bucket_url}")
+        logging.info(
+            f"Starting Zenodo upload of model with deposition_id {deposition_id} to {bucket_url}"
+        )
         response = self.upload(
             file_path=file_path,
             filename=filename,
