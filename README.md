@@ -6,21 +6,27 @@
 [![PyPI version](https://badge.fury.io/py/medigan.svg)](https://badge.fury.io/py/medigan)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.6327625.svg)](https://doi.org/10.5281/zenodo.6327625)
 
-#### MEDIGAN - A Modular Python Library For Automating Synthetic Dataset Generation.
+#### A modular package for automated synthetic data generation.
 
-While being extendable to any modality and generative model, medigan focuses on automating medical image dataset synthesis using GANs for training deep learning models.
+- :x: **Problem 1:** Data scarcity in medical imaging. 
+
+- :x: **Problem 2:** Scarcity of readily reusable generative models in medical imaging.
+
+- :white_check_mark: **Solution: medigan** for:
+    1. dataset sharing via generative models :gift:
+    2. data augmentation :gift:
+    3. domain adaptation :gift:
+    4. multi-model datasets for synthetic data evaluation :gift:
+
+`medigan` provides functions for sharing and re-use of pretrained generative models in medical imaging.
 
 ## Features:
 
-- Researchers and ML-practitioners can conveniently use an existing model in `medigan` for synthetic data augmentation instead of having to train their own generative model each time.
+- Instead of training your own, use one a generative models from `medigan` to generate synthetic data.
 
-- Search and find a model using search terms (e.g. "Mammography, 128x128, DCGAN") or key value pairs (e.g. `key` = "modality", `value` = "Mammography")
+- Search and find a model in `medigan` using search terms (e.g. "Mammography" or "Endoscopy").
 
-- Explore the config and information (metrics, use-cases, modalities, etc) of each model in `medigan`
-
-- Generate samples using a model
-
-- Get the generate_method of a model to use dynamically inside your app
+- Contribute your own generative model to `medigan` to increase its visibility, re-use, and impact.
 
 ## Available models
 
@@ -135,8 +141,8 @@ plt.show()
 ```
 ![sample](docs/source/_static/samples/gan_sample_00004_dataloader.png)
 
-## Interface for custom generation
-It is possible to generate sample by manually setting the conditional inputs or latent vector values. The sample is updated in realtime, so it's possible to observe how the images changes when the parameters are modified. The visualization is avaialble only for models with accessible input latent vector. Depending on a model, a conditional input may be also available or synthetic segmentation mask.
+## Visualize A Model 
+With our interface, it is possible to generate sample by manually setting the conditional inputs or latent vector values. The sample is updated in realtime, so it's possible to observe how the images changes when the parameters are modified. The visualization is available only for models with accessible input latent vector. Depending on a model, a conditional input may be also available or synthetic segmentation mask.
 ```
 from medigan import Generators
 
