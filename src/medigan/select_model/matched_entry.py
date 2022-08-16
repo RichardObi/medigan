@@ -1,10 +1,6 @@
 # -*- coding: utf-8 -*-
 # ! /usr/bin/env python
-"""MatchedEntry class that represents one match of a key value pair of a model's config against a search query.
-
-.. codeauthor:: Richard Osuala <richard.osuala@gmail.com>
-.. codeauthor:: Noussair Lazrak <lazrak.noussair@gmail.com>
-"""
+"""MatchedEntry class that represents one match of a key value pair of a model's config against a search query. """
 
 # Import python native libs
 from __future__ import absolute_import

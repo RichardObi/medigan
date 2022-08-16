@@ -1,9 +1,6 @@
 # -*- coding: utf-8 -*-
 # ! /usr/bin/env python
-"""Base Model uploader class that uploads models to medigan associated data storage services.
-
-.. codeauthor:: Richard Osuala <richard.osuala@gmail.com>
-"""
+"""Base Model uploader class that uploads models to medigan associated data storage services. """
 
 from __future__ import absolute_import
 

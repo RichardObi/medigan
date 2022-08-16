@@ -1,10 +1,6 @@
 # -*- coding: utf-8 -*-
 # ! /usr/bin/env python
-""" `Utils` class providing generalized reusable functions for I/O, parsing, sorting, type conversions, etc.
-
-.. codeauthor:: Richard Osuala <richard.osuala@gmail.com>
-.. codeauthor:: Noussair Lazrak <lazrak.noussair@gmail.com>
-"""
+""" `Utils` class providing generalized reusable functions for I/O, parsing, sorting, type conversions, etc. """
 # Import python native libs
 import json
 import logging
@@ -17,7 +13,6 @@ from pathlib import Path
 from urllib.parse import urlparse  # python3
 
 import numpy as np
-
 # Import pypi libs
 import requests
 from tqdm import tqdm

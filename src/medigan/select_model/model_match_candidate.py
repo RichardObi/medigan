@@ -1,10 +1,6 @@
 # -*- coding: utf-8 -*-
 # ! /usr/bin/env python
-"""ModelMatchCandidate class that holds data to evaluate if a generative model matches against a search query.
-
-.. codeauthor:: Richard Osuala <richard.osuala@gmail.com>
-.. codeauthor:: Noussair Lazrak <lazrak.noussair@gmail.com>
-"""
+"""ModelMatchCandidate class that holds data to evaluate if a generative model matches against a search query. """
 
 # Import python native libs
 from __future__ import absolute_import

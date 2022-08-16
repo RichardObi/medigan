@@ -1,10 +1,6 @@
 # -*- coding: utf-8 -*-
 # ! /usr/bin/env python
-""" `medigan` is a modular Python library for automating synthetic dataset generation.
-
-.. codeauthor:: Richard Osuala <richard.osuala@gmail.com>
-.. codeauthor:: Noussair Lazrak <lazrak.noussair@gmail.com>
-"""
+""" `medigan` is a modular Python library for automating synthetic dataset generation. """
 # Set default logging handler to avoid "No handler found" warnings.
 import logging
 from logging import NullHandler

@@ -1,10 +1,6 @@
 # -*- coding: utf-8 -*-
 # ! /usr/bin/env python
-""" Base class providing user-library interaction methods for config management, and model selection and execution.
-
-.. codeauthor:: Richard Osuala <richard.osuala@gmail.com>
-.. codeauthor:: Noussair Lazrak <lazrak.noussair@gmail.com>
-"""
+""" Base class providing user-library interaction methods for config management, and model selection and execution. """
 
 # Import python native libs
 from __future__ import absolute_import

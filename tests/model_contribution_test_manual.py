@@ -1,9 +1,6 @@
 # -*- coding: utf-8 -*-
 # ! /usr/bin/env python
-""" script for quick local testing if new models work inside medigan.
-
-.. codeauthor:: Richard Osuala <richard.osuala@gmail.com>
-"""
+""" script for quick local testing if a new model can be added and works inside medigan."""
 # run with python -m tests.model_contribution_test_manual
 
 import glob

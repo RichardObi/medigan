@@ -1,9 +1,6 @@
 # -*- coding: utf-8 -*-
 # ! /usr/bin/env python
-"""Github Model uploader class that uploads the metadata of a new model to the medigan github repository.
-
-.. codeauthor:: Richard Osuala <richard.osuala@gmail.com>
-"""
+"""Github Model uploader class that uploads the metadata of a new model to the medigan github repository. """
 
 from __future__ import absolute_import
 
@@ -12,13 +9,9 @@ import logging
 
 from github import Github
 
-from ..constants import (
-    CONFIG_FILE_KEY_EXECUTION,
-    CONFIG_FILE_KEY_PACKAGE_LINK,
-    GITHUB_ASSIGNEE,
-    GITHUB_REPO,
-    GITHUB_TITLE,
-)
+from ..constants import (CONFIG_FILE_KEY_EXECUTION,
+                         CONFIG_FILE_KEY_PACKAGE_LINK, GITHUB_ASSIGNEE,
+                         GITHUB_REPO, GITHUB_TITLE)
 from ..utils import Utils
 from .base_model_uploader import BaseModelUploader
 

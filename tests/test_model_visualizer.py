@@ -1,10 +1,13 @@
+# -*- coding: utf-8 -*-
+# ! /usr/bin/env python
+""" main test script for model visualization functions/classes/methods. """
+# run with python -m tests.test_model_visualizer
+
 import pytest
 
-from src.medigan.constants import (
-    CONFIG_FILE_KEY_EXECUTION,
-    CONFIG_FILE_KEY_GENERATE,
-    CONFIG_FILE_KEY_GENERATE_ARGS_INPUT_LATENT_VECTOR_SIZE,
-)
+from src.medigan.constants import (CONFIG_FILE_KEY_EXECUTION,
+                                   CONFIG_FILE_KEY_GENERATE,
+                                   CONFIG_FILE_KEY_GENERATE_ARGS_INPUT_LATENT_VECTOR_SIZE)
 from src.medigan.generators import Generators
 
 generators = Generators()

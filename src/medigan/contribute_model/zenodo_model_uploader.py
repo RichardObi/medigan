@@ -1,9 +1,6 @@
 # -*- coding: utf-8 -*-
 # ! /usr/bin/env python
-"""Zenodo Model uploader class that uploads models to medigan associated data storage on Zenodo
-
-.. codeauthor:: Richard Osuala <richard.osuala@gmail.com>
-"""
+"""Zenodo Model uploader class that uploads models to medigan associated data storage on Zenodo. """
 
 from __future__ import absolute_import
 
@@ -14,15 +11,10 @@ from pathlib import Path
 
 import requests
 
-from ..constants import (
-    CONFIG_FILE_KEY_DESCRIPTION,
-    CONFIG_FILE_KEY_SELECTION,
-    CONFIG_FILE_KEY_TAGS,
-    ZENODO_API_URL,
-    ZENODO_GENERIC_MODEL_DESCRIPTION,
-    ZENODO_HEADERS,
-    ZENODO_LINE_BREAK,
-)
+from ..constants import (CONFIG_FILE_KEY_DESCRIPTION,
+                         CONFIG_FILE_KEY_SELECTION, CONFIG_FILE_KEY_TAGS,
+                         ZENODO_API_URL, ZENODO_GENERIC_MODEL_DESCRIPTION,
+                         ZENODO_HEADERS, ZENODO_LINE_BREAK)
 from .base_model_uploader import BaseModelUploader
 
 
@@ -141,7 +133,9 @@ class ZenodoModelUploader(BaseModelUploader):
             # Create a zip archive containing the model package and store that zip file inside the
             # folder of the model package
             package_parent_path = str(Path(package_path).parent)
-            logging.info(f"Archiving the model package as zip archive: base_name={package_parent_path+ '/' + package_name}, root_dir={package_path + '/'} ")
+            logging.info(
+                f"Archiving the model package as zip archive: base_name={package_parent_path+ '/' + package_name}, root_dir={package_path + '/'} "
+            )
             filename = shutil.make_archive(
                 base_name=package_parent_path + "/" + package_name,
                 format="zip",
@@ -153,7 +147,8 @@ class ZenodoModelUploader(BaseModelUploader):
             filename = Path(package_path).name
             file_path = package_path
         logging.info(
-            f"Model was successfully archived as zip archive: filename={filename}, file_path={file_path} ")
+            f"Model was successfully archived as zip archive: filename={filename}, file_path={file_path} "
+        )
         return filename, file_path
 
     def empty_upload(self) -> dict:
@@ -330,7 +325,9 @@ class ZenodoModelUploader(BaseModelUploader):
         # Using bucket as defined by Zenodo API for zip file model upload
         bucket_url = response.json()["links"]["bucket"]
 
-        logging.info(f"Starting Zenodo upload of model with deposition_id {deposition_id} to {bucket_url}")
+        logging.info(
+            f"Starting Zenodo upload of model with deposition_id {deposition_id} to {bucket_url}"
+        )
         response = self.upload(
             file_path=file_path,
             filename=filename,

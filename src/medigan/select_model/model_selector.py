@@ -1,9 +1,6 @@
 # -*- coding: utf-8 -*-
 # ! /usr/bin/env python
-""" Model selection class that describes, finds, compares, and ranks generative models.
-
-.. codeauthor:: Richard Osuala <richard.osuala@gmail.com>,
-"""
+""" Model selection class that describes, finds, compares, and ranks generative models. """
 
 # Import python native libs
 from __future__ import absolute_import
@@ -12,7 +9,8 @@ import logging
 
 # Import library internal modules
 from ..config_manager import ConfigManager
-from ..constants import CONFIG_FILE_KEY_PERFORMANCE, CONFIG_FILE_KEY_SELECTION, MODEL_ID
+from ..constants import (CONFIG_FILE_KEY_PERFORMANCE,
+                         CONFIG_FILE_KEY_SELECTION, MODEL_ID)
 from ..utils import Utils
 from .matched_entry import MatchedEntry
 from .model_match_candidate import ModelMatchCandidate

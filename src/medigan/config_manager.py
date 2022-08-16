@@ -1,10 +1,6 @@
 # -*- coding: utf-8 -*-
 # ! /usr/bin/env python
-""" Config manager class that downloads, ingests, parses, and prepares the config information for all models.
-
-.. codeauthor:: Richard Osuala <richard.osuala@gmail.com>
-.. codeauthor:: Noussair Lazrak <lazrak.noussair@gmail.com>
-"""
+""" Config manager class that downloads, ingests, parses, and prepares the config information for all models. """
 
 # Import python native libs
 from __future__ import absolute_import
@@ -14,25 +10,20 @@ import logging
 from pathlib import Path
 
 # Import library internal modules
-from .constants import (
-    CONFIG_FILE_FOLDER,
-    CONFIG_FILE_KEY_DEPENDENCIES,
-    CONFIG_FILE_KEY_EXECUTION,
-    CONFIG_FILE_KEY_GENERATE,
-    CONFIG_FILE_KEY_GENERATE_ARGS,
-    CONFIG_FILE_KEY_GENERATE_ARGS_BASE,
-    CONFIG_FILE_KEY_GENERATE_ARGS_MODEL_FILE,
-    CONFIG_FILE_KEY_GENERATE_ARGS_NUM_SAMPLES,
-    CONFIG_FILE_KEY_GENERATE_ARGS_OUTPUT_PATH,
-    CONFIG_FILE_KEY_GENERATE_ARGS_SAVE_IMAGES,
-    CONFIG_FILE_KEY_MODEL_EXTENSION,
-    CONFIG_FILE_KEY_MODEL_NAME,
-    CONFIG_FILE_KEY_PACKAGE_LINK,
-    CONFIG_FILE_KEY_PACKAGE_NAME,
-    CONFIG_FILE_KEY_SELECTION,
-    CONFIG_FILE_NAME_AND_EXTENSION,
-    CONFIG_FILE_URL,
-)
+from .constants import (CONFIG_FILE_FOLDER, CONFIG_FILE_KEY_DEPENDENCIES,
+                        CONFIG_FILE_KEY_EXECUTION, CONFIG_FILE_KEY_GENERATE,
+                        CONFIG_FILE_KEY_GENERATE_ARGS,
+                        CONFIG_FILE_KEY_GENERATE_ARGS_BASE,
+                        CONFIG_FILE_KEY_GENERATE_ARGS_MODEL_FILE,
+                        CONFIG_FILE_KEY_GENERATE_ARGS_NUM_SAMPLES,
+                        CONFIG_FILE_KEY_GENERATE_ARGS_OUTPUT_PATH,
+                        CONFIG_FILE_KEY_GENERATE_ARGS_SAVE_IMAGES,
+                        CONFIG_FILE_KEY_MODEL_EXTENSION,
+                        CONFIG_FILE_KEY_MODEL_NAME,
+                        CONFIG_FILE_KEY_PACKAGE_LINK,
+                        CONFIG_FILE_KEY_PACKAGE_NAME,
+                        CONFIG_FILE_KEY_SELECTION,
+                        CONFIG_FILE_NAME_AND_EXTENSION, CONFIG_FILE_URL)
 from .utils import Utils
 
 
