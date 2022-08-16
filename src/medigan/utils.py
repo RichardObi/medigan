@@ -13,6 +13,7 @@ from pathlib import Path
 from urllib.parse import urlparse  # python3
 
 import numpy as np
+
 # Import pypi libs
 import requests
 from tqdm import tqdm

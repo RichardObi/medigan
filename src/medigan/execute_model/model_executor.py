@@ -8,29 +8,34 @@ from __future__ import absolute_import
 import importlib
 import logging
 import time
+
 # Import pypi libs
 from pathlib import Path
 
 import pkg_resources
 
 # Import library internal modules
-from ..constants import (CONFIG_FILE_KEY_DEPENDENCIES,
-                         CONFIG_FILE_KEY_GENERATE,
-                         CONFIG_FILE_KEY_GENERATE_ARGS,
-                         CONFIG_FILE_KEY_GENERATE_ARGS_BASE,
-                         CONFIG_FILE_KEY_GENERATE_ARGS_CUSTOM,
-                         CONFIG_FILE_KEY_GENERATE_ARGS_INPUT_LATENT_VECTOR_SIZE,
-                         CONFIG_FILE_KEY_GENERATE_ARGS_MODEL_FILE,
-                         CONFIG_FILE_KEY_GENERATE_ARGS_NUM_SAMPLES,
-                         CONFIG_FILE_KEY_GENERATE_ARGS_OUTPUT_PATH,
-                         CONFIG_FILE_KEY_GENERATE_ARGS_SAVE_IMAGES,
-                         CONFIG_FILE_KEY_GENERATE_NAME,
-                         CONFIG_FILE_KEY_IMAGE_SIZE,
-                         CONFIG_FILE_KEY_MODEL_EXTENSION,
-                         CONFIG_FILE_KEY_MODEL_NAME,
-                         CONFIG_FILE_KEY_PACKAGE_LINK,
-                         CONFIG_FILE_KEY_PACKAGE_NAME, DEFAULT_OUTPUT_FOLDER,
-                         MODEL_FOLDER, PACKAGE_EXTENSION)
+from ..constants import (
+    CONFIG_FILE_KEY_DEPENDENCIES,
+    CONFIG_FILE_KEY_GENERATE,
+    CONFIG_FILE_KEY_GENERATE_ARGS,
+    CONFIG_FILE_KEY_GENERATE_ARGS_BASE,
+    CONFIG_FILE_KEY_GENERATE_ARGS_CUSTOM,
+    CONFIG_FILE_KEY_GENERATE_ARGS_INPUT_LATENT_VECTOR_SIZE,
+    CONFIG_FILE_KEY_GENERATE_ARGS_MODEL_FILE,
+    CONFIG_FILE_KEY_GENERATE_ARGS_NUM_SAMPLES,
+    CONFIG_FILE_KEY_GENERATE_ARGS_OUTPUT_PATH,
+    CONFIG_FILE_KEY_GENERATE_ARGS_SAVE_IMAGES,
+    CONFIG_FILE_KEY_GENERATE_NAME,
+    CONFIG_FILE_KEY_IMAGE_SIZE,
+    CONFIG_FILE_KEY_MODEL_EXTENSION,
+    CONFIG_FILE_KEY_MODEL_NAME,
+    CONFIG_FILE_KEY_PACKAGE_LINK,
+    CONFIG_FILE_KEY_PACKAGE_NAME,
+    DEFAULT_OUTPUT_FOLDER,
+    MODEL_FOLDER,
+    PACKAGE_EXTENSION,
+)
 from ..utils import Utils
 from .install_model_dependencies import install_model
 
