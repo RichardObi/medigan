@@ -34,10 +34,11 @@ Overview
    code_examples
 
 .. toctree::
-   :caption: Modules
-   :maxdepth: 5
+   :caption: Code
+   :maxdepth: 2
 
-   modules
+   modules_overview
+   code_doc
 
 .. toctree::
    :caption: Tests
@@ -47,13 +48,13 @@ Overview
 
 .. toctree::
    :caption: Models
-   :maxdepth: 5
+   :maxdepth: 3
 
    models
 
 .. toctree::
    :caption: Add Your Model
-   :maxdepth: 5
+   :maxdepth: 3
 
    adding_models
 

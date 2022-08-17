@@ -1,7 +1,7 @@
 ModelExecutor
 =============
 
-.. currentmodule:: medigan.model_executor
+.. currentmodule:: medigan.execute_model.model_executor
 
 .. autoclass:: ModelExecutor
    :show-inheritance:
@@ -11,7 +11,9 @@ ModelExecutor
    .. autosummary::
 
       ~ModelExecutor.generate
+      ~ModelExecutor.is_model_already_unpacked
 
    .. rubric:: Methods Documentation
 
    .. automethod:: generate
+   .. automethod:: is_model_already_unpacked

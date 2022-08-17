@@ -6,7 +6,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="medigan",
-    version="0.0.1",
+    version="0.0.2",
     author="Richard Osuala, Grzegorz Skorupko, Noussair Lazrak",
     description="medigan is a modular open-source Python library that provides an interface to multiple generative models and automates synthetic dataset generation.",
     long_description=long_description,

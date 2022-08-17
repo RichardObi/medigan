@@ -20,13 +20,13 @@ sys.path.insert(0, os.path.abspath("../../src"))
 # -- Project information -----------------------------------------------------
 
 project = "medigan"
-copyright = "2021, Richard Osuala, Noussair Lazrak"
-author = "Richard Osuala, Noussair Lazrak"
+copyright = "2022, Richard Osuala, Grzegorz Skorupko, Noussair Lazrak"
+author = "Richard Osuala, Grzegorz Skorupko, Noussair Lazrak"
 
 # The short X.Y version
 version = ""
 # The full version, including alpha/beta/rc tags
-release = "0.1"
+release = "0.0.2"
 
 # -- General configuration ---------------------------------------------------
 
@@ -49,6 +49,7 @@ extensions = [
     "sphinx_rtd_theme",
     "sphinx_automodapi.automodapi",
     "sphinx_automodapi.smart_resolver",
+    "sphinx.ext.autosummary",
 ]
 # 'sphinx_automodapi.smart_resolver'
 
@@ -95,7 +96,7 @@ html_theme = "sphinx_rtd_theme"  # 'book' #'classic' #'alabaster'
 #
 html_theme_options = {
     "collapse_navigation": True,
-    "navigation_depth": 4,
+    "navigation_depth": 5,
     "includehidden": True,
     "titles_only": False,
 }
@@ -142,7 +143,7 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, "medigan.tex", "medigan Documentation", "Richard Osuala", "manual"),
+    (master_doc, "medigan.tex", "medigan Documentation", [author], "manual"),
 ]
 
 # -- Options for manual page output ------------------------------------------
