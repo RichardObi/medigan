@@ -5,9 +5,11 @@
 
 import pytest
 
-from src.medigan.constants import (CONFIG_FILE_KEY_EXECUTION,
-                                   CONFIG_FILE_KEY_GENERATE,
-                                   CONFIG_FILE_KEY_GENERATE_ARGS_INPUT_LATENT_VECTOR_SIZE)
+from src.medigan.constants import (
+    CONFIG_FILE_KEY_EXECUTION,
+    CONFIG_FILE_KEY_GENERATE,
+    CONFIG_FILE_KEY_GENERATE_ARGS_INPUT_LATENT_VECTOR_SIZE,
+)
 from src.medigan.generators import Generators
 
 generators = Generators()

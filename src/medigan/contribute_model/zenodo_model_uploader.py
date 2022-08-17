@@ -11,10 +11,15 @@ from pathlib import Path
 
 import requests
 
-from ..constants import (CONFIG_FILE_KEY_DESCRIPTION,
-                         CONFIG_FILE_KEY_SELECTION, CONFIG_FILE_KEY_TAGS,
-                         ZENODO_API_URL, ZENODO_GENERIC_MODEL_DESCRIPTION,
-                         ZENODO_HEADERS, ZENODO_LINE_BREAK)
+from ..constants import (
+    CONFIG_FILE_KEY_DESCRIPTION,
+    CONFIG_FILE_KEY_SELECTION,
+    CONFIG_FILE_KEY_TAGS,
+    ZENODO_API_URL,
+    ZENODO_GENERIC_MODEL_DESCRIPTION,
+    ZENODO_HEADERS,
+    ZENODO_LINE_BREAK,
+)
 from .base_model_uploader import BaseModelUploader
 
 
