@@ -1,9 +1,6 @@
 # -*- coding: utf-8 -*-
 # ! /usr/bin/env python
-"""Model contributor class that tests models, creates metadata entries, uploads and contributes them to medigan.
-
-.. codeauthor:: Richard Osuala <richard.osuala@gmail.com>
-"""
+"""Model contributor class that tests models, creates metadata entries, uploads and contributes them to medigan. """
 
 from __future__ import absolute_import
 

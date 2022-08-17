@@ -1,3 +1,7 @@
+# -*- coding: utf-8 -*-
+# ! /usr/bin/env python
+""" Functionality for automated installation of a model's python package dependencies. """
+
 import argparse
 import subprocess
 import sys

@@ -1,10 +1,6 @@
 # -*- coding: utf-8 -*-
 # ! /usr/bin/env python
-"""Global constants of the medigan library
-
-.. codeauthor:: Richard Osuala <richard.osuala@gmail.com>
-.. codeauthor:: Noussair Lazrak <lazrak.noussair@gmail.com>
-"""
+""" Global constants of the medigan library """
 
 """ Folder path that will be created to locally store the model modules. """
 MODEL_FOLDER = "models"

@@ -1,9 +1,6 @@
 # -*- coding: utf-8 -*-
 # ! /usr/bin/env python
-"""Github Model uploader class that uploads the metadata of a new model to the medigan github repository.
-
-.. codeauthor:: Richard Osuala <richard.osuala@gmail.com>
-"""
+"""Github Model uploader class that uploads the metadata of a new model to the medigan github repository. """
 
 from __future__ import absolute_import
 

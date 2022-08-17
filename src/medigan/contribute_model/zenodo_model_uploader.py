@@ -1,9 +1,6 @@
 # -*- coding: utf-8 -*-
 # ! /usr/bin/env python
-"""Zenodo Model uploader class that uploads models to medigan associated data storage on Zenodo
-
-.. codeauthor:: Richard Osuala <richard.osuala@gmail.com>
-"""
+"""Zenodo Model uploader class that uploads models to medigan associated data storage on Zenodo. """
 
 from __future__ import absolute_import
 

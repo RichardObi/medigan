@@ -1,9 +1,6 @@
 # -*- coding: utf-8 -*-
 # ! /usr/bin/env python
-""" Model selection class that describes, finds, compares, and ranks generative models.
-
-.. codeauthor:: Richard Osuala <richard.osuala@gmail.com>,
-"""
+""" Model selection class that describes, finds, compares, and ranks generative models. """
 
 # Import python native libs
 from __future__ import absolute_import

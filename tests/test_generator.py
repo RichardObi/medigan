@@ -1,9 +1,6 @@
 # -*- coding: utf-8 -*-
 # ! /usr/bin/env python
-""" main test script to test the primary functions/classes/methods of the medigan module.
-
-.. codeauthor:: Richard Osuala <richard.osuala@gmail.com>
-"""
+""" main test script to test the primary functions/classes/methods. """
 # run with python -m tests.test_generator
 
 import glob
