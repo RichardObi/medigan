@@ -378,11 +378,34 @@ class ModelExecutor:
                                 img = sample[0]
                             img = img.squeeze()
 
-                            plt.imsave(
-                                os.path.join(output_path, "%d_img.png" % (index)),
-                                img,
-                                cmap=plt.cm.gray,
+                            import cv2
+
+                            os.makedirs(
+                                os.path.join(output_path, "orig"), exist_ok=True
                             )
+                            os.makedirs(
+                                os.path.join(output_path, "norm"), exist_ok=True
+                            )
+
+                            cv2.imwrite(
+                                os.path.join(output_path, "orig/%d_img.png" % (index)),
+                                img,
+                            )
+                            # print(img.min(), img.max())
+                            img_norm = cv2.normalize(img, None, 0, 255, cv2.NORM_MINMAX)
+                            # print(img_norm.min(), img_norm.max())
+
+                            # fig, axes = plt.subplots(nrows=1, ncols=2, figsize=(10, 10))
+                            # xx
+                            # axes[0].imshow(img, cmap="gray")
+                            # axes[1].imshow(img_norm, cmap="gray")
+                            # plt.show()
+
+                            cv2.imwrite(
+                                os.path.join(output_path, "norm/%d_img.png" % (index)),
+                                img_norm,
+                            )
+
                             index += 1
                 return generate_method(**prepared_kwargs)
         except Exception as e:
