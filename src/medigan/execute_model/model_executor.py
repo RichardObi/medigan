@@ -7,12 +7,14 @@ from __future__ import absolute_import
 
 import importlib
 import logging
+import os
 import time
 
 # Import pypi libs
 from pathlib import Path
 
 import pkg_resources
+from tqdm import tqdm
 
 # Import library internal modules
 from ..constants import (
@@ -284,6 +286,7 @@ class ModelExecutor:
         output_path: str = None,
         save_images: bool = True,
         is_gen_function_returned: bool = False,
+        batch_size: int = 32,
         **kwargs,
     ):
         """Generate samples using the generative model or return the model's generate function.
@@ -327,7 +330,7 @@ class ModelExecutor:
             )
             prepared_kwargs = self._prepare_generate_method_args(
                 model_file=self.serialised_model_file_path,
-                num_samples=num_samples,
+                num_samples=batch_size,
                 output_path=output_path,
                 save_images=save_images,
                 **kwargs,
@@ -345,7 +348,26 @@ class ModelExecutor:
 
                 return gen
             else:
-                return generate_method(**prepared_kwargs)
+                sample_index = 1
+                for batch_num in tqdm(range(0, num_samples // batch_size + 1)):
+                    if batch_num == num_samples // batch_size:
+                        batch_size = num_samples % batch_size
+                        prepared_kwargs.update({"num_samples": batch_size})
+
+                    batch_path = os.path.join(output_path, "batch_" + str(batch_num))
+                    prepared_kwargs.update({"output_path": batch_path})
+
+                    generate_method(**prepared_kwargs)
+
+                    for filename in os.listdir(batch_path):
+                        os.rename(
+                            os.path.join(batch_path, filename),
+                            os.path.join(output_path, str(batch_num) + "_" + filename),
+                        )
+                        sample_index += 1
+
+                    os.rmdir(batch_path)
+
         except Exception as e:
             logging.error(
                 f"{self.model_id}: Error while trying to generate images with model "
