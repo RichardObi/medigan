@@ -1,9 +1,6 @@
 # -*- coding: utf-8 -*-
 # ! /usr/bin/env python
-"""Model contributor class that tests models, creates metadata entries, uploads and contributes them to medigan.
-
-.. codeauthor:: Richard Osuala <richard.osuala@gmail.com>
-"""
+"""Model contributor class that tests models, creates metadata entries, uploads and contributes them to medigan. """
 
 from __future__ import absolute_import
 
@@ -108,9 +105,12 @@ class ModelContributor:
             assert model_id[
                 i
             ].isdigit(), f"Your model_id's ({model_id}) character '{model_id[i]}' at position {i} is not a digit. The first 5 characters should be digits as in '00001_GANTYPE_MODALITY'. Please adjust."
+        logging.info(
+            f"The provided model_id is valid and will now be used to refer to the contributed model in medigan: {model_id}"
+        )
         return True
 
-    def validate_init_py_path(self, init_py_path):
+    def validate_init_py_path(self, init_py_path) -> bool:
         """Asserts whether the `init_py_path` exists and points to a valid `__init__.py` correct file.
 
         Parameters
@@ -126,8 +126,12 @@ class ModelContributor:
             folder_path=self.init_py_path.replace(f"/{INIT_PY_FILE}", ""),
             filename=INIT_PY_FILE,
         ), f"{self.model_id}: No __init__.py was found in your path {init_py_path}. Please revise. Note: You can find an __init__.py example in /templates in https://github.com/RichardObi/medigan"
+        logging.info(
+            f"The provided path to your model's __init__.py function was valid and points to a __init__.py file: {init_py_path}"
+        )
+        return True
 
-    def validate_and_update_model_weights_path(self) -> str:
+    def validate_and_update_model_weights_path(self) -> dict:
         """Check if the model files can be found in the `package_path` or based on the `path_to_metadata`.
 
         Ideally, the user provided `package_path` and the `path_to_metadata` should both point to the same model package
@@ -189,6 +193,9 @@ class ModelContributor:
                 self.metadata[self.model_id][CONFIG_FILE_KEY_EXECUTION][
                     CONFIG_FILE_KEY_PACKAGE_LINK
                 ] = self.package_path
+                logging.info(
+                    f"The model weights path is valid and was added to the metadata of your model: {self.package_path}"
+                )
                 return self.metadata
         raise FileNotFoundError(
             f"{self.model_id}: Error validating metadata. There was no valid model weights file found. Please revise. Tested paths: '{potential_weight_paths}'"
@@ -202,6 +209,9 @@ class ModelContributor:
         try:
             sys.path.insert(1, str(self.package_path).replace(self.package_name, ""))
             importlib.import_module(name=self.package_name)
+            logging.info(
+                f"Model import test successful: The model was successfully imported using importlib: {self.package_name}"
+            )
         except Exception as e:
             raise Exception(
                 f"{self.model_id}: Error while testing importlib model import. Is your {INIT_PY_FILE} erroneous? "

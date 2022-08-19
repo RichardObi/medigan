@@ -46,5 +46,4 @@ In case you encounter problems while using `medigan` or would like to request ad
 Links
 ___________________________
 - `Github (medigan library) <https://github.com/RichardObi/medigan>`_
-- `Github (medigan config) <https://github.com/RichardObi/medigan-models>`_
 - `Test Pypi (medigan library) <https://test.pypi.org/project/medigan/>`_

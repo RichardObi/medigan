@@ -1,10 +1,6 @@
 # -*- coding: utf-8 -*-
 # ! /usr/bin/env python
-"""Model executor class that downloads models, loads them as python packages, and runs their generate functions.
-
-.. codeauthor:: Richard Osuala <richard.osuala@gmail.com>
-.. codeauthor:: Noussair Lazrak <lazrak.noussair@gmail.com>
-"""
+"""Model executor class that downloads models, loads them as python packages, and runs their generate functions. """
 
 # Import python native libs
 from __future__ import absolute_import

@@ -6,21 +6,27 @@
 [![PyPI version](https://badge.fury.io/py/medigan.svg)](https://badge.fury.io/py/medigan)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.6327625.svg)](https://doi.org/10.5281/zenodo.6327625)
 
-#### MEDIGAN - A Modular Python Library For Automating Synthetic Dataset Generation.
+#### A modular package for automated synthetic data generation.
 
-While being extendable to any modality and generative model, medigan focuses on automating medical image dataset synthesis using GANs for training deep learning models.
+- :x: **Problem 1:** Data scarcity in medical imaging. 
+
+- :x: **Problem 2:** Scarcity of readily reusable generative models in medical imaging.
+
+- :white_check_mark: **Solution: medigan** for:
+    1. dataset sharing via generative models :gift:
+    2. data augmentation :gift:
+    3. domain adaptation :gift:
+    4. multi-model datasets for synthetic data evaluation :gift:
+
+`medigan` provides functions for sharing and re-use of pretrained generative models in medical imaging.
 
 ## Features:
 
-- Researchers and ML-practitioners can conveniently use an existing model in `medigan` for synthetic data augmentation instead of having to train their own generative model each time.
+- Instead of training your own, use one a generative models from `medigan` to generate synthetic data.
 
-- Search and find a model using search terms (e.g. "Mammography, 128x128, DCGAN") or key value pairs (e.g. `key` = "modality", `value` = "Mammography")
+- Search and find a model in `medigan` using search terms (e.g. "Mammography" or "Endoscopy").
 
-- Explore the config and information (metrics, use-cases, modalities, etc) of each model in `medigan`
-
-- Generate samples using a model
-
-- Get the generate_method of a model to use dynamically inside your app
+- Contribute your own generative model to `medigan` to increase its visibility, re-use, and impact.
 
 ## Available models
 
@@ -42,6 +48,9 @@ While being extendable to any modality and generative model, medigan focuses on 
 | Breast Density Transfer CC  |   x-ray  |    cyclegan   | 1332x800 |     OPTIMAM     |  ![sample](docs/source/_static/samples/00014.png) | <sub> 00014_CYCLEGAN_MMG_DENSITY_OPTIMAM_CC </sub>  | [Zenodo (6818103)](https://doi.org/10.5281/zenodo.6818103) | | 
 | Breast Density Transfer MLO |   x-ray  |    cyclegan   | 1332x800 |     CSAW     |  ![sample](docs/source/_static/samples/00015.png) | <sub> 00015_CYCLEGAN_MMG_DENSITY_CSAW_MLO </sub>  | [Zenodo (6818105)](https://doi.org/10.5281/zenodo.6818105) | | 
 | Breast Density Transfer CC  |   x-ray  |    cyclegan   | 1332x800 |     CSAW     |  ![sample](docs/source/_static/samples/00016.png) | <sub> 00016_CYCLEGAN_MMG_DENSITY_CSAW_CC </sub>  | [Zenodo (6818107)](https://doi.org/10.5281/zenodo.6818107) | | 
+| Lung Nodules                |   x-ray  |    dcgan      | 128x128  |     NODE21     |  ![sample](docs/source/_static/samples/00017.png) | <sub> 00017_DCGAN_XRAY_LUNG_NODULES </sub>  | [Zenodo (6943691)](https://doi.org/10.5281/zenodo.6943691) | | 
+| Lung Nodules                |   x-ray  |    wgan-gp      | 128x128  |     NODE21     |  ![sample](docs/source/_static/samples/00018.png) | <sub> 00018_WGANGP_XRAY_LUNG_NODULES </sub>  | [Zenodo (6943761)](https://doi.org/10.5281/zenodo.6943761) | | 
+| Chest Xray Images           |   x-ray  |    pggan      | 1024x1024  |     NODE21     |  ![sample](docs/source/_static/samples/00019.png) | <sub> 00019_PGGAN_CHEST_XRAY </sub>  | [Zenodo (6943803)](https://doi.org/10.5281/zenodo.6943803) | | 
 
 [comment]: <> (| Spine Bone Cement Injection |    CT    |    biceps     |  128x128 |     VerSe    | <sub> to be announced </sub>                  |        |)
 
@@ -132,8 +141,8 @@ plt.show()
 ```
 ![sample](docs/source/_static/samples/gan_sample_00004_dataloader.png)
 
-## Interface for custom generation
-It is possible to generate sample by manually setting the conditional inputs or latent vector values. The sample is updated in realtime, so it's possible to observe how the images changes when the parameters are modified. The visualization is avaialble only for models with accessible input latent vector. Depending on a model, a conditional input may be also available or synthetic segmentation mask.
+## Visualize A Model 
+With our interface, it is possible to generate sample by manually setting the conditional inputs or latent vector values. The sample is updated in realtime, so it's possible to observe how the images changes when the parameters are modified. The visualization is available only for models with accessible input latent vector. Depending on a model, a conditional input may be also available or synthetic segmentation mask.
 ```
 from medigan import Generators
 
@@ -153,7 +162,7 @@ Next, run the following code to contribute your model to medigan.
 
 - Also, a Github [issue](https://github.com/RichardObi/medigan/issues) will be created to add your model's metadata to medigan's [global.json](https://github.com/RichardObi/medigan/blob/main/config/global.json).
 
-- To do so, please provide a github access token ([get one here](https://github.com/settings/tokens)) and a zenodo access token ([get one here](https://zenodo.org/account/settings/applications/tokens/new/)), as shown below.
+- To do so, please provide a github access token ([get one here](https://github.com/settings/tokens)) and a zenodo access token ([get one here](https://zenodo.org/account/settings/applications/tokens/new/)), as shown below. After creation, the zenodo access token may take a few minutes before being recognized in zenodo API calls.
 
 ```python
 from medigan import Generators

@@ -1,3 +1,7 @@
+# -*- coding: utf-8 -*-
+# ! /usr/bin/env python
+""" `ModelVisualizer` class providing visualizing corresponding model input and model output changes. """
+
 import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.widgets import Button, Slider

@@ -1,3 +1,8 @@
+# -*- coding: utf-8 -*-
+# ! /usr/bin/env python
+""" main test script for model visualization functions/classes/methods. """
+# run with python -m tests.test_model_visualizer
+
 import pytest
 
 from src.medigan.constants import (

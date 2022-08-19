@@ -1,9 +1,6 @@
 # -*- coding: utf-8 -*-
 # ! /usr/bin/env python
-""" script for quick local testing if new models work inside medigan.
-
-.. codeauthor:: Richard Osuala <richard.osuala@gmail.com>
-"""
+""" script for quick local testing if a new model can be added and works inside medigan."""
 # run with python -m tests.model_contribution_test_manual
 
 import glob
@@ -36,6 +33,9 @@ try:
     zenodo_access_token = "ACCESS_TOKEN"
     github_access_token = "ACCESS_TOKEN"
 
+    creator_name = "John Doe"
+    creator_affiliation = "University of Barcelona"
+
     # Testing full model contribution workflow.
     generators.contribute(
         model_id=model_id,
@@ -43,6 +43,8 @@ try:
         zenodo_access_token=zenodo_access_token,
         github_access_token=github_access_token,
         metadata_file_path=metadata_file_path,
+        creator_name=creator_name,
+        creator_affiliation=creator_affiliation,
     )
 
     # Testing init of contributor with erroneous params

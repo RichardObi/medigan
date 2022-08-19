@@ -1,7 +1,7 @@
 ModelSelector
 =============
 
-.. currentmodule:: medigan.model_selector
+.. currentmodule:: medigan.select_model.model_selector
 
 .. autoclass:: ModelSelector
    :show-inheritance:

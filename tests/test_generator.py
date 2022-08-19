@@ -1,9 +1,6 @@
 # -*- coding: utf-8 -*-
 # ! /usr/bin/env python
-""" main test script to test the primary functions/classes/methods of the medigan module.
-
-.. codeauthor:: Richard Osuala <richard.osuala@gmail.com>
-"""
+""" main test script to test the primary functions/classes/methods. """
 # run with python -m tests.test_generator
 
 import glob
@@ -43,6 +40,9 @@ models = [
     ("00014_CYCLEGAN_MMG_DENSITY_OPTIMAM_CC", {"translate_all_images": False}, 2),
     ("00015_CYCLEGAN_MMG_DENSITY_CSAW_MLO", {"translate_all_images": False}, 2),
     ("00016_CYCLEGAN_MMG_DENSITY_CSAW_CC", {"translate_all_images": False}, 2),
+    ("00017_DCGAN_XRAY_LUNG_NODULES", {}, 3),
+    ("00018_WGANGP_XRAY_LUNG_NODULES", {}, 3),
+    ("00019_PGGAN_CHEST_XRAY", {}, 3),
 ]
 
 # class TestMediganMethods(unittest.TestCase):

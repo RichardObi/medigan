@@ -1,10 +1,6 @@
 # -*- coding: utf-8 -*-
 # ! /usr/bin/env python
-""" Config manager class that downloads, ingests, parses, and prepares the config information for all models.
-
-.. codeauthor:: Richard Osuala <richard.osuala@gmail.com>
-.. codeauthor:: Noussair Lazrak <lazrak.noussair@gmail.com>
-"""
+""" Config manager class that downloads, ingests, parses, and prepares the config information for all models. """
 
 # Import python native libs
 from __future__ import absolute_import
