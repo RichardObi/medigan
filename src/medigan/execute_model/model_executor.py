@@ -330,7 +330,7 @@ class ModelExecutor:
             )
             prepared_kwargs = self._prepare_generate_method_args(
                 model_file=self.serialised_model_file_path,
-                num_samples=batch_size,
+                num_samples=num_samples,
                 output_path=output_path,
                 save_images=save_images,
                 **kwargs,
@@ -347,8 +347,9 @@ class ModelExecutor:
                     return generate_method(**prepared_kwargs)
 
                 return gen
-            else:
+            elif save_images:
                 sample_index = 1
+                prepared_kwargs.update({"num_samples": batch_size})
                 for batch_num in tqdm(range(0, num_samples // batch_size + 1)):
                     if batch_num == num_samples // batch_size:
                         batch_size = num_samples % batch_size
@@ -367,6 +368,8 @@ class ModelExecutor:
                         sample_index += 1
 
                     os.rmdir(batch_path)
+            else:
+                return generate_method(**prepared_kwargs)
 
         except Exception as e:
             logging.error(
