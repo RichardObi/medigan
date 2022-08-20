@@ -6,17 +6,17 @@
 [![PyPI version](https://badge.fury.io/py/medigan.svg)](https://badge.fury.io/py/medigan)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.6327625.svg)](https://doi.org/10.5281/zenodo.6327625)
 
-#### A modular package for automated synthetic data generation.
+## A modular package for automated synthetic data generation.
 
 - :x: **Problem 1:** Data scarcity in medical imaging. 
 
 - :x: **Problem 2:** Scarcity of readily reusable generative models in medical imaging.
 
-- :white_check_mark: **Solution: medigan** for:
+- :white_check_mark: **Solution:** `medigan`
     1. dataset sharing via generative models :gift:
     2. data augmentation :gift:
     3. domain adaptation :gift:
-    4. multi-model datasets for synthetic data evaluation :gift:
+    4. synthetic multi-model datasets for generative model evaluation method testing :gift:
 
 `medigan` provides functions for sharing and re-use of pretrained generative models in medical imaging.
 
