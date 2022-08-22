@@ -304,6 +304,8 @@ class ModelExecutor:
             flag indicating whether generated samples are returned (i.e. as list of numpy arrays) or rather stored in file system (i.e in `output_path`)
         is_gen_function_returned: bool
             flag indicating whether, instead of generating samples, the sample generation function will be returned
+        batch_size: int
+            the batch size for the sample generation function
         **kwargs
             arbitrary number of keyword arguments passed to the model's sample generation function
 
