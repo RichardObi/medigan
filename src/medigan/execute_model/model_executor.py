@@ -363,7 +363,9 @@ class ModelExecutor:
                     for filename in os.listdir(batch_path):
                         os.rename(
                             os.path.join(batch_path, filename),
-                            os.path.join(output_path, "batch_" + str(batch_num) + "_" + filename),
+                            os.path.join(
+                                output_path, "batch_" + str(batch_num) + "_" + filename
+                            ),
                         )
                         sample_index += 1
 
