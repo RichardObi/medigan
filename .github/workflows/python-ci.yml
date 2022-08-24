@@ -146,4 +146,4 @@ jobs:
 
     - name: Test with pytest
       run: |
-        pytest ignore::DeprecationWarning
+        pytest -v ignore::DeprecationWarning
