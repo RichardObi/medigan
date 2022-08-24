@@ -35,14 +35,14 @@ models = [
     ("00009_PGGAN_POLYP_PATCHES_W_MASKS", {"save_option": "image_only"}, 3),
     ("00010_FASTGAN_POLYP_PATCHES_W_MASKS", {"save_option": "image_only"}, 3),
     ("00011_SINGAN_POLYP_PATCHES_W_MASKS", {"checkpoint_ids": [999]}, 3),
-    ("00012_C-DCGAN_MMG_MASSES", {"condition": 0}, 3),
-    ("00013_CYCLEGAN_MMG_DENSITY_OPTIMAM_MLO", {"translate_all_images": False}, 2),
-    ("00014_CYCLEGAN_MMG_DENSITY_OPTIMAM_CC", {"translate_all_images": False}, 2),
-    ("00015_CYCLEGAN_MMG_DENSITY_CSAW_MLO", {"translate_all_images": False}, 2),
-    ("00016_CYCLEGAN_MMG_DENSITY_CSAW_CC", {"translate_all_images": False}, 2),
-    ("00017_DCGAN_XRAY_LUNG_NODULES", {}, 3),
-    ("00018_WGANGP_XRAY_LUNG_NODULES", {}, 3),
-    ("00019_PGGAN_CHEST_XRAY", {}, 3),
+    # ("00012_C-DCGAN_MMG_MASSES", {"condition": 0}, 3),
+    # ("00013_CYCLEGAN_MMG_DENSITY_OPTIMAM_MLO", {"translate_all_images": False}, 2),
+    # ("00014_CYCLEGAN_MMG_DENSITY_OPTIMAM_CC", {"translate_all_images": False}, 2),
+    # ("00015_CYCLEGAN_MMG_DENSITY_CSAW_MLO", {"translate_all_images": False}, 2),
+    # ("00016_CYCLEGAN_MMG_DENSITY_CSAW_CC", {"translate_all_images": False}, 2),
+    # ("00017_DCGAN_XRAY_LUNG_NODULES", {}, 3),
+    # ("00018_WGANGP_XRAY_LUNG_NODULES", {}, 3),
+    # ("00019_PGGAN_CHEST_XRAY", {}, 3),
 ]
 
 # class TestMediganMethods(unittest.TestCase):
