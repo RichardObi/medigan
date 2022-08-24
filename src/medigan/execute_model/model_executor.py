@@ -357,7 +357,7 @@ class ModelExecutor:
                         batch_size = num_samples % batch_size
                         prepared_kwargs.update({"num_samples": batch_size})
 
-                    batch_path = os.path.join(output_path, "batch_" + str(batch_num))
+                    batch_path = os.path.join(output_path, "batch_" + str(batch_num))+"/"
                     prepared_kwargs.update({"output_path": batch_path})
 
                     generate_method(**prepared_kwargs)
