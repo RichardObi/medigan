@@ -16,7 +16,7 @@
     1. dataset sharing via generative models :gift:
     2. data augmentation :gift:
     3. domain adaptation :gift:
-    4. synthetic multi-model datasets for generative model evaluation method testing :gift:
+    4. synthetic data evaluation method testing with multi-model datasets :gift:
 
 `medigan` provides functions for sharing and re-use of pretrained generative models in medical imaging.
 

@@ -1,8 +1,8 @@
 {
     "00001_DCGAN_MMG_CALC_ROI": {
         "execution": {
-            "package_name": "DCGAN",
-            "package_link": "https://zenodo.org/record/6647234/files/DCGAN.zip?download=1",
+            "package_name": "00001_DCGAN_MMG_CALC_ROI",
+            "package_link": "https://zenodo.org/record/7031735/files/00001_DCGAN_MMG_CALC_ROI.zip?download=1",
             "model_name": "DCGAN",
             "extension": ".pt",
             "image_size": [
@@ -542,8 +542,8 @@
     },
     "00005_DCGAN_MMG_MASS_ROI": {
         "execution": {
-            "package_name": "DCGAN",
-            "package_link": "https://zenodo.org/record/6647263/files/DCGAN_MMG_MASSES_BCDR_IWBI22.zip?download=1",
+            "package_name": "00005_DCGAN_MMG_MASS_ROI",
+            "package_link": "https://zenodo.org/record/7031758/files/00005_DCGAN_MMG_MASS_ROI.zip?download=1",
             "model_name": "500",
             "extension": ".pt",
             "image_size": [
@@ -676,8 +676,8 @@
     },
     "00006_WGANGP_MMG_MASS_ROI": {
         "execution": {
-            "package_name": "WGANGP_MMG_MASSES_BCDR_IWBI22",
-            "package_link": "https://zenodo.org/record/6647264/files/WGANGP_MMG_MASSES_BCDR_IWBI22.zip?download=1",
+            "package_name": "00006_WGANGP_MMG_MASS_ROI",
+            "package_link": "https://zenodo.org/record/7031763/files/00006_WGANGP_MMG_MASS_ROI.zip?download=1",
             "model_name": "10000",
             "extension": ".pt",
             "image_size": [
@@ -927,8 +927,8 @@
     },
     "00008_C-DCGAN_MMG_MASSES": {
         "execution": {
-            "package_name": "C-DCGAN_MMG_MASSES_CBISDDSM_MAL_BEN",
-            "package_link": "https://zenodo.org/record/6759489/files/C-DCGAN_MMG_MASSES_CBISDDSM_MAL_BEN.zip?download=1",
+            "package_name": "00008_C-DCGAN_MMG_MASSES",
+            "package_link": "https://zenodo.org/record/7031766/files/00008_C-DCGAN_MMG_MASSES.zip?download=1",
             "model_name": "1750",
             "extension": ".pt",
             "image_size": [
@@ -1455,8 +1455,8 @@
     },
     "00012_C-DCGAN_MMG_MASSES": {
         "execution": {
-            "package_name": "C-DCGAN_MMG_MASSES_BCDR_MAL_BEN",
-            "package_link": "https://zenodo.org/record/6759283/files/C-DCGAN_MMG_MASSES_BCDR_MAL_BEN.zip?download=1",
+            "package_name": "00012_C-DCGAN_MMG_MASSES",
+            "package_link": "https://zenodo.org/record/7031755/files/00012_C-DCGAN_MMG_MASSES.zip?download=1",
             "model_name": "1250",
             "extension": ".pt",
             "image_size": [
