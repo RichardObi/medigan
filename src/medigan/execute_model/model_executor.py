@@ -304,6 +304,8 @@ class ModelExecutor:
             flag indicating whether generated samples are returned (i.e. as list of numpy arrays) or rather stored in file system (i.e in `output_path`)
         is_gen_function_returned: bool
             flag indicating whether, instead of generating samples, the sample generation function will be returned
+        batch_size: int
+            the batch size for the sample generation function
         **kwargs
             arbitrary number of keyword arguments passed to the model's sample generation function
 
@@ -355,7 +357,9 @@ class ModelExecutor:
                         batch_size = num_samples % batch_size
                         prepared_kwargs.update({"num_samples": batch_size})
 
-                    batch_path = os.path.join(output_path, "batch_" + str(batch_num))
+                    batch_path = (
+                        os.path.join(output_path, "batch_" + str(batch_num)) + "/"
+                    )
                     prepared_kwargs.update({"output_path": batch_path})
 
                     generate_method(**prepared_kwargs)
@@ -363,7 +367,9 @@ class ModelExecutor:
                     for filename in os.listdir(batch_path):
                         os.rename(
                             os.path.join(batch_path, filename),
-                            os.path.join(output_path, str(batch_num) + "_" + filename),
+                            os.path.join(
+                                output_path, "batch_" + str(batch_num) + "_" + filename
+                            ),
                         )
                         sample_index += 1
 
