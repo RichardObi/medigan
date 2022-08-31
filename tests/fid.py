@@ -146,7 +146,9 @@ def get_classifier_fn(model_name="imagenet"):
         raise ValueError("Model {} not recognized".format(model_name))
 
 
-def calculate_fid(directory_1, directory_2, model_name, normalize_images=False, lower_bound=False):
+def calculate_fid(
+    directory_1, directory_2, model_name, normalize_images=False, lower_bound=False
+):
     """
     Calculates the Frechet Inception Distance between two distributions using chosen feature extractor model.
     """
@@ -173,7 +175,9 @@ if __name__ == "__main__":
     normalize_images = args.normalize_images
     model_name = args.model
 
-    fid = calculate_fid(directory_1, directory_2, model_name, lower_bound, normalize_images)
+    fid = calculate_fid(
+        directory_1, directory_2, model_name, lower_bound, normalize_images
+    )
 
     if lower_bound:
         print("Lower bound FID {}: {}".format(model_name, fid))
