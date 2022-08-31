@@ -5,18 +5,25 @@
 
 import glob
 import logging
+import os
 import shutil
 import sys
-import numpy as np
-#import unittest
 
+import numpy as np
 import pytest
+
+# import unittest
+
 
 # Set the logging level depending on the level of detail you would like to have in the logs while running the tests.
 LOGGING_LEVEL = logging.WARNING  # logging.INFO
 
 models = [
-    ("00001_DCGAN_MMG_CALC_ROI", {}, 100), #100 samples to test automatic batch-wise image generation in model_executor
+    (
+        "00001_DCGAN_MMG_CALC_ROI",
+        {},
+        100,
+    ),  # 100 samples to test automatic batch-wise image generation in model_executor
     ("00002_DCGAN_MMG_MASS_ROI", {}, 3),
     ("00003_CYCLEGAN_MMG_DENSITY_FULL", {"translate_all_images": False}, 2),
     (
@@ -116,21 +123,25 @@ class TestMediganMethods:
     def test_get_dataloader_method(self, model_id):
         self._remove_dir_and_contents()
         data_loader = self.generators.get_as_torch_dataloader(
-            model_id=model_id,
-            num_samples=self.num_samples
+            model_id=model_id, num_samples=self.num_samples
         )
         #### Get the object at index 0 from the dataloader
         first_object = next(iter(data_loader))
         # Test if the items at index [0] of the aforementioned object is of type numpy array and not None, as expected by data structure design decision.
-        assert(isinstance(first_object[0], np.ndarray)) #, np.generic) )
+        assert isinstance(first_object[0], np.ndarray)  # , np.generic) )
 
         # Test if the items at index [1], [2] of the aforementioned object are None and, if not, whether they are of type numpy array, as expected
-        assert(first_object[1] is None or isinstance(first_object[1], np.ndarray)) #, np.generic) )
-        assert(first_object[2] is None or isinstance(first_object[2], np.ndarray)) #, np.generic) )
+        assert first_object[1] is None or isinstance(
+            first_object[1], np.ndarray
+        )  # , np.generic) )
+        assert first_object[2] is None or isinstance(
+            first_object[2], np.ndarray
+        )  # , np.generic) )
 
         # Test if the items at index [3] of the aforementioned object is None and, if not, whether it is of type string, as expected.
-        assert(first_object[3] is None or isinstance(first_object[3], str)) #, np.generic) )
-
+        assert first_object[3] is None or isinstance(
+            first_object[3], str
+        )  # , np.generic) )
 
     def test_search_for_models_method(self):
         values_list = ["dcgan", "mMg", "ClF", "modality"]
@@ -271,7 +282,7 @@ class TestMediganMethods:
             assert len(file_list) == 0
 
     def _remove_dir_and_contents(self):
-        """ After each test, empty the created folders and files to avoid corrupting a new test. """
+        """After each test, empty the created folders and files to avoid corrupting a new test."""
 
         try:
             shutil.rmtree(self.test_output_path)
@@ -283,3 +294,38 @@ class TestMediganMethods:
         except Exception as e2:
             self.logger.error(f"Error while trying to delete folder: {e2}")
 
+    @pytest.fixture(scope="session")
+    def _remove_model_dirs_and_zips(self):
+        """After all tests, empty the large model folders to avoid running out-of-disk space."""
+
+        # yield is at test-time, signaling that things after yield are run after the execution of the last test has terminated
+        yield None
+
+        try:
+            for model_executor in self.generators.model_executors:
+                try:
+                    # Delete the folder containing the model
+                    model_path = os.path.dirname(
+                        model_executor.deserialized_model_as_lib.__file__
+                    )
+                    shutil.rmtree(model_path)
+                except OSError as e:
+                    # This may give an error if the FOLDER is not present
+                    self.logger.warning(
+                        f"Exception while trying to delete the model folder of model {model_executor.model_id}: {e}"
+                    )
+                try:
+                    # If the downloaded zip package of the model was not deleted inside the model_path, we explicitely delete it now.
+                    if model_executor.package_path.is_file():
+                        os.remove(model_executor.package_path)
+                except Exception as e:
+                    self.logger.warning(
+                        f"Exception while trying to delete the ZIP file ({model_executor.package_path}) of model {model_executor.model_id}: {e}"
+                    )
+            # Deleting the stateful model_executors instantiated by the generators module
+            # It seems better to start with clean new model_executors, if need be, after deleting respective model folders and zip files
+            self.generators.model_executors.clear()
+        except Exception as e2:
+            self.logger.error(
+                f"Error while trying to delete model folders and zips: {e2}"
+            )
