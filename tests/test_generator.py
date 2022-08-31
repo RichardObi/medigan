@@ -7,7 +7,8 @@ import glob
 import logging
 import shutil
 import sys
-import unittest
+import numpy as np
+#import unittest
 
 import pytest
 
@@ -15,7 +16,7 @@ import pytest
 LOGGING_LEVEL = logging.WARNING  # logging.INFO
 
 models = [
-    ("00001_DCGAN_MMG_CALC_ROI", {}, 3),
+    ("00001_DCGAN_MMG_CALC_ROI", {}, 100), #100 samples to test automatic batch-wise image generation in model_executor
     ("00002_DCGAN_MMG_MASS_ROI", {}, 3),
     ("00003_CYCLEGAN_MMG_DENSITY_FULL", {"translate_all_images": False}, 2),
     (
@@ -108,10 +109,28 @@ class TestMediganMethods:
             num_samples=self.num_samples,
             output_path=self.test_output_path,
         )
-
         gen_function()
-
         self._check_if_samples_were_generated()
+
+    @pytest.mark.parametrize("model_id", [model[0] for model in models])
+    def test_get_dataloader_method(self, model_id):
+        self._remove_dir_and_contents()
+        data_loader = self.generators.get_as_torch_dataloader(
+            model_id=model_id,
+            num_samples=self.num_samples
+        )
+        #### Get the object at index 0 from the dataloader
+        first_object = next(iter(data_loader))
+        # Test if the items at index [0] of the aforementioned object is of type numpy array and not None, as expected by data structure design decision.
+        assert(isinstance(first_object[0], np.ndarray)) #, np.generic) )
+
+        # Test if the items at index [1], [2] of the aforementioned object are None and, if not, whether they are of type numpy array, as expected
+        assert(first_object[1] is None or isinstance(first_object[1], np.ndarray)) #, np.generic) )
+        assert(first_object[2] is None or isinstance(first_object[2], np.ndarray)) #, np.generic) )
+
+        # Test if the items at index [3] of the aforementioned object is None and, if not, whether it is of type string, as expected.
+        assert(first_object[3] is None or isinstance(first_object[3], str)) #, np.generic) )
+
 
     def test_search_for_models_method(self):
         values_list = ["dcgan", "mMg", "ClF", "modality"]
@@ -252,7 +271,8 @@ class TestMediganMethods:
             assert len(file_list) == 0
 
     def _remove_dir_and_contents(self):
-        # After each test, empty the created folders and files to avoid corrupting a new test.
+        """ After each test, empty the created folders and files to avoid corrupting a new test. """
+
         try:
             shutil.rmtree(self.test_output_path)
         except OSError as e:
@@ -262,3 +282,4 @@ class TestMediganMethods:
             )
         except Exception as e2:
             self.logger.error(f"Error while trying to delete folder: {e2}")
+
