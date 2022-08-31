@@ -276,6 +276,7 @@ class Utils:
 
         samples = []
         masks = []
+        other_imaging_output = []
         labels = []
         # if data is smaller than the number of samples that should have been generated, then data likely contains a nested array.
         # We go a maximum of max_nested_arrays deep into the data.
@@ -294,14 +295,17 @@ class Utils:
                         samples.append(item)
                     elif isinstance(item, np.ndarray) and i == 1:
                         masks.append(item)
+                    elif isinstance(item, np.ndarray) and i == 2:
+                        other_imaging_output.append(item)
                     elif isinstance(item, str):
                         labels.append(item)
             elif isinstance(data_point, np.ndarray):
                 # An image is expected in the case no tuple is returned
                 samples.append(data_point)
         masks = None if len(masks) == 0 else masks
+        other_imaging_output = None if len(other_imaging_output) == 0 else other_imaging_output
         labels = None if len(labels) == 0 else labels
-        return samples, masks, labels
+        return samples, masks, other_imaging_output, labels
 
     @staticmethod
     def split_images_and_masks_no_ordering(

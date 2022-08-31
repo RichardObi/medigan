@@ -1369,13 +1369,13 @@ class Generators:
             **kwargs,
         )
 
-        samples, masks, labels = Utils.split_images_masks_and_labels(
+        samples, masks, other_imaging_output, labels = Utils.split_images_masks_and_labels(
             data=data, num_samples=num_samples
         )
-        logging.debug(f"samples: {samples} \n masks: {masks} \n labels: {labels}")
+        logging.debug(f"samples: {samples} \n masks: {masks} \n other_imaging_output: {other_imaging_output} \n labels: {labels}")
 
         return SyntheticDataset(
-            samples=samples, masks=masks, labels=labels, transform=transform
+            samples=samples, masks=masks, other_imaging_output=other_imaging_output, labels=labels, transform=transform
         )
 
     def visualize(
