@@ -8,15 +8,14 @@ import logging
 import os
 import shutil
 import sys
-
-import numpy as np
+import torch
 import pytest
 
 # import unittest
 
 
 # Set the logging level depending on the level of detail you would like to have in the logs while running the tests.
-LOGGING_LEVEL = logging.WARNING  # logging.INFO
+LOGGING_LEVEL = logging.INFO #WARNING  # logging.INFO
 
 models = [
     (
@@ -126,22 +125,17 @@ class TestMediganMethods:
             model_id=model_id, num_samples=self.num_samples
         )
         #### Get the object at index 0 from the dataloader
-        first_object = next(iter(data_loader))
-        # Test if the items at index [0] of the aforementioned object is of type numpy array and not None, as expected by data structure design decision.
-        assert isinstance(first_object[0], np.ndarray)  # , np.generic) )
+        data_dict = next(iter(data_loader))
 
-        # Test if the items at index [1], [2] of the aforementioned object are None and, if not, whether they are of type numpy array, as expected
-        assert first_object[1] is None or isinstance(
-            first_object[1], np.ndarray
-        )  # , np.generic) )
-        assert first_object[2] is None or isinstance(
-            first_object[2], np.ndarray
-        )  # , np.generic) )
+        # Test if the items at index [0] of the aforementioned object is of type torch tensor (e.g. torch.uint8) and not None, as expected by data structure design decision.
+        assert torch.is_tensor(data_dict.get("sample"))
 
-        # Test if the items at index [3] of the aforementioned object is None and, if not, whether it is of type string, as expected.
-        assert first_object[3] is None or isinstance(
-            first_object[3], str
-        )  # , np.generic) )
+        # Test if the items at index [1], [2] of the aforementioned object are None and, if not, whether they are of type torch tensor, as expected
+        assert data_dict.get("mask") is None or torch.is_tensor(data_dict.get("mask"))
+        assert data_dict.get("other_imaging_output") is None or torch.is_tensor(data_dict.get("other_imaging_output"))
+
+        # Test if the items at index [3] of the aforementioned object is None and, if not, whether it is of type list of strings, as expected.
+        assert data_dict.get("label") is None or (isinstance(data_dict.get("label"), list) and isinstance(data_dict.get("label")[0], str))
 
     def test_search_for_models_method(self):
         values_list = ["dcgan", "mMg", "ClF", "modality"]
@@ -294,15 +288,19 @@ class TestMediganMethods:
         except Exception as e2:
             self.logger.error(f"Error while trying to delete folder: {e2}")
 
-    @pytest.fixture(scope="session")
-    def _remove_model_dirs_and_zips(self):
+    @pytest.fixture(scope="session", autouse=True)
+    def _remove_model_dirs_and_zips(self, num_models_to_delete=2):
         """After all tests, empty the large model folders to avoid running out-of-disk space."""
 
         # yield is at test-time, signaling that things after yield are run after the execution of the last test has terminated
+        # https://docs.pytest.org/en/7.1.x/reference/reference.html?highlight=fixture#pytest.fixture
         yield None
 
         try:
-            for model_executor in self.generators.model_executors:
+            for i, model_executor in enumerate(self.generators.model_executors):
+                if num_models_to_delete is not None and i > num_models_to_delete:
+                    # Option to opt out of model deletion (e.g. to avoid having to re-download models locally each time)
+                    break
                 try:
                     # Delete the folder containing the model
                     model_path = os.path.dirname(
@@ -322,8 +320,7 @@ class TestMediganMethods:
                     self.logger.warning(
                         f"Exception while trying to delete the ZIP file ({model_executor.package_path}) of model {model_executor.model_id}: {e}"
                     )
-            # Deleting the stateful model_executors instantiated by the generators module
-            # It seems better to start with clean new model_executors, if need be, after deleting respective model folders and zip files
+            # Deleting the stateful model_executors instantiated by the generators module, after deleting folders and zips
             self.generators.model_executors.clear()
         except Exception as e2:
             self.logger.error(

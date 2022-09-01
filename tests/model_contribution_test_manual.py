@@ -26,8 +26,8 @@ try:
     generators = Generators()
 
     # Testing init of contributor with correct params
-    init_py_path = "models/00012_C-DCGAN_MMG_MASSES/__init__.py"
-    metadata_file_path = "models/00012_C-DCGAN_MMG_MASSES/metadata.json"
+    init_py_path = "../models/00012_C-DCGAN_MMG_MASSES/__init__.py"
+    metadata_file_path = "../models/00012_C-DCGAN_MMG_MASSES/metadata.json"
     model_id = "00012_C-DCGAN_MMG_MASSES"
 
     zenodo_access_token = "ACCESS_TOKEN"
