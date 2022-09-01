@@ -6,6 +6,10 @@
 # - Run tests with pytest
 
 
+# ubuntu-latest has 7GB RAM and 14GB SSD. macos-latest has 14GB RAM and 14GB SSD. Using macos assuming more RAM -> faster tests -> less timeouts
+# Nonetheless, our tests seem to need >10 GB RAM and >16,7 GB SSD Space. Test refactoring needed.
+# https://docs.github.com/en/actions/using-github-hosted-runners/about-github-hosted-runners#supported-runners-and-hardware-resources
+
 name: Build and test
 
 on:
@@ -18,7 +22,7 @@ jobs:
   formatting:
     outputs:
       new_sha: ${{ steps.sha.outputs.SHA }}
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
 
     steps:
       - name: Checkout code
@@ -62,7 +66,7 @@ jobs:
   build:
     if: always()
     needs: formatting
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
 
     steps:
     - name: Checkout to latest changes
@@ -80,7 +84,7 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install flake8 pytest
+        pip install flake8 pytest pytest-cov pytest-github-actions-annotate-failures
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
         pip install -e .
 
@@ -90,7 +94,7 @@ jobs:
 
   lint:
     needs: build
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
 
     steps:
     - name: Checkout to latest changes
@@ -121,7 +125,7 @@ jobs:
   
   test:
     needs: build
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
 
     steps:
     - name: Checkout to latest changes
@@ -140,10 +144,11 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-        pip install pytest
+        pip install pytest pytest-cov pytest-github-actions-annotate-failures
         pip install -e .
         python src/medigan/execute_model/install_model_dependencies.py
 
     - name: Test with pytest
       run: |
-        pytest -W ignore::DeprecationWarning
+        pytest --verbose --failed-first --cov=. --cov-report html --log-cli-level=WARNING #--capture=tee-sys
+        # pytest -W ignore::DeprecationWarning
