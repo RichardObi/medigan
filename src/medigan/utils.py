@@ -13,7 +13,6 @@ from pathlib import Path
 from urllib.parse import urlparse  # python3
 
 import numpy as np
-
 # Import pypi libs
 import requests
 from tqdm import tqdm
@@ -262,13 +261,13 @@ class Utils:
     @staticmethod
     def split_images_masks_and_labels(
         data: list, num_samples: int, max_nested_arrays: int = 2
-    ) -> [np.ndarray, np.ndarray, str]:
-        """Separates the data (sample, mask, label) returned by a generative model
+    ) -> [list, list, list, list]:
+        """Separates the data (sample, mask, other_imaging_data, label) returned by a generative model
 
         This functions expects a list of tuples as input `data` and assumes that each
-        tuple contains sample, mask, label at index positions [0], [1], and [2] respectively.
+        tuple contains sample, mask, other_imaging_data, label at index positions [0], [1], [2], and [3] respectively.
 
-        samples, and masks are expected to be of type np.ndarray and labels of type "str".
+        samples, masks, and imaging data are expected to be of type np.ndarray and labels of type "str".
 
         For example, this extendable function assumes that, in data, a mask follows the image that it
         corresponds to or vice versa.

@@ -8,16 +8,17 @@ import logging
 import os
 import shutil
 import sys
-import torch
+
 import pytest
+import torch
 
 # import unittest
 
 
 # Set the logging level depending on the level of detail you would like to have in the logs while running the tests.
-LOGGING_LEVEL = logging.INFO #WARNING  # logging.INFO
+LOGGING_LEVEL = logging.INFO  # WARNING  # logging.INFO
 
-models = [
+models_with_args = [
     (
         "00001_DCGAN_MMG_CALC_ROI",
         {},
@@ -52,8 +53,8 @@ models = [
     ("00019_PGGAN_CHEST_XRAY", {}, 3),
 ]
 
-# class TestMediganMethods(unittest.TestCase):
-class TestMediganMethods:
+# class TestMediganExecutorMethods(unittest.TestCase):
+class TestMediganExecutorMethods:
     def setup_method(self):
 
         ## unittest logger config
@@ -70,20 +71,47 @@ class TestMediganMethods:
         self.logger.addHandler(stream_handler)
 
         self.test_output_path = "test_output_path"
-        self.num_samples = 1
-        self.test_medigan_imports()
-        self.test_init_generators()
+        self.num_samples = 2
+        self.test_imports_and_init_generators()
         self._remove_dir_and_contents()  # in case something is left there.
+        self.model_ids = self.generators.config_manager.model_ids
 
-    def test_medigan_imports(self):
-        import src.medigan
-
-    def test_init_generators(self):
+    def test_imports_and_init_generators(self):
         from src.medigan.generators import Generators
+        from src.medigan.constants import (
+            CONFIG_FILE_KEY_EXECUTION,
+            CONFIG_FILE_KEY_GENERATE,
+            CONFIG_FILE_KEY_GENERATE_ARGS_INPUT_LATENT_VECTOR_SIZE,
+        )
 
         self.generators = Generators()
+        self.CONFIG_FILE_KEY_EXECUTION = CONFIG_FILE_KEY_EXECUTION
+        self.CONFIG_FILE_KEY_GENERATE = CONFIG_FILE_KEY_GENERATE
+        self.CONFIG_FILE_KEY_GENERATE_ARGS_INPUT_LATENT_VECTOR_SIZE = (
+            CONFIG_FILE_KEY_GENERATE_ARGS_INPUT_LATENT_VECTOR_SIZE
+        )
 
-    @pytest.mark.parametrize("model_id", [model[0] for model in models])
+    @pytest.mark.parametrize("models_with_args", [models_with_args])
+    def test_sample_generation_methods(self, models_with_args: list):
+
+        self.logger.debug(f"models: {models_with_args}")
+        for i, model_id in enumerate(self.model_ids):
+            self._remove_dir_and_contents()  # Already done in each test independently, but to be sure, here again.
+            self.test_generate_method(model_id=model_id)
+
+            # Check if args available fo model_id. Note: The models list may not include the latest medigan models
+            for model in models_with_args:
+                if model_id == model[0]:
+                    self.test_generate_method_with_additional_args(
+                        model_id=model[0], args=model[1], expected_num_samples=model[2]
+                    )
+            self.test_get_generate_method(model_id=model_id)
+            self.test_get_dataloader_method(model_id=model_id)
+
+            if i == 16:  # TODO just for local testing
+                self._remove_model_dir_and_zip(self, model_ids=[model_id])
+
+    # @pytest.mark.parametrize("model_id", [model[0] for model in models_with_args])
     def test_generate_method(self, model_id):
         self._remove_dir_and_contents()
         self.generators.generate(
@@ -93,11 +121,10 @@ class TestMediganMethods:
         )
         self._check_if_samples_were_generated()
 
-    @pytest.mark.parametrize("model_id, args, expected_num_samples", models)
+    # @pytest.mark.parametrize("model_id, args, expected_num_samples", models_with_args)
     def test_generate_method_with_additional_args(
         self, model_id, args, expected_num_samples
     ):
-
         self._remove_dir_and_contents()
         self.generators.generate(
             model_id=model_id,
@@ -107,7 +134,7 @@ class TestMediganMethods:
         )
         self._check_if_samples_were_generated(num_samples=expected_num_samples)
 
-    @pytest.mark.parametrize("model_id", [model[0] for model in models])
+    # @pytest.mark.parametrize("model_id", [model[0] for model in models_with_args])
     def test_get_generate_method(self, model_id):
         self._remove_dir_and_contents()
         gen_function = self.generators.get_generate_function(
@@ -117,8 +144,9 @@ class TestMediganMethods:
         )
         gen_function()
         self._check_if_samples_were_generated()
+        del gen_function
 
-    @pytest.mark.parametrize("model_id", [model[0] for model in models])
+    # @pytest.mark.parametrize("model_id", [model[0] for model in models_with_args])
     def test_get_dataloader_method(self, model_id):
         self._remove_dir_and_contents()
         data_loader = self.generators.get_as_torch_dataloader(
@@ -132,31 +160,36 @@ class TestMediganMethods:
 
         # Test if the items at index [1], [2] of the aforementioned object are None and, if not, whether they are of type torch tensor, as expected
         assert data_dict.get("mask") is None or torch.is_tensor(data_dict.get("mask"))
-        assert data_dict.get("other_imaging_output") is None or torch.is_tensor(data_dict.get("other_imaging_output"))
+        assert data_dict.get("other_imaging_output") is None or torch.is_tensor(
+            data_dict.get("other_imaging_output")
+        )
 
         # Test if the items at index [3] of the aforementioned object is None and, if not, whether it is of type list of strings, as expected.
-        assert data_dict.get("label") is None or (isinstance(data_dict.get("label"), list) and isinstance(data_dict.get("label")[0], str))
-
-    def test_search_for_models_method(self):
-        values_list = ["dcgan", "mMg", "ClF", "modality"]
-        models = self.generators.find_matching_models_by_values(
-            values=values_list,
-            target_values_operator="AND",
-            are_keys_also_matched=True,
-            is_case_sensitive=False,
+        assert data_dict.get("label") is None or (
+            isinstance(data_dict.get("label"), list)
+            and isinstance(data_dict.get("label")[0], str)
         )
-        self.logger.debug(f"For value {values_list}, these models were found: {models}")
-        assert len(models) > 0
+        del data_dict
+        del data_loader
 
-        values_list = ["DCGAN", "Mammography"]
-        models = self.generators.find_matching_models_by_values(
-            values=values_list,
-            target_values_operator="OR",
-            are_keys_also_matched=False,
-            is_case_sensitive=True,
-        )
-        self.logger.debug(f"For value {values_list}, these models were found: {models}")
-        assert len(models) > 0
+    # @pytest.mark.parametrize("model_id", [model[0] for model in models_with_args])
+    def test_visualize_method(self, model_id):
+        self._remove_dir_and_contents()
+        if (
+            self.CONFIG_FILE_KEY_GENERATE_ARGS_INPUT_LATENT_VECTOR_SIZE
+            in self.generators.config_manager.config_dict[model_id][
+                self.CONFIG_FILE_KEY_EXECUTION
+            ][self.CONFIG_FILE_KEY_GENERATE]
+        ):
+
+            self.generators.visualize(model_id, auto_close=True)
+
+        else:
+            with pytest.raises(Exception) as e:
+
+                self.generators.visualize(model_id, auto_close=True)
+
+                assert e.type == ValueError
 
     @pytest.mark.parametrize(
         "values_list, should_sample_be_generated",
@@ -205,56 +238,7 @@ class TestMediganMethods:
             num_samples=self.num_samples,
             output_path=self.test_output_path,
         )
-
         self._check_if_samples_were_generated()
-
-    @pytest.mark.parametrize(
-        "values_list, metric",
-        [(["dcgan", "MMG"], "downstream_task.CLF.trained_on_real_and_fake.f1")],
-    )
-    def test_find_and_rank_models_by_performance(self, values_list, metric):
-        # These values would need to find at least two models. See metrics and values in the config/global.json file.
-        model_list = self.generators.find_models_and_rank(
-            values=values_list,
-            target_values_operator="AND",
-            are_keys_also_matched=True,
-            is_case_sensitive=False,
-            metric=metric,
-            order="asc",
-        )
-        assert len(model_list) > 0 and model_list[0]["model_id"] == models[1][0]
-
-    @pytest.mark.parametrize(
-        "metric, order",
-        [
-            ("downstream_task.CLF.trained_on_real_and_fake.f1", "desc"),
-            ("turing_test.AUC", "desc"),
-        ],
-    )
-    def test_rank_models_by_performance(self, metric, order):
-        # See metrics in the config/global.json file.
-        ranked_models = self.generators.rank_models_by_performance(
-            model_ids=[models[1][0], models[2][0]],
-            metric=metric,
-            order=order,
-        )
-        assert len(ranked_models) > 0 and ranked_models[0]["model_id"] == models[1][0]
-
-    @pytest.mark.parametrize(
-        "key1, value1, expected",
-        [
-            ("modality", "Full-Field Mammography", 2),
-            ("license", "BSD", 2),
-            ("performance.downstream_task.CLF.trained_on_real_and_fake.f1", "0.89", 0),
-            ("performance.turing_test.AUC", "0.56", 0),
-        ],
-    )
-    def test_get_models_by_key_value_pair(self, key1, value1, expected):
-        found_models = self.generators.get_models_by_key_value_pair(
-            key1=key1, value1=value1, is_case_sensitive=False
-        )
-
-        assert len(found_models) >= expected
 
     def _check_if_samples_were_generated(
         self, num_samples=None, should_sample_be_generated: bool = True
@@ -288,41 +272,67 @@ class TestMediganMethods:
         except Exception as e2:
             self.logger.error(f"Error while trying to delete folder: {e2}")
 
+    def _remove_model_dir_and_zip(
+        self, model_ids=[], are_all_models_deleted: bool = False
+    ):
+        """After a specific model folders, model_executor, and model zip file to avoid running out-of-disk space."""
+
+        try:
+            for i, model_executor in enumerate(self.generators.model_executors):
+                if model_executor.model_id in model_ids or are_all_models_deleted:
+                    try:
+                        # Delete the folder containing the model
+                        model_path = os.path.dirname(
+                            model_executor.deserialized_model_as_lib.__file__
+                        )
+                        shutil.rmtree(model_path)
+                        self.logger.info(
+                            f"Deleted directory of model {model_executor.model_id}. ({model_path})"
+                        )
+
+                    except OSError as e:
+                        # This may give an error if the FOLDER is not present
+                        self.logger.warning(
+                            f"Exception while trying to delete the model folder of model {model_executor.model_id}: {e}"
+                        )
+                    try:
+                        # If the downloaded zip package of the model was not deleted inside the model_path, we explicitely delete it now.
+                        if model_executor.package_path.is_file():
+                            os.remove(model_executor.package_path)
+                            self.logger.info(
+                                f"Deleted zip file of model {model_executor.model_id}. ({model_executor.package_path})"
+                            )
+                    except Exception as e:
+                        self.logger.warning(
+                            f"Exception while trying to delete the ZIP file ({model_executor.package_path}) of model {model_executor.model_id}: {e}"
+                        )
+            # Deleting the stateful model_executors instantiated by the generators module, after deleting folders and zips
+            if are_all_models_deleted:
+                self.generators.model_executors.clear()
+            else:
+                for model_id in model_ids:
+                    model_executor = self.generators.find_model_executor_by_id(model_id)
+                    if model_executor is not None:
+                        self.generators.model_executors.remove(model_executor)
+                    del model_executor
+        except Exception as e2:
+            self.logger.error(
+                f"Error while trying to delete model folders and zips: {e2}"
+            )
+
     @pytest.fixture(scope="session", autouse=True)
-    def _remove_model_dirs_and_zips(self, num_models_to_delete=2):
-        """After all tests, empty the large model folders to avoid running out-of-disk space."""
+    def _remove_all_model_dirs_and_zips(self):
+        """After all tests, empty the large model folders, model_executors, and zip files to avoid running out-of-disk space."""
 
         # yield is at test-time, signaling that things after yield are run after the execution of the last test has terminated
         # https://docs.pytest.org/en/7.1.x/reference/reference.html?highlight=fixture#pytest.fixture
         yield None
 
-        try:
-            for i, model_executor in enumerate(self.generators.model_executors):
-                if num_models_to_delete is not None and i > num_models_to_delete:
-                    # Option to opt out of model deletion (e.g. to avoid having to re-download models locally each time)
-                    break
-                try:
-                    # Delete the folder containing the model
-                    model_path = os.path.dirname(
-                        model_executor.deserialized_model_as_lib.__file__
-                    )
-                    shutil.rmtree(model_path)
-                except OSError as e:
-                    # This may give an error if the FOLDER is not present
-                    self.logger.warning(
-                        f"Exception while trying to delete the model folder of model {model_executor.model_id}: {e}"
-                    )
-                try:
-                    # If the downloaded zip package of the model was not deleted inside the model_path, we explicitely delete it now.
-                    if model_executor.package_path.is_file():
-                        os.remove(model_executor.package_path)
-                except Exception as e:
-                    self.logger.warning(
-                        f"Exception while trying to delete the ZIP file ({model_executor.package_path}) of model {model_executor.model_id}: {e}"
-                    )
-            # Deleting the stateful model_executors instantiated by the generators module, after deleting folders and zips
-            self.generators.model_executors.clear()
-        except Exception as e2:
-            self.logger.error(
-                f"Error while trying to delete model folders and zips: {e2}"
-            )
+        # Remove all test outputs in test_output_path
+        self._remove_dir_and_contents()
+
+        # Remove all model folders, zip files and model executors
+        self._remove_model_dir_and_zip(
+            self, model_ids=["00006_WGANGP_MMG_MASS_ROI"]
+        )  # TODO just for local testing
+        # self._remove_model_dir_and_zip(self, are_all_models_deleted:bool=True)
