@@ -54,8 +54,10 @@ models_with_args = [
 ]
 
 # class TestMediganExecutorMethods(unittest.TestCase):
-class TestMediganExecutorMethods:
-    def setup_method(self):
+class TestMediganExecutorMethods():
+
+
+    def setup_class(self):
 
         ## unittest logger config
         # This logger on root level initialized via logging.getLogger() will also log all log events
@@ -72,8 +74,8 @@ class TestMediganExecutorMethods:
 
         self.test_output_path = "test_output_path"
         self.num_samples = 2
-        self.test_imports_and_init_generators()
-        self._remove_dir_and_contents()  # in case something is left there.
+        self.test_imports_and_init_generators(self)
+        self._remove_dir_and_contents(self)  # in case something is left there.
         self.model_ids = self.generators.config_manager.model_ids
 
     def test_imports_and_init_generators(self):
@@ -83,7 +85,6 @@ class TestMediganExecutorMethods:
             CONFIG_FILE_KEY_GENERATE,
             CONFIG_FILE_KEY_GENERATE_ARGS_INPUT_LATENT_VECTOR_SIZE,
         )
-
         self.generators = Generators()
         self.CONFIG_FILE_KEY_EXECUTION = CONFIG_FILE_KEY_EXECUTION
         self.CONFIG_FILE_KEY_GENERATE = CONFIG_FILE_KEY_GENERATE
@@ -109,87 +110,8 @@ class TestMediganExecutorMethods:
             self.test_get_dataloader_method(model_id=model_id)
 
             if i == 16:  # TODO just for local testing
-                self._remove_model_dir_and_zip(self, model_ids=[model_id])
-
-    # @pytest.mark.parametrize("model_id", [model[0] for model in models_with_args])
-    def test_generate_method(self, model_id):
-        self._remove_dir_and_contents()
-        self.generators.generate(
-            model_id=model_id,
-            num_samples=self.num_samples,
-            output_path=self.test_output_path,
-        )
-        self._check_if_samples_were_generated()
-
-    # @pytest.mark.parametrize("model_id, args, expected_num_samples", models_with_args)
-    def test_generate_method_with_additional_args(
-        self, model_id, args, expected_num_samples
-    ):
-        self._remove_dir_and_contents()
-        self.generators.generate(
-            model_id=model_id,
-            num_samples=expected_num_samples,
-            output_path=self.test_output_path,
-            **args,
-        )
-        self._check_if_samples_were_generated(num_samples=expected_num_samples)
-
-    # @pytest.mark.parametrize("model_id", [model[0] for model in models_with_args])
-    def test_get_generate_method(self, model_id):
-        self._remove_dir_and_contents()
-        gen_function = self.generators.get_generate_function(
-            model_id=model_id,
-            num_samples=self.num_samples,
-            output_path=self.test_output_path,
-        )
-        gen_function()
-        self._check_if_samples_were_generated()
-        del gen_function
-
-    # @pytest.mark.parametrize("model_id", [model[0] for model in models_with_args])
-    def test_get_dataloader_method(self, model_id):
-        self._remove_dir_and_contents()
-        data_loader = self.generators.get_as_torch_dataloader(
-            model_id=model_id, num_samples=self.num_samples
-        )
-        #### Get the object at index 0 from the dataloader
-        data_dict = next(iter(data_loader))
-
-        # Test if the items at index [0] of the aforementioned object is of type torch tensor (e.g. torch.uint8) and not None, as expected by data structure design decision.
-        assert torch.is_tensor(data_dict.get("sample"))
-
-        # Test if the items at index [1], [2] of the aforementioned object are None and, if not, whether they are of type torch tensor, as expected
-        assert data_dict.get("mask") is None or torch.is_tensor(data_dict.get("mask"))
-        assert data_dict.get("other_imaging_output") is None or torch.is_tensor(
-            data_dict.get("other_imaging_output")
-        )
-
-        # Test if the items at index [3] of the aforementioned object is None and, if not, whether it is of type list of strings, as expected.
-        assert data_dict.get("label") is None or (
-            isinstance(data_dict.get("label"), list)
-            and isinstance(data_dict.get("label")[0], str)
-        )
-        del data_dict
-        del data_loader
-
-    # @pytest.mark.parametrize("model_id", [model[0] for model in models_with_args])
-    def test_visualize_method(self, model_id):
-        self._remove_dir_and_contents()
-        if (
-            self.CONFIG_FILE_KEY_GENERATE_ARGS_INPUT_LATENT_VECTOR_SIZE
-            in self.generators.config_manager.config_dict[model_id][
-                self.CONFIG_FILE_KEY_EXECUTION
-            ][self.CONFIG_FILE_KEY_GENERATE]
-        ):
-
-            self.generators.visualize(model_id, auto_close=True)
-
-        else:
-            with pytest.raises(Exception) as e:
-
-                self.generators.visualize(model_id, auto_close=True)
-
-                assert e.type == ValueError
+                print(f"model_id: {model_id}")
+                self._remove_model_dir_and_zip(model_ids=[model_id], are_all_models_deleted=False)
 
     @pytest.mark.parametrize(
         "values_list, should_sample_be_generated",
@@ -240,6 +162,94 @@ class TestMediganExecutorMethods:
         )
         self._check_if_samples_were_generated()
 
+
+
+    # @pytest.mark.parametrize("model_id", [model[0] for model in models_with_args])
+    @pytest.mark.skip
+    def test_generate_method(self, model_id):
+        self._remove_dir_and_contents()
+        self.generators.generate(
+            model_id=model_id,
+            num_samples=self.num_samples,
+            output_path=self.test_output_path,
+        )
+        self._check_if_samples_were_generated()
+
+    # @pytest.mark.parametrize("model_id, args, expected_num_samples", models_with_args)
+    @pytest.mark.skip
+    def test_generate_method_with_additional_args(
+        self, model_id, args, expected_num_samples
+    ):
+        self._remove_dir_and_contents()
+        self.generators.generate(
+            model_id=model_id,
+            num_samples=expected_num_samples,
+            output_path=self.test_output_path,
+            **args,
+        )
+        self._check_if_samples_were_generated(num_samples=expected_num_samples)
+
+    # @pytest.mark.parametrize("model_id", [model[0] for model in models_with_args])
+    @pytest.mark.skip
+    def test_get_generate_method(self, model_id):
+        self._remove_dir_and_contents()
+        gen_function = self.generators.get_generate_function(
+            model_id=model_id,
+            num_samples=self.num_samples,
+            output_path=self.test_output_path,
+        )
+        gen_function()
+        self._check_if_samples_were_generated()
+        del gen_function
+
+    # @pytest.mark.parametrize("model_id", [model[0] for model in models_with_args])
+    @pytest.mark.skip
+    def test_get_dataloader_method(self, model_id):
+        self._remove_dir_and_contents()
+        data_loader = self.generators.get_as_torch_dataloader(
+            model_id=model_id, num_samples=self.num_samples
+        )
+        #### Get the object at index 0 from the dataloader
+        data_dict = next(iter(data_loader))
+
+        # Test if the items at index [0] of the aforementioned object is of type torch tensor (e.g. torch.uint8) and not None, as expected by data structure design decision.
+        assert torch.is_tensor(data_dict.get("sample"))
+
+        # Test if the items at index [1], [2] of the aforementioned object are None and, if not, whether they are of type torch tensor, as expected
+        assert data_dict.get("mask") is None or torch.is_tensor(data_dict.get("mask"))
+        assert data_dict.get("other_imaging_output") is None or torch.is_tensor(
+            data_dict.get("other_imaging_output")
+        )
+
+        # Test if the items at index [3] of the aforementioned object is None and, if not, whether it is of type list of strings, as expected.
+        assert data_dict.get("label") is None or (
+            isinstance(data_dict.get("label"), list)
+            and isinstance(data_dict.get("label")[0], str)
+        )
+        del data_dict
+        del data_loader
+
+    # @pytest.mark.parametrize("model_id", [model[0] for model in models_with_args])
+    @pytest.mark.skip
+    def test_visualize_method(self, model_id):
+
+        if (
+            self.CONFIG_FILE_KEY_GENERATE_ARGS_INPUT_LATENT_VECTOR_SIZE
+            in self.generators.config_manager.config_dict[model_id][
+                self.CONFIG_FILE_KEY_EXECUTION
+            ][self.CONFIG_FILE_KEY_GENERATE]
+        ):
+
+            self.generators.visualize(model_id, auto_close=True)
+
+        else:
+            with pytest.raises(Exception) as e:
+
+                self.generators.visualize(model_id, auto_close=True)
+
+                assert e.type == ValueError
+
+    @pytest.mark.skip
     def _check_if_samples_were_generated(
         self, num_samples=None, should_sample_be_generated: bool = True
     ):
@@ -259,6 +269,7 @@ class TestMediganExecutorMethods:
         else:
             assert len(file_list) == 0
 
+    #@pytest.mark.skip
     def _remove_dir_and_contents(self):
         """After each test, empty the created folders and files to avoid corrupting a new test."""
 
@@ -272,6 +283,7 @@ class TestMediganExecutorMethods:
         except Exception as e2:
             self.logger.error(f"Error while trying to delete folder: {e2}")
 
+    @pytest.mark.skip
     def _remove_model_dir_and_zip(
         self, model_ids=[], are_all_models_deleted: bool = False
     ):
@@ -320,19 +332,19 @@ class TestMediganExecutorMethods:
                 f"Error while trying to delete model folders and zips: {e2}"
             )
 
-    @pytest.fixture(scope="session", autouse=True)
-    def _remove_all_model_dirs_and_zips(self):
+    #@pytest.fixture(scope="session", autouse=True)
+    def teardown_class(self):
         """After all tests, empty the large model folders, model_executors, and zip files to avoid running out-of-disk space."""
 
         # yield is at test-time, signaling that things after yield are run after the execution of the last test has terminated
         # https://docs.pytest.org/en/7.1.x/reference/reference.html?highlight=fixture#pytest.fixture
-        yield None
+        #yield None
 
         # Remove all test outputs in test_output_path
-        self._remove_dir_and_contents()
+        self._remove_dir_and_contents(self)
 
         # Remove all model folders, zip files and model executors
         self._remove_model_dir_and_zip(
-            self, model_ids=["00006_WGANGP_MMG_MASS_ROI"]
+            self, model_ids=["00006_WGANGP_MMG_MASS_ROI"], are_all_models_deleted=False
         )  # TODO just for local testing
-        # self._remove_model_dir_and_zip(self, are_all_models_deleted:bool=True)
+        # self._remove_model_dir_and_zip(self, model_ids=None, are_all_models_deleted=True)

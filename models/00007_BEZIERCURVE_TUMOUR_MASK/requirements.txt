@@ -1,5 +1,0 @@
-skimage
-scipy
-numpy
-imageio
-Pillow
