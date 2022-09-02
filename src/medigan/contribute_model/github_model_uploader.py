@@ -9,9 +9,13 @@ import logging
 
 from github import Github
 
-from ..constants import (CONFIG_FILE_KEY_EXECUTION,
-                         CONFIG_FILE_KEY_PACKAGE_LINK, GITHUB_ASSIGNEE,
-                         GITHUB_REPO, GITHUB_TITLE)
+from ..constants import (
+    CONFIG_FILE_KEY_EXECUTION,
+    CONFIG_FILE_KEY_PACKAGE_LINK,
+    GITHUB_ASSIGNEE,
+    GITHUB_REPO,
+    GITHUB_TITLE,
+)
 from ..utils import Utils
 from .base_model_uploader import BaseModelUploader
 

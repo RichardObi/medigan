@@ -1117,7 +1117,7 @@ class Generators:
         generate_method_name: str = None,
         dependencies: list = None,
         fill_more_fields_interactively: bool = True,
-        overwrite_existing_metadata:bool = False,
+        overwrite_existing_metadata: bool = False,
         output_path: str = "config",
         creator_name: str = "unknown name",
         creator_affiliation: str = "unknown affiliation",
@@ -1189,7 +1189,11 @@ class Generators:
         )
 
         try:
-            self.test_model(model_id=model_id, is_local_model=True, overwrite_existing_metadata=overwrite_existing_metadata)
+            self.test_model(
+                model_id=model_id,
+                is_local_model=True,
+                overwrite_existing_metadata=overwrite_existing_metadata,
+            )
         except Exception as e:
             logging.error(
                 f"{model_id}: Error while testing this local model. "
@@ -1374,13 +1378,22 @@ class Generators:
 
         logging.debug(f"data: {data}")
 
-        samples, masks, other_imaging_output, labels = Utils.split_images_masks_and_labels(
-            data=data, num_samples=num_samples
+        (
+            samples,
+            masks,
+            other_imaging_output,
+            labels,
+        ) = Utils.split_images_masks_and_labels(data=data, num_samples=num_samples)
+        logging.debug(
+            f"samples: {samples} \n masks: {masks} \n other_imaging_output: {other_imaging_output} \n labels: {labels}"
         )
-        logging.debug(f"samples: {samples} \n masks: {masks} \n other_imaging_output: {other_imaging_output} \n labels: {labels}")
 
         return SyntheticDataset(
-            samples=samples, masks=masks, other_imaging_output=other_imaging_output, labels=labels, transform=transform
+            samples=samples,
+            masks=masks,
+            other_imaging_output=other_imaging_output,
+            labels=labels,
+            transform=transform,
         )
 
     def visualize(

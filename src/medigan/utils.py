@@ -13,6 +13,7 @@ from pathlib import Path
 from urllib.parse import urlparse  # python3
 
 import numpy as np
+
 # Import pypi libs
 import requests
 from tqdm import tqdm
@@ -302,7 +303,9 @@ class Utils:
                 # An image is expected in the case no tuple is returned
                 samples.append(data_point)
         masks = None if len(masks) == 0 else masks
-        other_imaging_output = None if len(other_imaging_output) == 0 else other_imaging_output
+        other_imaging_output = (
+            None if len(other_imaging_output) == 0 else other_imaging_output
+        )
         labels = None if len(labels) == 0 else labels
         return samples, masks, other_imaging_output, labels
 
