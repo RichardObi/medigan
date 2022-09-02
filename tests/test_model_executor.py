@@ -287,7 +287,7 @@ class TestMediganExecutorMethods():
 
         try:
             for i, model_executor in enumerate(self.generators.model_executors):
-                if model_executor.model_id in model_ids or are_all_models_deleted:
+                if are_all_models_deleted or (model_ids is not None and model_executor.model_id in model_ids):
                     try:
                         # Delete the folder containing the model
                         model_path = os.path.dirname(
@@ -318,11 +318,12 @@ class TestMediganExecutorMethods():
             if are_all_models_deleted:
                 self.generators.model_executors.clear()
             else:
-                for model_id in model_ids:
-                    model_executor = self.generators.find_model_executor_by_id(model_id)
-                    if model_executor is not None:
-                        self.generators.model_executors.remove(model_executor)
-                    del model_executor
+                if model_ids is not None:
+                    for model_id in model_ids:
+                        model_executor = self.generators.find_model_executor_by_id(model_id)
+                        if model_executor is not None:
+                            self.generators.model_executors.remove(model_executor)
+                        del model_executor
         except Exception as e2:
             self.logger.error(
                 f"Error while trying to delete model folders and zips: {e2}"
