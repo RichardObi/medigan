@@ -150,5 +150,5 @@ jobs:
 
     - name: Test with pytest
       run: |
-        pytest --verbose --failed-first --cov=. --cov-report html --log-cli-level=INFO #--capture=tee-sys
-        # pytest -W ignore::DeprecationWarning -v
+        pytest --verbose --failed-first --log-cli-level=INFO #--cov=. --cov-report html  #--capture=tee-sys
+        pytest -W ignore::DeprecationWarning -v
