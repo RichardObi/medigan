@@ -12,7 +12,7 @@ import pytest
 
 
 # Set the logging level depending on the level of detail you would like to have in the logs while running the tests.
-LOGGING_LEVEL = logging.INF  # WARNING  # logging.INFO
+LOGGING_LEVEL = logging.INFO  # WARNING  # logging.INFO
 
 models = [
     (
