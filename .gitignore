@@ -135,3 +135,5 @@ dmypy.json
 output/
 models/*/**
 !models/00007_BEZIERCURVE_TUMOUR_MASK/**
+models/00007_BEZIERCURVE_TUMOUR_MASK/.DS_Store
+models/00007_BEZIERCURVE_TUMOUR_MASK/__pycache__/
