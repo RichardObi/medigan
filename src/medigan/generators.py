@@ -1090,8 +1090,8 @@ class Generators:
             samples is not None
             and isinstance(samples, list)
             and (
-                (len(samples) == num_samples) or (len(samples) == num_samples + 1)
-            )  # + 1 as sample generation can be restricted to be balanced among classes
+                (len(samples) == num_samples) or (len(samples) > num_samples)
+            )  # e.g., len(samples) = num_samples + 1, as sample generation can be restricted to be balanced among classes
         ), (
             f"{model_id}: Model test was not successful. The generated samples {'is None, but ' if samples is None else ''}"
             f"should be a list (actual type: {type(samples)}) and of length {num_samples} (actual length: "
@@ -1117,6 +1117,7 @@ class Generators:
         generate_method_name: str = None,
         dependencies: list = None,
         fill_more_fields_interactively: bool = True,
+        overwrite_existing_metadata: bool = False,
         output_path: str = "config",
         creator_name: str = "unknown name",
         creator_affiliation: str = "unknown affiliation",
@@ -1146,6 +1147,8 @@ class Generators:
             the list of dependencies that need to be installed via pip to run the model
         fill_more_fields_interactively: bool
             flag indicating whether a user will be interactively asked via command line for further input to fill out missing metadata content
+        overwrite_existing_metadata: bool
+            flag indicating whether existing metadata for this model in medigan's `config/global.json` should be overwritten.
         output_path: str
             the path where the created metadata json file will be stored
         creator_name: str
@@ -1186,7 +1189,11 @@ class Generators:
         )
 
         try:
-            self.test_model(model_id=model_id, is_local_model=True)
+            self.test_model(
+                model_id=model_id,
+                is_local_model=True,
+                overwrite_existing_metadata=overwrite_existing_metadata,
+            )
         except Exception as e:
             logging.error(
                 f"{model_id}: Error while testing this local model. "
@@ -1332,7 +1339,7 @@ class Generators:
     def get_as_torch_dataset(
         self,
         model_id: str,
-        num_samples: int = 1000,
+        num_samples: int = 100,
         install_dependencies: bool = False,
         transform=None,
         **kwargs,
@@ -1369,13 +1376,24 @@ class Generators:
             **kwargs,
         )
 
-        samples, masks, labels = Utils.split_images_masks_and_labels(
-            data=data, num_samples=num_samples
+        logging.debug(f"data: {data}")
+
+        (
+            samples,
+            masks,
+            other_imaging_output,
+            labels,
+        ) = Utils.split_images_masks_and_labels(data=data, num_samples=num_samples)
+        logging.debug(
+            f"samples: {samples} \n masks: {masks} \n other_imaging_output: {other_imaging_output} \n labels: {labels}"
         )
-        logging.debug(f"samples: {samples} \n masks: {masks} \n labels: {labels}")
 
         return SyntheticDataset(
-            samples=samples, masks=masks, labels=labels, transform=transform
+            samples=samples,
+            masks=masks,
+            other_imaging_output=other_imaging_output,
+            labels=labels,
+            transform=transform,
         )
 
     def visualize(

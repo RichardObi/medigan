@@ -808,121 +808,160 @@
             "comment": "A wasserstein generative adversarial network with gradient penalty (WGAN-GP) that generates mass patches of mammograms. Pixel dimensions are 128x128. The DCGAN was trained on MMG patches from the BCDR dataset (Lopez et al, 2012). The uploaded ZIP file contains the files 10000.pt (model weight), __init__.py (image generation method and utils), a requirements.txt, and the GAN model architecture (in pytorch) below the /src folder."
         }
     },
-    "00007_BEZIERCURVE_TUMOUR_MASK": {
+    "00007_INPAINT_BRAIN_MRI": {
         "execution": {
-            "package_name": "",
-            "package_link": "models/00007_BEZIERCURVE_TUMOUR_MASK",
-            "model_name": "",
-            "extension": "",
+            "package_name": "00007_INPAINT_BRAIN_MRI",
+            "package_link": "https://zenodo.org/record/7042217/files/00007_INPAINT_BRAIN_MRI.zip?download=1",
+            "model_name": "inp_gen",
+            "extension": ".pth",
             "image_size": [
-                256,
-                256
+               256,
+               256
             ],
             "dependencies": [
-                "scikit-image",
-                "scipy",
-                "numpy",
-                "imageio",
-                "Pillow"
+               "matplotlib",
+               "albumentations",
+               "torch",
+               "torchvision",
+               "numpy",
+               "pillow",
+               "opencv-contrib-python"
             ],
             "generate_method": {
-                "name": "generate",
-                "args": {
-                    "base": [
-                        "model_file",
-                        "output_path",
-                        "save_images",
-                        "num_samples"
-                    ],
-                    "custom": {
-                        "image_size": [
-                            256,
-                            256
-                        ],
-                        "shapes": [
-                            "oval",
-                            "lobulated",
-                            "nodular",
-                            "stellate",
-                            "irregular"
-                        ]
-                    }
-                }
+               "name": "generate",
+               "args": {
+                  "base": [
+                     "model_file",
+                     "num_samples",
+                     "output_path",
+                     "save_images"
+                  ],
+                  "custom": {
+                     "image_size": 256,
+                     "num_inpaints_per_sample": 2,
+                     "randomize_input_image_order": true,
+                     "F_img_path": null,
+                     "T1_img_path": null,
+                     "T1c_img_path": null,
+                     "T2_img_path": null,
+                     "add_variations_to_mask": true,
+                     "x_center": 130,
+                     "y_center": 130,
+                     "radius_1": 10,
+                     "radius_2": 15,
+                     "radius_3": 30
+                  }
+               }
             }
         },
         "selection": {
-            "performance": {},
+            "performance": {
+               "SSIM": null,
+               "MSE": null,
+               "NSME": null,
+               "PSNR": null,
+               "IS": null,
+               "FID": 1.1597,
+               "turing_test": null,
+               "downstream_task": null,
+               "DSC": 0.737,
+               "Sensitivity": 0.663,
+               "Precision": 0.864
+            },
             "use_cases": [
-                "segmentation",
-                "segmentation mask generation"
+               "segmentation",
+               "classification",
+               "detection"
             ],
             "organ": [
-                "any",
-                "breast",
-                "breasts",
-                "chest"
+               "brain",
+               "cranial",
+               "head"
             ],
             "modality": [
-                "any",
-                "MMG",
-                "Mammography",
-                "Mammogram",
-                "full-field digital",
-                "full-field digital MMG",
-                "full-field MMG",
-                "full-field Mammography",
-                "digital Mammography",
-                "digital MMG",
-                "x-ray mammography"
+               "MRI",
+               "Cranial MRI",
+               "Brain MRI",
+               "Flair",
+               "T1",
+               "T1c",
+               "T1 contrast-enhanced",
+               "T2"
             ],
             "vendors": [],
             "centres": [],
             "function": [
-                "mask generation",
-                "mask synthesis"
+               "image inpainting",
+               "mask to image",
+               "circle to tumor grade",
+               "tumor grade to image",
+               "cross-modal synthesis",
+               "data augmentation",
+               "domain-adaptation"
             ],
-            "condition": [
-                "shapes"
+            "condition": [],
+            "dataset": [
+               "BRATS"
             ],
-            "dataset": [],
             "augmentations": [],
             "generates": [
-                "segmentation masks",
-                "masks",
-                "tumour masks",
-                "tumour delineation",
-                "mask"
+               "brain MRI",
+               "Flair",
+               "T1",
+               "T1c",
+               "T2",
+               "binary mask",
+               "tumor grade mask"
             ],
             "height": 256,
             "width": 256,
-            "depth": null,
-            "type": "bezier curve model",
-            "license": "MIT",
-            "dataset_type": null,
+            "depth": 1,
+            "type": "Inpaint Generator",
+            "license": null,
+            "dataset_type": "public",
             "privacy_preservation": null,
             "tags": [
-                "bezier curves",
-                "segmentation masks",
-                "masks",
-                "tumour masks",
-                "tumour delineation",
-                "mask",
-                "Mammogram",
-                "Mammography lesion mask",
-                "Mass segmentation",
-                "Breast lesion mask"
+               "Brain",
+               "Tumor",
+               "MRI Generation",
+               "Inpainting",
+               "Brain MRI Synthesis",
+               "Concentric Circle",
+               "Tumor Inpainting",
+               "Tumor Grade",
+               "Tumor Grading",
+               "Cross-Modality",
+               "Multi-modal synthesis"
             ],
-            "year": "2021"
+            "year": "2022"
         },
         "description": {
-            "title": "Bezier Curve Based Tumour Mask Generator",
-            "provided_date": "8th June 2022",
-            "trained_date": null,
+            "title": "Tumor Inpainting Model for Generation of Flair, T1, T1c, T2 Brain MRI Images (Trained on BRATS)",
+            "provided_date": "August 2022",
+            "trained_date": "2020",
             "provided_after_epoch": null,
             "version": null,
-            "publication": null,
-            "doi": [],
-            "comment": "Generates segmentation masks of variable size of tumours of 5 different shape types based on bezier curves. This model is based on geometric operations and does not contain a GAN nor other deep learning models."
+            "publication": "Medical Physics Journal",
+            "doi": [
+               "https://doi.org/10.48550/arXiv.2003.07526",
+               "https://doi.org/10.1002/mp.14701"
+            ],
+            "inputs": [
+               "image_size: default=256, help=the size if height and width of the generated images.",
+               "num_inpaints_per_sample: default=2, help=the number of tumor inpaint images per MRI modality that is generated from the same input sample",
+               "randomize_input_image_order: default=True, help=input image order is randomized. This helps to not exclude input images if batch generation is used.",
+               "F_img_path: default=None, help=The path to the folder were the input Flair MRI images are stored.",
+               "T1_img_path: default=None, help=The path to the folder were the input T1 MRI images are stored.",
+               "T1c_img_path: default=None, help=The path to the folder were the input T1c MRI images are stored.",
+               "T2_img_path: default=None, help=The path to the folder were the input T2 MRI images are stored.",
+               "add_variations_to_mask: default=True, help=This slightly varies the values of x_center, y_center, radius_1, radius_2, radius_3. If True, the same segmentation masks is still used to generate each of the 4 modality images. This is recommended as it results in higher image diversity.",
+               "x_center: default=130, help=the x coordinate of the concentric circle upon which the binary mask, the tumor grade mask, and, ultimately, the generated images are based.",
+               "y_center: default=130, help=the y coordinate of the concentric circle upon which the binary mask, the tumor grade mask, and, ultimately, the generated images are based.",
+               "radius_1: default=10, help=the radius of the first (inside second) of three concentric circles (necrotic and non-enhancing tumor) upon which the binary mask, the tumor grade mask, and, ultimately, the generated images are based.",
+               "radius_2: default=15, help=the radius of the second (inside third) of three concentric circles (enhancing tumor) upon which the binary mask, the tumor grade mask, and, ultimately, the generated images are based.",
+               "radius_3: default=30, help=the radius of the third of three concentric circles (edema) upon which the binary mask, the tumor grade mask, and, ultimately, the generated images are based."
+            ],
+            "comment": "A Generative adversarial network (GAN) for Inpainting tumors (based on concentric circle-based tumor grade masks) into multi-modal MRI images (Flair, T1, T1c, T2) with dimensions 256x256. Model was trained on BRATS MRI Dataset (Menze et al). For more information, see publication (https://doi.org/10.1002/mp.14701). Model comes with example input image folders. Apart from that, the uploaded ZIP file contains the model checkpoint files .pth (model weight), __init__.py (image generation method and utils), a requirements.txt, the MEDIGAN metadata.json. The proposed method synthesizes brain tumor images from normal brain images and concentric circles that are simplified tumor masks. The tumor masks are defined by complex features, such as grade, appearance, size, and location. Thus, these features of the tumor masks are condensed and simplified to concentric circles. In the proposed method, the user-defined concentric circles are converted to various tumor masks through deep neural networks. The normal brain images are masked by the tumor mask, and the masked region is inpainted with the tumor images synthesized by the deep neural networks. Also see original repository at: https://github.com/KSH0660/BrainTumor"
         }
     },
     "00008_C-DCGAN_MMG_MASSES": {
@@ -1338,7 +1377,6 @@
                 "torch",
                 "torchvision",
                 "pandas",
-                "pathlib",
                 "PyYAML",
                 "scipy",
                 "scikit-image",
@@ -2067,330 +2105,328 @@
         }
     },
     "00017_DCGAN_XRAY_LUNG_NODULES": {
-      "execution": {
-        "package_name": "00017_DCGAN_NODE21",
-        "package_link": "https://zenodo.org/record/6943692/files/00017_DCGAN_NODE21.zip?download=1",
-        "model_name": "model",
-        "extension": ".pt",
-        "image_size": [
-          128,
-          128,
-          1
-        ],
-        "dependencies": [
-          "numpy",
-          "tqdm",
-          "torch"
-        ],
-        "generate_method": {
-          "name": "generate",
-          "args": {
-            "base": [
-              "model_file",
-              "num_samples",
-              "output_path",
-              "save_images"
+        "execution": {
+            "package_name": "00017_DCGAN_NODE21",
+            "package_link": "https://zenodo.org/record/6943692/files/00017_DCGAN_NODE21.zip?download=1",
+            "model_name": "model",
+            "extension": ".pt",
+            "image_size": [
+                128,
+                128,
+                1
             ],
-            "custom": {
+            "dependencies": [
+                "numpy",
+                "tqdm",
+                "torch"
+            ],
+            "generate_method": {
+                "name": "generate",
+                "args": {
+                    "base": [
+                        "model_file",
+                        "num_samples",
+                        "output_path",
+                        "save_images"
+                    ],
+                    "custom": {}
+                },
+                "input_latent_vector_size": 120
             }
-          },
-          "input_latent_vector_size": 120
+        },
+        "selection": {
+            "performance": {
+                "SSIM": null,
+                "MSE": null,
+                "NSME": null,
+                "PSNR": null,
+                "IS": null,
+                "FID": null,
+                "turing_test": null,
+                "downstream_task": null
+            },
+            "use_cases": [
+                "classification"
+            ],
+            "organ": [
+                "lung",
+                "chest",
+                "thorax"
+            ],
+            "modality": [
+                "x-ray",
+                "xray",
+                "CXR"
+            ],
+            "vendors": [],
+            "centres": [],
+            "function": [
+                "noise to image",
+                "unconditional generation",
+                "data augmentation"
+            ],
+            "condition": [],
+            "dataset": [
+                "Node21"
+            ],
+            "augmentations": [
+                "horizontal flip",
+                "vertical flip"
+            ],
+            "generates": [
+                "lung nodules",
+                "nodules",
+                "lung roi",
+                "lung region of interest",
+                "patches"
+            ],
+            "height": 128,
+            "width": 128,
+            "depth": 1,
+            "type": "DCGAN",
+            "license": "MIT",
+            "dataset_type": "public",
+            "privacy_preservation": null,
+            "tags": [
+                "Thoracic xray",
+                "xray",
+                "x-ray",
+                "Thorax",
+                "Lung",
+                "Nodules",
+                "Lung Cancer",
+                "Lung Tumor"
+            ],
+            "year": "2022"
+        },
+        "description": {
+            "title": "DCGAN Model for Patch Generation of Lung Nodules (Trained on Node21)",
+            "provided_date": "June 2022",
+            "trained_date": "June 2022",
+            "provided_after_epoch": null,
+            "version": null,
+            "publication": null,
+            "doi": [],
+            "inputs": "",
+            "comment": "A unconditional deep convolutional generative adversarial network (DCGAN) that generates lung nodule regions-of-interest patches based on chest xray (CXR) images. The pixel dimension of the generated patches is 128x128. The WGANGP was trained on cropped patches from CXR images from the NODE21 dataset (Sogancioglu et al, 2021). The uploaded ZIP file contains the files model.pt (model weight), __init__.py (image generation method and utils), a requirements.txt, a LICENSE file, the MEDIGAN metadata.json file, the used GAN training config file, a test.sh file to run the model, and an /image folder with a few generated example images."
         }
-      },
-      "selection": {
-      "performance": {
-        "SSIM": null,
-        "MSE": null,
-        "NSME": null,
-        "PSNR": null,
-        "IS": null,
-        "FID": null,
-        "turing_test": null,
-        "downstream_task": null
-      },
-      "use_cases": [
-        "classification"
-      ],
-      "organ": [
-        "lung",
-        "chest",
-        "thorax"
-      ],
-      "modality": [
-        "x-ray",
-        "xray",
-        "CXR"
-      ],
-      "vendors": [],
-      "centres": [],
-      "function": [
-        "noise to image",
-        "unconditional generation",
-        "data augmentation"
-      ],
-      "condition": [],
-      "dataset": [
-        "Node21"
-      ],
-      "augmentations": [
-        "horizontal flip",
-        "vertical flip"
-      ],
-      "generates": [
-        "lung nodules",
-        "nodules",
-        "lung roi",
-        "lung region of interest",
-        "patches"
-      ],
-      "height": 128,
-      "width": 128,
-      "depth": 1,
-      "type": "DCGAN",
-      "license": "MIT",
-      "dataset_type": "public",
-      "privacy_preservation": null,
-      "tags": [
-        "Thoracic xray",
-        "xray",
-        "x-ray",
-        "Thorax",
-        "Lung",
-        "Nodules",
-        "Lung Cancer",
-        "Lung Tumor"
-      ],
-      "year": "2022"
     },
-    "description": {
-      "title": "DCGAN Model for Patch Generation of Lung Nodules (Trained on Node21)",
-      "provided_date": "June 2022",
-      "trained_date": "June 2022",
-      "provided_after_epoch": null,
-      "version": null,
-      "publication": null,
-      "doi": [],
-      "inputs": "",
-      "comment": "A unconditional deep convolutional generative adversarial network (DCGAN) that generates lung nodule regions-of-interest patches based on chest xray (CXR) images. The pixel dimension of the generated patches is 128x128. The WGANGP was trained on cropped patches from CXR images from the NODE21 dataset (Sogancioglu et al, 2021). The uploaded ZIP file contains the files model.pt (model weight), __init__.py (image generation method and utils), a requirements.txt, a LICENSE file, the MEDIGAN metadata.json file, the used GAN training config file, a test.sh file to run the model, and an /image folder with a few generated example images."
-    }
-  },
-  "00018_WGANGP_XRAY_LUNG_NODULES": {
-    "execution": {
-      "package_name": "00018_WGANGP_NODE21",
-      "package_link": "https://zenodo.org/record/6943762/files/00018_WGANGP_NODE21.zip?download=1",
-      "model_name": "model",
-      "extension": ".pt",
-      "image_size": [
-        128,
-        128,
-        1
-      ],
-      "dependencies": [
-        "numpy",
-        "tqdm",
-        "torch"
-      ],
-      "generate_method": {
-        "name": "generate",
-        "args": {
-          "base": [
-            "model_file",
-            "num_samples",
-            "output_path",
-            "save_images"
-          ],
-          "custom": {
-          }
+    "00018_WGANGP_XRAY_LUNG_NODULES": {
+        "execution": {
+            "package_name": "00018_WGANGP_NODE21",
+            "package_link": "https://zenodo.org/record/6943762/files/00018_WGANGP_NODE21.zip?download=1",
+            "model_name": "model",
+            "extension": ".pt",
+            "image_size": [
+                128,
+                128,
+                1
+            ],
+            "dependencies": [
+                "numpy",
+                "tqdm",
+                "torch"
+            ],
+            "generate_method": {
+                "name": "generate",
+                "args": {
+                    "base": [
+                        "model_file",
+                        "num_samples",
+                        "output_path",
+                        "save_images"
+                    ],
+                    "custom": {}
+                },
+                "input_latent_vector_size": 100
+            }
         },
-        "input_latent_vector_size": 100
-      }
-    },
-      "selection": {
-      "performance": {
-        "SSIM": null,
-        "MSE": null,
-        "NSME": null,
-        "PSNR": null,
-        "IS": null,
-        "FID": null,
-        "turing_test": null,
-        "downstream_task": null
-      },
-      "use_cases": [
-        "classification"
-      ],
-      "organ": [
-        "lung",
-        "chest",
-        "thorax"
-      ],
-      "modality": [
-        "x-ray",
-        "xray",
-        "CXR"
-      ],
-      "vendors": [],
-      "centres": [],
-      "function": [
-        "noise to image",
-        "unconditional generation",
-        "data augmentation"
-      ],
-      "condition": [],
-      "dataset": [
-        "Node21"
-      ],
-      "augmentations": [
-        "horizontal flip",
-        "vertical flip"
-      ],
-      "generates": [
-        "lung nodules",
-        "nodules",
-        "lung roi",
-        "lung region of interest",
-        "patches"
-      ],
-      "height": 128,
-      "width": 128,
-      "depth": 1,
-      "type": "WGANGP",
-      "license": "MIT",
-      "dataset_type": "public",
-      "privacy_preservation": null,
-      "tags": [
-        "Thoracic xray",
-        "xray",
-        "x-ray",
-        "Thorax",
-        "Lung",
-        "Nodules",
-        "Lung Cancer",
-        "Lung Tumor"
-      ],
-      "year": "2022"
-    },
-    "description": {
-      "title": "WGANGP Model for Patch Generation of Lung Nodules (Trained on Node21)",
-      "provided_date": "June 2022",
-      "trained_date": "June 2022",
-      "provided_after_epoch": null,
-      "version": null,
-      "publication": null,
-      "doi": [],
-      "inputs": "",
-      "comment": "A unconditional wasserstein generative adversarial network with gradient penalty (WGAN_GP) that generates lung nodule regions-of-interest patches based on chest xray (CXR) images. The pixel dimension of the generated patches is 128x128. The WGANGP was trained on cropped patches from CXR images from the NODE21 dataset (Sogancioglu et al, 2021). The uploaded ZIP file contains the files model.pt (model weight), __init__.py (image generation method and utils), a requirements.txt, a LICENSE file, the MEDIGAN metadata.json file, the used GAN training config file, a test.sh file to run the model, and an /image folder with a few generated example images."
-    }
-  },
-  "00019_PGGAN_CHEST_XRAY": {
-    "execution": {
-      "package_name": "00019_PGGAN_NODE21",
-      "package_link": "https://zenodo.org/record/6943804/files/00019_PGGAN_NODE21.zip?download=1",
-      "model_name": "model",
-      "extension": ".pt",
-      "image_size": [
-        1024,
-        1024,
-        1
-      ],
-      "dependencies": [
-        "numpy",
-        "tqdm",
-        "torch"
-      ],
-      "generate_method": {
-        "name": "generate",
-        "args": {
-          "base": [
-            "model_file",
-            "num_samples",
-            "output_path",
-            "save_images"
-          ],
-          "custom": {
-            "image_size": 1024
-          }
+        "selection": {
+            "performance": {
+                "SSIM": null,
+                "MSE": null,
+                "NSME": null,
+                "PSNR": null,
+                "IS": null,
+                "FID": null,
+                "turing_test": null,
+                "downstream_task": null
+            },
+            "use_cases": [
+                "classification"
+            ],
+            "organ": [
+                "lung",
+                "chest",
+                "thorax"
+            ],
+            "modality": [
+                "x-ray",
+                "xray",
+                "CXR"
+            ],
+            "vendors": [],
+            "centres": [],
+            "function": [
+                "noise to image",
+                "unconditional generation",
+                "data augmentation"
+            ],
+            "condition": [],
+            "dataset": [
+                "Node21"
+            ],
+            "augmentations": [
+                "horizontal flip",
+                "vertical flip"
+            ],
+            "generates": [
+                "lung nodules",
+                "nodules",
+                "lung roi",
+                "lung region of interest",
+                "patches"
+            ],
+            "height": 128,
+            "width": 128,
+            "depth": 1,
+            "type": "WGANGP",
+            "license": "MIT",
+            "dataset_type": "public",
+            "privacy_preservation": null,
+            "tags": [
+                "Thoracic xray",
+                "xray",
+                "x-ray",
+                "Thorax",
+                "Lung",
+                "Nodules",
+                "Lung Cancer",
+                "Lung Tumor"
+            ],
+            "year": "2022"
         },
-        "real_input_latent_vector_size": 512,
-        "input_latent_vector_size": 1024
-      }
+        "description": {
+            "title": "WGANGP Model for Patch Generation of Lung Nodules (Trained on Node21)",
+            "provided_date": "June 2022",
+            "trained_date": "June 2022",
+            "provided_after_epoch": null,
+            "version": null,
+            "publication": null,
+            "doi": [],
+            "inputs": "",
+            "comment": "A unconditional wasserstein generative adversarial network with gradient penalty (WGAN_GP) that generates lung nodule regions-of-interest patches based on chest xray (CXR) images. The pixel dimension of the generated patches is 128x128. The WGANGP was trained on cropped patches from CXR images from the NODE21 dataset (Sogancioglu et al, 2021). The uploaded ZIP file contains the files model.pt (model weight), __init__.py (image generation method and utils), a requirements.txt, a LICENSE file, the MEDIGAN metadata.json file, the used GAN training config file, a test.sh file to run the model, and an /image folder with a few generated example images."
+        }
     },
-    "selection": {
-      "performance": {
-        "SSIM": null,
-        "MSE": null,
-        "NSME": null,
-        "PSNR": null,
-        "IS": null,
-        "FID": null,
-        "turing_test": null,
-        "downstream_task": null
-      },
-      "use_cases": [
-        "classification",
-        "detection"
-      ],
-      "organ": [
-        "lung",
-        "chest",
-        "thorax"
-      ],
-      "modality": [
-        "x-ray",
-        "xray",
-        "CXR"
-      ],
-      "vendors": [],
-      "centres": [],
-      "function": [
-        "noise to image",
-        "unconditional generation",
-        "data augmentation"
-      ],
-      "condition": [],
-      "dataset": [
-        "Node21"
-      ],
-      "augmentations": [
-        "horizontal flip",
-        "vertical flip"
-      ],
-      "generates": [
-        "chest xray",
-        "CXR",
-        "thoracic xray",
-        "lung xray",
-        "lung xray"
-      ],
-      "height": 128,
-      "width": 128,
-      "depth": 1,
-      "type": "WGANGP",
-      "license": "MIT",
-      "dataset_type": "public",
-      "privacy_preservation": null,
-      "tags": [
-        "Thoracic xray",
-        "xray",
-        "x-ray",
-        "Thorax",
-        "Lung",
-        "Nodules",
-        "Lung Cancer",
-        "Lung Tumor"
-      ],
-      "year": "2022"
-    },
-    "description": {
-      "title": "PGGAN Model for Generation of Chest XRAY (CXR) Images (Trained on Node21)",
-      "provided_date": "June 2022",
-      "trained_date": "June 2022",
-      "provided_after_epoch": null,
-      "version": null,
-      "publication": null,
-      "doi": [],
-      "inputs": "image_size: default=1024, help=the size if height and width of the generated images.",
-      "comment": "A unconditional Progressively-growing generative adversarial network (PGGAN) that generates chest xray (CXR) images with pixel dimensions 1024x1024. The PGGAN was trained on CXR images from the NODE21 dataset (Sogancioglu et al, 2021). The uploaded ZIP file contains the files model.pt (model weight), __init__.py (image generation method and utils), a requirements.txt, a LICENSE file, the MEDIGAN metadata.json file, the used GAN training config file, a test.sh file to run the model, and an /image folder with a few generated example images."
+    "00019_PGGAN_CHEST_XRAY": {
+        "execution": {
+            "package_name": "00019_PGGAN_NODE21",
+            "package_link": "https://zenodo.org/record/6943804/files/00019_PGGAN_NODE21.zip?download=1",
+            "model_name": "model",
+            "extension": ".pt",
+            "image_size": [
+                1024,
+                1024,
+                1
+            ],
+            "dependencies": [
+                "numpy",
+                "tqdm",
+                "torch"
+            ],
+            "generate_method": {
+                "name": "generate",
+                "args": {
+                    "base": [
+                        "model_file",
+                        "num_samples",
+                        "output_path",
+                        "save_images"
+                    ],
+                    "custom": {
+                        "image_size": 1024
+                    }
+                },
+                "real_input_latent_vector_size": 512,
+                "input_latent_vector_size": 1024
+            }
+        },
+        "selection": {
+            "performance": {
+                "SSIM": null,
+                "MSE": null,
+                "NSME": null,
+                "PSNR": null,
+                "IS": null,
+                "FID": null,
+                "turing_test": null,
+                "downstream_task": null
+            },
+            "use_cases": [
+                "classification",
+                "detection"
+            ],
+            "organ": [
+                "lung",
+                "chest",
+                "thorax"
+            ],
+            "modality": [
+                "x-ray",
+                "xray",
+                "CXR"
+            ],
+            "vendors": [],
+            "centres": [],
+            "function": [
+                "noise to image",
+                "unconditional generation",
+                "data augmentation"
+            ],
+            "condition": [],
+            "dataset": [
+                "Node21"
+            ],
+            "augmentations": [
+                "horizontal flip",
+                "vertical flip"
+            ],
+            "generates": [
+                "chest xray",
+                "CXR",
+                "thoracic xray",
+                "lung xray",
+                "lung xray"
+            ],
+            "height": 128,
+            "width": 128,
+            "depth": 1,
+            "type": "PGGAN",
+            "license": "MIT",
+            "dataset_type": "public",
+            "privacy_preservation": null,
+            "tags": [
+                "Thoracic xray",
+                "xray",
+                "x-ray",
+                "Thorax",
+                "Lung",
+                "Nodules",
+                "Lung Cancer",
+                "Lung Tumor"
+            ],
+            "year": "2022"
+        },
+        "description": {
+            "title": "PGGAN Model for Generation of Chest XRAY (CXR) Images (Trained on Node21)",
+            "provided_date": "June 2022",
+            "trained_date": "June 2022",
+            "provided_after_epoch": null,
+            "version": null,
+            "publication": null,
+            "doi": [],
+            "inputs": "image_size: default=1024, help=the size if height and width of the generated images.",
+            "comment": "A unconditional Progressively-growing generative adversarial network (PGGAN) that generates chest xray (CXR) images with pixel dimensions 1024x1024. The PGGAN was trained on CXR images from the NODE21 dataset (Sogancioglu et al, 2021). The uploaded ZIP file contains the files model.pt (model weight), __init__.py (image generation method and utils), a requirements.txt, a LICENSE file, the MEDIGAN metadata.json file, the used GAN training config file, a test.sh file to run the model, and an /image folder with a few generated example images."
+        }
     }
-  }
 }

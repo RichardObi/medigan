@@ -152,7 +152,7 @@ class ModelExecutor:
         )
         try:
             pkg_resources.require(self.dependencies)
-            logging.info(
+            logging.debug(
                 f"{self.model_id}: All necessary dependencies for model are available: {self.dependencies}"
             )
         except Exception as e:
