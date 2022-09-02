@@ -9,20 +9,16 @@ import logging
 import sys
 from pathlib import Path
 
-from ..constants import (
-    CONFIG_FILE_KEY_DEPENDENCIES,
-    CONFIG_FILE_KEY_EXECUTION,
-    CONFIG_FILE_KEY_GENERATE,
-    CONFIG_FILE_KEY_GENERATE_NAME,
-    CONFIG_FILE_KEY_MODEL_EXTENSION,
-    CONFIG_FILE_KEY_MODEL_NAME,
-    CONFIG_FILE_KEY_PACKAGE_LINK,
-    CONFIG_FILE_KEY_PACKAGE_NAME,
-    CONFIG_TEMPLATE_FILE_NAME_AND_EXTENSION,
-    CONFIG_TEMPLATE_FILE_URL,
-    INIT_PY_FILE,
-    TEMPLATE_FOLDER,
-)
+from ..constants import (CONFIG_FILE_KEY_DEPENDENCIES,
+                         CONFIG_FILE_KEY_EXECUTION, CONFIG_FILE_KEY_GENERATE,
+                         CONFIG_FILE_KEY_GENERATE_NAME,
+                         CONFIG_FILE_KEY_MODEL_EXTENSION,
+                         CONFIG_FILE_KEY_MODEL_NAME,
+                         CONFIG_FILE_KEY_PACKAGE_LINK,
+                         CONFIG_FILE_KEY_PACKAGE_NAME,
+                         CONFIG_TEMPLATE_FILE_NAME_AND_EXTENSION,
+                         CONFIG_TEMPLATE_FILE_URL, INIT_PY_FILE,
+                         TEMPLATE_FOLDER)
 from ..utils import Utils
 from .github_model_uploader import GithubModelUploader
 from .zenodo_model_uploader import ZenodoModelUploader
