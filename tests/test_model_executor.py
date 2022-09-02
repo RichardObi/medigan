@@ -38,7 +38,21 @@ models_with_args = [
     ),
     ("00005_DCGAN_MMG_MASS_ROI", {}, 3),
     ("00006_WGANGP_MMG_MASS_ROI", {}, 3),
-    ("00007_INPAINT_BRAIN_MRI", {"image_size": (256, 256), "num_inpaints_per_sample": 2, "randomize_input_image_order": False, "add_variations_to_mask": False, "x_center": 120, "y_center": 140, "radius_1": 8, "radius_2": 12, "radius_3": 24}, 3),
+    (
+        "00007_INPAINT_BRAIN_MRI",
+        {
+            "image_size": (256, 256),
+            "num_inpaints_per_sample": 2,
+            "randomize_input_image_order": False,
+            "add_variations_to_mask": False,
+            "x_center": 120,
+            "y_center": 140,
+            "radius_1": 8,
+            "radius_2": 12,
+            "radius_3": 24,
+        },
+        3,
+    ),
     ("00008_C-DCGAN_MMG_MASSES", {"condition": 0}, 3),
     ("00009_PGGAN_POLYP_PATCHES_W_MASKS", {"save_option": "image_only"}, 3),
     ("00010_FASTGAN_POLYP_PATCHES_W_MASKS", {"save_option": "image_only"}, 3),
@@ -54,9 +68,7 @@ models_with_args = [
 ]
 
 # class TestMediganExecutorMethods(unittest.TestCase):
-class TestMediganExecutorMethods():
-
-
+class TestMediganExecutorMethods:
     def setup_class(self):
         ## unittest logger config
         # This logger on root level initialized via logging.getLogger() will also log all log events
@@ -78,12 +90,13 @@ class TestMediganExecutorMethods():
         self.model_ids = self.generators.config_manager.model_ids
 
     def test_imports_and_init_generators(self):
-        from src.medigan.generators import Generators
         from src.medigan.constants import (
             CONFIG_FILE_KEY_EXECUTION,
             CONFIG_FILE_KEY_GENERATE,
             CONFIG_FILE_KEY_GENERATE_ARGS_INPUT_LATENT_VECTOR_SIZE,
         )
+        from src.medigan.generators import Generators
+
         self.generators = Generators()
         self.CONFIG_FILE_KEY_EXECUTION = CONFIG_FILE_KEY_EXECUTION
         self.CONFIG_FILE_KEY_GENERATE = CONFIG_FILE_KEY_GENERATE
@@ -108,8 +121,10 @@ class TestMediganExecutorMethods():
             self.test_get_generate_method(model_id=model_id)
             self.test_get_dataloader_method(model_id=model_id)
 
-            #if i == 16:  # just for local testing
-            self._remove_model_dir_and_zip(model_ids=[model_id], are_all_models_deleted=False)
+            # if i == 16:  # just for local testing
+            self._remove_model_dir_and_zip(
+                model_ids=[model_id], are_all_models_deleted=False
+            )
 
     @pytest.mark.parametrize(
         "values_list, should_sample_be_generated",
@@ -202,7 +217,9 @@ class TestMediganExecutorMethods():
     @pytest.mark.skip
     def test_get_dataloader_method(self, model_id="00007_INPAINT_BRAIN_MRI"):
         self._remove_dir_and_contents()
-        data_loader = self.generators.get_as_torch_dataloader(model_id=model_id, num_samples=self.num_samples)
+        data_loader = self.generators.get_as_torch_dataloader(
+            model_id=model_id, num_samples=self.num_samples
+        )
         self.logger.debug(f"len(data_loader): {len(data_loader)}")
         #### Get the object at index 0 from the dataloader
         data_dict = next(iter(data_loader))
@@ -257,7 +274,10 @@ class TestMediganExecutorMethods():
         if should_sample_be_generated:
             assert (
                 len(file_list) == num_samples
-                or len(file_list) == num_samples * 2 * 6 # 00007_INPAINT_BRAIN_MRI: 2 inpaints per sample, 6 outputs per sample
+                or len(file_list)
+                == num_samples
+                * 2
+                * 6  # 00007_INPAINT_BRAIN_MRI: 2 inpaints per sample, 6 outputs per sample
                 or len(file_list) == num_samples * 2
                 or len(file_list) == num_samples + 1
             )  # Temporary fix for different outputs per model.
@@ -265,7 +285,7 @@ class TestMediganExecutorMethods():
         else:
             assert len(file_list) == 0
 
-    #@pytest.mark.skip
+    # @pytest.mark.skip
     def _remove_dir_and_contents(self):
         """After each test, empty the created folders and files to avoid corrupting a new test."""
 
@@ -328,19 +348,21 @@ class TestMediganExecutorMethods():
                 f"Error while trying to delete model folders and zips: {e2}"
             )
 
-    #@pytest.fixture(scope="session", autouse=True)
+    # @pytest.fixture(scope="session", autouse=True)
     def teardown_class(self):
         """After all tests, empty the large model folders, model_executors, and zip files to avoid running out-of-disk space."""
 
         # yield is at test-time, signaling that things after yield are run after the execution of the last test has terminated
         # https://docs.pytest.org/en/7.1.x/reference/reference.html?highlight=fixture#pytest.fixture
-        #yield None
+        # yield None
 
         # Remove all test outputs in test_output_path
         self._remove_dir_and_contents(self)
 
         # Remove all model folders, zip files and model executors
-        #self._remove_model_dir_and_zip(
+        # self._remove_model_dir_and_zip(
         #    self, model_ids=["00006_WGANGP_MMG_MASS_ROI"], are_all_models_deleted=False
-        #)  # just for local testing
-        self._remove_model_dir_and_zip(self, model_ids=None, are_all_models_deleted=True)
+        # )  # just for local testing
+        self._remove_model_dir_and_zip(
+            self, model_ids=None, are_all_models_deleted=True
+        )

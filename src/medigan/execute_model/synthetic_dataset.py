@@ -35,7 +35,14 @@ class SyntheticDataset(Dataset):
         torch compose transform functions that are applied to the torch dataset.
     """
 
-    def __init__(self, samples, masks=None, other_imaging_output=None, labels=None, transform=None):
+    def __init__(
+        self,
+        samples,
+        masks=None,
+        other_imaging_output=None,
+        labels=None,
+        transform=None,
+    ):
         self.samples = samples
         self.masks = masks
         self.other_imaging_output = other_imaging_output
@@ -46,12 +53,18 @@ class SyntheticDataset(Dataset):
         x = self.samples[index]
         y = self.labels[index] if self.labels is not None else None
         mask = self.masks[index] if self.masks is not None else None
-        other_imaging_output = self.other_imaging_output[index] if self.other_imaging_output is not None else None
+        other_imaging_output = (
+            self.other_imaging_output[index]
+            if self.other_imaging_output is not None
+            else None
+        )
 
         if self.transform:
             if mask is not None:
                 if other_imaging_output is not None:
-                    x, mask, other_imaging_output = self.transform(x, mask, other_imaging_output)
+                    x, mask, other_imaging_output = self.transform(
+                        x, mask, other_imaging_output
+                    )
                 # transform needs to be applied to both mask and image.
                 x, mask = self.transform(x, mask)
             elif other_imaging_output is not None:
