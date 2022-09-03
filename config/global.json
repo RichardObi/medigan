@@ -528,7 +528,7 @@
             "year": "2021"
         },
         "description": {
-            "title": "Generates synthetic patches given a random mask tiled with texture patches extracted from real images",
+            "title": "Generates synthetic patches given a random mask tiled with texture patches extracted from real images (Trained on BCDR)",
             "provided_date": "5th Oct 2021",
             "trained_date": "Sep 2021",
             "provided_after_epoch": 200,
@@ -2208,7 +2208,7 @@
             "publication": null,
             "doi": [],
             "inputs": "",
-            "comment": "A unconditional deep convolutional generative adversarial network (DCGAN) that generates lung nodule regions-of-interest patches based on chest xray (CXR) images. The pixel dimension of the generated patches is 128x128. The WGANGP was trained on cropped patches from CXR images from the NODE21 dataset (Sogancioglu et al, 2021). The uploaded ZIP file contains the files model.pt (model weight), __init__.py (image generation method and utils), a requirements.txt, a LICENSE file, the MEDIGAN metadata.json file, the used GAN training config file, a test.sh file to run the model, and an /image folder with a few generated example images."
+            "comment": "An unconditional deep convolutional generative adversarial network (DCGAN) that generates lung nodule regions-of-interest patches based on chest xray (CXR) images. The pixel dimension of the generated patches is 128x128. The WGANGP was trained on cropped patches from CXR images from the NODE21 dataset (Sogancioglu et al, 2021). The uploaded ZIP file contains the files model.pt (model weight), __init__.py (image generation method and utils), a requirements.txt, a LICENSE file, the MEDIGAN metadata.json file, the used GAN training config file, a test.sh file to run the model, and an /image folder with a few generated example images."
         }
     },
     "00018_WGANGP_XRAY_LUNG_NODULES": {
@@ -2315,13 +2315,13 @@
             "publication": null,
             "doi": [],
             "inputs": "",
-            "comment": "A unconditional wasserstein generative adversarial network with gradient penalty (WGAN_GP) that generates lung nodule regions-of-interest patches based on chest xray (CXR) images. The pixel dimension of the generated patches is 128x128. The WGANGP was trained on cropped patches from CXR images from the NODE21 dataset (Sogancioglu et al, 2021). The uploaded ZIP file contains the files model.pt (model weight), __init__.py (image generation method and utils), a requirements.txt, a LICENSE file, the MEDIGAN metadata.json file, the used GAN training config file, a test.sh file to run the model, and an /image folder with a few generated example images."
+            "comment": "An unconditional wasserstein generative adversarial network with gradient penalty (WGAN_GP) that generates lung nodule regions-of-interest patches based on chest xray (CXR) images. The pixel dimension of the generated patches is 128x128. The WGANGP was trained on cropped patches from CXR images from the NODE21 dataset (Sogancioglu et al, 2021). The uploaded ZIP file contains the files model.pt (model weight), __init__.py (image generation method and utils), a requirements.txt, a LICENSE file, the MEDIGAN metadata.json file, the used GAN training config file, a test.sh file to run the model, and an /image folder with a few generated example images."
         }
     },
     "00019_PGGAN_CHEST_XRAY": {
         "execution": {
             "package_name": "00019_PGGAN_NODE21",
-            "package_link": "https://zenodo.org/record/6943804/files/00019_PGGAN_NODE21.zip?download=1",
+            "package_link": "https://zenodo.org/record/7047097/files/00019_PGGAN_CHEST_XRAY.zip?download=1",
             "model_name": "model",
             "extension": ".pt",
             "image_size": [
@@ -2343,11 +2343,8 @@
                         "output_path",
                         "save_images"
                     ],
-                    "custom": {
-                        "image_size": 1024
-                    }
+                    "custom": {}
                 },
-                "real_input_latent_vector_size": 512,
                 "input_latent_vector_size": 1024
             }
         },
@@ -2426,13 +2423,13 @@
             "publication": null,
             "doi": [],
             "inputs": "image_size: default=1024, help=the size if height and width of the generated images.",
-            "comment": "A unconditional Progressively-growing generative adversarial network (PGGAN) that generates chest xray (CXR) images with pixel dimensions 1024x1024. The PGGAN was trained on CXR images from the NODE21 dataset (Sogancioglu et al, 2021). The uploaded ZIP file contains the files model.pt (model weight), __init__.py (image generation method and utils), a requirements.txt, a LICENSE file, the MEDIGAN metadata.json file, the used GAN training config file, a test.sh file to run the model, and an /image folder with a few generated example images."
+            "comment": "An unconditional Progressively-growing generative adversarial network (PGGAN) that generates chest xray (CXR) images with pixel dimensions 1024x1024. The PGGAN was trained on CXR images from the NODE21 dataset (Sogancioglu et al, 2021). The uploaded ZIP file contains the files model.pt (model weight), __init__.py (image generation method and utils), a requirements.txt, a LICENSE file, the MEDIGAN metadata.json file, the used GAN training config file, a test.sh file to run the model, and an /image folder with a few generated example images."
         }
     },
     "00020_PGGAN_CHEST_XRAY": {
         "execution": {
             "package_name": "00020_PGGAN_CHEST_XRAY",
-            "package_link": "https://zenodo.org/record/7046281/files/00020_PGGAN_CHEST_XRAY.zip?download=1",
+            "package_link": "https://zenodo.org/record/7047096/files/00020_PGGAN_CHEST_XRAY.zip?download=1",
             "model_name": "Final_Full_Model",
             "extension": ".pth",
             "image_size": [
@@ -2513,7 +2510,7 @@
             "width": 1028,
             "depth": 3,
             "type": "PGGAN",
-            "license": null,
+            "license": "MIT",
             "dataset_type": "public",
             "privacy_preservation": null,
             "tags": [
@@ -2542,7 +2539,7 @@
                 "image_size: default=1024, help=the size if height and width of the generated images",
                 "resize_pixel_dim: default=None, help=Resizing of generated images via the pillow PIL image library."
             ],
-            "comment": "A unconditional Progressively-growing generative adversarial network (PGGAN) that generates chest xray (CXR) images with pixel dimensions 1024x1024. The PGGAN was trained on CXR images based on ChestX-ray14 dataset (Wang et al. 2017, Paper: https://arxiv.org/pdf/1705.02315.pdf, Data: https://nihcc.app.box.com/v/ChestXray-NIHCC). The uploaded ZIP file contains the model weights checkpoint file, __init__.py (image generation method and utils), a requirements.txt, the MEDIGAN metadata.json file, a test.sh file to run the model, and an /image folder with a few generated example images."
+            "comment": "An unconditional Progressively-growing generative adversarial network (PGGAN) that generates chest xray (CXR) images with pixel dimensions 1024x1024. The PGGAN was trained on CXR images based on ChestX-ray14 dataset (Wang et al. 2017, Paper: https://arxiv.org/pdf/1705.02315.pdf, Data: https://nihcc.app.box.com/v/ChestXray-NIHCC). The uploaded ZIP file contains the model weights checkpoint file, __init__.py (image generation method and utils), a requirements.txt, the MEDIGAN metadata.json file, a test.sh file to run the model, and an /image folder with a few generated example images."
         }
     }
 }
