@@ -30,7 +30,7 @@
 
 ## Available models
 
-| Output type                     | Modality |      Model type    |   Output size   | Base dataset | <pre>     </pre> Sample <pre>     </pre>    |    `model_id`     |  Hosted on  |  Reference |
+| Output type                     | Modality |      Model type    |   Output size   | Base dataset |     Output examples      |    `model_id`     |  Hosted on  |  Reference |
 |-----------------------------|:--------:|:-------------:|:--------:|:------------:|:------:|:------:|:------:|:------:|
 | <sub> Breast Calcification        </sub> | <sub>  mammography  </sub> | <sub>    dcgan     </sub> | <sub> 128x128 </sub> | <sub>  [Inbreast](https://www.academicradiology.org/article/S1076-6332(11)00451-X/fulltext)   </sub> | ![sample](docs/source/_static/samples/00001.png) | <sub> `00001_DCGAN_MMG_CALC_ROI` </sub> | <sub>[Zenodo (5187714)](https://doi.org/10.5281/zenodo.5187714) </sub> | | 
 | <sub> Breast Mass                 </sub> | <sub>  mammography  </sub> | <sub>    dcgan     </sub> | <sub> 128x128 </sub> | <sub>   [Optimam](https://doi.org/10.48550/arXiv.2004.04742)   </sub> | ![sample](docs/source/_static/samples/00002.png) | <sub> `00002_DCGAN_MMG_MASS_ROI` </sub> | <sub>[Zenodo (5188557)](https://doi.org/10.5281/zenodo.5188557) </sub> | <sub>[Alyafi et al (2019)](https://doi.org/10.48550/arXiv.1909.02062) </sub> | 
