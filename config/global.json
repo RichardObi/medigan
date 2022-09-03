@@ -2347,6 +2347,7 @@
                         "image_size": 1024
                     }
                 },
+                "real_input_latent_vector_size": 512,
                 "input_latent_vector_size": 1024
             }
         },
