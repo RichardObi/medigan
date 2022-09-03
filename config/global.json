@@ -815,103 +815,103 @@
             "model_name": "inp_gen",
             "extension": ".pth",
             "image_size": [
-               256,
-               256
+                256,
+                256
             ],
             "dependencies": [
-               "matplotlib",
-               "albumentations",
-               "torch",
-               "torchvision",
-               "numpy",
-               "pillow",
-               "opencv-contrib-python"
+                "matplotlib",
+                "albumentations",
+                "torch",
+                "torchvision",
+                "numpy",
+                "pillow",
+                "opencv-contrib-python"
             ],
             "generate_method": {
-               "name": "generate",
-               "args": {
-                  "base": [
-                     "model_file",
-                     "num_samples",
-                     "output_path",
-                     "save_images"
-                  ],
-                  "custom": {
-                     "image_size": 256,
-                     "num_inpaints_per_sample": 2,
-                     "randomize_input_image_order": true,
-                     "F_img_path": null,
-                     "T1_img_path": null,
-                     "T1c_img_path": null,
-                     "T2_img_path": null,
-                     "add_variations_to_mask": true,
-                     "x_center": 130,
-                     "y_center": 130,
-                     "radius_1": 10,
-                     "radius_2": 15,
-                     "radius_3": 30
-                  }
-               }
+                "name": "generate",
+                "args": {
+                    "base": [
+                        "model_file",
+                        "num_samples",
+                        "output_path",
+                        "save_images"
+                    ],
+                    "custom": {
+                        "image_size": 256,
+                        "num_inpaints_per_sample": 2,
+                        "randomize_input_image_order": true,
+                        "F_img_path": null,
+                        "T1_img_path": null,
+                        "T1c_img_path": null,
+                        "T2_img_path": null,
+                        "add_variations_to_mask": true,
+                        "x_center": 130,
+                        "y_center": 130,
+                        "radius_1": 10,
+                        "radius_2": 15,
+                        "radius_3": 30
+                    }
+                }
             }
         },
         "selection": {
             "performance": {
-               "SSIM": null,
-               "MSE": null,
-               "NSME": null,
-               "PSNR": null,
-               "IS": null,
-               "FID": 1.1597,
-               "turing_test": null,
-               "downstream_task": null,
-               "DSC": 0.737,
-               "Sensitivity": 0.663,
-               "Precision": 0.864
+                "SSIM": null,
+                "MSE": null,
+                "NSME": null,
+                "PSNR": null,
+                "IS": null,
+                "FID": 1.1597,
+                "turing_test": null,
+                "downstream_task": null,
+                "DSC": 0.737,
+                "Sensitivity": 0.663,
+                "Precision": 0.864
             },
             "use_cases": [
-               "segmentation",
-               "classification",
-               "detection"
+                "segmentation",
+                "classification",
+                "detection"
             ],
             "organ": [
-               "brain",
-               "cranial",
-               "head"
+                "brain",
+                "cranial",
+                "head"
             ],
             "modality": [
-               "MRI",
-               "Cranial MRI",
-               "Brain MRI",
-               "Flair",
-               "T1",
-               "T1c",
-               "T1 contrast-enhanced",
-               "T2"
+                "MRI",
+                "Cranial MRI",
+                "Brain MRI",
+                "Flair",
+                "T1",
+                "T1c",
+                "T1 contrast-enhanced",
+                "T2"
             ],
             "vendors": [],
             "centres": [],
             "function": [
-               "image inpainting",
-               "mask to image",
-               "circle to tumor grade",
-               "tumor grade to image",
-               "cross-modal synthesis",
-               "data augmentation",
-               "domain-adaptation"
+                "image inpainting",
+                "mask to image",
+                "circle to tumor grade",
+                "tumor grade to image",
+                "cross-modal synthesis",
+                "data augmentation",
+                "domain-adaptation"
             ],
             "condition": [],
             "dataset": [
-               "BRATS"
+                "BRATS"
             ],
             "augmentations": [],
             "generates": [
-               "brain MRI",
-               "Flair",
-               "T1",
-               "T1c",
-               "T2",
-               "binary mask",
-               "tumor grade mask"
+                "brain MRI",
+                "Flair",
+                "T1",
+                "T1c",
+                "T2",
+                "binary mask",
+                "tumor grade mask"
             ],
             "height": 256,
             "width": 256,
@@ -921,17 +921,17 @@
             "dataset_type": "public",
             "privacy_preservation": null,
             "tags": [
-               "Brain",
-               "Tumor",
-               "MRI Generation",
-               "Inpainting",
-               "Brain MRI Synthesis",
-               "Concentric Circle",
-               "Tumor Inpainting",
-               "Tumor Grade",
-               "Tumor Grading",
-               "Cross-Modality",
-               "Multi-modal synthesis"
+                "Brain",
+                "Tumor",
+                "MRI Generation",
+                "Inpainting",
+                "Brain MRI Synthesis",
+                "Concentric Circle",
+                "Tumor Inpainting",
+                "Tumor Grade",
+                "Tumor Grading",
+                "Cross-Modality",
+                "Multi-modal synthesis"
             ],
             "year": "2022"
         },
@@ -943,23 +943,23 @@
             "version": null,
             "publication": "Medical Physics Journal",
             "doi": [
-               "https://doi.org/10.48550/arXiv.2003.07526",
-               "https://doi.org/10.1002/mp.14701"
+                "https://doi.org/10.48550/arXiv.2003.07526",
+                "https://doi.org/10.1002/mp.14701"
             ],
             "inputs": [
-               "image_size: default=256, help=the size if height and width of the generated images.",
-               "num_inpaints_per_sample: default=2, help=the number of tumor inpaint images per MRI modality that is generated from the same input sample",
-               "randomize_input_image_order: default=True, help=input image order is randomized. This helps to not exclude input images if batch generation is used.",
-               "F_img_path: default=None, help=The path to the folder were the input Flair MRI images are stored.",
-               "T1_img_path: default=None, help=The path to the folder were the input T1 MRI images are stored.",
-               "T1c_img_path: default=None, help=The path to the folder were the input T1c MRI images are stored.",
-               "T2_img_path: default=None, help=The path to the folder were the input T2 MRI images are stored.",
-               "add_variations_to_mask: default=True, help=This slightly varies the values of x_center, y_center, radius_1, radius_2, radius_3. If True, the same segmentation masks is still used to generate each of the 4 modality images. This is recommended as it results in higher image diversity.",
-               "x_center: default=130, help=the x coordinate of the concentric circle upon which the binary mask, the tumor grade mask, and, ultimately, the generated images are based.",
-               "y_center: default=130, help=the y coordinate of the concentric circle upon which the binary mask, the tumor grade mask, and, ultimately, the generated images are based.",
-               "radius_1: default=10, help=the radius of the first (inside second) of three concentric circles (necrotic and non-enhancing tumor) upon which the binary mask, the tumor grade mask, and, ultimately, the generated images are based.",
-               "radius_2: default=15, help=the radius of the second (inside third) of three concentric circles (enhancing tumor) upon which the binary mask, the tumor grade mask, and, ultimately, the generated images are based.",
-               "radius_3: default=30, help=the radius of the third of three concentric circles (edema) upon which the binary mask, the tumor grade mask, and, ultimately, the generated images are based."
+                "image_size: default=256, help=the size if height and width of the generated images.",
+                "num_inpaints_per_sample: default=2, help=the number of tumor inpaint images per MRI modality that is generated from the same input sample",
+                "randomize_input_image_order: default=True, help=input image order is randomized. This helps to not exclude input images if batch generation is used.",
+                "F_img_path: default=None, help=The path to the folder were the input Flair MRI images are stored.",
+                "T1_img_path: default=None, help=The path to the folder were the input T1 MRI images are stored.",
+                "T1c_img_path: default=None, help=The path to the folder were the input T1c MRI images are stored.",
+                "T2_img_path: default=None, help=The path to the folder were the input T2 MRI images are stored.",
+                "add_variations_to_mask: default=True, help=This slightly varies the values of x_center, y_center, radius_1, radius_2, radius_3. If True, the same segmentation masks is still used to generate each of the 4 modality images. This is recommended as it results in higher image diversity.",
+                "x_center: default=130, help=the x coordinate of the concentric circle upon which the binary mask, the tumor grade mask, and, ultimately, the generated images are based.",
+                "y_center: default=130, help=the y coordinate of the concentric circle upon which the binary mask, the tumor grade mask, and, ultimately, the generated images are based.",
+                "radius_1: default=10, help=the radius of the first (inside second) of three concentric circles (necrotic and non-enhancing tumor) upon which the binary mask, the tumor grade mask, and, ultimately, the generated images are based.",
+                "radius_2: default=15, help=the radius of the second (inside third) of three concentric circles (enhancing tumor) upon which the binary mask, the tumor grade mask, and, ultimately, the generated images are based.",
+                "radius_3: default=30, help=the radius of the third of three concentric circles (edema) upon which the binary mask, the tumor grade mask, and, ultimately, the generated images are based."
             ],
             "comment": "A Generative adversarial network (GAN) for Inpainting tumors (based on concentric circle-based tumor grade masks) into multi-modal MRI images (Flair, T1, T1c, T2) with dimensions 256x256. Model was trained on BRATS MRI Dataset (Menze et al). For more information, see publication (https://doi.org/10.1002/mp.14701). Model comes with example input image folders. Apart from that, the uploaded ZIP file contains the model checkpoint files .pth (model weight), __init__.py (image generation method and utils), a requirements.txt, the MEDIGAN metadata.json. The proposed method synthesizes brain tumor images from normal brain images and concentric circles that are simplified tumor masks. The tumor masks are defined by complex features, such as grade, appearance, size, and location. Thus, these features of the tumor masks are condensed and simplified to concentric circles. In the proposed method, the user-defined concentric circles are converted to various tumor masks through deep neural networks. The normal brain images are masked by the tumor mask, and the masked region is inpainted with the tumor images synthesized by the deep neural networks. Also see original repository at: https://github.com/KSH0660/BrainTumor"
         }
@@ -2347,7 +2347,6 @@
                         "image_size": 1024
                     }
                 },
-                "real_input_latent_vector_size": 512,
                 "input_latent_vector_size": 1024
             }
         },
@@ -2398,8 +2397,8 @@
                 "lung xray",
                 "lung xray"
             ],
-            "height": 128,
-            "width": 128,
+            "height": 1024,
+            "width": 1024,
             "depth": 1,
             "type": "PGGAN",
             "license": "MIT",
@@ -2427,6 +2426,122 @@
             "doi": [],
             "inputs": "image_size: default=1024, help=the size if height and width of the generated images.",
             "comment": "A unconditional Progressively-growing generative adversarial network (PGGAN) that generates chest xray (CXR) images with pixel dimensions 1024x1024. The PGGAN was trained on CXR images from the NODE21 dataset (Sogancioglu et al, 2021). The uploaded ZIP file contains the files model.pt (model weight), __init__.py (image generation method and utils), a requirements.txt, a LICENSE file, the MEDIGAN metadata.json file, the used GAN training config file, a test.sh file to run the model, and an /image folder with a few generated example images."
+        }
+    },
+    "00020_PGGAN_CHEST_XRAY": {
+        "execution": {
+            "package_name": "00020_PGGAN_CHEST_XRAY",
+            "package_link": "https://zenodo.org/record/7046281/files/00020_PGGAN_CHEST_XRAY.zip?download=1",
+            "model_name": "Final_Full_Model",
+            "extension": ".pth",
+            "image_size": [
+                1024,
+                1024,
+                3
+            ],
+            "dependencies": [
+                "pytorch_lightning==1.2.10",
+                "torch",
+                "torchvision",
+                "matplotlib",
+                "pillow",
+                "numpy"
+            ],
+            "generate_method": {
+                "name": "generate",
+                "args": {
+                    "base": [
+                        "model_file",
+                        "num_samples",
+                        "output_path",
+                        "save_images"
+                    ],
+                    "custom": {
+                        "image_size": 1024,
+                        "resize_pixel_dim": null
+                    }
+                },
+                "input_latent_vector_size": 512
+            }
+        },
+        "selection": {
+            "performance": {
+                "SSIM": null,
+                "MSE": null,
+                "NSME": null,
+                "PSNR": null,
+                "IS": null,
+                "FID": null,
+                "turing_test": null,
+                "downstream_task": null
+            },
+            "use_cases": [
+                "classification",
+                "detection"
+            ],
+            "organ": [
+                "lung",
+                "chest",
+                "thorax"
+            ],
+            "modality": [
+                "x-ray",
+                "xray",
+                "CXR"
+            ],
+            "vendors": [],
+            "centres": [],
+            "function": [
+                "noise to image",
+                "unconditional generation",
+                "data augmentation"
+            ],
+            "condition": [],
+            "dataset": [
+                "ChestX-ray14"
+            ],
+            "augmentations": [],
+            "generates": [
+                "chest xray",
+                "CXR",
+                "thoracic xray",
+                "lung xray",
+                "lung xray"
+            ],
+            "height": 1028,
+            "width": 1028,
+            "depth": 3,
+            "type": "PGGAN",
+            "license": null,
+            "dataset_type": "public",
+            "privacy_preservation": null,
+            "tags": [
+                "Thoracic xray",
+                "xray",
+                "x-ray",
+                "Thorax",
+                "Lung",
+                "Nodules",
+                "Lung Cancer",
+                "Lung Tumor"
+            ],
+            "year": "2022"
+        },
+        "description": {
+            "title": "PGGAN Model for Generation of Chest XRAY (CXR) Images (Trained on ChestX-ray14 Dataset)",
+            "provided_date": "September 2022",
+            "trained_date": "2021",
+            "provided_after_epoch": null,
+            "version": null,
+            "publication": null,
+            "doi": [
+                "https://doi.org/10.1007/s42979-021-00720-7"
+            ],
+            "inputs": [
+                "image_size: default=1024, help=the size if height and width of the generated images",
+                "resize_pixel_dim: default=None, help=Resizing of generated images via the pillow PIL image library."
+            ],
+            "comment": "A unconditional Progressively-growing generative adversarial network (PGGAN) that generates chest xray (CXR) images with pixel dimensions 1024x1024. The PGGAN was trained on CXR images based on ChestX-ray14 dataset (Wang et al. 2017, Paper: https://arxiv.org/pdf/1705.02315.pdf, Data: https://nihcc.app.box.com/v/ChestXray-NIHCC). The uploaded ZIP file contains the model weights checkpoint file, __init__.py (image generation method and utils), a requirements.txt, the MEDIGAN metadata.json file, a test.sh file to run the model, and an /image folder with a few generated example images."
         }
     }
 }

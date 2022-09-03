@@ -65,6 +65,7 @@ models_with_args = [
     ("00017_DCGAN_XRAY_LUNG_NODULES", {}, 3),
     ("00018_WGANGP_XRAY_LUNG_NODULES", {}, 3),
     ("00019_PGGAN_CHEST_XRAY", {}, 3),
+    ("00020_PGGAN_CHEST_XRAY", {"resize_pixel_dim": 512, "image_size": 256}, 3),
 ]
 
 # class TestMediganExecutorMethods(unittest.TestCase):
