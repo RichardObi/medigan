@@ -65,6 +65,7 @@ models_with_args = [
     ("00017_DCGAN_XRAY_LUNG_NODULES", {}, 3),
     ("00018_WGANGP_XRAY_LUNG_NODULES", {}, 3),
     ("00019_PGGAN_CHEST_XRAY", {}, 3),
+    ("00020_PGGAN_CHEST_XRAY", {"resize_pixel_dim": 512, "image_size": 256}, 3),
 ]
 
 # class TestMediganExecutorMethods(unittest.TestCase):
@@ -109,6 +110,7 @@ class TestMediganExecutorMethods:
 
         self.logger.debug(f"models: {models_with_args}")
         for i, model_id in enumerate(self.model_ids):
+            self.logger.debug(f"Now testing model {model_id}")
             self._remove_dir_and_contents()  # Already done in each test independently, but to be sure, here again.
             self.test_generate_method(model_id=model_id)
 
@@ -122,9 +124,9 @@ class TestMediganExecutorMethods:
             self.test_get_dataloader_method(model_id=model_id)
 
             # if i == 16:  # just for local testing
-            self._remove_model_dir_and_zip(
-                model_ids=[model_id], are_all_models_deleted=False
-            )
+            # self._remove_model_dir_and_zip(
+            #    model_ids=[model_id], are_all_models_deleted=False
+            # )
 
     @pytest.mark.parametrize(
         "values_list, should_sample_be_generated",
@@ -184,7 +186,7 @@ class TestMediganExecutorMethods:
             num_samples=self.num_samples,
             output_path=self.test_output_path,
         )
-        self._check_if_samples_were_generated()
+        self._check_if_samples_were_generated(model_id=model_id)
 
     # @pytest.mark.parametrize("model_id, args, expected_num_samples", models_with_args)
     @pytest.mark.skip
@@ -198,7 +200,9 @@ class TestMediganExecutorMethods:
             output_path=self.test_output_path,
             **args,
         )
-        self._check_if_samples_were_generated(num_samples=expected_num_samples)
+        self._check_if_samples_were_generated(
+            model_id=model_id, num_samples=expected_num_samples
+        )
 
     # @pytest.mark.parametrize("model_id", [model[0] for model in models_with_args])
     @pytest.mark.skip
@@ -210,12 +214,12 @@ class TestMediganExecutorMethods:
             output_path=self.test_output_path,
         )
         gen_function()
-        self._check_if_samples_were_generated()
+        self._check_if_samples_were_generated(model_id=model_id)
         del gen_function
 
     # @pytest.mark.parametrize("model_id", [model[0] for model in models_with_args])
     @pytest.mark.skip
-    def test_get_dataloader_method(self, model_id="00007_INPAINT_BRAIN_MRI"):
+    def test_get_dataloader_method(self, model_id):
         self._remove_dir_and_contents()
         data_loader = self.generators.get_as_torch_dataloader(
             model_id=model_id, num_samples=self.num_samples
@@ -263,7 +267,7 @@ class TestMediganExecutorMethods:
 
     @pytest.mark.skip
     def _check_if_samples_were_generated(
-        self, num_samples=None, should_sample_be_generated: bool = True
+        self, model_id=None, num_samples=None, should_sample_be_generated: bool = True
     ):
         # check if the number of generated samples of model_id_1 is as expected.
         file_list = glob.glob(self.test_output_path + "/*")
@@ -278,9 +282,10 @@ class TestMediganExecutorMethods:
                 == num_samples
                 * 2
                 * 6  # 00007_INPAINT_BRAIN_MRI: 2 inpaints per sample, 6 outputs per sample
-                or len(file_list) == num_samples * 2
+                or len(file_list)
+                == num_samples * 2  # Temporary fix for different outputs per model.
                 or len(file_list) == num_samples + 1
-            )  # Temporary fix for different outputs per model.
+            ), f"Model {model_id} generated {len(file_list)} samples instead of the expected {num_samples}, {num_samples*2*6}, or {num_samples + 1}."
             # Some models are balanced per label by default: If num_samples is odd, then len(file_list)==num_samples +1
         else:
             assert len(file_list) == 0
@@ -368,6 +373,6 @@ class TestMediganExecutorMethods:
         # self._remove_model_dir_and_zip(
         #    self, model_ids=["00006_WGANGP_MMG_MASS_ROI"], are_all_models_deleted=False
         # )  # just for local testing
-        self._remove_model_dir_and_zip(
-            self, model_ids=None, are_all_models_deleted=True
-        )
+        # self._remove_model_dir_and_zip(
+        #    self, model_ids=None, are_all_models_deleted=True
+        # )
