@@ -50,6 +50,7 @@ extensions = [
     "sphinx_automodapi.automodapi",
     "sphinx_automodapi.smart_resolver",
     "sphinx.ext.autosummary",
+    "myst_parser",
 ]
 # 'sphinx_automodapi.smart_resolver'
 

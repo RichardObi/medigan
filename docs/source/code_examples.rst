@@ -3,9 +3,9 @@ Code Examples
 
 .. contents:: Table of Contents
 
-Getting Started
+Install
 __________________________
-Install `medigan` library from pypi.
+Install `medigan` library from pypi (or github).
 
 .. code-block:: Python
 
@@ -17,6 +17,7 @@ Import `medigan` and initialize Generators
 
     from medigan import Generators
     generators = Generators()
+
 
 Generate Images
 _______________________________________
@@ -32,6 +33,25 @@ Get the model's generate method and run it to generate 3 samples
 
     gen_function = generators.get_generate_function(model_id="00001_DCGAN_MMG_CALC_ROI", num_samples=3)
     gen_function()
+
+Get the model's synthetic data as torch dataloader with 3 samples
+
+.. code-block:: Python
+
+    dataloader = generators.get_as_torch_dataloader(model_id="00004_PIX2PIX_MASKTOMASS_BREAST_MG_SYNTHESIS", num_samples=3)
+
+
+Visualize Generative Model
+_______________________________________
+
+Displays an interactive visual interface for exploration of applicable models.
+
+.. code-block:: Python
+
+    generators.visualize("00010_FASTGAN_POLYP_PATCHES_W_MASKS")
+
+.. figure:: _static/interface.png
+   :alt: Visualization example for model 00010
 
 Search for Generative Models
 _______________________________________

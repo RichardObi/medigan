@@ -53,7 +53,7 @@
 | <sub> Chest Xray Images           </sub> | <sub>  chest x-ray  </sub> | <sub>   pggan      </sub> | <sub>1024x1024  </sub> | <sub>    [NODE21](https://zenodo.org/record/4725881#.YxNmNuxBwXA)     </sub> | ![sample](_static/samples/00019.png) | <sub> `00019_PGGAN_CHEST_XRAY` </sub> | <sub>[Zenodo (6943803)](https://doi.org/10.5281/zenodo.6943803) </sub> | | 
 | <sub> Chest Xray Images           </sub> | <sub>  chest x-ray  </sub> | <sub>   pggan      </sub> | <sub>1024x1024  </sub> | <sub>    [ChestX-ray14](https://nihcc.app.box.com/v/ChestXray-NIHCC/folder/36938765345)     </sub> | ![sample](_static/samples/00020.png) | <sub> `00020_PGGAN_CHEST_XRAY` </sub> | <sub>[Zenodo (7046280)](https://doi.org/10.5281/zenodo.7046280) </sub> | <sub> [Segal et al (2021)](https://doi.org/10.1007/s42979-021-00720-7) </sub> |
 
-Model information can be found in the [global.json](https://github.com/RichardObi/medigan/blob/main/config/global.json) model metadata file.
+Model information can be found in the [model documentation](https://medigan.readthedocs.io/en/latest/models.html) and in the [global.json](https://github.com/RichardObi/medigan/blob/main/config/global.json) model metadata.
 
 ## Installation
 To install the current release, simply run:
@@ -100,7 +100,7 @@ generators.generate(model_id="00003_CYCLEGAN_MMG_DENSITY_FULL", num_samples=1)
 
 
 ### Search Example
-Search for a model inside medigan using keywords
+Search for a [model](https://medigan.readthedocs.io/en/latest/models.html) inside medigan using keywords
 ```python
 # import medigan and initialize Generators
 from medigan import Generators
