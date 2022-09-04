@@ -2504,7 +2504,7 @@
     "00020_PGGAN_CHEST_XRAY": {
         "execution": {
             "package_name": "00020_PGGAN_CHEST_XRAY",
-            "package_link": "https://zenodo.org/record/7047096/files/00020_PGGAN_CHEST_XRAY.zip?download=1",
+            "package_link": "https://zenodo.org/record/7047295/files/00020_PGGAN_CHEST_XRAY.zip?download=1",
             "model_name": "Final_Full_Model",
             "extension": ".pth",
             "image_size": [
