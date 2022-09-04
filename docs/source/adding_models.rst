@@ -1,12 +1,45 @@
 Model Contributions
 =====================
 
-We are happy that you are thinking of contributing your generative model to `medigan`.
-This will make your model accessible to our user base and our users can easily integrate your models synthetic data in their model training pipelines and experiments.
+We are happy that you are considering contributing your model to `medigan`.
+This will make your model accessible to the community and our users can easily integrate your synthetic data into their training pipelines and experiments.
 
 
-Guide: How to add your model
-____________________________
+Guide: Automated Model Contribution
+_________________________________________
+
+Create an `__init__.py <templates/examples/__init__.py>`_ file in your model's root folder.
+
+Next, run the following code to contribute your model to `medigan`.
+
+- Your model will be stored on `Zenodo <https://zenodo.org/>`_.
+
+- Also, a Github `issue <https://github.com/RichardObi/medigan/issues>`_ will be created to add your model's metadata to medigan's `global.json <https://github.com/RichardObi/medigan/blob/main/config/global.json>`_.
+
+- To do so, please provide a github access token (`get one here <https://github.com/settings/tokens>`_) and a zenodo access token (`get one here <https://zenodo.org/account/settings/applications/tokens/new/>`_), as shown below. After creation, the zenodo access token may take a few minutes before being recognized in zenodo API calls.
+
+.. code-block:: Python
+
+    from medigan import Generators
+    gen = Generators()
+
+    # Contribute your model
+    gen.contribute(
+        model_id = "00100_YOUR_MODEL", # assign an ID
+        init_py_path ="path/ending/with/__init__.py",
+        model_weights_name = "10000",
+        model_weights_extension = ".pt",
+        generate_method_name = "generate", # in __init__.py
+        dependencies = ["numpy", "torch"],
+        creator_name = "YOUR_NAME",
+        creator_affiliation = "YOUR_AFFILIATION",
+        zenodo_access_token = 'ZENODO_ACCESS_TOKEN',
+        github_access_token = 'GITHUB_ACCESS_TOKEN',
+    )
+
+Guide:  Manual Model Contribution
+______________________________________
+
 In the following, you find a step-by-step guide on how to contribute your generative model to `medigan`.
 In case you encounter problems during this process feel free to reach out by creating an issue `here <https://github.com/RichardObi/medigan-models/issues>`_ and we will try to help.
 Checkout the figure below that shows the main components of the model contribution workflow depicted in yellow (d).
@@ -16,20 +49,20 @@ Checkout the figure below that shows the main components of the model contributi
 
    Architectural overview including main workflows consisting of (a) library import and initialisation, (b) generative model search and ranking, (c) sample generation, and (d) generative model contribution.
 
-If you are here, you have recently developed a generative model such as a GAN or an Variational Autoencoder and you would like to boost your model's impact, reusability, dissemination by uploading it to `medigan`.
+If you are here, you have recently developed a generative model such as a GAN, VAE, Diffusion Model, etc and you would like to boost your model's impact, reusability, dissemination by uploading it to `medigan`.
 We are delighted and will assist you in adding your model.
 
 #. **Firstly, let's create the needed files:**
 
     To add your model you will need the following files.
 
-    #. A checkpoint file that contains your trained model weights (i.e. the ``state_dict`` in pytorch)
+    #. A checkpoint file that contains your trained model weights (e.g.,  the ``state_dict`` in pytorch)
 
     #. An ``__init__.py`` file that contains functions that
 
-        - loads the weights file (let's call that one ``weights.pt``)
+        - load the weights file (let's call that one ``weights.pt``)
 
-        - initializes your model with these weights
+        - initialize your model with these weights
 
         - generate samples with the initialized model.
 
@@ -174,5 +207,7 @@ If you have suggestions on improvements for our model contribution process, plea
 Conventions that your model should follow
 ______________________________________________
 
-* Currently (10/2021), it is a requirement that models in `medigan` are `pytorch <pytorch>`_ models. In the future, we may explore to add compatibility with additional frameworks to `medigan` If you need support of other frameworks, please let us now `here <https://github.com/RichardObi/medigan/issues>`_.
-* Your model's should have a ``generate`` method, error handling, use ``logging`` instead of ``prints``, and create some sort of synthetic data. We hope to welcome you model soon to `medigan`!
+* Your model should have a ``generate`` method with the params model_file:str, num_samples:int, save_images:bool, and output_path:str (see `template (templates/examples/__init__.py>`_)
+* Also, the model should do simple error handling, run flexibly on either gpu or cpu, use ``logging`` instead of ``prints``, and create some sort of synthetic data.
+
+We hope to welcome you model soon to `medigan`! If you need support, please let us now `here <https://github.com/RichardObi/medigan/issues>`_.

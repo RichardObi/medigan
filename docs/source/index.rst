@@ -11,7 +11,7 @@ Let's install `medigan` and generate a few synthetic images.
 .. code-block:: Python
 
     from medigan import Generators
-    Generators.generate(model_id="00001_DCGAN_MMG_CALC_ROI")
+    Generators().generate(model_id="00001_DCGAN_MMG_CALC_ROI")
 
 
 Overview
@@ -28,7 +28,13 @@ Overview
    description
 
 .. toctree::
-   :caption: Code Examples
+   :caption: Models
+   :maxdepth: 3
+
+   models
+
+.. toctree::
+   :caption: Getting Started
    :maxdepth: 3
 
    code_examples
@@ -46,11 +52,6 @@ Overview
 
    tests
 
-.. toctree::
-   :caption: Models
-   :maxdepth: 3
-
-   models
 
 .. toctree::
    :caption: Add Your Model
