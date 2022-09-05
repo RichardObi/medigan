@@ -75,8 +75,8 @@ Create mammography calcification images using DCGAN model
 from medigan import Generators
 generators = Generators()
 
-# generate 6 samples using one of the medigan models
-generators.generate(model_id="00001_DCGAN_MMG_CALC_ROI", num_samples=6)
+# generate 6 samples with model 1 (00001_DCGAN_MMG_CALC_ROI)
+generators.generate(model_id=1, num_samples=6)
 ```
 ![sample](docs/source/_static/samples/dcgan/gan_sample_1.png)
 ![sample](docs/source/_static/samples/dcgan/gan_sample_2.png)
@@ -91,8 +91,8 @@ Create mammograms translated from Low-to-High Breast Density using CYCLEGAN mode
 ```python
 from medigan import Generators
 generators = Generators()
-
-generators.generate(model_id="00003_CYCLEGAN_MMG_DENSITY_FULL", num_samples=1)
+# model 3 is "00003_CYCLEGAN_MMG_DENSITY_FULL"
+generators.generate(model_id=3, num_samples=1)
 ```
 ![sample](docs/source/_static/samples/cyclegan/sample_image_5_low.png)
 &rarr;
@@ -119,7 +119,8 @@ We can directly receive a [torch.utils.data.DataLoader](https://pytorch.org/docs
 ```python
 from medigan import Generators
 generators = Generators()
-dataloader = generators.get_as_torch_dataloader(model_id="00004_PIX2PIX_MASKTOMASS_BREAST_MG_SYNTHESIS", num_samples=3)
+# model 4 is "00004_PIX2PIX_MASKTOMASS_BREAST_MG_SYNTHESIS"
+dataloader = generators.get_as_torch_dataloader(model_id=4, num_samples=3)
 ```
 
 Visualize the contents of the dataloader.
@@ -146,7 +147,8 @@ With our interface, it is possible to generate sample by manually setting the co
 from medigan import Generators
 
 generators = Generators()
-generators.visualize("00010_FASTGAN_POLYP_PATCHES_W_MASKS")
+# model 10 is "00010_FASTGAN_POLYP_PATCHES_W_MASKS"
+generators.visualize(10)
 ```
 
 ![sample](docs/source/_static/interface.png)

@@ -31,14 +31,16 @@ Get the model's generate method and run it to generate 3 samples
 
 .. code-block:: Python
 
-    gen_function = generators.get_generate_function(model_id="00001_DCGAN_MMG_CALC_ROI", num_samples=3)
+    # model 1 is "00001_DCGAN_MMG_CALC_ROI"
+    gen_function = generators.get_generate_function(model_id=1, num_samples=3)
     gen_function()
 
 Get the model's synthetic data as torch dataloader with 3 samples
 
 .. code-block:: Python
 
-    dataloader = generators.get_as_torch_dataloader(model_id="00004_PIX2PIX_MASKTOMASS_BREAST_MG_SYNTHESIS", num_samples=3)
+    # model 4 is "00004_PIX2PIX_MASKTOMASS_BREAST_MG_SYNTHESIS"
+    dataloader = generators.get_as_torch_dataloader(model_id=4, num_samples=3)
 
 
 Visualize Generative Model
@@ -48,7 +50,8 @@ Displays an interactive visual interface for exploration of applicable models.
 
 .. code-block:: Python
 
-    generators.visualize("00010_FASTGAN_POLYP_PATCHES_W_MASKS")
+    # model 10 is "00010_FASTGAN_POLYP_PATCHES_W_MASKS"
+    generators.visualize(10)
 
 .. figure:: _static/interface.png
    :alt: Visualization example for model 00010
