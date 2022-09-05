@@ -771,6 +771,8 @@ class Generators:
             Returns images as list of numpy arrays if `save_images` is False. However, if `is_gen_function_returned` is True, it returns the internal generate function of the model.
         """
 
+        model_id = self.config_manager.match_model_id(provided_model_id=model_id)
+
         model_executor = self.get_model_executor(
             model_id=model_id, install_dependencies=install_dependencies
         )
@@ -1064,6 +1066,8 @@ class Generators:
         num_samples: int
             the number of samples that will be generated
         """
+
+        model_id = self.config_manager.match_model_id(provided_model_id=model_id)
 
         if is_local_model:
             model_contributor = self.get_model_contributor_by_id(model_id=model_id)
@@ -1412,6 +1416,9 @@ class Generators:
         auto_close: bool
             Flag for closing the user interface automatically after time. Used while testing.
         """
+
+        model_id = self.config_manager.match_model_id(provided_model_id=model_id)
+
         config = self.get_config_by_id(model_id)
         model_executor = self.get_model_executor(model_id)
 
