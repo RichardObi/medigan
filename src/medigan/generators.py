@@ -771,6 +771,8 @@ class Generators:
             Returns images as list of numpy arrays if `save_images` is False. However, if `is_gen_function_returned` is True, it returns the internal generate function of the model.
         """
 
+        model_id = self.config_manager.match_model_id(provided_model_id=model_id)
+
         model_executor = self.get_model_executor(
             model_id=model_id, install_dependencies=install_dependencies
         )
@@ -1065,6 +1067,8 @@ class Generators:
             the number of samples that will be generated
         """
 
+        model_id = self.config_manager.match_model_id(provided_model_id=model_id)
+
         if is_local_model:
             model_contributor = self.get_model_contributor_by_id(model_id=model_id)
 
@@ -1090,8 +1094,8 @@ class Generators:
             samples is not None
             and isinstance(samples, list)
             and (
-                (len(samples) == num_samples) or (len(samples) == num_samples + 1)
-            )  # + 1 as sample generation can be restricted to be balanced among classes
+                (len(samples) == num_samples) or (len(samples) > num_samples)
+            )  # e.g., len(samples) = num_samples + 1, as sample generation can be restricted to be balanced among classes
         ), (
             f"{model_id}: Model test was not successful. The generated samples {'is None, but ' if samples is None else ''}"
             f"should be a list (actual type: {type(samples)}) and of length {num_samples} (actual length: "
@@ -1117,6 +1121,7 @@ class Generators:
         generate_method_name: str = None,
         dependencies: list = None,
         fill_more_fields_interactively: bool = True,
+        overwrite_existing_metadata: bool = False,
         output_path: str = "config",
         creator_name: str = "unknown name",
         creator_affiliation: str = "unknown affiliation",
@@ -1146,6 +1151,8 @@ class Generators:
             the list of dependencies that need to be installed via pip to run the model
         fill_more_fields_interactively: bool
             flag indicating whether a user will be interactively asked via command line for further input to fill out missing metadata content
+        overwrite_existing_metadata: bool
+            flag indicating whether existing metadata for this model in medigan's `config/global.json` should be overwritten.
         output_path: str
             the path where the created metadata json file will be stored
         creator_name: str
@@ -1186,7 +1193,11 @@ class Generators:
         )
 
         try:
-            self.test_model(model_id=model_id, is_local_model=True)
+            self.test_model(
+                model_id=model_id,
+                is_local_model=True,
+                overwrite_existing_metadata=overwrite_existing_metadata,
+            )
         except Exception as e:
             logging.error(
                 f"{model_id}: Error while testing this local model. "
@@ -1332,7 +1343,7 @@ class Generators:
     def get_as_torch_dataset(
         self,
         model_id: str,
-        num_samples: int = 1000,
+        num_samples: int = 100,
         install_dependencies: bool = False,
         transform=None,
         **kwargs,
@@ -1369,13 +1380,24 @@ class Generators:
             **kwargs,
         )
 
-        samples, masks, labels = Utils.split_images_masks_and_labels(
-            data=data, num_samples=num_samples
+        logging.debug(f"data: {data}")
+
+        (
+            samples,
+            masks,
+            other_imaging_output,
+            labels,
+        ) = Utils.split_images_masks_and_labels(data=data, num_samples=num_samples)
+        logging.debug(
+            f"samples: {samples} \n masks: {masks} \n other_imaging_output: {other_imaging_output} \n labels: {labels}"
         )
-        logging.debug(f"samples: {samples} \n masks: {masks} \n labels: {labels}")
 
         return SyntheticDataset(
-            samples=samples, masks=masks, labels=labels, transform=transform
+            samples=samples,
+            masks=masks,
+            other_imaging_output=other_imaging_output,
+            labels=labels,
+            transform=transform,
         )
 
     def visualize(
@@ -1394,6 +1416,9 @@ class Generators:
         auto_close: bool
             Flag for closing the user interface automatically after time. Used while testing.
         """
+
+        model_id = self.config_manager.match_model_id(provided_model_id=model_id)
+
         config = self.get_config_by_id(model_id)
         model_executor = self.get_model_executor(model_id)
 

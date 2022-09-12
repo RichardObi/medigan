@@ -152,7 +152,7 @@ class ModelExecutor:
         )
         try:
             pkg_resources.require(self.dependencies)
-            logging.info(
+            logging.debug(
                 f"{self.model_id}: All necessary dependencies for model are available: {self.dependencies}"
             )
         except Exception as e:
@@ -360,6 +360,12 @@ class ModelExecutor:
                     batch_path = (
                         os.path.join(output_path, "batch_" + str(batch_num)) + "/"
                     )
+
+                    # Generate the path in case it is not yet available.
+                    assert Utils.mkdirs(
+                        path_as_string=batch_path
+                    ), f"{self.model_id}: The batch path was not found nor created in {batch_path}."
+
                     prepared_kwargs.update({"output_path": batch_path})
 
                     generate_method(**prepared_kwargs)

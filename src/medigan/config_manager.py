@@ -311,6 +311,40 @@ class ConfigManager:
             return False
         return True
 
+    def match_model_id(self, provided_model_id: str) -> bool:
+        """Replacing a model_id acronym (e.g. 00005 or 5) with the unique `model_id` present in the model metadata
+
+        Parameters
+        ----------
+        provided_model_id: str
+            The user-provided model_id that might be shorter (e.g. "00005" or "5") than the real unique model id
+
+        Returns
+        -------
+        str
+            If matched, returning the unique `model_id` present in global model metadata.
+        """
+
+        # (1) quick check if model_id is in config. In this case no matching is needed.
+        # (2) if the model id's length is >5, it comprises info different from the numeric id (e.g., 00001) and could
+        # be ambiguous (e.g. PGGAN_CHEST).
+        p_id_length = len(str(provided_model_id))
+        if (
+            not self.is_model_in_config(model_id=str(provided_model_id))
+            and p_id_length <= 5
+            and p_id_length > 0
+        ):
+            for i in range(5 - p_id_length):
+                # Adding zeros e.g., to allow matching and to avoid returning 01015 instead of 00015.
+                provided_model_id = "0" + str(provided_model_id)
+            for model_id in self.model_ids:
+                if model_id[0:5] == str(provided_model_id):
+                    logging.debug(
+                        f"model_id[0:5]={model_id[0:5]}, provided_model_id={provided_model_id}. Matched: {model_id}"
+                    )
+                    return model_id
+        return provided_model_id
+
     def __str__(self):
         return json.dumps(self.config_dict)
 
