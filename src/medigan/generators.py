@@ -1401,7 +1401,7 @@ class Generators:
         )
 
     def visualize(
-        self, model_id: str, slider_grouper: int = 10, auto_close: bool = False
+        self, model_id: str, slider_grouper: int = 10, auto_close: bool = False, install_dependencies:bool = False,
     ) -> None:
         """Initialize and run `ModelVisualizer` of this model_id if it is available.
         It allows to visualize a sample from the model's output.
@@ -1415,14 +1415,17 @@ class Generators:
             Number of input parameters to group together within one slider.
         auto_close: bool
             Flag for closing the user interface automatically after time. Used while testing.
+        install_dependencies: bool
+            flag indicating whether a generative model's dependencies are automatically installed. Else error is raised if missing dependencies are detected.
+
         """
 
         model_id = self.config_manager.match_model_id(provided_model_id=model_id)
 
-        config = self.get_config_by_id(model_id)
-        model_executor = self.get_model_executor(model_id)
+        config = self.get_config_by_id(model_id=model_id)
+        model_executor = self.get_model_executor(model_id=model_id, install_dependencies=install_dependencies)
 
-        ModelVisualizer(model_executor, config).visualize(slider_grouper, auto_close)
+        ModelVisualizer(model_executor=model_executor, config=config).visualize(slider_grouper=slider_grouper, auto_close=auto_close)
 
     def __repr__(self):
         return (

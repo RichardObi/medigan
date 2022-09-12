@@ -42,7 +42,7 @@ Overview
    code_examples
 
 .. toctree::
-   :caption: Code
+   :caption: API Reference
    :maxdepth: 2
 
    modules_overview
