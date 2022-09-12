@@ -1050,6 +1050,7 @@ class Generators:
         overwrite_existing_metadata: bool = False,
         store_new_config: bool = True,
         num_samples: int = 3,
+        install_dependencies:bool = False,
     ):
         """Test if a model generates and returns a specific number of samples in the correct format
 
@@ -1065,6 +1066,9 @@ class Generators:
             flag indicating whether the current model metadata should be stored on disk i.e. in config/
         num_samples: int
             the number of samples that will be generated
+        install_dependencies: bool
+            flag indicating whether a generative model's dependencies are automatically installed.
+            Else error is raised if missing dependencies are detected.
         """
 
         model_id = self.config_manager.match_model_id(provided_model_id=model_id)
@@ -1087,7 +1091,7 @@ class Generators:
         samples = self.generate(
             model_id=model_id,
             save_images=False,
-            install_dependencies=False,
+            install_dependencies=install_dependencies,
             num_samples=num_samples,
         )
         assert (
@@ -1126,6 +1130,7 @@ class Generators:
         creator_name: str = "unknown name",
         creator_affiliation: str = "unknown affiliation",
         model_description: str = "",
+        install_dependencies:bool = False,
     ):
         """Implements the full model contribution workflow including model metadata generation, model test, model Zenodo upload, and medigan github issue creation.
 
@@ -1161,11 +1166,14 @@ class Generators:
             the creator affiliation that will appear on the corresponding github issue
         model_description: list
             the model_description that will appear on the corresponding github issue
+        install_dependencies: bool
+            flag indicating whether a generative model's dependencies are automatically installed.
+            Else error is raised if missing dependencies are detected.
 
-         Returns
-         -------
-         str
-             Returns the url pointing to the corresponding issue on github
+        Returns
+        -------
+        str
+            Returns the url pointing to the corresponding issue on github
         """
 
         # Create model contributor
@@ -1197,6 +1205,7 @@ class Generators:
                 model_id=model_id,
                 is_local_model=True,
                 overwrite_existing_metadata=overwrite_existing_metadata,
+                install_dependencies=install_dependencies
             )
         except Exception as e:
             logging.error(
