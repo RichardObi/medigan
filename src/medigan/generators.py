@@ -1050,7 +1050,7 @@ class Generators:
         overwrite_existing_metadata: bool = False,
         store_new_config: bool = True,
         num_samples: int = 3,
-        install_dependencies:bool = False,
+        install_dependencies: bool = False,
     ):
         """Test if a model generates and returns a specific number of samples in the correct format
 
@@ -1130,7 +1130,7 @@ class Generators:
         creator_name: str = "unknown name",
         creator_affiliation: str = "unknown affiliation",
         model_description: str = "",
-        install_dependencies:bool = False,
+        install_dependencies: bool = False,
     ):
         """Implements the full model contribution workflow including model metadata generation, model test, model Zenodo upload, and medigan github issue creation.
 
@@ -1205,7 +1205,7 @@ class Generators:
                 model_id=model_id,
                 is_local_model=True,
                 overwrite_existing_metadata=overwrite_existing_metadata,
-                install_dependencies=install_dependencies
+                install_dependencies=install_dependencies,
             )
         except Exception as e:
             logging.error(
@@ -1410,7 +1410,11 @@ class Generators:
         )
 
     def visualize(
-        self, model_id: str, slider_grouper: int = 10, auto_close: bool = False, install_dependencies:bool = False,
+        self,
+        model_id: str,
+        slider_grouper: int = 10,
+        auto_close: bool = False,
+        install_dependencies: bool = False,
     ) -> None:
         """Initialize and run `ModelVisualizer` of this model_id if it is available.
         It allows to visualize a sample from the model's output.
@@ -1432,9 +1436,13 @@ class Generators:
         model_id = self.config_manager.match_model_id(provided_model_id=model_id)
 
         config = self.get_config_by_id(model_id=model_id)
-        model_executor = self.get_model_executor(model_id=model_id, install_dependencies=install_dependencies)
+        model_executor = self.get_model_executor(
+            model_id=model_id, install_dependencies=install_dependencies
+        )
 
-        ModelVisualizer(model_executor=model_executor, config=config).visualize(slider_grouper=slider_grouper, auto_close=auto_close)
+        ModelVisualizer(model_executor=model_executor, config=config).visualize(
+            slider_grouper=slider_grouper, auto_close=auto_close
+        )
 
     def __repr__(self):
         return (
