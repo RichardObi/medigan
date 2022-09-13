@@ -147,7 +147,7 @@ def get_classifier_fn(model_name="imagenet"):
 
 
 def calculate_fid(
-    directory_1, directory_2, model_name, normalize_images=False, lower_bound=False
+    directory_1, directory_2, model_name, lower_bound=False, normalize_images=False,
 ):
     """
     Calculates the Frechet Inception Distance between two distributions using chosen feature extractor model.
@@ -176,7 +176,11 @@ if __name__ == "__main__":
     model_name = args.model
 
     fid = calculate_fid(
-        directory_1, directory_2, model_name, lower_bound, normalize_images
+        directory_1=directory_1,
+        directory_2=directory_2,
+        model_name=model_name,
+        lower_bound=lower_bound,
+        normalize_images=normalize_images
     )
 
     if lower_bound:
