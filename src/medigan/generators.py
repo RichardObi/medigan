@@ -1129,7 +1129,7 @@ class Generators:
         ), (
             f"{model_id}: Model test was not successful. The generated samples {'is None, but ' if samples is None else ''}"
             f"should be a list (actual type: {type(samples)}) and of length {num_samples} (actual length: "
-            f"{'None' if samples is None else len(samples)})."
+            f"{'None' if samples is None else len(samples)}). Check if input params (e.g. input_path) to model are valid. "
         )  # {f'Generated samples: {samples}' if samples is not None else ''}"
 
         logging.info(
