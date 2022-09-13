@@ -239,7 +239,9 @@ class Generators:
 
         mapped_model_ids = []
         for model_id in model_ids:
-            mapped_model_ids.append(self.config_manager.match_model_id(provided_model_id=model_id))
+            mapped_model_ids.append(
+                self.config_manager.match_model_id(provided_model_id=model_id)
+            )
 
         return self.model_selector.get_selection_criteria_by_ids(
             model_ids=mapped_model_ids, are_model_ids_removed=are_model_ids_removed
