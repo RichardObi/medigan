@@ -105,6 +105,8 @@ class Generators:
             a dictionary from the part of the config file corresponding to `model_id` and `config_key`.
         """
 
+        model_id = self.config_manager.match_model_id(provided_model_id=model_id)
+
         return self.config_manager.get_config_by_id(
             model_id=model_id, config_key=config_key
         )
@@ -165,6 +167,7 @@ class Generators:
         """
 
         if is_local_model is None:
+            model_id = self.config_manager.match_model_id(provided_model_id=model_id)
             # if no model contributor can be found the model is assumed to be not a local model.
             is_local_model = not is_local_model == self.get_model_contributor_by_id(
                 model_id=model_id
@@ -210,6 +213,8 @@ class Generators:
             a dictionary corresponding to the selection config of a model
         """
 
+        model_id = self.config_manager.match_model_id(provided_model_id=model_id)
+
         return self.model_selector.get_selection_criteria_by_id(model_id=model_id)
 
     def get_selection_criteria_by_ids(
@@ -222,7 +227,7 @@ class Generators:
         Parameters
         ----------
         model_ids: list
-            A list of generative models' unique ids
+            A list of generative models' unique ids or ids abbreviated as integers (e.g. 1, 2, .. 21)
         are_model_ids_removed: bool
             flag to remove the model_ids from first level of dictionary.
 
@@ -232,8 +237,12 @@ class Generators:
             a list of dictionaries each corresponding to the selection config of a model
         """
 
+        mapped_model_ids = []
+        for model_id in model_ids:
+            mapped_model_ids.append(self.config_manager.match_model_id(provided_model_id=model_id))
+
         return self.model_selector.get_selection_criteria_by_ids(
-            model_ids=model_ids, are_model_ids_removed=are_model_ids_removed
+            model_ids=mapped_model_ids, are_model_ids_removed=are_model_ids_removed
         )
 
     def get_selection_values_for_key(self, key: str, model_id: str = None) -> list:
@@ -678,6 +687,8 @@ class Generators:
             indicating whether this `ModelExecutor` had been already previously added to `self.model_executors`
         """
 
+        model_id = self.config_manager.match_model_id(provided_model_id=model_id)
+
         if self.find_model_executor_by_id(model_id=model_id) is None:
             logging.debug(
                 f"{model_id}: The model has not yet been added to the model_executor list."
@@ -698,6 +709,8 @@ class Generators:
         ModelExecutor
             `ModelExecutor` class instance corresponding to the `model_id`
         """
+
+        model_id = self.config_manager.match_model_id(provided_model_id=model_id)
 
         for idx, model_executor in enumerate(self.model_executors):
             if model_executor.model_id == model_id:
@@ -723,6 +736,8 @@ class Generators:
         ModelExecutor
             `ModelExecutor` class instance corresponding to the `model_id`
         """
+
+        model_id = self.config_manager.match_model_id(provided_model_id=model_id)
 
         try:
             self.add_model_executor(
@@ -846,6 +861,8 @@ class Generators:
             `ModelContributor` class instance corresponding to the `model_id`
         """
 
+        model_id = self.config_manager.match_model_id(provided_model_id=model_id)
+
         model_contributor = self.get_model_contributor_by_id(model_id=model_id)
         if model_contributor is not None:
             logging.warning(
@@ -872,6 +889,8 @@ class Generators:
             `ModelContributor` class instance corresponding to the `model_id`
         """
 
+        model_id = self.config_manager.match_model_id(provided_model_id=model_id)
+
         for idx, model_contributor in enumerate(self.model_contributors):
             if model_contributor.model_id == model_id:
                 return model_contributor
@@ -892,6 +911,8 @@ class Generators:
         dict
             Returns a dict containing the contents of parsed metadata json file.
         """
+
+        model_id = self.config_manager.match_model_id(provided_model_id=model_id)
 
         model_contributor = self.get_model_contributor_by_id(model_id=model_id)
         assert (
@@ -936,6 +957,8 @@ class Generators:
             Returns a dict containing the contents of the metadata json file.
         """
 
+        model_id = self.config_manager.match_model_id(provided_model_id=model_id)
+
         model_contributor = self.get_model_contributor_by_id(model_id=model_id)
         assert (
             model_contributor is not None
@@ -979,6 +1002,7 @@ class Generators:
         str
             Returns the url pointing to the corresponding Zenodo model upload homepage
         """
+        model_id = self.config_manager.match_model_id(provided_model_id=model_id)
 
         model_contributor = self.get_model_contributor_by_id(model_id=model_id)
         assert (
@@ -1029,6 +1053,8 @@ class Generators:
         str
             Returns the url pointing to the corresponding issue on github
         """
+
+        model_id = self.config_manager.match_model_id(provided_model_id=model_id)
 
         model_contributor = self.get_model_contributor_by_id(model_id=model_id)
         assert (
