@@ -563,3 +563,37 @@ inputs = [
     "resize_pixel_dim: default=None, help=Resizing of generated images via the pillow PIL image library."
 ]
 ```
+
+
+# 00021_CYCLEGAN_Brain_MRI_T1_T2
+
+CycleGAN Brain MRI T1-T2 translation (trained on CrossMoDA 2021 dataset)
+
+<sub> **Note:** In recent years, deep learning models have considerably advanced the performance of segmentation tasks on Brain Magnetic Resonance Imaging (MRI). However, these models show a considerable performance drop when they are evaluated on unseen data from a different distribution. Since annotation is often a hard and costly task requiring expert supervision, it is necessary to develop ways in which existing models can be adapted to the unseen domains without any additional labelled information. In this work, we explore one such technique which extends the CycleGAN [2] architecture to generate label-preserving data in the target domain. The synthetic target domain data is used to train the nn-UNet [3] framework for the task of multi-label segmentation. The experiments are conducted and evaluated on the dataset [1] provided in the ‘Cross-Modality Domain Adaptation for Medical Image Segmentation’ challenge [23] for segmentation of vestibular schwannoma (VS) tumour and cochlea on contrast enhanced (ceT1) and high resolution (hrT2) MRI scans. In the proposed approach, our model obtains dice scores (DSC) 0.73 and 0.49 for tumour and cochlea respectively on the validation set of the dataset. This indicates the applicability of the proposed technique to real-world problems where data may be obtained by different acquisition protocols as in [1] where hrT2 images are more reliable, safer, and lower-cost alternative to ceT1. </sub>
+
+
+| Output type                     |  Modality   |      Model type     |   Output size    |  Base dataset   |     Output examples       |    `model_id`      |  Hosted on   |  Reference  |
+|-----------------------------|:--------:|:-------------:|:--------:|:------------:|:------:|:------:|:------:|:------:|
+| Brain T1-T2 MRI Modality Transfer |  brain MRI  |   cyclegan      | 224x192  |    [CrossMoDA 2021](https://arxiv.org/abs/2201.02831)     | ![sample](_static/samples/00021.png) | `00021_CYCLEGAN_Brain_MRI_T1_T2` | [Zenodo (7074555)](https://doi.org/10.5281/zenodo.7074555) | [Joshi et al (2022)](https://doi.org/10.1007/978-3-031-09002-8_47) |
+
+```python
+# create samples with this model
+from medigan import Generators
+Generators().generate(
+    model_id="00021_CYCLEGAN_Brain_MRI_T1_T2",
+    input_path= "models/00021_CYCLEGAN_Brain_MRI_T1_T2/inputs/T1", # or /T2
+    image_size=[224, 192],
+    gpu_id=0,
+    translate_all_images=True,
+    T1_to_T2=True,
+)
+
+# model specific parameters
+inputs = [
+    "input_path: default=models/00021_CYCLEGAN_Brain_MRI_T1_T2/inputs/T1, help=the path to .png brain MRI images that are translated from T1 to T2 or vice versa. ",
+    "image_size: default=[224, 192], help=list with image height and width. ",
+    "gpu_id: default=0, help=the gpu to run the model on.",
+    "translate_all_images: default=False, help=flag to override num_samples in case the user wishes to translate all images in the specified input_path folder.",
+    "T1_to_T2: default=True, help=if true, generator for T1 to T2 translation is used. If false, the translation is done from T2 to T1 instead. Need to adjust input path in this case e.g. models/00021_CYCLEGAN_Brain_MRI_T1_T2/inputs/T2 instead of models/00021_CYCLEGAN_Brain_MRI_T1_T2/inputs/T1. A different generator of the cycleGAN is used based on this flag."
+]
+```
