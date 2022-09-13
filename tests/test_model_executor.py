@@ -74,6 +74,15 @@ models_with_args = [
     ("00018_WGANGP_XRAY_LUNG_NODULES", {}, 3),
     ("00019_PGGAN_CHEST_XRAY", {}, 3),
     ("00020_PGGAN_CHEST_XRAY", {"resize_pixel_dim": 512, "image_size": 256}, 3),
+    (
+        "00021_CYCLEGAN_Brain_MRI_T1_T2",
+        {
+            "input_path": "models/00021_CYCLEGAN_Brain_MRI_T1_T2/inputs/T2",
+            "gpu_id": 0,
+            "T1_to_T2": False,
+        },
+        3,
+    ),
 ]
 
 # class TestMediganExecutorMethods(unittest.TestCase):
