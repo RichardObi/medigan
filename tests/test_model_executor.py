@@ -24,11 +24,18 @@ models_with_args = [
         {},
         100,
     ),  # 100 samples to test automatic batch-wise image generation in model_executor
-    ("00002", {}, 3), # "00002" instead of "00002_DCGAN_MMG_MASS_ROI" to test shortcut model_ids
-    ("03", {"translate_all_images": False}, 2),  # "03" instead of "00003_CYCLEGAN_MMG_DENSITY_FULL" to test shortcut model_ids
-
     (
-        4, # 4 instead of "00004_PIX2PIX_MASKTOMASS_BREAST_MG_SYNTHESIS" to test shortcut model_ids
+        "00002",
+        {},
+        3,
+    ),  # "00002" instead of "00002_DCGAN_MMG_MASS_ROI" to test shortcut model_ids
+    (
+        "03",
+        {"translate_all_images": False},
+        2,
+    ),  # "03" instead of "00003_CYCLEGAN_MMG_DENSITY_FULL" to test shortcut model_ids
+    (
+        4,  # 4 instead of "00004_PIX2PIX_MASKTOMASS_BREAST_MG_SYNTHESIS" to test shortcut model_ids
         {
             "shapes": ["oval"],
             "ssim_threshold": 0.18,
