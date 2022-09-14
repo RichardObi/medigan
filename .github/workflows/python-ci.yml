@@ -22,7 +22,7 @@ jobs:
   formatting:
     outputs:
       new_sha: ${{ steps.sha.outputs.SHA }}
-    runs-on: windows-latest #runs-on: macos-latest
+    runs-on: macos-latest
 
     steps:
       - name: Checkout code
@@ -66,7 +66,7 @@ jobs:
   build:
     if: always()
     needs: formatting
-    runs-on: windows-latest #runs-on: macos-latest
+    runs-on: macos-latest
 
     steps:
     - name: Checkout to latest changes
@@ -85,7 +85,7 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install flake8 pytest pytest-cov pytest-github-actions-annotate-failures
-        pip install -r requirements.txt
+        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
         pip install -e .
 
     - name: Install model dependencies
@@ -94,7 +94,7 @@ jobs:
 
   lint:
     needs: build
-    runs-on: windows-latest #runs-on: macos-latest
+    runs-on: macos-latest
 
     steps:
     - name: Checkout to latest changes
@@ -112,7 +112,7 @@ jobs:
     - name: Install cached dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install -r requirements.txt
+        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
         pip install flake8
         pip install -e .
    
@@ -125,7 +125,7 @@ jobs:
   
   test:
     needs: build
-    runs-on: windows-latest #runs-on: macos-latest
+    runs-on: windows-latest
 
     steps:
     - name: Checkout to latest changes
@@ -151,3 +151,4 @@ jobs:
     - name: Test with pytest
       run: |
         pytest tests -W ignore::DeprecationWarning --verbose --failed-first --log-cli-level=INFO #--cov=. --cov-report html  #--capture=tee-sys
+
