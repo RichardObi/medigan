@@ -125,7 +125,8 @@ jobs:
   
   test:
     needs: build
-    runs-on: macos-latest
+    #runs-on: macos-latest
+    runs-on: windows-latest
 
     steps:
     - name: Checkout to latest changes
