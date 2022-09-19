@@ -2620,7 +2620,7 @@
     "00021_CYCLEGAN_Brain_MRI_T1_T2": {
         "execution": {
             "package_name": "00021_CYCLEGAN_Brain_MRI_T1_T2",
-            "package_link": "https://zenodo.org/record/7074556/files/00021_CYCLEGAN_Brain_MRI_T1_T2.zip?download=1",
+            "package_link": "https://zenodo.org/record/7093370/files/00021_CYCLEGAN_Brain_MRI_T1_T2.zip?download=1",
             "model_name": "netG_T1toT2_checkpoint",
             "extension": ".pth.tar",
             "image_size": [
