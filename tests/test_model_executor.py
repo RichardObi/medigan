@@ -64,7 +64,7 @@ models_with_args = [
     ("00008_C-DCGAN_MMG_MASSES", {"condition": 0}, 3),
     ("00009_PGGAN_POLYP_PATCHES_W_MASKS", {"save_option": "image_only"}, 3),
     ("00010_FASTGAN_POLYP_PATCHES_W_MASKS", {"save_option": "image_only"}, 3),
-    #("00011_SINGAN_POLYP_PATCHES_W_MASKS", {"checkpoint_ids": [999]}, 3),
+    # ("00011_SINGAN_POLYP_PATCHES_W_MASKS", {"checkpoint_ids": [999]}, 3),
     ("00012_C-DCGAN_MMG_MASSES", {"condition": 0}, 3),
     ("00013_CYCLEGAN_MMG_DENSITY_OPTIMAM_MLO", {"translate_all_images": False}, 2),
     ("00014_CYCLEGAN_MMG_DENSITY_OPTIMAM_CC", {"translate_all_images": False}, 2),
@@ -127,7 +127,7 @@ class TestMediganExecutorMethods:
 
         self.logger.debug(f"models: {models_with_args}")
         for i, model_id in enumerate(self.model_ids):
-            if model_id == '00011_SINGAN_POLYP_PATCHES_W_MASKS':
+            if model_id == "00011_SINGAN_POLYP_PATCHES_W_MASKS":
                 # avoiding full memory on Windows ci test server
                 continue
             self.logger.debug(f"Now testing model {model_id}")
