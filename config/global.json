@@ -295,8 +295,8 @@
     },
     "00003_CYCLEGAN_MMG_DENSITY_FULL": {
         "execution": {
-            "package_name": "CycleGAN_high_density",
-            "package_link": "https://zenodo.org/record/5555010/files/CycleGAN_high_density.zip?download=1",
+            "package_name": "00003_CYCLEGAN_MMG_DENSITY_FULL",
+            "package_link": "https://zenodo.org/record/7093550/files/00003_CYCLEGAN_MMG_DENSITY_FULL.zip?download=1",
             "model_name": "CycleGAN_high_density",
             "extension": ".pth",
             "image_size": [
@@ -1669,8 +1669,8 @@
     },
     "00013_CYCLEGAN_MMG_DENSITY_OPTIMAM_MLO": {
         "execution": {
-            "package_name": "CycleGAN_high_density_OPTIMAM_MLO",
-            "package_link": "https://zenodo.org/record/6818096/files/CycleGAN_high_density_OPTIMAM_MLO.zip?download=1",
+            "package_name": "00013_CYCLEGAN_MMG_DENSITY_OPTIMAM_MLO",
+            "package_link": "https://zenodo.org/record/7093556/files/00013_CYCLEGAN_MMG_DENSITY_OPTIMAM_MLO.zip?download=1",
             "model_name": "latest_net_G_A",
             "extension": ".pth",
             "image_size": [
@@ -1797,8 +1797,8 @@
     },
     "00014_CYCLEGAN_MMG_DENSITY_OPTIMAM_CC": {
         "execution": {
-            "package_name": "CycleGAN_high_density_OPTIMAM_CC",
-            "package_link": "https://zenodo.org/record/6818104/files/CycleGAN_high_density_OPTIMAM_CC.zip?download=1",
+            "package_name": "00014_CYCLEGAN_MMG_DENSITY_OPTIMAM_CC",
+            "package_link": "https://zenodo.org/record/7093553/files/00014_CYCLEGAN_MMG_DENSITY_OPTIMAM_CC.zip?download=1",
             "model_name": "latest_net_G_A",
             "extension": ".pth",
             "image_size": [
@@ -1925,8 +1925,8 @@
     },
     "00015_CYCLEGAN_MMG_DENSITY_CSAW_MLO": {
         "execution": {
-            "package_name": "CycleGAN_high_density_CSAW_MLO",
-            "package_link": "https://zenodo.org/record/6818106/files/CycleGAN_high_density_CSAW_MLO.zip?download=1",
+            "package_name": "00015_CYCLEGAN_MMG_DENSITY_CSAW_MLO",
+            "package_link": "https://zenodo.org/record/7093566/files/00015_CYCLEGAN_MMG_DENSITY_CSAW_MLO.zip?download=1",
             "model_name": "latest_net_G_A",
             "extension": ".pth",
             "image_size": [
@@ -2053,8 +2053,8 @@
     },
     "00016_CYCLEGAN_MMG_DENSITY_CSAW_CC": {
         "execution": {
-            "package_name": "CycleGAN_high_density_CSAW_CC",
-            "package_link": "https://zenodo.org/record/6818378/files/CycleGAN_high_density_CSAW_CC.zip?download=1",
+            "package_name": "00016_CYCLEGAN_MMG_DENSITY_CSAW_CC",
+            "package_link": "https://zenodo.org/record/7093559/files/00016_CYCLEGAN_MMG_DENSITY_CSAW_CC.zip?download=1",
             "model_name": "latest_net_G_A",
             "extension": ".pth",
             "image_size": [
