@@ -421,10 +421,10 @@
             "comment": "A cycle generative adversarial network (CycleGAN) that generates mammograms with high breast density from an original mammogram e.g. with low-breast density. The CycleGAN was trained using normal (without pathologies) digital mammograms from BCDR dataset (Lopez, M. G., et al. 2012). The uploaded ZIP file contains the files CycleGAN_high_density.pth (model weights), __init__.py (image generation method and utils) and the GAN model architecture (in pytorch) below the /src folder."
         }
     },
-    "00004_PIX2PIX_MASKTOMASS_BREAST_MG_SYNTHESIS": {
+    "00004_PIX2PIX_MMG_MASSES_W_MASKS": {
         "execution": {
-            "package_name": "Pix2Pix_MaskToMass_breastMG_synthesis",
-            "package_link": "https://zenodo.org/record/5569573/files/Pix2Pix_MaskToMass_breastMG_synthesis.zip?download=1",
+            "package_name": "00004_PIX2PIX_MMG_MASSES_W_MASKS",
+            "package_link": "https://zenodo.org/record/7093760/files/00004_PIX2PIX_MMG_MASSES_W_MASKS.zip?download=1",
             "model_name": "pix2pix_mask_to_mass_model",
             "extension": ".pth",
             "image_size": [
@@ -455,7 +455,7 @@
                         "num_samples"
                     ],
                     "custom": {
-                        "input_path": "models/00004_PIX2PIX_MASKTOMASS_BREAST_MG_SYNTHESIS/images",
+                        "input_path": "models/00004_PIX2PIX_MMG_MASSES_W_MASKS/images",
                         "image_size": [
                             256,
                             256
@@ -548,7 +548,7 @@
                 "10.5281/zenodo.5863095"
             ],
             "inputs": [
-                "input_path: default=models/00004_PIX2PIX_MASKTOMASS_BREAST_MG_SYNTHESIS/images help=inputs that are used in the pix2pix input image pool (e.g. for tiled image generation) ",
+                "input_path: default=models/00004_PIX2PIX_MMG_MASSES_W_MASKS/images help=inputs that are used in the pix2pix input image pool (e.g. for tiled image generation) ",
                 "image_size: default=[256, 256] help=height and width of images.",
                 "patch_size: default=[32, 32] help=height and width of patches (annotation size on image).",
                 "shapes: default=['oval', 'lobulated'] help=the type of the mask curve shapes generated via bezier curves.",
@@ -2617,10 +2617,10 @@
             "comment": "An unconditional Progressively-growing generative adversarial network (PGGAN) that generates chest xray (CXR) images with pixel dimensions 1024x1024. The PGGAN was trained on CXR images based on ChestX-ray14 dataset (Wang et al. 2017, Paper: https://arxiv.org/pdf/1705.02315.pdf, Data: https://nihcc.app.box.com/v/ChestXray-NIHCC). The uploaded ZIP file contains the model weights checkpoint file, __init__.py (image generation method and utils), a requirements.txt, the MEDIGAN metadata.json file, a test.sh file to run the model, and an /image folder with a few generated example images."
         }
     },
-    "00021_CYCLEGAN_Brain_MRI_T1_T2": {
+    "00021_CYCLEGAN_BRAIN_MRI_T1_T2": {
         "execution": {
-            "package_name": "00021_CYCLEGAN_Brain_MRI_T1_T2",
-            "package_link": "https://zenodo.org/record/7093370/files/00021_CYCLEGAN_Brain_MRI_T1_T2.zip?download=1",
+            "package_name": "00021_CYCLEGAN_BRAIN_MRI_T1_T2",
+            "package_link": "https://zenodo.org/record/7093859/files/00021_CYCLEGAN_BRAIN_MRI_T1_T2.zip?download=1",
             "model_name": "netG_T1toT2_checkpoint",
             "extension": ".pth.tar",
             "image_size": [
@@ -2643,7 +2643,7 @@
                         "save_images"
                     ],
                     "custom": {
-                        "input_path": "models/00021_CYCLEGAN_Brain_MRI_T1_T2/inputs/T1",
+                        "input_path": "models/00021_CYCLEGAN_BRAIN_MRI_T1_T2/inputs/T1",
                         "gpu_id": "0",
                         "translate_all_images": false,
                         "T1_to_T2": true
@@ -2716,16 +2716,16 @@
             "trained_date": "2021",
             "provided_after_epoch": 65,
             "version": "1",
-            "publication": "workshop paper",
+            "publication": "BrainLes 2022 MICCAI workshop paper",
             "doi": [
                 "10.1007/978-3-031-09002-8_47"
             ],
             "inputs": [
-                "input_path: default=models/00021_CYCLEGAN_Brain_MRI_T1_T2/inputs/T1, help=the path to .png brain MRI images that are translated from T1 to T2 or vice versa. ",
+                "input_path: default=models/00021_CYCLEGAN_BRAIN_MRI_T1_T2/inputs/T1, help=the path to .png brain MRI images that are translated from T1 to T2 or vice versa. ",
                 "image_size: default=[224, 192], help=list with image height and width. ",
                 "gpu_id: default=0, help=the gpu to run the model on.",
                 "translate_all_images: default=False, help=flag to override num_samples in case the user wishes to translate all images in the specified input_path folder.",
-                "T1_to_T2: default=True, help=if true, generator for T1 to T2 translation is used. If false, the translation is done from T2 to T1 instead. Need to adjust input path in this case e.g. models/00021_CYCLEGAN_Brain_MRI_T1_T2/inputs/T2 instead of models/00021_CYCLEGAN_Brain_MRI_T1_T2/inputs/T1. A different generator of the cycleGAN is used based on this flag."
+                "T1_to_T2: default=True, help=if true, generator for T1 to T2 translation is used. If false, the translation is done from T2 to T1 instead. Need to adjust input path in this case e.g. models/00021_CYCLEGAN_BRAIN_MRI_T1_T2/inputs/T2 instead of models/00021_CYCLEGAN_BRAIN_MRI_T1_T2/inputs/T1. A different generator of the cycleGAN is used based on this flag."
             ],
             "comment": "In recent years, deep learning models have considerably advanced the performance of segmentation tasks on Brain Magnetic Resonance Imaging (MRI). However, these models show a considerable performance drop when they are evaluated on unseen data from a different distribution. Since annotation is often a hard and costly task requiring expert supervision, it is necessary to develop ways in which existing models can be adapted to the unseen domains without any additional labelled information. In this work, we explore one such technique which extends the CycleGAN [2] architecture to generate label-preserving data in the target domain. The synthetic target domain data is used to train the nn-UNet [3] framework for the task of multi-label segmentation. The experiments are conducted and evaluated on the dataset [1] provided in the ‘Cross-Modality Domain Adaptation for Medical Image Segmentation’ challenge [23] for segmentation of vestibular schwannoma (VS) tumour and cochlea on contrast enhanced (ceT1) and high resolution (hrT2) MRI scans. In the proposed approach, our model obtains dice scores (DSC) 0.73 and 0.49 for tumour and cochlea respectively on the validation set of the dataset. This indicates the applicability of the proposed technique to real-world problems where data may be obtained by different acquisition protocols as in [1] where hrT2 images are more reliable, safer, and lower-cost alternative to ceT1."
         }

@@ -35,7 +35,7 @@ models_with_args = [
         2,
     ),  # "03" instead of "00003_CYCLEGAN_MMG_DENSITY_FULL" to test shortcut model_ids
     (
-        4,  # 4 instead of "00004_PIX2PIX_MASKTOMASS_BREAST_MG_SYNTHESIS" to test shortcut model_ids
+        4,  # 4 instead of "00004_PIX2PIX_MMG_MASSES_W_MASKS" to test shortcut model_ids
         {
             "shapes": ["oval"],
             "ssim_threshold": 0.18,
@@ -75,7 +75,7 @@ models_with_args = [
     ("00019_PGGAN_CHEST_XRAY", {}, 3),
     ("00020_PGGAN_CHEST_XRAY", {"resize_pixel_dim": 512, "image_size": 256}, 3),
     (
-        "00021_CYCLEGAN_Brain_MRI_T1_T2",
+        "00021_CYCLEGAN_BRAIN_MRI_T1_T2",
         {
             "input_path": "models/00021_CYCLEGAN_Brain_MRI_T1_T2/inputs/T2",
             "gpu_id": 0,

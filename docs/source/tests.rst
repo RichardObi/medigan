@@ -3,8 +3,11 @@ Tests
 
 .. contents:: Table of Contents
 
-To facilitate testing if `medigan` is setup correctly and whether all of the features in `medigan` work as desired, the following set of automated test cases is provided.
-Below each test procedure is described and a command is provided to run each test.
+Automated continuous integration (CI) tests (`GitHub actions <https://github.com/RichardObi/medigan/actions>`_) are triggered by commits to the medigan repository.
+These CI tests can be found `here <https://github.com/RichardObi/medigan/tree/main/tests>`_.
+
+Apart from that, to facilitate testing if `medigan` is setup correctly and whether all of the features in `medigan` work as desired, the following set of automated test cases is provided.
+Below, each test function is described and a command is provided to run each test.
 
 Setup medigan for running tests
 _______________________________________

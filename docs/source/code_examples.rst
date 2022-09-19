@@ -39,7 +39,7 @@ Get the model's synthetic data as torch dataloader with 3 samples
 
 .. code-block:: Python
 
-    # model 4 is "00004_PIX2PIX_MASKTOMASS_BREAST_MG_SYNTHESIS"
+    # model 4 is "00004_PIX2PIX_MMG_MASSES_W_MASKS"
     dataloader = generators.get_as_torch_dataloader(model_id=4, num_samples=3)
 
 
