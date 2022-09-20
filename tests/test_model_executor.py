@@ -35,7 +35,7 @@ models_with_args = [
         2,
     ),  # "03" instead of "00003_CYCLEGAN_MMG_DENSITY_FULL" to test shortcut model_ids
     (
-        4,  # 4 instead of "00004_PIX2PIX_MASKTOMASS_BREAST_MG_SYNTHESIS" to test shortcut model_ids
+        4,  # 4 instead of "00004_PIX2PIX_MMG_MASSES_W_MASKS" to test shortcut model_ids
         {
             "shapes": ["oval"],
             "ssim_threshold": 0.18,
@@ -75,7 +75,7 @@ models_with_args = [
     ("00019_PGGAN_CHEST_XRAY", {}, 3),
     ("00020_PGGAN_CHEST_XRAY", {"resize_pixel_dim": 512, "image_size": 256}, 3),
     (
-        "00021_CYCLEGAN_Brain_MRI_T1_T2",
+        "00021_CYCLEGAN_BRAIN_MRI_T1_T2",
         {
             "input_path": "models/00021_CYCLEGAN_Brain_MRI_T1_T2/inputs/T2",
             "gpu_id": 0,
@@ -127,6 +127,9 @@ class TestMediganExecutorMethods:
 
         self.logger.debug(f"models: {models_with_args}")
         for i, model_id in enumerate(self.model_ids):
+            # if model_id == '00011_SINGAN_POLYP_PATCHES_W_MASKS':
+            ## avoiding full memory on Windows ci test server
+            # continue
             self.logger.debug(f"Now testing model {model_id}")
             self._remove_dir_and_contents()  # Already done in each test independently, but to be sure, here again.
             self.test_generate_method(model_id=model_id)

@@ -69,7 +69,7 @@ inputs= [
 ]
 ```
 
-# 00004_PIX2PIX_MASKTOMASS_BREAST_MG_SYNTHESIS
+# 00004_PIX2PIX_MMG_MASSES_W_MASKS
 
 Generates synthetic patches given a random mask tiled with texture patches extracted from real images (Trained on BCDR)  \
 <sub> **Note:** Generates synthetic patches given a random mask tiled with texture patches extracted from real images. The texture patches should be extracted from within the mass an outside the mass of a real image. Hence, some real ROIs are required to start with and its ideal for data augmentation purposes for mass segmentation. </sub>
@@ -77,14 +77,14 @@ Generates synthetic patches given a random mask tiled with texture patches extra
 
 | Output type                     |  Modality   |      Model type     |   Output size    |  Base dataset   |     Output examples       |    `model_id`      |  Hosted on   |  Reference  |
 |-----------------------------|:--------:|:-------------:|:--------:|:------------:|:------:|:------:|:------:|:------:|
-|  Breast Mass with Mask        |   mammography   |    pix2pix     |  256x256  |     [BCDR](https://bcdr.eu/information/about)      | ![sample](_static/samples/00004.png) <br> ![sample](_static/samples/00004_mask.png) |  `00004_PIX2PIX_MASKTOMASS_BREAST_MG_SYNTHESIS`  | [Zenodo (5554950)](https://doi.org/10.5281/zenodo.5554950)  |  | 
+|  Breast Mass with Mask        |   mammography   |    pix2pix     |  256x256  |     [BCDR](https://bcdr.eu/information/about)      | ![sample](_static/samples/00004.png) <br> ![sample](_static/samples/00004_mask.png) |  `00004_PIX2PIX_MMG_MASSES_W_MASKS`  | [Zenodo (7093759)](https://doi.org/10.5281/zenodo.7093759)  |  | 
 
 ```python
 # create samples with this model
 from medigan import Generators
 Generators().generate(
-    model_id="00004_PIX2PIX_MASKTOMASS_BREAST_MG_SYNTHESIS",
-    input_path="models/00004_PIX2PIX_MASKTOMASS_BREAST_MG_SYNTHESIS/images",
+    model_id="00004_PIX2PIX_MMG_MASSES_W_MASKS",
+    input_path="models/00004_PIX2PIX_MMG_MASSES_W_MASKS/images",
     image_size=[256, 256],
     patch_size=[32, 32],
     shapes=['oval', 'lobulated'],
@@ -94,7 +94,7 @@ Generators().generate(
 
 # model specific parameters
 inputs= [
-    "input_path: default=models/00004_PIX2PIX_MASKTOMASS_BREAST_MG_SYNTHESIS/images help=inputs that are used in the pix2pix input image pool (e.g. for tiled image generation) ",
+    "input_path: default=models/00004_PIX2PIX_MMG_MASSES_W_MASKS/images help=inputs that are used in the pix2pix input image pool (e.g. for tiled image generation) ",
     "image_size: default=[256, 256] help=height and width of images.",
     "patch_size: default=[32, 32] help=height and width of patches (annotation size on image).",
     "shapes: default=['oval', 'lobulated'] help=the type of the mask curve shapes generated via bezier curves.",
@@ -565,7 +565,7 @@ inputs = [
 ```
 
 
-# 00021_CYCLEGAN_Brain_MRI_T1_T2
+# 00021_CYCLEGAN_BRAIN_MRI_T1_T2
 
 CycleGAN Brain MRI T1-T2 translation (trained on CrossMoDA 2021 dataset)
 
@@ -574,14 +574,14 @@ CycleGAN Brain MRI T1-T2 translation (trained on CrossMoDA 2021 dataset)
 
 | Output type                     |  Modality   |      Model type     |   Output size    |  Base dataset   |     Output examples       |    `model_id`      |  Hosted on   |  Reference  |
 |-----------------------------|:--------:|:-------------:|:--------:|:------------:|:------:|:------:|:------:|:------:|
-| Brain T1-T2 MRI Modality Transfer |  brain MRI  |   cyclegan      | 224x192  |    [CrossMoDA 2021](https://arxiv.org/abs/2201.02831)     | ![sample](_static/samples/00021.png) | `00021_CYCLEGAN_Brain_MRI_T1_T2` | [Zenodo (7074555)](https://doi.org/10.5281/zenodo.7074555) | [Joshi et al (2022)](https://doi.org/10.1007/978-3-031-09002-8_47) |
+| Brain T1-T2 MRI Modality Transfer |  brain MRI  |   cyclegan      | 224x192  |    [CrossMoDA 2021](https://arxiv.org/abs/2201.02831)     | ![sample](_static/samples/00021.png) | `00021_CYCLEGAN_BRAIN_MRI_T1_T2` | [Zenodo (7074555)](https://doi.org/10.5281/zenodo.7074555) | [Joshi et al (2022)](https://doi.org/10.1007/978-3-031-09002-8_47) |
 
 ```python
 # create samples with this model
 from medigan import Generators
 Generators().generate(
-    model_id="00021_CYCLEGAN_Brain_MRI_T1_T2",
-    input_path= "models/00021_CYCLEGAN_Brain_MRI_T1_T2/inputs/T1", # or /T2
+    model_id="00021_CYCLEGAN_BRAIN_MRI_T1_T2",
+    input_path= "models/00021_CYCLEGAN_BRAIN_MRI_T1_T2/inputs/T1", # or /T2
     image_size=[224, 192],
     gpu_id=0,
     translate_all_images=True,
@@ -590,10 +590,10 @@ Generators().generate(
 
 # model specific parameters
 inputs = [
-    "input_path: default=models/00021_CYCLEGAN_Brain_MRI_T1_T2/inputs/T1, help=the path to .png brain MRI images that are translated from T1 to T2 or vice versa. ",
+    "input_path: default=models/00021_CYCLEGAN_BRAIN_MRI_T1_T2/inputs/T1, help=the path to .png brain MRI images that are translated from T1 to T2 or vice versa. ",
     "image_size: default=[224, 192], help=list with image height and width. ",
     "gpu_id: default=0, help=the gpu to run the model on.",
     "translate_all_images: default=False, help=flag to override num_samples in case the user wishes to translate all images in the specified input_path folder.",
-    "T1_to_T2: default=True, help=if true, generator for T1 to T2 translation is used. If false, the translation is done from T2 to T1 instead. Need to adjust input path in this case e.g. models/00021_CYCLEGAN_Brain_MRI_T1_T2/inputs/T2 instead of models/00021_CYCLEGAN_Brain_MRI_T1_T2/inputs/T1. A different generator of the cycleGAN is used based on this flag."
+    "T1_to_T2: default=True, help=if true, generator for T1 to T2 translation is used. If false, the translation is done from T2 to T1 instead. Need to adjust input path in this case e.g. models/00021_CYCLEGAN_BRAIN_MRI_T1_T2/inputs/T2 instead of models/00021_CYCLEGAN_BRAIN_MRI_T1_T2/inputs/T1. A different generator of the cycleGAN is used based on this flag."
 ]
 ```

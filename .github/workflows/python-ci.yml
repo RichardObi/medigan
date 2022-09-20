@@ -125,7 +125,7 @@ jobs:
   
   test:
     needs: build
-    runs-on: macos-latest
+    runs-on: macos-latest #windows-latest
 
     steps:
     - name: Checkout to latest changes
@@ -147,7 +147,7 @@ jobs:
         pip install pytest pytest-cov pytest-github-actions-annotate-failures
         pip install -e .
         python src/medigan/execute_model/install_model_dependencies.py
-
+      # for windows: pip install -r requirements.txt
     - name: Test with pytest
       run: |
         pytest tests -W ignore::DeprecationWarning --verbose --failed-first --log-cli-level=INFO #--cov=. --cov-report html  #--capture=tee-sys
