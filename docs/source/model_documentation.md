@@ -521,12 +521,12 @@ inputs= []
 
 # 00019_PGGAN_CHEST_XRAY
 
-PGGAN Model for Generation of Chest XRAY (CXR) Images (Trained on Node21) \
-<sub> **Note:** An unconditional Progressively-growing generative adversarial network (PGGAN) that generates chest xray (CXR) images with pixel dimensions 1024x1024. The PGGAN was trained on CXR images from the NODE21 dataset (Sogancioglu et al, 2021). The uploaded ZIP file contains the files model.pt (model weight), __init__.py (image generation method and utils), a requirements.txt, a LICENSE file, the MEDIGAN metadata.json file, the used GAN training config file, a test.sh file to run the model, and an /image folder with a few generated example images. </sub>
+PGGAN Model for Generation of Chest XRAY (CXR) Images (Trained on ChestX-ray14 Dataset) \
+<sub> **Note:** An unconditional Progressively-growing generative adversarial network (PGGAN) that generates chest xray (CXR) images with pixel dimensions 1024x1024. The PGGAN was trained on CXR images from the ChestX-ray14 Dataset (Wang et al., 2017, Paper: https://arxiv.org/pdf/1705.02315.pdf, Data: https://nihcc.app.box.com/v/ChestXray-NIHCC). The uploaded ZIP file contains the files model.pt (model weight), __init__.py (image generation method and utils), a requirements.txt, a LICENSE file, the MEDIGAN metadata.json file, the used GAN training config file, a test.sh file to run the model, and an /image folder with a few generated example images. </sub>
 
 | Output type                     |  Modality   |      Model type     |   Output size    |  Base dataset   |     Output examples       |    `model_id`      |  Hosted on   |  Reference  |
 |-----------------------------|:--------:|:-------------:|:--------:|:------------:|:------:|:------:|:------:|:------:|
-|  Chest Xray Images            |   chest x-ray   |    pggan       | 1024x1024   |     [NODE21](https://zenodo.org/record/4725881#.YxNmNuxBwXA)      | ![sample](_static/samples/00019.png) |  `00019_PGGAN_CHEST_XRAY`  | [Zenodo (6943803)](https://doi.org/10.5281/zenodo.6943803)  | | 
+|  Chest Xray Images            |   chest x-ray   |    pggan       | 1024x1024   |     [ChestX-ray14](https://nihcc.app.box.com/v/ChestXray-NIHCC/folder/36938765345)      | ![sample](_static/samples/00019.png) |  `00019_PGGAN_CHEST_XRAY`  | [Zenodo (6943803)](https://doi.org/10.5281/zenodo.6943803)  | | 
 
 ```python
 # create samples with this model
@@ -542,7 +542,7 @@ inputs= []
 # 00020_PGGAN_CHEST_XRAY
 
 PGGAN Model for Generation of Chest XRAY (CXR) Images (Trained on ChestX-ray14 Dataset) \
-<sub> **Note:** An unconditional Progressively-growing generative adversarial network (PGGAN) that generates chest xray (CXR) images with pixel dimensions 1024x1024. The PGGAN was trained on CXR images based on ChestX-ray14 dataset (Wang et al. 2017, Paper: https://arxiv.org/pdf/1705.02315.pdf, Data: https://nihcc.app.box.com/v/ChestXray-NIHCC). The uploaded ZIP file contains the model weights checkpoint file, __init__.py (image generation method and utils), a requirements.txt, the MEDIGAN metadata.json file, a test.sh file to run the model, and an /image folder with a few generated example images. </sub>
+<sub> **Note:** An unconditional Progressively-growing generative adversarial network (PGGAN) that generates chest xray (CXR) images with pixel dimensions 1024x1024. The PGGAN was trained on CXR images from the ChestX-ray14 Dataset (Wang et al., 2017, Paper: https://arxiv.org/pdf/1705.02315.pdf, Data: https://nihcc.app.box.com/v/ChestXray-NIHCC). The uploaded ZIP file contains the model weights checkpoint file, __init__.py (image generation method and utils), a requirements.txt, the MEDIGAN metadata.json file, a test.sh file to run the model, and an /image folder with a few generated example images. </sub>
 
 | Output type                     |  Modality   |      Model type     |   Output size    |  Base dataset   |     Output examples       |    `model_id`      |  Hosted on   |  Reference  |
 |-----------------------------|:--------:|:-------------:|:--------:|:------------:|:------:|:------:|:------:|:------:|
