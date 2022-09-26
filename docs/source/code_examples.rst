@@ -21,11 +21,13 @@ Import `medigan` and initialize Generators
 
 Generate Images
 _______________________________________
-Generate 10 samples using one of the `medigan models <https://doi.org/10.5281/zenodo.5187714>`_ from the `config <https://github.com/RichardObi/medigan-models/blob/main/global.json>`_.
+Generate 10 samples using one (model 1 is `00001_DCGAN_MMG_CALC_ROI`) of the `medigan models <https://doi.org/10.5281/zenodo.5187714>`_ from the `config <https://github.com/RichardObi/medigan-models/blob/main/global.json>`_.
+
+`install_dependencies` signals to medigan that the user wishes to automatically install all the python dependencies (e.g. numpy. torch, etc) required to run this model (i.e. to the user's active python environment).
 
 .. code-block:: Python
 
-    generators.generate(model_id="00001_DCGAN_MMG_CALC_ROI",num_samples=10)
+    generators.generate(model_id=1, num_samples=10, install_dependencies=True)
 
 Get the model's generate method and run it to generate 3 samples
 

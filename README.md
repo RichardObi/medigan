@@ -76,8 +76,9 @@ Create mammography calcification images using DCGAN model
 from medigan import Generators
 generators = Generators()
 
-# generate 6 samples with model 1 (00001_DCGAN_MMG_CALC_ROI)
-generators.generate(model_id=1, num_samples=6)
+# generate 6 samples with model 1 (00001_DCGAN_MMG_CALC_ROI). 
+# Also, auto-install required model dependencies.
+generators.generate(model_id=1, num_samples=6, install_dependencies=True)
 ```
 ![sample](docs/source/_static/samples/dcgan/gan_sample_1.png)
 ![sample](docs/source/_static/samples/dcgan/gan_sample_2.png)
