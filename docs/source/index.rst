@@ -13,7 +13,7 @@ Let's install `medigan` and generate a few synthetic images.
     from medigan import Generators
 
     # model 1 is "00001_DCGAN_MMG_CALC_ROI"
-    Generators().generate(model_id=1)
+    Generators().generate(model_id=1, install_dependencies=True)
 
 
 Overview
