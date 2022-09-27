@@ -1400,8 +1400,8 @@
     },
     "00011_SINGAN_POLYP_PATCHES_W_MASKS": {
         "execution": {
-            "package_name": "singan-seg-polyp",
-            "package_link": "https://zenodo.org/record/6667945/files/singan-seg-polyp.zip?download=1",
+            "package_name": "00011_SINGAN_POLYP_PATCHES_W_MASKS",
+            "package_link": "https://zenodo.org/record/7113453/files/00011_SINGAN_POLYP_PATCHES_W_MASKS.zip?download=1",
             "model_name": "singan_seg_polyp/SinGAN-Generated/TrainedModels_1_clean/1/Gs",
             "extension": ".pth",
             "image_size": [
