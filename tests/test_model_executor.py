@@ -127,8 +127,11 @@ class TestMediganExecutorMethods:
 
         self.logger.debug(f"models: {models_with_args}")
         for i, model_id in enumerate(self.model_ids):
-            if model_id != '00011_SINGAN_POLYP_PATCHES_W_MASKS' and model_id != "00021_CYCLEGAN_BRAIN_MRI_T1_T2":
-            ## avoiding full memory on Windows ci test server
+            if (
+                model_id != "00011_SINGAN_POLYP_PATCHES_W_MASKS"
+                and model_id != "00021_CYCLEGAN_BRAIN_MRI_T1_T2"
+            ):
+                ## avoiding full memory on Windows ci test server
                 continue
             self.logger.debug(f"Now testing model {model_id}")
             self._remove_dir_and_contents()  # Already done in each test independently, but to be sure, here again.
