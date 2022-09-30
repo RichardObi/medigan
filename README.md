@@ -190,3 +190,22 @@ You will soon receive a reply in the Github [issue](https://github.com/RichardOb
 
 ## Contributions in General
 We welcome contributions to medigan. Please send us an email or read the [contributing guidelines](CONTRIBUTING.md) regarding contributing to the medigan project.
+
+## Referencing \& Citing medigan
+
+If you use medigan in your work, please consider citing the paper:
+
+> [R. Osuala, G. Skorupko, N. Lazrak, et al., “medigan: A Python Library of Pretrained Generative Models for Enriched Data Access in Medical Imaging,” arXiv preprint arXiv:2209.14472 (2022).](https://arxiv.org/abs/2209.14472)
+
+BibTeX entry:
+```bibtex
+@article{osuala2022medigan,
+  title = {{medigan: A Python Library of Pretrained Generative Models for Enriched Data Access in Medical Imaging}},
+  shorttitle = {{medigan}},
+  doi = {10.48550/ARXIV.2209.14472},
+  url = {https://arxiv.org/abs/2209.14472},
+  journal={arXiv preprint arXiv:2209.14472},
+  author = {Osuala, Richard and Skorupko, Grzegorz and Lazrak, Noussair and Garrucho, Lidia and García, Eloy and Joshi, Smriti and Jouide, Socayna and Rutherford, Michael and Prior, Fred and Kushibar, Kaisar and Diaz, Oliver and Lekadir, Karim},
+  year = {2022}
+}
+```
