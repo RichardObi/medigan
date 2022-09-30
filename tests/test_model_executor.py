@@ -127,11 +127,11 @@ class TestMediganExecutorMethods:
 
         self.logger.debug(f"models: {models_with_args}")
         for i, model_id in enumerate(self.model_ids):
-            #if (
+            # if (
             #    model_id != "00011_SINGAN_POLYP_PATCHES_W_MASKS"
-            #):
-                ## avoiding full memory on Windows ci test server
-                # continue
+            # ):
+            ## avoiding full memory on Windows ci test server
+            # continue
             self.logger.debug(f"Now testing model {model_id}")
             self._remove_dir_and_contents()  # Already done in each test independently, but to be sure, here again.
             self.test_generate_method(model_id=model_id)
