@@ -191,7 +191,7 @@ You will soon receive a reply in the Github [issue](https://github.com/RichardOb
 ## Contributions in General
 We welcome contributions to medigan. Please send us an email or read the [contributing guidelines](CONTRIBUTING.md) regarding contributing to the medigan project.
 
-## Referencing \& Citing medigan
+## Reference
 
 If you use medigan in your work, please consider citing the paper:
 
