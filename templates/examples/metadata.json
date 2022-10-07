@@ -34,17 +34,28 @@
         "NSME": null,
         "PSNR": null,
         "IS": null,
-        "FID": null,
         "turing_test": null,
-        "downstream_task": {
-          "CLF": {
-            "trained_on_fake": {
-              "accuracy": 0.9528,
-              "f1": 0.9721,
-              "AUROC": 0.9596,
-              "AUPRC": 0.9908
-            }
-          }
+        "FID_no_images":1000,
+        "FID": 67.60,
+        "FID_ratio": 0.497,
+        "FID_RADIMAGENET": 1.27,
+        "FID_RADIMAGENET_ratio": 0.197,
+        "CLF_delta": null,
+        "SEG_delta": null,
+        "CLF": {
+          "trained_on_fake": {
+            "accuracy": 0.9528,
+            "f1": 0.9721,
+            "AUROC": 0.9596,
+            "AUPRC": 0.9908
+          },
+          "trained_on_real_and_fake": {},
+          "trained_on_real": {}
+        },
+        "SEG": {
+                "trained_on_fake": {},
+                "trained_on_real_and_fake": {},
+                "trained_on_real": {}
         }
       },
       "use_cases": [

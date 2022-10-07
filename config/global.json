@@ -38,34 +38,28 @@
                 "NSME": null,
                 "PSNR": null,
                 "IS": null,
-                "FID": null,
                 "turing_test": null,
-                "downstream_task": {
-                    "CLF": {
-                        "trained_on_fake": {
-                            "accuracy": null,
-                            "precision": null,
-                            "recall": null,
-                            "f1": null,
-                            "specificity": null,
-                            "AUROC": null,
-                            "AUPRC": null
-                        },
+                "FID_no_images":1000,
+                "FID": 67.60,
+                "FID_ratio": 0.497,
+                "FID_RADIMAGENET": 1.27,
+                "FID_RADIMAGENET_ratio": 0.197,
+                "CLF_delta": null,
+                "SEG_delta": null,
+                "CLF": {
+                    "trained_on_fake": {},
+                    "trained_on_real_and_fake": {},
+                    "trained_on_real": {}
+                },
+                "SEG": {
+                        "trained_on_fake": {},
                         "trained_on_real_and_fake": {},
                         "trained_on_real": {}
-                    },
-                    "SEG": {
-                        "trained_on_fake": {
-                            "dice": null,
-                            "jaccard": null,
-                            "accuracy": null,
-                            "precision": null,
-                            "recall": null,
-                            "f1": null
-                        },
-                        "trained_on_real_and_fake": {},
-                        "trained_on_real": {}
-                    }
+                },
+                "DET": {
+                    "trained_on_fake": {},
+                    "trained_on_real_and_fake": {},
+                    "trained_on_real": {}
                 }
             },
             "use_cases": [
@@ -181,6 +175,11 @@
         },
         "selection": {
             "performance": {
+                "SSIM": null,
+                "MSE": null,
+                "NSME": null,
+                "PSNR": null,
+                "IS": null,
                 "turing_test": {
                     "number_radiologists": 2,
                     "AUC": [
@@ -196,17 +195,31 @@
                         25
                     ]
                 },
-                "downstream_task": {
-                    "CLF": {
-                        "trained_on_real_and_fake": {
-                            "fraction_real_data": 0.067,
-                            "f1": 0.89
-                        },
-                        "trained_on_real": {
-                            "fraction_real_data": 0.067,
-                            "f1": 0.89
-                        }
+                "FID_no_images":1000,
+                "FID": 80.51,
+                "FID_ratio": 0.358,
+                "FID_RADIMAGENET": 6.19,
+                "FID_RADIMAGENET_ratio": 0.036,
+                "CLF_delta": 0.06,
+                "SEG_delta": null,
+                "CLF": {
+                    "trained_on_fake": {},
+                    "trained_on_real_and_fake": {
+                        "f1": 0.96
+                    },
+                    "trained_on_real": {
+                        "f1": 0.90
                     }
+                },
+                "SEG": {
+                        "trained_on_fake": {},
+                        "trained_on_real_and_fake": {},
+                        "trained_on_real": {}
+                },
+                "DET": {
+                    "trained_on_fake": {},
+                    "trained_on_real_and_fake": {},
+                    "trained_on_real": {}
                 }
             },
             "use_cases": [
@@ -337,7 +350,41 @@
             }
         },
         "selection": {
-            "performance": {},
+            "performance": {
+                "SSIM": null,
+                "MSE": null,
+                "NSME": null,
+                "PSNR": null,
+                "IS": null,
+                "turing_test": null,
+                "FID_no_images":74,
+                "FID": 150.16,
+                "FID_ratio": 0.439,
+                "FID_RADIMAGENET": 3.00,
+                "FID_RADIMAGENET_ratio": 0.265,
+                "CLF_delta": null,
+                "SEG_delta": null,
+                "DET_delta": 0.06,
+                "CLF": {
+                    "trained_on_fake": {},
+                    "trained_on_real_and_fake": {},
+                    "trained_on_real": {}
+                },
+                "SEG": {
+                    "trained_on_fake": {},
+                    "trained_on_real_and_fake": {},
+                    "trained_on_real": {}
+                },
+                "DET": {
+                    "trained_on_fake": {},
+                    "trained_on_real_and_fake": {
+                        "AUC": 0.89
+                    },
+                    "trained_on_real": {
+                        "AUC": 0.83
+                    }
+                }
+            },
             "use_cases": [
                 "classification",
                 "detection",
@@ -410,7 +457,7 @@
             "version": "0.0.1",
             "publication": null,
             "doi": [
-                "10.5281/zenodo.5547263"
+                "https://doi.org/10.48550/arXiv.2209.09809"
             ],
             "inputs": [
                 "input_path: default=models/00003_CYCLEGAN_MMG_DENSITY_FULL/images, help=the path to .png mammogram images that are translated from low to high breast density or vice versa",
@@ -475,7 +522,41 @@
             }
         },
         "selection": {
-            "performance": {},
+            "performance": {
+                "SSIM": null,
+                "MSE": null,
+                "NSME": null,
+                "PSNR": null,
+                "IS": null,
+                "turing_test": null,
+                "FID_no_images":199,
+                "FID": 161.17,
+                "FID_ratio": 0.423,
+                "FID_RADIMAGENET": null,
+                "FID_RADIMAGENET_ratio": null,
+                "CLF_delta": null,
+                "SEG_delta": null,
+                "DET_delta": null,
+                "CLF": {
+                    "trained_on_fake": {},
+                    "trained_on_real_and_fake": {},
+                    "trained_on_real": {}
+                },
+                "SEG": {
+                    "trained_on_fake": {
+                        "Dice": 0.737
+                    },
+                    "trained_on_real_and_fake": {},
+                    "trained_on_real": {
+                        "Dice": 0.865
+                    }
+                },
+                "DET": {
+                    "trained_on_fake": {},
+                    "trained_on_real_and_fake": {},
+                    "trained_on_real": {}
+                }
+            },
             "use_cases": [
                 "segmentation"
             ],
@@ -594,17 +675,37 @@
                 "NSME": null,
                 "PSNR": null,
                 "IS": null,
-                "FID": null,
                 "turing_test": null,
-                "downstream_task": {
-                    "CLF": {
-                        "trained_on_fake": {
-                            "accuracy": 0.9528,
-                            "f1": 0.9721,
-                            "AUROC": 0.9596,
-                            "AUPRC": 0.9908
-                        }
+                "FID_no_images":199,
+                "FID": 180.04,
+                "FID_ratio": 0.379,
+                "FID_RADIMAGENET": 1.67,
+                "FID_RADIMAGENET_ratio": 0.593,
+                "CLF_delta": 0.029,
+                "SEG_delta": null,
+                "DET_delta": null,
+                "CLF": {
+                    "trained_on_fake": {},
+                    "trained_on_real_and_fake": {
+                        "f1": 0.920,
+                        "AUC": 0.959,
+                        "AUPRC": 0.992
+                    },
+                    "trained_on_real": {
+                        "f1": 0.891,
+                        "AUC": 0.928,
+                        "AUPRC": 0.986
                     }
+                },
+                "SEG": {
+                    "trained_on_fake": {},
+                    "trained_on_real_and_fake": {},
+                    "trained_on_real": {}
+                },
+                "DET": {
+                    "trained_on_fake": {},
+                    "trained_on_real_and_fake": {},
+                    "trained_on_real": {}
                 }
             },
             "use_cases": [
@@ -729,17 +830,37 @@
                 "NSME": null,
                 "PSNR": null,
                 "IS": null,
-                "FID": null,
                 "turing_test": null,
-                "downstream_task": {
-                    "CLF": {
-                        "trained_on_fake": {
-                            "accuracy": 0.95,
-                            "f1": 0.969,
-                            "AUROC": 0.978,
-                            "AUPRC": 0.996
-                        }
+                "FID_no_images":199,
+                "FID": 221.30,
+                "FID_ratio": 0.308,
+                "FID_RADIMAGENET": 1.80,
+                "FID_RADIMAGENET_ratio": 0.550,
+                "CLF_delta": 0.078,
+                "SEG_delta": null,
+                "DET_delta": null,
+                "CLF": {
+                    "trained_on_fake": {},
+                    "trained_on_real_and_fake": {
+                        "f1": 0.969,
+                        "AUC": 0.978,
+                        "AUPRC": 0.996
+                    },
+                    "trained_on_real": {
+                        "f1": 0.891,
+                        "AUC": 0.928,
+                        "AUPRC": 0.986
                     }
+                },
+                "SEG": {
+                    "trained_on_fake": {},
+                    "trained_on_real_and_fake": {},
+                    "trained_on_real": {}
+                },
+                "DET": {
+                    "trained_on_fake": {},
+                    "trained_on_real_and_fake": {},
+                    "trained_on_real": {}
                 }
             },
             "use_cases": [
@@ -881,12 +1002,34 @@
                 "NSME": null,
                 "PSNR": null,
                 "IS": null,
-                "FID": 1.1597,
                 "turing_test": null,
-                "downstream_task": null,
-                "DSC": 0.737,
-                "Sensitivity": 0.663,
-                "Precision": 0.864
+                "FID_no_images":1000,
+                "FID": 140.02,
+                "FID_ratio": 0.219,
+                "FID_RADIMAGENET": 5.31,
+                "FID_RADIMAGENET_ratio": 0.012,
+                "CLF_delta": null,
+                "SEG_delta": 0.018,
+                "DET_delta": null,
+                "CLF": {
+                    "trained_on_fake": {},
+                    "trained_on_real_and_fake": {},
+                    "trained_on_real": {}
+                },
+                "SEG": {
+                    "trained_on_fake": {},
+                    "trained_on_real_and_fake": {
+                        "dice": 0.814
+                    },
+                    "trained_on_real": {
+                        "dice": 0.796
+                    }
+                },
+                "DET": {
+                    "trained_on_fake": {},
+                    "trained_on_real_and_fake": {},
+                    "trained_on_real": {}
+                }
             },
             "use_cases": [
                 "segmentation",
@@ -1023,10 +1166,29 @@
                 "NSME": null,
                 "PSNR": null,
                 "IS": null,
-                "FID": null,
                 "turing_test": null,
-                "downstream_task": {
-                    "CLF": {}
+                "FID_no_images":379,
+                "FID": 137.75,
+                "FID_ratio": 0.272,
+                "FID_RADIMAGENET": 3.05,
+                "FID_RADIMAGENET_ratio": 0.151,
+                "CLF_delta": null,
+                "SEG_delta": null,
+                "DET_delta": null,
+                "CLF": {
+                    "trained_on_fake": {},
+                    "trained_on_real_and_fake": {},
+                    "trained_on_real": {}
+                },
+                "SEG": {
+                    "trained_on_fake": {},
+                    "trained_on_real_and_fake": {},
+                    "trained_on_real": {}
+                },
+                "DET": {
+                    "trained_on_fake": {},
+                    "trained_on_real_and_fake": {},
+                    "trained_on_real": {}
                 }
             },
             "use_cases": [
@@ -1170,9 +1332,34 @@
                 "NSME": null,
                 "PSNR": null,
                 "IS": null,
-                "FID": 284.29,
                 "turing_test": null,
-                "downstream_task": null
+                "FID_no_images":1000,
+                "FID": 225.85,
+                "FID_ratio": 0.192,
+                "FID_RADIMAGENET": null,
+                "FID_RADIMAGENET_ratio": null,
+                "CLF_delta": null,
+                "SEG_delta": null,
+                "DET_delta": null,
+                "CLF": {
+                    "trained_on_fake": {},
+                    "trained_on_real_and_fake": {},
+                    "trained_on_real": {}
+                },
+                "SEG": {
+                    "trained_on_fake": {
+                        "dice_loss": 0.137
+                    },
+                    "trained_on_real_and_fake": {},
+                    "trained_on_real": {
+                        "dice_loss": 0.112
+                    }
+                },
+                "DET": {
+                    "trained_on_fake": {},
+                    "trained_on_real_and_fake": {},
+                    "trained_on_real": {}
+                }
             },
             "use_cases": [
                 "classification",
@@ -1312,9 +1499,34 @@
                 "NSME": null,
                 "PSNR": null,
                 "IS": null,
-                "FID": 75.17,
                 "turing_test": null,
-                "downstream_task": null
+                "FID_no_images":1000,
+                "FID": 63.99,
+                "FID_ratio": 0.677,
+                "FID_RADIMAGENET": 7.32,
+                "FID_RADIMAGENET_ratio": 0.015,
+                "CLF_delta": null,
+                "SEG_delta": null,
+                "DET_delta": null,
+                "CLF": {
+                    "trained_on_fake": {},
+                    "trained_on_real_and_fake": {},
+                    "trained_on_real": {}
+                },
+                "SEG": {
+                    "trained_on_fake": {
+                        "IoU": 0.798
+                    },
+                    "trained_on_real_and_fake": {},
+                    "trained_on_real": {
+                        "IoU": 0.827
+                    }
+                },
+                "DET": {
+                    "trained_on_fake": {},
+                    "trained_on_real_and_fake": {},
+                    "trained_on_real": {}
+                }
             },
             "use_cases": [
                 "classification",
@@ -1448,9 +1660,34 @@
                 "NSME": null,
                 "PSNR": null,
                 "IS": null,
-                "FID": 98.29,
                 "turing_test": null,
-                "downstream_task": null
+                "FID_no_images":1000,
+                "FID": 171.15,
+                "FID_ratio": 0.253,
+                "FID_RADIMAGENET": null,
+                "FID_RADIMAGENET_ratio": null,
+                "CLF_delta": null,
+                "SEG_delta": null,
+                "DET_delta": null,
+                "CLF": {
+                    "trained_on_fake": {},
+                    "trained_on_real_and_fake": {},
+                    "trained_on_real": {}
+                },
+                "SEG": {
+                    "trained_on_fake": {
+                        "f1": 0.863
+                    },
+                    "trained_on_real_and_fake": {},
+                    "trained_on_real": {
+                        "f1": 0.888
+                    }
+                },
+                "DET": {
+                    "trained_on_fake": {},
+                    "trained_on_real_and_fake": {},
+                    "trained_on_real": {}
+                }
             },
             "use_cases": [
                 "classification",
@@ -1573,10 +1810,29 @@
                 "NSME": null,
                 "PSNR": null,
                 "IS": null,
-                "FID": null,
                 "turing_test": null,
-                "downstream_task": {
-                    "CLF": {}
+                "FID_no_images": 199,
+                "FID": 205.29,
+                "FID_ratio": 0.332,
+                "FID_RADIMAGENET": 5.69,
+                "FID_RADIMAGENET_ratio": 0.080,
+                "CLF_delta": null,
+                "SEG_delta": null,
+                "DET_delta": null,
+                "CLF": {
+                    "trained_on_fake": {},
+                    "trained_on_real_and_fake": {},
+                    "trained_on_real": {}
+                },
+                "SEG": {
+                    "trained_on_fake": {},
+                    "trained_on_real_and_fake": {},
+                    "trained_on_real": {}
+                },
+                "DET": {
+                    "trained_on_fake": {},
+                    "trained_on_real_and_fake": {},
+                    "trained_on_real": {}
                 }
             },
             "use_cases": [
@@ -1712,7 +1968,37 @@
             }
         },
         "selection": {
-            "performance": {},
+            "performance": {
+                "SSIM": null,
+                "MSE": null,
+                "NSME": null,
+                "PSNR": null,
+                "IS": null,
+                "turing_test": null,
+                "FID_no_images": 358,
+                "FID": 101.01,
+                "FID_ratio": 0.650,
+                "FID_RADIMAGENET": 1.14,
+                "FID_RADIMAGENET_ratio": 0.153,
+                "CLF_delta": null,
+                "SEG_delta": null,
+                "DET_delta": null,
+                "CLF": {
+                    "trained_on_fake": {},
+                    "trained_on_real_and_fake": {},
+                    "trained_on_real": {}
+                },
+                "SEG": {
+                    "trained_on_fake": {},
+                    "trained_on_real_and_fake": {},
+                    "trained_on_real": {}
+                },
+                "DET": {
+                    "trained_on_fake": {},
+                    "trained_on_real_and_fake": {},
+                    "trained_on_real": {}
+                }
+            },
             "use_cases": [
                 "classification",
                 "detection",
@@ -1784,7 +2070,9 @@
             "provided_after_epoch": null,
             "version": "0.0.1",
             "publication": null,
-            "doi": [],
+            "doi": [
+                "https://doi.org/10.48550/arXiv.2209.09809"
+            ],
             "inputs": [
                 "input_path: default=models/00013_CYCLEGAN_MMG_DENSITY_OPTIMAM_MLO/images, help=the path to .png mammogram images that are translated from low to high breast density or vice versa",
                 "image_size: default=[1332, 800], help=list with image height and width. Images are rescaled to these pixel dimensions.",
@@ -1840,7 +2128,41 @@
             }
         },
         "selection": {
-            "performance": {},
+            "performance": {
+                "SSIM": null,
+                "MSE": null,
+                "NSME": null,
+                "PSNR": null,
+                "IS": null,
+                "turing_test": null,
+                "FID_no_images": 350,
+                "FID": 73.77,
+                "FID_ratio": 0.564,
+                "FID_RADIMAGENET": 0.83,
+                "FID_RADIMAGENET_ratio": 0.190,
+                "CLF_delta": null,
+                "SEG_delta": null,
+                "DET_delta": 0.02,
+                "CLF": {
+                    "trained_on_fake": {},
+                    "trained_on_real_and_fake": {},
+                    "trained_on_real": {}
+                },
+                "SEG": {
+                    "trained_on_fake": {},
+                    "trained_on_real_and_fake": {},
+                    "trained_on_real": {}
+                },
+                "DET": {
+                    "trained_on_fake": {},
+                    "trained_on_real_and_fake": {
+                        "AUC": 0.85
+                    },
+                    "trained_on_real": {
+                        "AUC": 0.83
+                    }
+                }
+            },
             "use_cases": [
                 "classification",
                 "detection",
@@ -1912,7 +2234,9 @@
             "provided_after_epoch": null,
             "version": "0.0.1",
             "publication": null,
-            "doi": [],
+            "doi": [
+                "https://doi.org/10.48550/arXiv.2209.09809"
+            ],
             "inputs": [
                 "input_path: default=models/00014_CYCLEGAN_MMG_DENSITY_OPTIMAM_CC/images, help=the path to .png mammogram images that are translated from low to high breast density or vice versa",
                 "image_size: default=[1332, 800], help=list with image height and width. Images are rescaled to these pixel dimensions.",
@@ -1968,7 +2292,41 @@
             }
         },
         "selection": {
-            "performance": {},
+            "performance": {
+                "SSIM": null,
+                "MSE": null,
+                "NSME": null,
+                "PSNR": null,
+                "IS": null,
+                "turing_test": null,
+                "FID_no_images": 192,
+                "FID": 162.67,
+                "FID_ratio": 0.461,
+                "FID_RADIMAGENET": 4.07,
+                "FID_RADIMAGENET_ratio": 0.076,
+                "CLF_delta": null,
+                "SEG_delta": null,
+                "DET_delta": 0.02,
+                "CLF": {
+                    "trained_on_fake": {},
+                    "trained_on_real_and_fake": {},
+                    "trained_on_real": {}
+                },
+                "SEG": {
+                    "trained_on_fake": {},
+                    "trained_on_real_and_fake": {},
+                    "trained_on_real": {}
+                },
+                "DET": {
+                    "trained_on_fake": {},
+                    "trained_on_real_and_fake": {
+                        "AUC": 0.85
+                    },
+                    "trained_on_real": {
+                        "AUC": 0.83
+                    }
+                }
+            },
             "use_cases": [
                 "classification",
                 "detection",
@@ -2040,7 +2398,9 @@
             "provided_after_epoch": null,
             "version": "0.0.1",
             "publication": null,
-            "doi": [],
+            "doi": [
+                "https://doi.org/10.48550/arXiv.2209.09809"
+            ],
             "inputs": [
                 "input_path: default=models/00015_CYCLEGAN_MMG_DENSITY_CSAW_MLO/images, help=the path to .png mammogram images that are translated from low to high breast density or vice versa",
                 "image_size: default=[1332, 800], help=list with image height and width. Images are rescaled to these pixel dimensions.",
@@ -2096,7 +2456,37 @@
             }
         },
         "selection": {
-            "performance": {},
+            "performance": {
+                "SSIM": null,
+                "MSE": null,
+                "NSME": null,
+                "PSNR": null,
+                "IS": null,
+                "turing_test": null,
+                "FID_no_images": 202,
+                "FID": 98.38,
+                "FID_ratio": 0.434,
+                "FID_RADIMAGENET": 2.71,
+                "FID_RADIMAGENET_ratio": 0.142,
+                "CLF_delta": null,
+                "SEG_delta": null,
+                "DET_delta": null,
+                "CLF": {
+                    "trained_on_fake": {},
+                    "trained_on_real_and_fake": {},
+                    "trained_on_real": {}
+                },
+                "SEG": {
+                    "trained_on_fake": {},
+                    "trained_on_real_and_fake": {},
+                    "trained_on_real": {}
+                },
+                "DET": {
+                    "trained_on_fake": {},
+                    "trained_on_real_and_fake": {},
+                    "trained_on_real": {}
+                }
+            },
             "use_cases": [
                 "classification",
                 "detection",
@@ -2168,7 +2558,9 @@
             "provided_after_epoch": null,
             "version": "0.0.1",
             "publication": null,
-            "doi": [],
+            "doi": [
+                "https://doi.org/10.48550/arXiv.2209.09809"
+            ],
             "inputs": [
                 "input_path: default=models/00016_CYCLEGAN_MMG_DENSITY_CSAW_CC/images, help=the path to .png mammogram images that are translated from low to high breast density or vice versa",
                 "image_size: default=[1332, 800], help=list with image height and width. Images are rescaled to these pixel dimensions.",
@@ -2216,9 +2608,30 @@
                 "NSME": null,
                 "PSNR": null,
                 "IS": null,
-                "FID": null,
                 "turing_test": null,
-                "downstream_task": null
+                "FID_no_images": 1476,
+                "FID": 126.78,
+                "FID_ratio": 0.192,
+                "FID_RADIMAGENET": null,
+                "FID_RADIMAGENET_ratio": null,
+                "CLF_delta": null,
+                "SEG_delta": null,
+                "DET_delta": null,
+                "CLF": {
+                    "trained_on_fake": {},
+                    "trained_on_real_and_fake": {},
+                    "trained_on_real": {}
+                },
+                "SEG": {
+                    "trained_on_fake": {},
+                    "trained_on_real_and_fake": {},
+                    "trained_on_real": {}
+                },
+                "DET": {
+                    "trained_on_fake": {},
+                    "trained_on_real_and_fake": {},
+                    "trained_on_real": {}
+                }
             },
             "use_cases": [
                 "classification"
@@ -2323,9 +2736,30 @@
                 "NSME": null,
                 "PSNR": null,
                 "IS": null,
-                "FID": null,
                 "turing_test": null,
-                "downstream_task": null
+                "FID_no_images": 1476,
+                "FID": 211.47,
+                "FID_ratio": 0.115,
+                "FID_RADIMAGENET": null,
+                "FID_RADIMAGENET_ratio": null,
+                "CLF_delta": null,
+                "SEG_delta": null,
+                "DET_delta": null,
+                "CLF": {
+                    "trained_on_fake": {},
+                    "trained_on_real_and_fake": {},
+                    "trained_on_real": {}
+                },
+                "SEG": {
+                    "trained_on_fake": {},
+                    "trained_on_real_and_fake": {},
+                    "trained_on_real": {}
+                },
+                "DET": {
+                    "trained_on_fake": {},
+                    "trained_on_real_and_fake": {},
+                    "trained_on_real": {}
+                }
             },
             "use_cases": [
                 "classification"
@@ -2430,9 +2864,30 @@
                 "NSME": null,
                 "PSNR": null,
                 "IS": null,
-                "FID": null,
                 "turing_test": null,
-                "downstream_task": null
+                "FID_no_images": 1000,
+                "FID": 96.74,
+                "FID_ratio": 0.297,
+                "FID_RADIMAGENET": 0.77,
+                "FID_RADIMAGENET_ratio": 0.243,
+                "CLF_delta": null,
+                "SEG_delta": null,
+                "DET_delta": null,
+                "CLF": {
+                    "trained_on_fake": {},
+                    "trained_on_real_and_fake": {},
+                    "trained_on_real": {}
+                },
+                "SEG": {
+                    "trained_on_fake": {},
+                    "trained_on_real_and_fake": {},
+                    "trained_on_real": {}
+                },
+                "DET": {
+                    "trained_on_fake": {},
+                    "trained_on_real_and_fake": {},
+                    "trained_on_real": {}
+                }
             },
             "use_cases": [
                 "classification",
@@ -2544,9 +2999,34 @@
                 "NSME": null,
                 "PSNR": null,
                 "IS": null,
-                "FID": null,
                 "turing_test": null,
-                "downstream_task": null
+                "FID_no_images": 1000,
+                "FID": 52.17,
+                "FID_ratio": 0.543,
+                "FID_RADIMAGENET": 2.83,
+                "FID_RADIMAGENET_ratio": 0.071,
+                "CLF_delta": null,
+                "SEG_delta": null,
+                "DET_delta": null,
+                "CLF": {
+                    "trained_on_fake": {
+                        "AUC": 0.878
+                    },
+                    "trained_on_real_and_fake": {},
+                    "trained_on_real": {
+                        "AUC": 0.947
+                    }
+                },
+                "SEG": {
+                    "trained_on_fake": {},
+                    "trained_on_real_and_fake": {},
+                    "trained_on_real": {}
+                },
+                "DET": {
+                    "trained_on_fake": {},
+                    "trained_on_real_and_fake": {},
+                    "trained_on_real": {}
+                }
             },
             "use_cases": [
                 "classification",
@@ -2653,17 +3133,38 @@
         },
         "selection": {
             "performance": {
-                "FID": null,
-                "downstream_task": {
-                    "SEG": {
-                        "trained_on_fake": {
-                            "dice": 0.6117,
-                            "dice_tumor": 0.7291,
-                            "dice_cochlea": 0.4944,
-                            "assd_tumor": 0.8969,
-                            "assd_cochlea": 0.5591
-                        }
-                    }
+                "SSIM": null,
+                "MSE": null,
+                "NSME": null,
+                "PSNR": null,
+                "IS": null,
+                "turing_test": null,
+                "FID_no_images": 1000,
+                "FID": 59.49,
+                "FID_ratio": 0.410,
+                "FID_RADIMAGENET": 1.45,
+                "FID_RADIMAGENET_ratio": 0.014,
+                "CLF_delta": null,
+                "SEG_delta": null,
+                "DET_delta": null,
+                "CLF": {
+                    "trained_on_fake": {},
+                    "trained_on_real_and_fake": {},
+                    "trained_on_real": {}
+                },
+                "SEG": {
+                    "trained_on_fake": {
+                        "dice": 0.712,
+                        "dice_tumor": 0.712,
+                        "dice_cochlea": 0.478
+                    },
+                    "trained_on_real_and_fake": {},
+                    "trained_on_real": {}
+                },
+                "DET": {
+                    "trained_on_fake": {},
+                    "trained_on_real_and_fake": {},
+                    "trained_on_real": {}
                 }
             },
             "use_cases": [
