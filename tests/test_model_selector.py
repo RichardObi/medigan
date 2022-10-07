@@ -22,6 +22,7 @@ models = [
     ),
     ("00002_DCGAN_MMG_MASS_ROI", {}, 3),
     ("00003_CYCLEGAN_MMG_DENSITY_FULL", {"translate_all_images": False}, 2),
+    ("00005_DCGAN_MMG_MASS_ROI", {}, 3),
     # Further models can be added here if/when needed.
 ]
 
@@ -86,11 +87,12 @@ class TestMediganSelectorMethods:
             are_keys_also_matched=True,
             is_case_sensitive=False,
             metric=metric,
-            order="asc",
+            order="desc",
         )
         assert (
-            len(found_ranked_models) > 0
-            and found_ranked_models[0]["model_id"] == models[1][0]
+            len(found_ranked_models) > 0 # some models were found as is expected
+            and found_ranked_models[0]["model_id"] is not None # has a model id
+            and (len(found_ranked_models) < 2 or found_ranked_models[0][metric] > found_ranked_models[1][metric]) # descending order (the higher a model's value, the lower its index in the list) is working
         )
 
     @pytest.mark.parametrize(
@@ -100,7 +102,13 @@ class TestMediganSelectorMethods:
                 models,
                 "FID",
                 "asc",
-            ),  # Note: normally a lower FID is better, therefore asc here.
+            ),  # Note: normally a lower FID is better, therefore asc (model with lowest FID has lowest result list index).
+            (
+                    models,
+                    "FID_RADIMAGENET_ratio",
+                    "desc", # descending, as the higher the FID ratio the better.
+            ),
+            # Note: normally a lower FID is better, therefore asc (model with lowest FID has lowest result list index).
             (models, "CLF.trained_on_real_and_fake.f1", "desc"),
             (models, "turing_test.AUC", "desc"),
         ],
@@ -112,7 +120,12 @@ class TestMediganSelectorMethods:
             metric=metric,
             order=order,
         )
-        assert len(ranked_models) > 0 and ranked_models[0]["model_id"] == models[1][0]
+        assert (
+                len(ranked_models) > 0 # at least one model was found
+                and (len(ranked_models) >= 21 or metric != "FID") # we should find at least 21 models with FID in medigan
+                and ranked_models[0]["model_id"] is not None # found model has a model id (i.e. correctly formatted results)
+                and (ranked_models[0][metric] > ranked_models[1][metric] or metric == "FID") # descending order (the higher a model's value, the lower its index in the list) is working. In case of FID it is the other way around (ascending order is better).
+        )
 
     @pytest.mark.parametrize(
         "key1, value1, expected",
