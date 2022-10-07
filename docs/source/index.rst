@@ -1,6 +1,8 @@
 
 Getting started
 =========================
+Welcome to `medigan`: **medi**\ cal  **g**\ enerative (\ **a**\ dversarial) **n**\ etworks
+
 Let's install `medigan` and generate a few synthetic images.
 
 .. code-block:: Python
@@ -22,6 +24,9 @@ Overview
    :alt: Overview
 
    Overview of `medigan` users, library, and models on the example of mammography cancer image dataset generation.
+
+.. note::
+    Check out our `article <https://arxiv.org/abs/2209.14472>`_ on `medigan` to get all the details.
 
 .. toctree::
    :caption: Description
