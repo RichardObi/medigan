@@ -73,7 +73,7 @@ class TestMediganSelectorMethods:
             (
                 models,
                 ["dcgan", "MMG"],
-                "downstream_task.CLF.trained_on_real_and_fake.f1",
+                "CLF.trained_on_real_and_fake.f1",
             ),
             (models, ["dcgan", "MMG"], "turing_test.AUC"),
         ],
@@ -96,7 +96,8 @@ class TestMediganSelectorMethods:
     @pytest.mark.parametrize(
         "models, metric, order",
         [
-            (models, "downstream_task.CLF.trained_on_real_and_fake.f1", "desc"),
+            (models, "FID", "asc"), # Note: normally a lower FID is better, therefore asc here.
+            (models, "CLF.trained_on_real_and_fake.f1", "desc"),
             (models, "turing_test.AUC", "desc"),
         ],
     )
@@ -114,7 +115,7 @@ class TestMediganSelectorMethods:
         [
             ("modality", "Full-Field Mammography", 2),
             ("license", "BSD", 2),
-            ("performance.downstream_task.CLF.trained_on_real_and_fake.f1", "0.89", 0),
+            ("performance.CLF.trained_on_real_and_fake.f1", "0.96", 0),
             ("performance.turing_test.AUC", "0.56", 0),
         ],
     )
