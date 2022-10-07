@@ -6,7 +6,7 @@
 [![PyPI version](https://badge.fury.io/py/medigan.svg)](https://badge.fury.io/py/medigan)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.6327625.svg)](https://doi.org/10.5281/zenodo.6327625)
 
-## A modular package for automated synthetic data generation.
+`medigan`: **medi**cal **g**enerative (**a**dversarial) **n**etworks
 
 - :x: **Problem 1:** Data scarcity in medical imaging. 
 
