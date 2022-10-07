@@ -96,7 +96,11 @@ class TestMediganSelectorMethods:
     @pytest.mark.parametrize(
         "models, metric, order",
         [
-            (models, "FID", "asc"), # Note: normally a lower FID is better, therefore asc here.
+            (
+                models,
+                "FID",
+                "asc",
+            ),  # Note: normally a lower FID is better, therefore asc here.
             (models, "CLF.trained_on_real_and_fake.f1", "desc"),
             (models, "turing_test.AUC", "desc"),
         ],
