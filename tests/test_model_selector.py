@@ -131,7 +131,11 @@ class TestMediganSelectorMethods:
             and ranked_models[0]["model_id"]
             is not None  # found model has a model id (i.e. correctly formatted results)
             and (
-                len(ranked_models) ==1 or (ranked_models[0][metric] > ranked_models[1][metric] or metric == "FID")
+                len(ranked_models) == 1
+                or (
+                    ranked_models[0][metric] > ranked_models[1][metric]
+                    or metric == "FID"
+                )
             )  # descending order (the higher a model's value, the lower its index in the list) is working. In case of FID it is the other way around (ascending order is better).
         )
 
