@@ -1,6 +1,8 @@
 Description
 ==============
 
+Welcome to `medigan`: **medi**\ cal  **g**\ enerative (\ **a**\ dversarial) **n**\ etworks
+
 .. contents:: Table of Contents
 
 
@@ -12,6 +14,11 @@ _______________
 These datasets can again be used to train diagnostic or prognostic clinical models such as disease classification, detection and segmentation models.
 
 Despite this current focus, medigan, is readily extendable to any type of modality and any type of generative model.
+
+.. note::
+    More detail is available in the `medigan` article now available as `preprint <https://arxiv.org/abs/2209.14472>`_.
+    The article also includes experiments with insights into FID as generative model evaluation metric.
+
 
 Core Features
 _______________

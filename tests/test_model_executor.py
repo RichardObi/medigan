@@ -179,7 +179,7 @@ class TestMediganExecutorMethods:
     @pytest.mark.parametrize(
         "values_list, metric",
         [
-            (["dcgan", "MMG"], "downstream_task.CLF.trained_on_real_and_fake.f1"),
+            (["dcgan", "MMG"], "CLF.trained_on_real_and_fake.f1"),
             (["dcgan", "MMG"], "turing_test.AUC"),
         ],
     )
