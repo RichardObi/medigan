@@ -119,7 +119,7 @@ class TestMediganSelectorMethods:
     def test_rank_models_by_performance(self, models, metric, order):
         """Ranking according to metrics in the config/global.json file."""
         ranked_models = self.generators.rank_models_by_performance(
-            model_ids=[models[1][0], models[2][0]],
+            model_ids=None, # [models[1][0], models[2][0]],
             metric=metric,
             order=order,
         )
