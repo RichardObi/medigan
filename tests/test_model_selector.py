@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # ! /usr/bin/env python
 """ main test script to test the primary functions/classes/methods. """
-# run with python -m tests.test_generator
+# run with python -m tests.test_model_selector
 
 import logging
 import sys
@@ -119,7 +119,7 @@ class TestMediganSelectorMethods:
     def test_rank_models_by_performance(self, models, metric, order):
         """Ranking according to metrics in the config/global.json file."""
         ranked_models = self.generators.rank_models_by_performance(
-            model_ids=None,  # [models[1][0], models[2][0]],
+            model_ids=None,
             metric=metric,
             order=order,
         )
@@ -137,6 +137,28 @@ class TestMediganSelectorMethods:
                     or metric == "FID"
                 )
             )  # descending order (the higher a model's value, the lower its index in the list) is working. In case of FID it is the other way around (ascending order is better).
+        )
+
+    @pytest.mark.parametrize(
+        "models, metric, order",
+        [
+            (models, "CLF.trained_on_real_and_fake.f1", "desc"),
+            (models, "turing_test.AUC", "desc"),
+        ],
+    )
+    def test_rank_models_by_performance_with_given_ids(self, models, metric, order):
+        """Ranking a specified set of models according to metrics in the config/global.json file."""
+        ranked_models = self.generators.rank_models_by_performance(
+            model_ids=[models[1][0], models[2][0]],
+            metric=metric,
+            order=order,
+        )
+        assert (
+                0 < len(ranked_models) <= 2
+                and (
+                        len(ranked_models) < 2
+                        or (ranked_models[0][metric] > ranked_models[1][metric])
+                ) # checking if descending order (the higher a model's value, the lower its index in the list) is working.
         )
 
     @pytest.mark.parametrize(
