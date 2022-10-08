@@ -153,13 +153,10 @@ class TestMediganSelectorMethods:
             metric=metric,
             order=order,
         )
-        assert (
-                0 < len(ranked_models) <= 2
-                and (
-                        len(ranked_models) < 2
-                        or (ranked_models[0][metric] > ranked_models[1][metric])
-                ) # checking if descending order (the higher a model's value, the lower its index in the list) is working.
-        )
+        assert 0 < len(ranked_models) <= 2 and (
+            len(ranked_models) < 2
+            or (ranked_models[0][metric] > ranked_models[1][metric])
+        )  # checking if descending order (the higher a model's value, the lower its index in the list) is working.
 
     @pytest.mark.parametrize(
         "key1, value1, expected",
