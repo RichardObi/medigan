@@ -54,7 +54,10 @@
 | <sub> Chest Xray Images           </sub> | <sub>  chest x-ray  </sub> | <sub>   pggan      </sub> | <sub>1024x1024  </sub> | <sub>    [ChestX-ray14](https://nihcc.app.box.com/v/ChestXray-NIHCC/folder/36938765345)     </sub> | ![sample](docs/source/_static/samples/00020.png) | <sub> `00020_PGGAN_CHEST_XRAY` </sub> | <sub>[Zenodo (7046280)](https://doi.org/10.5281/zenodo.7046280) </sub> | <sub> [Segal et al (2021)](https://doi.org/10.1007/s42979-021-00720-7) </sub> |
 | <sub> Brain T1-T2 MRI Modality Transfer </sub> | <sub>  brain MRI  </sub> | <sub>   cyclegan      </sub> | <sub>224x192  </sub> | <sub>    [CrossMoDA 2021](https://arxiv.org/abs/2201.02831)     </sub> | ![sample](docs/source/_static/samples/00021.png) | <sub> `00021_CYCLEGAN_BRAIN_MRI_T1_T2` </sub> | <sub>[Zenodo (7074555)](https://doi.org/10.5281/zenodo.7074555) </sub> | <sub> [Joshi et al (2022)](https://doi.org/10.1007/978-3-031-09002-8_47) </sub> |
 
-Model information can be found in the [model documentation](https://medigan.readthedocs.io/en/latest/models.html) and in the [global.json](https://github.com/RichardObi/medigan/blob/main/config/global.json) model metadata.
+Model information can be found in:
+- [model documentation](https://medigan.readthedocs.io/en/latest/models.html) (e.g. the parameters of the models' generate functions)
+- [global.json](https://github.com/RichardObi/medigan/blob/main/config/global.json) file (e.g. metadata for model description, selection, and execution)
+- [medigan paper](https://arxiv.org/abs/2209.14472) (e.g. analysis and comparisons of models and FID scores)
 
 ## Installation
 To install the current release, simply run:
