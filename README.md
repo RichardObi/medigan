@@ -2,9 +2,11 @@
 <!-- ![medigan](medigan_logo_1.png) -->
 ![medigan](docs/source/_static/medigan_logo.png)
 
+[![License](https://img.shields.io/github/license/RichardObi/medigan)](https://opensource.org/licenses/MIT)
 ![Continuous integration](https://github.com/RichardObi/medigan/actions/workflows/python-ci.yml/badge.svg)
 [![PyPI version](https://badge.fury.io/py/medigan.svg)](https://badge.fury.io/py/medigan)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.6327625.svg)](https://doi.org/10.5281/zenodo.6327625)
+[![arXiv](https://img.shields.io/badge/arXiv-2209.14472-b31b1b.svg)](https://arxiv.org/abs/2209.14472)
 
 `medigan`: **medi**cal **g**enerative (**a**dversarial) **n**etworks
 
