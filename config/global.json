@@ -1130,8 +1130,8 @@
     "00008_C-DCGAN_MMG_MASSES": {
         "execution": {
             "package_name": "00008_C-DCGAN_MMG_MASSES",
-            "package_link": "https://zenodo.org/record/7031766/files/00008_C-DCGAN_MMG_MASSES.zip?download=1",
-            "model_name": "1750",
+            "package_link": "https://zenodo.org/record/7382545/files/00008_C-DCGAN_MMG_MASSES.zip?download=1",
+            "model_name": "1400_ckpt_train_cbis_ddsm",
             "extension": ".pt",
             "image_size": [
                 128,
@@ -1153,7 +1153,8 @@
                     ],
                     "custom": {
                         "condition": null,
-                        "z": null
+                        "z": null,
+                        "is_cbisddsm_training_data": true
                     }
                 },
                 "input_latent_vector_size": 100
@@ -1266,15 +1267,16 @@
         },
         "description": {
             "title": "Conditional DCGAN Model for Patch Generation of Mammogram Masses Conditioned on Biopsy Proven Malignancy Status (Trained on CBIS-DDSM)",
-            "provided_date": "June 2022",
-            "trained_date": "June 2022",
-            "provided_after_epoch": 1750,
-            "version": "1.0.0",
+            "provided_date": "November 2022",
+            "trained_date": "November 2022",
+            "provided_after_epoch": [1400, 1750],
+            "version": "1.0.1",
             "publication": null,
             "doi": [],
             "inputs": [
                 "condition: default=None, help=Either 0, 1 or None. Condition indicates whether a generated mass is malignant (0) or benign (1). If None, a balanced set of malignant and benign tumor images is created.",
-                "z: default=None, help=the input noise torch tensor for the generator. If None, this option is ignored (e.g. random input vector generation)"
+                "z: default=None, help=the input noise torch tensor for the generator. If None, this option is ignored (e.g. random input vector generation)",
+                "is_cbisddsm_training_data: default=True, help=Boolean indicating whether a GAN checkpoint trained on the predefined test or train dataset (predefined by cbis-ddsm dataset creators) should be used."
             ],
             "comment": "A class-conditional deep convolutional generative adversarial network that generates mass patches of mammograms that are conditioned to either be benign (1) or malignant (0). Pixel dimensions are 128x128. The Cond-DCGAN was trained on MMG patches from the CBIS-DDSM (Sawyer Lee et al, 2016). The uploaded ZIP file contains the files 1750.pt (model weight), __init__.py (image generation method and utils), a requirements.txt, a LICENSE file, the MEDIGAN metadata, the used GAN training config file, a test.sh file to run the model, and two folders with a few generated images."
         }
