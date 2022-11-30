@@ -48,7 +48,7 @@ CycleGAN Model for Low-to-High Brest Density Mammograms Translation (Trained on 
 
 | Output type                     |  Modality   |      Model type     |   Output size    |  Base dataset   |     Output examples       |    `model_id`      |  Hosted on   |  Reference  |
 |-----------------------------|:--------:|:-------------:|:--------:|:------------:|:------:|:------:|:------:|:------:|
-|  Breast Density Transfer      |   mammography   |    cyclegan    | 1332x800  |     [BCDR](https://bcdr.eu/information/about)      | ![sample](_static/samples/00003.png) |  `00003_CYCLEGAN_MMG_DENSITY_FULL`  | [Zenodo (5547263)](https://doi.org/10.5281/zenodo.5547263)  | | 
+|  Breast Density Transfer      |   mammography   |    cyclegan    | 1332x800  |     [BCDR](https://bcdr.eu/information/about)      | ![sample](_static/samples/00003.png) |  `00003_CYCLEGAN_MMG_DENSITY_FULL`  | [Zenodo (5547263)](https://doi.org/10.5281/zenodo.5547263)  | [Garrucho et al (2022)](https://doi.org/10.48550/arXiv.2209.09809) | 
 
 ```python
 # create samples with this model
@@ -211,12 +211,14 @@ Generators().generate(
     model_id="00008_C-DCGAN_MMG_MASSES",
     condition=None,
     z=None,
+    is_cbisddsm_training_data=False, # False generates with weights of GAN trained on cbis-ddsm testset
 )
 
 # model specific parameters
 inputs= [
     "condition: default=None, help=Either 0, 1 or None. Condition indicates whether a generated mass is malignant (0) or benign (1). If None, a balanced set of malignant and benign tumor images is created.",
     "z: default=None, help=the input noise torch tensor for the generator. If None, this option is ignored (e.g. random input vector generation)"
+    "is_cbisddsm_training_data: default=True, help=Boolean indicating whether a GAN checkpoint trained on the predefined test or train dataset (predefined by cbis-ddsm dataset creators) should be used."
 ]
 ```
 
@@ -356,7 +358,7 @@ CycleGAN Model for Low-to-High Brest Density Mammograms Translation of MLO VIEW 
 
 | Output type                     |  Modality   |      Model type     |   Output size    |  Base dataset   |     Output examples       |    `model_id`      |  Hosted on   |  Reference  |
 |-----------------------------|:--------:|:-------------:|:--------:|:------------:|:------:|:------:|:------:|:------:|
-|  Breast Density Transfer MLO  |   mammography   |    cyclegan    | 1332x800  |     [OPTIMAM](https://doi.org/10.48550/arXiv.2004.04742)      | ![sample](_static/samples/00013.png) |  `00013_CYCLEGAN_MMG_DENSITY_OPTIMAM_MLO`  | [Zenodo (6818095)](https://doi.org/10.5281/zenodo.6818095)  | | 
+|  Breast Density Transfer MLO  |   mammography   |    cyclegan    | 1332x800  |     [OPTIMAM](https://doi.org/10.48550/arXiv.2004.04742)      | ![sample](_static/samples/00013.png) |  `00013_CYCLEGAN_MMG_DENSITY_OPTIMAM_MLO`  | [Zenodo (6818095)](https://doi.org/10.5281/zenodo.6818095)  | [Garrucho et al (2022)](https://doi.org/10.48550/arXiv.2209.09809) |
 
 ```python
 # create samples with this model
@@ -388,7 +390,7 @@ CycleGAN Model for Low-to-High Brest Density Mammograms Translation of CC VIEW (
 
 | Output type                     |  Modality   |      Model type     |   Output size    |  Base dataset   |     Output examples       |    `model_id`      |  Hosted on   |  Reference  |
 |-----------------------------|:--------:|:-------------:|:--------:|:------------:|:------:|:------:|:------:|:------:|
-|  Breast Density Transfer CC   |   mammography   |    cyclegan    | 1332x800  |     [OPTIMAM](https://doi.org/10.48550/arXiv.2004.04742)      | ![sample](_static/samples/00014.png) |  `00014_CYCLEGAN_MMG_DENSITY_OPTIMAM_CC`  | [Zenodo (6818103)](https://doi.org/10.5281/zenodo.6818103)  | |  
+|  Breast Density Transfer CC   |   mammography   |    cyclegan    | 1332x800  |     [OPTIMAM](https://doi.org/10.48550/arXiv.2004.04742)      | ![sample](_static/samples/00014.png) |  `00014_CYCLEGAN_MMG_DENSITY_OPTIMAM_CC`  | [Zenodo (6818103)](https://doi.org/10.5281/zenodo.6818103)  | [Garrucho et al (2022)](https://doi.org/10.48550/arXiv.2209.09809) |
 
 ```python
 # create samples with this model
@@ -420,7 +422,7 @@ CycleGAN Model for Low-to-High Brest Density Mammograms Translation of MLO VIEW 
 
 | Output type                     |  Modality   |      Model type     |   Output size    |  Base dataset   |     Output examples       |    `model_id`      |  Hosted on   |  Reference  |
 |-----------------------------|:--------:|:-------------:|:--------:|:------------:|:------:|:------:|:------:|:------:|
-|  Breast Density Transfer MLO  |   mammography   |    cyclegan    | 1332x800  |     [CSAW](https://link.springer.com/article/10.1007/s10278-019-00278-0)      | ![sample](_static/samples/00015.png) |  `00015_CYCLEGAN_MMG_DENSITY_CSAW_MLO`  | [Zenodo (6818105)](https://doi.org/10.5281/zenodo.6818105)  | |  
+|  Breast Density Transfer MLO  |   mammography   |    cyclegan    | 1332x800  |     [CSAW](https://link.springer.com/article/10.1007/s10278-019-00278-0)      | ![sample](_static/samples/00015.png) |  `00015_CYCLEGAN_MMG_DENSITY_CSAW_MLO`  | [Zenodo (6818105)](https://doi.org/10.5281/zenodo.6818105)  | [Garrucho et al (2022)](https://doi.org/10.48550/arXiv.2209.09809) |
 
 ```python
 # create samples with this model
@@ -452,7 +454,7 @@ CycleGAN Model for Low-to-High Brest Density Mammograms Translation of CC VIEW (
 
 | Output type                     |  Modality   |      Model type     |   Output size    |  Base dataset   |     Output examples       |    `model_id`      |  Hosted on   |  Reference  |
 |-----------------------------|:--------:|:-------------:|:--------:|:------------:|:------:|:------:|:------:|:------:|
-|  Breast Density Transfer CC   |   mammography   |    cyclegan    | 1332x800  |     [CSAW](https://link.springer.com/article/10.1007/s10278-019-00278-0)     | ![sample](_static/samples/00016.png) |  `00016_CYCLEGAN_MMG_DENSITY_CSAW_CC`  | [Zenodo (6818107)](https://doi.org/10.5281/zenodo.6818107)  | | 
+|  Breast Density Transfer CC   |   mammography   |    cyclegan    | 1332x800  |     [CSAW](https://link.springer.com/article/10.1007/s10278-019-00278-0)     | ![sample](_static/samples/00016.png) |  `00016_CYCLEGAN_MMG_DENSITY_CSAW_CC`  | [Zenodo (6818107)](https://doi.org/10.5281/zenodo.6818107)  | [Garrucho et al (2022)](https://doi.org/10.48550/arXiv.2209.09809) |
 
 ```python
 # create samples with this model
