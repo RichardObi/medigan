@@ -19,74 +19,75 @@ import torch
 LOGGING_LEVEL = logging.INFO  # WARNING  # logging.INFO
 
 models_with_args = [
-    (
-        "00001_DCGAN_MMG_CALC_ROI",
-        {},
-        100,
-    ),  # 100 samples to test automatic batch-wise image generation in model_executor
-    (
-        "00002",
-        {},
-        3,
-    ),  # "00002" instead of "00002_DCGAN_MMG_MASS_ROI" to test shortcut model_ids
-    (
-        "03",
-        {"translate_all_images": False},
-        2,
-    ),  # "03" instead of "00003_CYCLEGAN_MMG_DENSITY_FULL" to test shortcut model_ids
-    (
-        4,  # 4 instead of "00004_PIX2PIX_MMG_MASSES_W_MASKS" to test shortcut model_ids
-        {
-            "shapes": ["oval"],
-            "ssim_threshold": 0.18,
-            "image_size": [128, 128],
-            "patch_size": [30, 30],
-        },
-        3,
-    ),
-    ("00005_DCGAN_MMG_MASS_ROI", {}, 3),
-    ("00006_WGANGP_MMG_MASS_ROI", {}, 3),
-    (
-        "00007_INPAINT_BRAIN_MRI",
-        {
-            "image_size": (256, 256),
-            "num_inpaints_per_sample": 2,
-            "randomize_input_image_order": False,
-            "add_variations_to_mask": False,
-            "x_center": 120,
-            "y_center": 140,
-            "radius_1": 8,
-            "radius_2": 12,
-            "radius_3": 24,
-        },
-        3,
-    ),
-    (
-        "00008_C-DCGAN_MMG_MASSES",
-        {"condition": 0, "is_cbisddsm_training_data": False},
-        3,
-    ),
-    ("00009_PGGAN_POLYP_PATCHES_W_MASKS", {"save_option": "image_only"}, 3),
-    ("00010_FASTGAN_POLYP_PATCHES_W_MASKS", {"save_option": "image_only"}, 3),
-    ("00011_SINGAN_POLYP_PATCHES_W_MASKS", {"checkpoint_ids": [999]}, 3),
-    ("00012_C-DCGAN_MMG_MASSES", {"condition": 0}, 3),
-    ("00013_CYCLEGAN_MMG_DENSITY_OPTIMAM_MLO", {"translate_all_images": False}, 2),
-    ("00014_CYCLEGAN_MMG_DENSITY_OPTIMAM_CC", {"translate_all_images": False}, 2),
-    ("00015_CYCLEGAN_MMG_DENSITY_CSAW_MLO", {"translate_all_images": False}, 2),
-    ("00016_CYCLEGAN_MMG_DENSITY_CSAW_CC", {"translate_all_images": False}, 2),
-    ("00017_DCGAN_XRAY_LUNG_NODULES", {}, 3),
-    ("00018_WGANGP_XRAY_LUNG_NODULES", {}, 3),
-    ("00019_PGGAN_CHEST_XRAY", {}, 3),
-    ("00020_PGGAN_CHEST_XRAY", {"resize_pixel_dim": 512, "image_size": 256}, 3),
-    (
-        "00021_CYCLEGAN_BRAIN_MRI_T1_T2",
-        {
-            "input_path": "models/00021_CYCLEGAN_Brain_MRI_T1_T2/inputs/T2",
-            "gpu_id": 0,
-            "T1_to_T2": False,
-        },
-        3,
-    ),
+    # (
+    #     "00001_DCGAN_MMG_CALC_ROI",
+    #     {},
+    #     100,
+    # ),  # 100 samples to test automatic batch-wise image generation in model_executor
+    # (
+    #     "00002",
+    #     {},
+    #     3,
+    # ),  # "00002" instead of "00002_DCGAN_MMG_MASS_ROI" to test shortcut model_ids
+    # (
+    #     "03",
+    #     {"translate_all_images": False},
+    #     2,
+    # ),  # "03" instead of "00003_CYCLEGAN_MMG_DENSITY_FULL" to test shortcut model_ids
+    # (
+    #     4,  # 4 instead of "00004_PIX2PIX_MMG_MASSES_W_MASKS" to test shortcut model_ids
+    #     {
+    #         "shapes": ["oval"],
+    #         "ssim_threshold": 0.18,
+    #         "image_size": [128, 128],
+    #         "patch_size": [30, 30],
+    #     },
+    #     3,
+    # ),
+    # ("00005_DCGAN_MMG_MASS_ROI", {}, 3),
+    # ("00006_WGANGP_MMG_MASS_ROI", {}, 3),
+    # (
+    #     "00007_INPAINT_BRAIN_MRI",
+    #     {
+    #         "image_size": (256, 256),
+    #         "num_inpaints_per_sample": 2,
+    #         "randomize_input_image_order": False,
+    #         "add_variations_to_mask": False,
+    #         "x_center": 120,
+    #         "y_center": 140,
+    #         "radius_1": 8,
+    #         "radius_2": 12,
+    #         "radius_3": 24,
+    #     },
+    #     3,
+    # ),
+    # (
+    #     "00008_C-DCGAN_MMG_MASSES",
+    #     {"condition": 0, "is_cbisddsm_training_data": False},
+    #     3,
+    # ),
+    # ("00009_PGGAN_POLYP_PATCHES_W_MASKS", {"save_option": "image_only"}, 3),
+    # ("00010_FASTGAN_POLYP_PATCHES_W_MASKS", {"save_option": "image_only"}, 3),
+    # ("00011_SINGAN_POLYP_PATCHES_W_MASKS", {"checkpoint_ids": [999]}, 3),
+    # ("00012_C-DCGAN_MMG_MASSES", {"condition": 0}, 3),
+    # ("00013_CYCLEGAN_MMG_DENSITY_OPTIMAM_MLO", {"translate_all_images": False}, 2),
+    # ("00014_CYCLEGAN_MMG_DENSITY_OPTIMAM_CC", {"translate_all_images": False}, 2),
+    # ("00015_CYCLEGAN_MMG_DENSITY_CSAW_MLO", {"translate_all_images": False}, 2),
+    # ("00016_CYCLEGAN_MMG_DENSITY_CSAW_CC", {"translate_all_images": False}, 2),
+    # ("00017_DCGAN_XRAY_LUNG_NODULES", {}, 3),
+    # ("00018_WGANGP_XRAY_LUNG_NODULES", {}, 3),
+    # ("00019_PGGAN_CHEST_XRAY", {}, 3),
+    # ("00020_PGGAN_CHEST_XRAY", {"resize_pixel_dim": 512, "image_size": 256}, 3),
+    # (
+    #     "00021_CYCLEGAN_BRAIN_MRI_T1_T2",
+    #     {
+    #         "input_path": "models/00021_CYCLEGAN_Brain_MRI_T1_T2/inputs/T2",
+    #         "gpu_id": 0,
+    #         "T1_to_T2": False,
+    #     },
+    #     3,
+    # ),
+    ("00022_WGAN_CARDIAC_AGING", {}, 3),
 ]
 
 # class TestMediganExecutorMethods(unittest.TestCase):
