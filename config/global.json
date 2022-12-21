@@ -2973,7 +2973,7 @@
                 3
             ],
             "dependencies": [
-                "pytorch_lightning==1.2.10",
+                "pytorch-lightning>=1.2.10",
                 "torch",
                 "torchvision",
                 "matplotlib",
