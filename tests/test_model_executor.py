@@ -18,75 +18,79 @@ import torch
 # Set the logging level depending on the level of detail you would like to have in the logs while running the tests.
 LOGGING_LEVEL = logging.INFO  # WARNING  # logging.INFO
 
+from src.medigan.generators import Generators
+
+model_ids = Generators().config_manager.model_ids
+
 models_with_args = [
-    # (
-    #     "00001_DCGAN_MMG_CALC_ROI",
-    #     {},
-    #     100,
-    # ),  # 100 samples to test automatic batch-wise image generation in model_executor
-    # (
-    #     "00002",
-    #     {},
-    #     3,
-    # ),  # "00002" instead of "00002_DCGAN_MMG_MASS_ROI" to test shortcut model_ids
-    # (
-    #     "03",
-    #     {"translate_all_images": False},
-    #     2,
-    # ),  # "03" instead of "00003_CYCLEGAN_MMG_DENSITY_FULL" to test shortcut model_ids
-    # (
-    #     4,  # 4 instead of "00004_PIX2PIX_MMG_MASSES_W_MASKS" to test shortcut model_ids
-    #     {
-    #         "shapes": ["oval"],
-    #         "ssim_threshold": 0.18,
-    #         "image_size": [128, 128],
-    #         "patch_size": [30, 30],
-    #     },
-    #     3,
-    # ),
-    # ("00005_DCGAN_MMG_MASS_ROI", {}, 3),
-    # ("00006_WGANGP_MMG_MASS_ROI", {}, 3),
-    # (
-    #     "00007_INPAINT_BRAIN_MRI",
-    #     {
-    #         "image_size": (256, 256),
-    #         "num_inpaints_per_sample": 2,
-    #         "randomize_input_image_order": False,
-    #         "add_variations_to_mask": False,
-    #         "x_center": 120,
-    #         "y_center": 140,
-    #         "radius_1": 8,
-    #         "radius_2": 12,
-    #         "radius_3": 24,
-    #     },
-    #     3,
-    # ),
-    # (
-    #     "00008_C-DCGAN_MMG_MASSES",
-    #     {"condition": 0, "is_cbisddsm_training_data": False},
-    #     3,
-    # ),
-    # ("00009_PGGAN_POLYP_PATCHES_W_MASKS", {"save_option": "image_only"}, 3),
-    # ("00010_FASTGAN_POLYP_PATCHES_W_MASKS", {"save_option": "image_only"}, 3),
-    # ("00011_SINGAN_POLYP_PATCHES_W_MASKS", {"checkpoint_ids": [999]}, 3),
-    # ("00012_C-DCGAN_MMG_MASSES", {"condition": 0}, 3),
-    # ("00013_CYCLEGAN_MMG_DENSITY_OPTIMAM_MLO", {"translate_all_images": False}, 2),
-    # ("00014_CYCLEGAN_MMG_DENSITY_OPTIMAM_CC", {"translate_all_images": False}, 2),
-    # ("00015_CYCLEGAN_MMG_DENSITY_CSAW_MLO", {"translate_all_images": False}, 2),
-    # ("00016_CYCLEGAN_MMG_DENSITY_CSAW_CC", {"translate_all_images": False}, 2),
-    # ("00017_DCGAN_XRAY_LUNG_NODULES", {}, 3),
-    # ("00018_WGANGP_XRAY_LUNG_NODULES", {}, 3),
-    # ("00019_PGGAN_CHEST_XRAY", {}, 3),
-    # ("00020_PGGAN_CHEST_XRAY", {"resize_pixel_dim": 512, "image_size": 256}, 3),
-    # (
-    #     "00021_CYCLEGAN_BRAIN_MRI_T1_T2",
-    #     {
-    #         "input_path": "models/00021_CYCLEGAN_Brain_MRI_T1_T2/inputs/T2",
-    #         "gpu_id": 0,
-    #         "T1_to_T2": False,
-    #     },
-    #     3,
-    # ),
+    (
+        "00001_DCGAN_MMG_CALC_ROI",
+        {},
+        100,
+    ),  # 100 samples to test automatic batch-wise image generation in model_executor
+    (
+        "00002",
+        {},
+        3,
+    ),  # "00002" instead of "00002_DCGAN_MMG_MASS_ROI" to test shortcut model_ids
+    (
+        "03",
+        {"translate_all_images": False},
+        2,
+    ),  # "03" instead of "00003_CYCLEGAN_MMG_DENSITY_FULL" to test shortcut model_ids
+    (
+        4,  # 4 instead of "00004_PIX2PIX_MMG_MASSES_W_MASKS" to test shortcut model_ids
+        {
+            "shapes": ["oval"],
+            "ssim_threshold": 0.18,
+            "image_size": [128, 128],
+            "patch_size": [30, 30],
+        },
+        3,
+    ),
+    ("00005_DCGAN_MMG_MASS_ROI", {}, 3),
+    ("00006_WGANGP_MMG_MASS_ROI", {}, 3),
+    (
+        "00007_INPAINT_BRAIN_MRI",
+        {
+            "image_size": (256, 256),
+            "num_inpaints_per_sample": 2,
+            "randomize_input_image_order": False,
+            "add_variations_to_mask": False,
+            "x_center": 120,
+            "y_center": 140,
+            "radius_1": 8,
+            "radius_2": 12,
+            "radius_3": 24,
+        },
+        3,
+    ),
+    (
+        "00008_C-DCGAN_MMG_MASSES",
+        {"condition": 0, "is_cbisddsm_training_data": False},
+        3,
+    ),
+    ("00009_PGGAN_POLYP_PATCHES_W_MASKS", {"save_option": "image_only"}, 3),
+    ("00010_FASTGAN_POLYP_PATCHES_W_MASKS", {"save_option": "image_only"}, 3),
+    ("00011_SINGAN_POLYP_PATCHES_W_MASKS", {"checkpoint_ids": [999]}, 3),
+    ("00012_C-DCGAN_MMG_MASSES", {"condition": 0}, 3),
+    ("00013_CYCLEGAN_MMG_DENSITY_OPTIMAM_MLO", {"translate_all_images": False}, 2),
+    ("00014_CYCLEGAN_MMG_DENSITY_OPTIMAM_CC", {"translate_all_images": False}, 2),
+    ("00015_CYCLEGAN_MMG_DENSITY_CSAW_MLO", {"translate_all_images": False}, 2),
+    ("00016_CYCLEGAN_MMG_DENSITY_CSAW_CC", {"translate_all_images": False}, 2),
+    ("00017_DCGAN_XRAY_LUNG_NODULES", {}, 3),
+    ("00018_WGANGP_XRAY_LUNG_NODULES", {}, 3),
+    ("00019_PGGAN_CHEST_XRAY", {}, 3),
+    ("00020_PGGAN_CHEST_XRAY", {"resize_pixel_dim": 512, "image_size": 256}, 3),
+    (
+        "00021_CYCLEGAN_BRAIN_MRI_T1_T2",
+        {
+            "input_path": "models/00021_CYCLEGAN_Brain_MRI_T1_T2/inputs/T2",
+            "gpu_id": 0,
+            "T1_to_T2": False,
+        },
+        3,
+    ),
     ("00022_WGAN_CARDIAC_AGING", {}, 3),
 ]
 
@@ -127,28 +131,32 @@ class TestMediganExecutorMethods:
             CONFIG_FILE_KEY_GENERATE_ARGS_INPUT_LATENT_VECTOR_SIZE
         )
 
-    @pytest.mark.parametrize("models_with_args", [models_with_args])
+    # @pytest.mark.parametrize("models_with_args", [models_with_args])
+    @pytest.mark.parametrize("models_with_args", model_ids)
     def test_sample_generation_methods(self, models_with_args: list):
 
         self.logger.debug(f"models: {models_with_args}")
-        for i, model_id in enumerate(self.model_ids):
+        print(models_with_args)
+        # print(self.model_ids, )
+
+        # for i, model_id in enumerate(self.model_ids):
             # if (
             #    model_id != "00011_SINGAN_POLYP_PATCHES_W_MASKS"
             # ):
             ## avoiding full memory on Windows ci test server
             # continue
-            self.logger.debug(f"Now testing model {model_id}")
-            self._remove_dir_and_contents()  # Already done in each test independently, but to be sure, here again.
-            self.test_generate_method(model_id=model_id)
+            # self.logger.debug(f"Now testing model {model_id}")
+        self._remove_dir_and_contents()  # Already done in each test independently, but to be sure, here again.
+        self.test_generate_method(model_id=models_with_args)
 
-            # Check if args available fo model_id. Note: The models list may not include the latest medigan models
-            for model in models_with_args:
-                if model_id == model[0]:
-                    self.test_generate_method_with_additional_args(
-                        model_id=model[0], args=model[1], expected_num_samples=model[2]
-                    )
-            self.test_get_generate_method(model_id=model_id)
-            self.test_get_dataloader_method(model_id=model_id)
+            # # Check if args available fo model_id. Note: The models list may not include the latest medigan models
+            # for model in models_with_args:
+            #     if model_id == model[0]:
+            #         self.test_generate_method_with_additional_args(
+            #             model_id=model[0], args=model[1], expected_num_samples=model[2]
+            #         )
+            # self.test_get_generate_method(model_id=model_id)
+            # self.test_get_dataloader_method(model_id=model_id)
 
             # if i == 16:  # just for local testing
             # self._remove_model_dir_and_zip(
@@ -212,6 +220,7 @@ class TestMediganExecutorMethods:
             model_id=model_id,
             num_samples=self.num_samples,
             output_path=self.test_output_path,
+            install_dependencies=True
         )
         self._check_if_samples_were_generated(model_id=model_id)
 
