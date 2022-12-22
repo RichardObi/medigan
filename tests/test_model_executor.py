@@ -140,28 +140,28 @@ class TestMediganExecutorMethods:
         # print(self.model_ids, )
 
         # for i, model_id in enumerate(self.model_ids):
-            # if (
-            #    model_id != "00011_SINGAN_POLYP_PATCHES_W_MASKS"
-            # ):
-            ## avoiding full memory on Windows ci test server
-            # continue
-            # self.logger.debug(f"Now testing model {model_id}")
+        # if (
+        #    model_id != "00011_SINGAN_POLYP_PATCHES_W_MASKS"
+        # ):
+        ## avoiding full memory on Windows ci test server
+        # continue
+        # self.logger.debug(f"Now testing model {model_id}")
         self._remove_dir_and_contents()  # Already done in each test independently, but to be sure, here again.
         self.test_generate_method(model_id=models_with_args)
 
-            # # Check if args available fo model_id. Note: The models list may not include the latest medigan models
-            # for model in models_with_args:
-            #     if model_id == model[0]:
-            #         self.test_generate_method_with_additional_args(
-            #             model_id=model[0], args=model[1], expected_num_samples=model[2]
-            #         )
-            # self.test_get_generate_method(model_id=model_id)
-            # self.test_get_dataloader_method(model_id=model_id)
+        # # Check if args available fo model_id. Note: The models list may not include the latest medigan models
+        # for model in models_with_args:
+        #     if model_id == model[0]:
+        #         self.test_generate_method_with_additional_args(
+        #             model_id=model[0], args=model[1], expected_num_samples=model[2]
+        #         )
+        # self.test_get_generate_method(model_id=model_id)
+        # self.test_get_dataloader_method(model_id=model_id)
 
-            # if i == 16:  # just for local testing
-            # self._remove_model_dir_and_zip(
-            #    model_ids=[model_id], are_all_models_deleted=False
-            # )
+        # if i == 16:  # just for local testing
+        # self._remove_model_dir_and_zip(
+        #    model_ids=[model_id], are_all_models_deleted=False
+        # )
 
     @pytest.mark.parametrize(
         "values_list, should_sample_be_generated",
@@ -220,7 +220,7 @@ class TestMediganExecutorMethods:
             model_id=model_id,
             num_samples=self.num_samples,
             output_path=self.test_output_path,
-            install_dependencies=True
+            install_dependencies=True,
         )
         self._check_if_samples_were_generated(model_id=model_id)
 
