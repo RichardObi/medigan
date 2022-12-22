@@ -2973,7 +2973,6 @@
                 3
             ],
             "dependencies": [
-                "torchmetrics==0.6.0",
                 "pytorch-lightning>=1.2.10",
                 "torch",
                 "torchvision",
@@ -3258,7 +3257,8 @@
                 "monai[skimage]",
                 "munch==2.5.0",
                 "pillow>=7.0.0",
-                "ffmpeg-python==0.2.0"
+                "ffmpeg-python==0.2.0",
+                "torchmetrics==0.6.0"
             ],
             "generate_method": {
                 "name": "generate",
