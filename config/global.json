@@ -2973,6 +2973,7 @@
                 3
             ],
             "dependencies": [
+                "torchmetrics==0.6.0",
                 "pytorch-lightning>=1.2.10",
                 "torch",
                 "torchvision",
