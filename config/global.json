@@ -3239,7 +3239,7 @@
     "00022_WGAN_CARDIAC_AGING": {
         "execution": {
             "package_name": "00022_WGAN_CARDIAC_AGING",
-            "package_link": "https://zenodo.org/record/7446930/files/CardiacAging.zip?download=1",
+            "package_link": "https://zenodo.org/record/7476702/files/CardiacAging.zip?download=1",
             "model_name": "model",
             "extension": ".ckpt",
             "image_size": [
