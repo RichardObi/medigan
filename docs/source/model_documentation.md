@@ -608,7 +608,7 @@ Conditional WGANGP Model for Cardiac Image generation with age offset (Trained o
 
 | Output type                     |  Modality   |      Model type     |   Output size    |  Base dataset   |     Output examples       |    `model_id`      |  Hosted on   |  Reference  |
 |-----------------------------|:--------:|:-------------:|:--------:|:------------:|:------:|:------:|:------:|:------:|
-|  Cardiac image              |   MRI   |    wgan  |  256x256  |     [UK Biobank](https://www.ukbiobank.ac.uk/)      | ![sample](_static/samples/00022.png) |  `00022_WGAN_CARDIAC_AGING`  | [Zenodo (7476702)](https://doi.org/10.5281/zenodo.7476702)  | [Campello et al (2022)](https://doi.org/10.3389/fcvm.2022.983091)  | 
+|  Cardiac image              |   MRI   |    wgan  |  256x256  |     [UK Biobank](https://www.ukbiobank.ac.uk/)      | ![sample](_static/samples/00022.png) |  `00022_WGAN_CARDIAC_AGING`  | [Zenodo (7494368)](https://doi.org/10.5281/zenodo.7494368)  | [Campello et al (2022)](https://doi.org/10.3389/fcvm.2022.983091)  | 
 
 ```python
 # create samples with this model
