@@ -87,6 +87,7 @@ models_with_args = [
         },
         3,
     ),
+    ("00022_WGAN_CARDIAC_AGING", {}, 3),
 ]
 
 # class TestMediganExecutorMethods(unittest.TestCase):
@@ -211,6 +212,7 @@ class TestMediganExecutorMethods:
             model_id=model_id,
             num_samples=self.num_samples,
             output_path=self.test_output_path,
+            install_dependencies=True,
         )
         self._check_if_samples_were_generated(model_id=model_id)
 

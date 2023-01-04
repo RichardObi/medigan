@@ -39,7 +39,7 @@
                 "PSNR": null,
                 "IS": null,
                 "turing_test": null,
-                "FID_no_images":1000,
+                "FID_no_images": 1000,
                 "FID": 67.60,
                 "FID_ratio": 0.497,
                 "FID_RADIMAGENET": 1.27,
@@ -52,9 +52,9 @@
                     "trained_on_real": {}
                 },
                 "SEG": {
-                        "trained_on_fake": {},
-                        "trained_on_real_and_fake": {},
-                        "trained_on_real": {}
+                    "trained_on_fake": {},
+                    "trained_on_real_and_fake": {},
+                    "trained_on_real": {}
                 },
                 "DET": {
                     "trained_on_fake": {},
@@ -195,7 +195,7 @@
                         25
                     ]
                 },
-                "FID_no_images":1000,
+                "FID_no_images": 1000,
                 "FID": 80.51,
                 "FID_ratio": 0.358,
                 "FID_RADIMAGENET": 6.19,
@@ -212,9 +212,9 @@
                     }
                 },
                 "SEG": {
-                        "trained_on_fake": {},
-                        "trained_on_real_and_fake": {},
-                        "trained_on_real": {}
+                    "trained_on_fake": {},
+                    "trained_on_real_and_fake": {},
+                    "trained_on_real": {}
                 },
                 "DET": {
                     "trained_on_fake": {},
@@ -357,7 +357,7 @@
                 "PSNR": null,
                 "IS": null,
                 "turing_test": null,
-                "FID_no_images":74,
+                "FID_no_images": 74,
                 "FID": 150.16,
                 "FID_ratio": 0.439,
                 "FID_RADIMAGENET": 3.00,
@@ -529,7 +529,7 @@
                 "PSNR": null,
                 "IS": null,
                 "turing_test": null,
-                "FID_no_images":199,
+                "FID_no_images": 199,
                 "FID": 161.17,
                 "FID_ratio": 0.423,
                 "FID_RADIMAGENET": null,
@@ -676,7 +676,7 @@
                 "PSNR": null,
                 "IS": null,
                 "turing_test": null,
-                "FID_no_images":199,
+                "FID_no_images": 199,
                 "FID": 180.04,
                 "FID_ratio": 0.379,
                 "FID_RADIMAGENET": 1.67,
@@ -831,7 +831,7 @@
                 "PSNR": null,
                 "IS": null,
                 "turing_test": null,
-                "FID_no_images":199,
+                "FID_no_images": 199,
                 "FID": 221.30,
                 "FID_ratio": 0.308,
                 "FID_RADIMAGENET": 1.80,
@@ -1003,7 +1003,7 @@
                 "PSNR": null,
                 "IS": null,
                 "turing_test": null,
-                "FID_no_images":1000,
+                "FID_no_images": 1000,
                 "FID": 140.02,
                 "FID_ratio": 0.219,
                 "FID_RADIMAGENET": 5.31,
@@ -1168,7 +1168,7 @@
                 "PSNR": null,
                 "IS": null,
                 "turing_test": null,
-                "FID_no_images":379,
+                "FID_no_images": 379,
                 "FID": 137.75,
                 "FID_ratio": 0.272,
                 "FID_RADIMAGENET": 3.05,
@@ -1269,7 +1269,10 @@
             "title": "Conditional DCGAN Model for Patch Generation of Mammogram Masses Conditioned on Biopsy Proven Malignancy Status (Trained on CBIS-DDSM)",
             "provided_date": "November 2022",
             "trained_date": "November 2022",
-            "provided_after_epoch": [1400, 1750],
+            "provided_after_epoch": [
+                1400,
+                1750
+            ],
             "version": "1.0.1",
             "publication": null,
             "doi": [],
@@ -1335,7 +1338,7 @@
                 "PSNR": null,
                 "IS": null,
                 "turing_test": null,
-                "FID_no_images":1000,
+                "FID_no_images": 1000,
                 "FID": 225.85,
                 "FID_ratio": 0.192,
                 "FID_RADIMAGENET": null,
@@ -1502,7 +1505,7 @@
                 "PSNR": null,
                 "IS": null,
                 "turing_test": null,
-                "FID_no_images":1000,
+                "FID_no_images": 1000,
                 "FID": 63.99,
                 "FID_ratio": 0.677,
                 "FID_RADIMAGENET": 7.32,
@@ -1663,7 +1666,7 @@
                 "PSNR": null,
                 "IS": null,
                 "turing_test": null,
-                "FID_no_images":1000,
+                "FID_no_images": 1000,
                 "FID": 171.15,
                 "FID_ratio": 0.253,
                 "FID_RADIMAGENET": null,
@@ -2970,7 +2973,7 @@
                 3
             ],
             "dependencies": [
-                "pytorch_lightning==1.2.10",
+                "pytorch-lightning==1.2.10",
                 "torch",
                 "torchvision",
                 "matplotlib",
@@ -3231,6 +3234,127 @@
                 "T1_to_T2: default=True, help=if true, generator for T1 to T2 translation is used. If false, the translation is done from T2 to T1 instead. Need to adjust input path in this case e.g. models/00021_CYCLEGAN_BRAIN_MRI_T1_T2/inputs/T2 instead of models/00021_CYCLEGAN_BRAIN_MRI_T1_T2/inputs/T1. A different generator of the cycleGAN is used based on this flag."
             ],
             "comment": "In recent years, deep learning models have considerably advanced the performance of segmentation tasks on Brain Magnetic Resonance Imaging (MRI). However, these models show a considerable performance drop when they are evaluated on unseen data from a different distribution. Since annotation is often a hard and costly task requiring expert supervision, it is necessary to develop ways in which existing models can be adapted to the unseen domains without any additional labelled information. In this work, we explore one such technique which extends the CycleGAN [2] architecture to generate label-preserving data in the target domain. The synthetic target domain data is used to train the nn-UNet [3] framework for the task of multi-label segmentation. The experiments are conducted and evaluated on the dataset [1] provided in the ‘Cross-Modality Domain Adaptation for Medical Image Segmentation’ challenge [23] for segmentation of vestibular schwannoma (VS) tumour and cochlea on contrast enhanced (ceT1) and high resolution (hrT2) MRI scans. In the proposed approach, our model obtains dice scores (DSC) 0.73 and 0.49 for tumour and cochlea respectively on the validation set of the dataset. This indicates the applicability of the proposed technique to real-world problems where data may be obtained by different acquisition protocols as in [1] where hrT2 images are more reliable, safer, and lower-cost alternative to ceT1."
+        }
+    },
+    "00022_WGAN_CARDIAC_AGING": {
+        "execution": {
+            "package_name": "00022_WGAN_CARDIAC_AGING",
+            "package_link": "https://zenodo.org/record/7494368/files/00022_WGAN_CARDIAC_AGING.zip?download=1",
+            "model_name": "model",
+            "extension": ".ckpt",
+            "image_size": [
+                256,
+                256
+            ],
+            "dependencies": [
+                "nibabel==3.2.1",
+                "pytorch-lightning==1.4.7",
+                "pandas",
+                "comet-ml",
+                "monai",
+                "grad-cam",
+                "matplotlib",
+                "monai[skimage]",
+                "munch==2.5.0",
+                "pillow>=7.0.0",
+                "ffmpeg-python==0.2.0",
+                "torchmetrics==0.6.0"
+            ],
+            "generate_method": {
+                "name": "generate",
+                "args": {
+                    "base": [
+                        "model_file",
+                        "output_path",
+                        "save_images",
+                        "num_samples"
+                    ],
+                    "custom": {
+                        "image_paths_input": [
+                            "models/00022_WGAN_CARDIAC_AGING/sample_image.png",
+                            "models/00022_WGAN_CARDIAC_AGING/sample_image.png",
+                            "models/00022_WGAN_CARDIAC_AGING/sample_image.png"
+                        ],
+                        "aging_input": [
+                            -4,
+                            10,
+                            2
+                        ],
+                        "data_type": "2d",
+                        "view": "la",
+                        "subcat": "2ch"
+                    }
+                }
+            }
+        },
+        "selection": {
+            "performance": {},
+            "use_cases": [
+                "classification",
+                "segmentation"
+            ],
+            "organ": [
+                "heart",
+                "chest"
+            ],
+            "modality": [
+                "MRI",
+                "Cardiac imaging",
+                "Cardiography",
+                "full-field digital"
+            ],
+            "vendors": [],
+            "centres": [],
+            "function": [
+                "image to image",
+                "image generation",
+                "data augmentation"
+            ],
+            "condition": [
+                "age"
+            ],
+            "dataset": [
+                "UK Biobank"
+            ],
+            "augmentations": [
+                "resize"
+            ],
+            "generates": [
+                "cardiac image",
+                "full-field digital"
+            ],
+            "height": 256,
+            "width": 256,
+            "depth": null,
+            "type": "pix2pix",
+            "license": null,
+            "dataset_type": "non-public",
+            "privacy_preservation": null,
+            "tags": [
+                "Cardiac imaging",
+                "pix2pix",
+                "Pix2Pix"
+            ],
+            "year": "2022"
+        },
+        "description": {
+            "title": "Generates cardiac images with age offset from real images (Trained on UK Biobank)",
+            "provided_date": "2022",
+            "trained_date": "2022",
+            "provided_after_epoch": 299,
+            "version": "0.0.1",
+            "publication": "https://www.frontiersin.org/articles/10.3389/fcvm.2022.983091",
+            "doi": [
+                ""
+            ],
+            "inputs": [
+                "input_image_paths: default=[\"models/00022_WGAN_CARDIAC_AGING/sample_image.png\"] help=List of image paths to apply aging.",
+                "aging_input: default=[-4] help=List of age offset values for each image.",
+                "data_type: default=\"2d\" help=",
+                "view: default=\"la\" help=",
+                "subcat: default=\"2ch\", help="
+            ],
+            "comment": ""
         }
     }
 }

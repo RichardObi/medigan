@@ -599,3 +599,43 @@ inputs = [
     "T1_to_T2: default=True, help=if true, generator for T1 to T2 translation is used. If false, the translation is done from T2 to T1 instead. Need to adjust input path in this case e.g. models/00021_CYCLEGAN_BRAIN_MRI_T1_T2/inputs/T2 instead of models/00021_CYCLEGAN_BRAIN_MRI_T1_T2/inputs/T1. A different generator of the cycleGAN is used based on this flag."
 ]
 ```
+
+# 00022_WGAN_CARDIAC_AGING
+
+Conditional WGANGP Model for Cardiac Image generation with age offset (Trained on UK Biobank) \
+<sub> **Note:** A conditional wasserstein generative adversarial network with gradient penalty (WGAN_GP) that generates MRI cardiac images. The pixel dimension of the generated images is 256x256. The uploaded ZIP file contains the files model.ckpt (model weights), __init__.py (image generation method and utils), a requirements.txt, and the used GAN training config file. A sample_image.png is provided for example generation. </sub>
+
+
+| Output type                     |  Modality   |      Model type     |   Output size    |  Base dataset   |     Output examples       |    `model_id`      |  Hosted on   |  Reference  |
+|-----------------------------|:--------:|:-------------:|:--------:|:------------:|:------:|:------:|:------:|:------:|
+|  Cardiac image              |   MRI   |    wgan  |  256x256  |     [UK Biobank](https://www.ukbiobank.ac.uk/)      | ![sample](_static/samples/00022.png) |  `00022_WGAN_CARDIAC_AGING`  | [Zenodo (7494368)](https://doi.org/10.5281/zenodo.7494368)  | [Campello et al (2022)](https://doi.org/10.3389/fcvm.2022.983091)  | 
+
+```python
+# create samples with this model
+from medigan import Generators
+Generators().generate(
+    model_id="00022_WGAN_CARDIAC_AGING",
+    image_paths_input=[
+                            "models/00022_WGAN_CARDIAC_AGING/sample_image.png",
+                            "models/00022_WGAN_CARDIAC_AGING/sample_image.png",
+                            "models/00022_WGAN_CARDIAC_AGING/sample_image.png"
+                        ],
+    aging_input=[
+                    -4,
+                    10,
+                    2
+                ],
+    data_type="2d",
+    view="la",
+    subcat="2ch",
+)
+
+# model specific parameters
+inputs= [
+    "input_image_paths: default=[\"models/00022_WGAN_CARDIAC_AGING/sample_image.png\"] help=List of image paths to apply aging. One channel .png images must be provided.",
+    "aging_input: default=[-4] help=List of age offset values for each image.",
+    "data_type: default=\"2d\" help=",
+    "view: default=\"la\" help=",
+    "subcat: default=\"2ch\", help="
+]
+```
