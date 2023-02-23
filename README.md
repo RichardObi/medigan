@@ -203,17 +203,18 @@ If you use a medigan model in your work, please cite its respective publication 
 
 Please also consider citing the medigan paper:
 
-> [R. Osuala, G. Skorupko, N. Lazrak, et al., “medigan: A Python Library of Pretrained Generative Models for Enriched Data Access in Medical Imaging,” arXiv preprint arXiv:2209.14472 (2022).](https://arxiv.org/abs/2209.14472)
+> [Osuala, Richard, G. Skorupko, N. Lazrak, et al., "medigan: a Python library of pretrained generative models for medical image synthesis." Journal of Medical Imaging 10.6 (2023): 061403.](https://doi.org/10.1117/1.JMI.10.6.061403)
 
 BibTeX entry:
 ```bibtex
-@article{osuala2022medigan,
-  title = {{medigan: A Python Library of Pretrained Generative Models for Enriched Data Access in Medical Imaging}},
-  shorttitle = {{medigan}},
-  doi = {10.48550/ARXIV.2209.14472},
-  url = {https://arxiv.org/abs/2209.14472},
-  journal={arXiv preprint arXiv:2209.14472},
-  author = {Osuala, Richard and Skorupko, Grzegorz and Lazrak, Noussair and Garrucho, Lidia and García, Eloy and Joshi, Smriti and Jouide, Socayna and Rutherford, Michael and Prior, Fred and Kushibar, Kaisar and Diaz, Oliver and Lekadir, Karim},
-  year = {2022}
+@article{osuala2023medigan,
+  title={medigan: a Python library of pretrained generative models for medical image synthesis},
+  author={Osuala, Richard and Skorupko, Grzegorz and Lazrak, Noussair and Garrucho, Lidia and Garc{\'\i}a, Eloy and Joshi, Smriti and Jouide, Socayna and Rutherford, Michael and Prior, Fred and Kushibar, Kaisar and others},
+  journal={Journal of Medical Imaging},
+  volume={10},
+  number={6},
+  pages={061403},
+  year={2023},
+  publisher={SPIE}
 }
 ```
