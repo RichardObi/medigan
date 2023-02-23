@@ -203,7 +203,7 @@ If you use a medigan model in your work, please cite its respective publication 
 
 Please also consider citing the medigan paper:
 
-> [Osuala, Richard, G. Skorupko, N. Lazrak, et al., "medigan: a Python library of pretrained generative models for medical image synthesis." Journal of Medical Imaging 10.6 (2023): 061403.](https://doi.org/10.1117/1.JMI.10.6.061403)
+> [Osuala, R., Skorupko, G., Lazrak, N., Garrucho, L., García, E., Joshi, S., ... & Lekadir, K. (2023). medigan: a Python library of pretrained generative models for medical image synthesis. Journal of Medical Imaging, 10(6), 061403.](https://doi.org/10.1117/1.JMI.10.6.061403)
 
 BibTeX entry:
 ```bibtex
