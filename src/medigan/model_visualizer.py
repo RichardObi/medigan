@@ -34,7 +34,6 @@ class ModelVisualizer:
     """
 
     def __init__(self, model_executor, config: None):
-
         self.model_executor = model_executor
         self.model_id = self.model_executor.model_id
         self.config = config

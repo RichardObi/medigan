@@ -26,10 +26,10 @@ models = [
     # Further models can be added here if/when needed.
 ]
 
+
 # class TestMediganSelectorMethods(unittest.TestCase):
 class TestMediganSelectorMethods:
     def setup_method(self):
-
         ## unittest logger config
         # This logger on root level initialized via logging.getLogger() will also log all log events
         # from the medigan library. Pass a logger name (e.g. __name__) instead if you only want logs from tests.py

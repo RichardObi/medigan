@@ -1284,7 +1284,6 @@ class Generators:
         persistent_workers=False,
         **kwargs,
     ) -> DataLoader:
-
         """Get torch Dataloader sampling synthetic data from medigan model.
 
         Dataloader combines a dataset and a sampler, and provides an iterable over

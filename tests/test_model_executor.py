@@ -90,6 +90,7 @@ models_with_args = [
     ("00022_WGAN_CARDIAC_AGING", {}, 3),
 ]
 
+
 # class TestMediganExecutorMethods(unittest.TestCase):
 class TestMediganExecutorMethods:
     def setup_class(self):
@@ -129,7 +130,6 @@ class TestMediganExecutorMethods:
 
     @pytest.mark.parametrize("models_with_args", [models_with_args])
     def test_sample_generation_methods(self, models_with_args: list):
-
         self.logger.debug(f"models: {models_with_args}")
         for i, model_id in enumerate(self.model_ids):
             # if (
@@ -276,19 +276,16 @@ class TestMediganExecutorMethods:
     # @pytest.mark.parametrize("model_id", [model[0] for model in models_with_args])
     @pytest.mark.skip
     def test_visualize_method(self, model_id):
-
         if (
             self.CONFIG_FILE_KEY_GENERATE_ARGS_INPUT_LATENT_VECTOR_SIZE
             in self.generators.config_manager.config_dict[model_id][
                 self.CONFIG_FILE_KEY_EXECUTION
             ][self.CONFIG_FILE_KEY_GENERATE]
         ):
-
             self.generators.visualize(model_id, auto_close=True)
 
         else:
             with pytest.raises(Exception) as e:
-
                 self.generators.visualize(model_id, auto_close=True)
 
                 assert e.type == ValueError
