@@ -26,7 +26,7 @@ See below how medigan can be run from the command line to generate synthetic med
     3. domain adaptation :gift:
     4. synthetic data evaluation method testing with multi-model datasets :gift:
 
-Instead of training your own, use one a generative models from `medigan` to generate synthetic data. 
+Instead of training your own, use one of the generative models from `medigan` to generate synthetic data. 
 
 Search and find a model in `medigan` using search terms (e.g. "Mammography" or "Endoscopy"). 
 
