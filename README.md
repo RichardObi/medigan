@@ -12,7 +12,7 @@
 
 See below how medigan can be run from the command line to generate synthetic medical images.
 
-![medigan can be run directly from the command line to generate synthetic medical images](https://github.com/RichardObi/medigan-dev/blob/v0.2.0/docs/source/_static/medigan.gif "medigan can be run directly from the command line to generate synthetic medical images.")
+![medigan can be run directly from the command line to generate synthetic medical images](https://github.com/RichardObi/medigan/blob/main/docs/source/_static/medigan.gif "medigan can be run directly from the command line to generate synthetic medical images.")
 
 ## Features:
 
