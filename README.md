@@ -8,7 +8,11 @@
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.6327625.svg)](https://doi.org/10.5281/zenodo.6327625)
 [![arXiv](https://img.shields.io/badge/arXiv-2209.14472-b31b1b.svg)](https://arxiv.org/abs/2209.14472)
 
-`medigan`: **medi**cal **g**enerative (**a**dversarial) **n**etworks
+`medigan` stands for **medi**cal **g**enerative (**a**dversarial) **n**etworks. `medigan` makes medical image synthesis user-friendly and allows users to choose from a range of pretrained generative models to `generate` synthetic datasets. These synthetic datasets can be used to train or adapt AI models that perform clinical tasks such as lesion classification, segmentation or detection. See below how medigan can be run from the command line to generate synthetic medical images.
+
+![medigan can be run directly from the command line to generate synthetic medical images](https://github.com/RichardObi/medigan-dev/blob/v0.2.0/docs/source/_static/medigan.gif "medigan can be run directly from the command line to generate synthetic medical images.")
+
+## Features:
 
 - :x: **Problem 1:** Data scarcity in medical imaging. 
 
@@ -20,15 +24,12 @@
     3. domain adaptation :gift:
     4. synthetic data evaluation method testing with multi-model datasets :gift:
 
-`medigan` provides functions for sharing and re-use of pretrained generative models in medical imaging.
+Instead of training your own, use one a generative models from `medigan` to generate synthetic data. 
 
-## Features:
+Search and find a model in `medigan` using search terms (e.g. "Mammography" or "Endoscopy"). 
 
-- Instead of training your own, use one a generative models from `medigan` to generate synthetic data.
+Contribute your own generative model to `medigan` to increase its visibility, re-use, and impact.
 
-- Search and find a model in `medigan` using search terms (e.g. "Mammography" or "Endoscopy").
-
-- Contribute your own generative model to `medigan` to increase its visibility, re-use, and impact.
 
 ## Available models
 
