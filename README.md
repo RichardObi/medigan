@@ -8,7 +8,7 @@
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.6327625.svg)](https://doi.org/10.5281/zenodo.6327625)
 [![arXiv](https://img.shields.io/badge/arXiv-2209.14472-b31b1b.svg)](https://arxiv.org/abs/2209.14472)
 
-`medigan` stands for **medi**cal **g**enerative (**a**dversarial) **n**etworks. `medigan` makes medical image synthesis user-friendly and allows users to choose from a range of pretrained generative models to `generate` synthetic datasets. These synthetic datasets can be used to train or adapt AI models that perform clinical tasks such as lesion classification, segmentation or detection. 
+`medigan` stands for **medi**cal **g**enerative (**a**dversarial) **n**etworks. `medigan` provides user-friendly medical image synthesis and allows users to choose from a range of pretrained generative models to `generate` synthetic datasets. These synthetic datasets can be used to train or adapt AI models that perform clinical tasks such as lesion classification, segmentation or detection. 
 
 See below how medigan can be run from the command line to generate synthetic medical images.
 
