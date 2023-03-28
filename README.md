@@ -5,6 +5,7 @@
 [![License](https://img.shields.io/github/license/RichardObi/medigan)](https://opensource.org/licenses/MIT)
 ![Continuous integration](https://github.com/RichardObi/medigan/actions/workflows/python-ci.yml/badge.svg)
 [![PyPI version](https://badge.fury.io/py/medigan.svg)](https://badge.fury.io/py/medigan)
+[![Conda version](https://img.shields.io/conda/vn/conda-forge/medigan)](https://github.com/conda-forge/medigan-feedstock)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.6327625.svg)](https://doi.org/10.5281/zenodo.6327625)
 [![arXiv](https://img.shields.io/badge/arXiv-2209.14472-b31b1b.svg)](https://arxiv.org/abs/2209.14472)
 
@@ -69,6 +70,10 @@ Model information can be found in:
 To install the current release, simply run:
 ```python
 pip install medigan
+```
+Or, alternatively via conda:
+```console
+conda install -c conda-forge medigan
 ```
 
 ## Getting Started
