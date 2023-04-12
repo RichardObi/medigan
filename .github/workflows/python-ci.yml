@@ -26,9 +26,9 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
-          ref: ${{ github.event.pull_request.head.ref }}
+          ref: ${{ github.event.pull_request.head.ref }} # ${{ github.event.pull_request.head.sha }} 
 
       - name: Setup Python 3.8
         uses: actions/setup-python@v2
@@ -70,7 +70,7 @@ jobs:
 
     steps:
     - name: Checkout to latest changes
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
       with:
         ref: ${{ needs.formatting.outputs.new_sha }}
         fetch-depth: 0
@@ -98,7 +98,7 @@ jobs:
 
     steps:
     - name: Checkout to latest changes
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
       with:
         ref: ${{ needs.formatting.outputs.new_sha }}
         fetch-depth: 0
@@ -129,7 +129,7 @@ jobs:
 
     steps:
     - name: Checkout to latest changes
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
       with:
         ref: ${{ needs.formatting.outputs.new_sha }}
         fetch-depth: 0
