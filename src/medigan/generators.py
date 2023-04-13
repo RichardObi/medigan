@@ -1280,8 +1280,9 @@ class Generators:
         drop_last=False,
         timeout=0,
         worker_init_fn=None,
-        prefetch_factor=2,
-        persistent_workers=False,
+        prefetch_factor: Optional[int] = None,
+        persistent_workers: bool = False,
+        pin_memory_device: str = "",
         **kwargs,
     ) -> DataLoader:
         """Get torch Dataloader sampling synthetic data from medigan model.
@@ -1333,12 +1334,15 @@ class Generators:
             worker_init_fn (callable, optional): If not ``None``, this will be called on each
                 worker subprocess with the worker id (an int in ``[0, num_workers - 1]``) as
                 input, after seeding and before data loading. (default: ``None``)
-            prefetch_factor (int, optional, keyword-only arg): Number of samples loaded
+            prefetch_factor (int, optional, keyword-only arg): Number of batches loaded
                 in advance by each worker. ``2`` means there will be a total of
-                2 * num_workers samples prefetched across all workers. (default: ``2``)
+                2 * num_workers batches prefetched across all workers. (default value depends
+                on the set value for num_workers. If value of num_workers=0 default is ``None``.
+                Otherwise if value of num_workers>0 default is ``2``).
             persistent_workers (bool, optional): If ``True``, the data loader will not shutdown
                 the worker processes after a dataset has been consumed once. This allows to
                 maintain the workers `Dataset` instances alive. (default: ``False``)
+            pin_memory_device (str, optional): the device to pin memory to if ``pin_memory`` is ``True``.
 
         Returns
         -------
@@ -1372,6 +1376,7 @@ class Generators:
             worker_init_fn=worker_init_fn,
             prefetch_factor=prefetch_factor,
             persistent_workers=persistent_workers,
+            pin_memory_device=pin_memory_device,
         )
 
         return dataloader
