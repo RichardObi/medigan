@@ -1280,7 +1280,7 @@ class Generators:
         drop_last=False,
         timeout=0,
         worker_init_fn=None,
-        prefetch_factor: Optional[int] = None,
+        prefetch_factor: int = None,
         persistent_workers: bool = False,
         pin_memory_device: str = "",
         **kwargs,
