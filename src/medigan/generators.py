@@ -1270,25 +1270,27 @@ class Generators:
         num_samples: int = 1000,
         install_dependencies: bool = False,
         transform=None,
-        batch_size=1,
-        shuffle=False,
+        batch_size=None,
+        shuffle=None,
         sampler=None,
         batch_sampler=None,
-        num_workers=0,
+        num_workers=None,
         collate_fn=None,
-        pin_memory=False,
-        drop_last=False,
-        timeout=0,
+        pin_memory=None,
+        drop_last=None,
+        timeout=None,
         worker_init_fn=None,
         prefetch_factor: int = None,
-        persistent_workers: bool = False,
-        pin_memory_device: str = "",
+        persistent_workers: bool = None,
+        pin_memory_device: str = None,
         **kwargs,
     ) -> DataLoader:
         """Get torch Dataloader sampling synthetic data from medigan model.
 
         Dataloader combines a dataset and a sampler, and provides an iterable over
         the given torch dataset. Dataloader is created for synthetic data for the specified medigan model.
+        Pytorch native parameters are set to ``None`` per default. Only those params are are passed to the Dataloader()
+        initialization function that are not ``None``.
 
         Args:
             dataset (Dataset): dataset from which to load the data.
@@ -1305,44 +1307,42 @@ class Generators:
             transform
                 the torch data transformation functions to be applied to the data in the dataset.
             batch_size (int, optional): how many samples per batch to load
-                (default: ``1``).
+                (default: ``None``).
             shuffle (bool, optional): set to ``True`` to have the data reshuffled
-                at every epoch (default: ``False``).
+                at every epoch (default: ``None``).
             sampler (Sampler or Iterable, optional): defines the strategy to draw
                 samples from the dataset. Can be any ``Iterable`` with ``__len__``
-                implemented. If specified, :attr:`shuffle` must not be specified.
+                implemented. If specified, :attr:`shuffle` must not be specified. (default: ``None``)
             batch_sampler (Sampler or Iterable, optional): like :attr:`sampler`, but
                 returns a batch of indices at a time. Mutually exclusive with
                 :attr:`batch_size`, :attr:`shuffle`, :attr:`sampler`,
-                and :attr:`drop_last`.
+                and :attr:`drop_last`. (default: ``None``)
             num_workers (int, optional): how many subprocesses to use for data
                 loading. ``0`` means that the data will be loaded in the main process.
-                (default: ``0``)
+                (default: ``None``)
             collate_fn (callable, optional): merges a list of samples to form a
                 mini-batch of Tensor(s).  Used when using batched loading from a
-                map-style dataset.
+                map-style dataset. (default: ``None``)
             pin_memory (bool, optional): If ``True``, the data loader will copy Tensors
                 into CUDA pinned memory before returning them.  If your data elements
                 are a custom type, or your :attr:`collate_fn` returns a batch that is a custom type,
-                see the example below.
+                see the example below. (default: ``None``)
             drop_last (bool, optional): set to ``True`` to drop the last incomplete batch,
                 if the dataset size is not divisible by the batch size. If ``False`` and
                 the size of dataset is not divisible by the batch size, then the last batch
-                will be smaller. (default: ``False``)
+                will be smaller. (default: ``None``)
             timeout (numeric, optional): if positive, the timeout value for collecting a batch
-                from workers. Should always be non-negative. (default: ``0``)
+                from workers. Should always be non-negative. (default: ``None``)
             worker_init_fn (callable, optional): If not ``None``, this will be called on each
                 worker subprocess with the worker id (an int in ``[0, num_workers - 1]``) as
                 input, after seeding and before data loading. (default: ``None``)
             prefetch_factor (int, optional, keyword-only arg): Number of batches loaded
                 in advance by each worker. ``2`` means there will be a total of
-                2 * num_workers batches prefetched across all workers. (default value depends
-                on the set value for num_workers. If value of num_workers=0 default is ``None``.
-                Otherwise if value of num_workers>0 default is ``2``).
+                2 * num_workers batches prefetched across all workers. (default: ``None``).
             persistent_workers (bool, optional): If ``True``, the data loader will not shutdown
                 the worker processes after a dataset has been consumed once. This allows to
-                maintain the workers `Dataset` instances alive. (default: ``False``)
-            pin_memory_device (str, optional): the device to pin memory to if ``pin_memory`` is ``True``.
+                maintain the workers `Dataset` instances alive. (default: ``None``)
+            pin_memory_device (str, optional): the device to pin memory to if ``pin_memory`` is ``True`` (default: ``None``).
 
         Returns
         -------
@@ -1362,7 +1362,11 @@ class Generators:
             else dataset
         )
 
-        dataloader = DataLoader(
+        # Reducing dependency on torch.util.data.DataLoader param default values by passing
+        # only the ones specified by the user.
+        dataloader = Utils.call_without_removable_params(
+            my_callable=DataLoader,
+            removable_param_values=[None],
             dataset=dataset,
             batch_size=batch_size,
             shuffle=shuffle,
