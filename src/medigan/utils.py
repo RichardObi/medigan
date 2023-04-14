@@ -408,6 +408,31 @@ class Utils:
         with open(output_path, "w") as outfile:
             outfile.write(json_object)
 
+    @staticmethod
+    def call_without_removable_params(
+        my_callable, removable_param_values: list = [None], **params
+    ):
+        """call a callable without passing parameters that contain any of the removable_param_values as value."""
+
+        not_removed_params = params
+        for removable_param_value in removable_param_values:
+            if removable_param_value is None:
+                not_removed_params = {
+                    k: v
+                    for k, v in not_removed_params.items()
+                    if v is not removable_param_value
+                }
+            else:
+                not_removed_params = {
+                    k: v
+                    for k, v in not_removed_params.items()
+                    if v != removable_param_value
+                }
+        logging.debug(
+            f"call_without_removable_params final params: {not_removed_params}"
+        )
+        return my_callable(**not_removed_params)
+
     def __len__(self):
         raise NotImplementedError
 
