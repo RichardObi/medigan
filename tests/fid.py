@@ -2,7 +2,8 @@
 Calculates the Frechet Inception Distance between two distributions, using chosen feature extractor model.
 
 RadImageNet Model source: https://github.com/BMEII-AI/RadImageNet
-RadImageNet InceptionV3 weights: https://drive.google.com/file/d/1p0q9AhG3rufIaaUE1jc2okpS8sdwN6PU
+RadImageNet InceptionV3 weights (original, broken since 11.07.2023): https://drive.google.com/file/d/1p0q9AhG3rufIaaUE1jc2okpS8sdwN6PU
+RadImageNet InceptionV3 weights (for medigan, updated link 11.07.2023): https://drive.google.com/drive/folders/1lGFiS8_a5y28l4f8zpc7fklwzPJC-gZv
 
 Usage:
     python fid.py dir1 dir2 
@@ -21,7 +22,7 @@ from tensorflow.keras.applications.inception_v3 import preprocess_input
 img_size = 299
 batch_size = 64
 num_batches = 1
-RADIMAGENET_URL = "https://drive.google.com/uc?id=1p0q9AhG3rufIaaUE1jc2okpS8sdwN6PU"
+RADIMAGENET_URL = "https://drive.google.com/uc?id=1uvJHLG1K71Qzl7Km4JMpNOwE7iTjN8g9"
 RADIMAGENET_WEIGHTS = "RadImageNet-InceptionV3_notop.h5"
 IMAGENET_TFHUB_URL = "https://tfhub.dev/tensorflow/tfgan/eval/inception/1"
 
