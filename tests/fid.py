@@ -83,7 +83,7 @@ def load_images(directory, normalize=False, split=False, limit=None):
                 img = np.stack([img] * 3, axis=2)
 
             if split:
-                if count % 2:
+                if count % 2 == 0:
                     subset_1.append(img)
                 else:
                     subset_2.append(img)
