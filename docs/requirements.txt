@@ -5,7 +5,7 @@ Sphinx==4.5.0
 sphinx-automodapi==0.14.1
 tqdm==4.64.0
 requests==2.27.1
-torch==1.11.0
+torch==1.13.1
 PyGithub==1.55
 numpy==1.22.4
 matplotlib==3.4.3
