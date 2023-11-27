@@ -3354,7 +3354,145 @@
                 "view: default=\"la\" help=",
                 "subcat: default=\"2ch\", help="
             ],
-            "comment": ""
+            "comment": "Conditional WGAN-GP Model for Cardiac Image generation with age offset (Trained on UK Biobank). A conditional wasserstein generative adversarial network with gradient penalty (WGAN_GP) that generates MRI cardiac images. The pixel dimension of the generated images is 256x256. The uploaded ZIP file contains the files model.ckpt (model weights), __init__.py (image generation method and utils), a requirements.txt, and the used GAN training config file. A sample_image.png is provided for example generation."
         }
-    }
+    },
+    "00023_PIX2PIXHD_BREAST_DCEMRI": {
+         "execution": {
+            "package_name": "00023",
+            "package_link": "https://zenodo.org/records/10210945/files/00023_PIX2PIXHD_BREAST_DCEMRI.zip?download=1",
+            "model_name": "30_net_G",
+            "extension": ".pth",
+            "image_size": [
+               512, 512
+            ],
+            "dependencies": [
+               "numpy",
+               "torch",
+               "torchvision",
+               "pillow"
+            ],
+            "generate_method": {
+               "name": "generate",
+               "args": {
+                  "base": [
+                     "model_file",
+                     "num_samples",
+                     "output_path",
+                     "save_images"
+                  ],
+                  "custom": {
+                     "input_path": "input/",
+                     "image_size": "512",
+                     "gpu_id": "0"
+                  }
+               }
+            }
+         },
+         "selection": {
+            "performance": {
+               "SSIM": 0.726,
+               "MSE": 34.88,
+               "NSME": null,
+               "PSNR": 32.91,
+               "IS": null,
+               "FID": 28.71,
+               "turing_test": "",
+               "downstream_task": {
+                  "CLF": {
+                     "trained_on_fake": {
+                        "accuracy": null,
+                        "precision": null,
+                        "recall": null,
+                        "f1": null,
+                        "specificity": null,
+                        "AUROC": null,
+                        "AUPRC": null
+                     },
+                     "trained_on_real_and_fake": {},
+                     "trained_on_real": {}
+                  },
+                  "SEG": {
+                     "trained_on_fake": {
+                        "dice": 0.687,
+                        "jaccard": null,
+                        "accuracy": null,
+                        "precision": null,
+                        "recall": null,
+                        "f1": null
+                     },
+                     "trained_on_real_and_fake": {
+                        "dice": "0.797"
+                     },
+                     "trained_on_real": {
+                        "dice": "0.790"
+                     }
+                  }
+               }
+            },
+            "use_cases": [
+               "segmentation",
+               "tumour localization",
+               "classification",
+               "simulation"
+            ],
+            "organ": [
+               "breast"
+            ],
+            "modality": [
+               "dce-mri",
+               "mri",
+               "t1",
+               "t1-weighted",
+               "fat-saturated"
+            ],
+            "vendors": [],
+            "centres": [
+               "Duke Hospital"
+            ],
+            "function": [],
+            "condition": [],
+            "dataset": [
+               "DUKE"
+            ],
+            "augmentations": [],
+            "generates": [],
+            "height": 512,
+            "width": 512,
+            "depth": 1,
+            "type": "pix2pixHD",
+            "license": "BSD License",
+            "dataset_type": "DCE-MRI",
+            "privacy_preservation": "",
+            "tags": [
+               "dce-mri",
+               "postcontrast",
+               "synthesis",
+               "breast",
+               "mri",
+               "treatment",
+               "i2i",
+               "pix2pixHD",
+               "SPIE"
+            ],
+            "year": 2023
+         },
+         "description": {
+            "title": "Pre- to Post-Contrast Breast MRI Synthesis for Enhanced Tumour Segmentation",
+            "provided_date": "11.2023",
+            "trained_date": "2023",
+            "provided_after_epoch": 30,
+            "version": "1.0",
+            "publication": "https://doi.org/10.48550/arXiv.2311.10879",
+            "doi": [
+               "https://doi.org/10.48550/arXiv.2311.10879"
+            ],
+            "inputs": [
+                "input_path: default=input/, help=the path to .png breast DCE-MRI images that are translated from pre-contrast to the first DCE post-contrast sequence. ",
+                "image_size: default=[512, 512], help=list with image height and width. ",
+                "gpu_id: default=0, help=the gpu to run the model on."
+            ],
+            "comment": "Pix2Pix model for DCE-MRI slice generation from pre-contrast image input (Trained on Duke Breast MRI Dataset). A pix2pixHD mmodel that generates DCE-MRI axial slices based on checkpoint after 30 training epochs. \nThe pixel dimension of the generated images is 512x512. Several generated 2d slices can be merged together to create a 3D MRI volume with tumour tissue highlighted by synthetic contrast. \nThe uploaded ZIP file contains the files 30_net_G.pth (model weights), __init__.py (image generation method and utils), a requirements.txt, and further code below the /src folder for handling of model, data, and training utils. Sample input images are provided as an example for image generation."
+         }
+  }
 }

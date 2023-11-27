@@ -88,6 +88,14 @@ models_with_args = [
         3,
     ),
     ("00022_WGAN_CARDIAC_AGING", {}, 3),
+    ("00023_PIX2PIXHD_BREAST_DCEMRI",
+            {
+                "input_path": "input/",
+                "gpu_id": 0,
+                "image_size": 448,
+            },
+            3,
+    )
 ]
 
 
