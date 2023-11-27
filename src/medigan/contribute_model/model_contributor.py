@@ -253,6 +253,9 @@ class ModelContributor:
             self.zenodo_model_uploader = ZenodoModelUploader(
                 model_id=self.model_id, access_token=access_token
             )
+        # Update in case previous access token gave an error
+        self.zenodo_model_uploader.access_token = access_token
+
         return self.zenodo_model_uploader.push(
             metadata=self.metadata,
             package_path=self.package_path,
@@ -301,6 +304,8 @@ class ModelContributor:
             self.github_model_uploader = GithubModelUploader(
                 model_id=self.model_id, access_token=access_token
             )
+        # Update in case previous access token gave an error
+        self.github_model_uploader.access_token = access_token
 
         return self.github_model_uploader.push(
             metadata=self.metadata,
