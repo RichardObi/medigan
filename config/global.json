@@ -3360,7 +3360,7 @@
     "00023_PIX2PIXHD_BREAST_DCEMRI": {
          "execution": {
             "package_name": "00023",
-            "package_link": "https://zenodo.org/records/10210945/files/00023_PIX2PIXHD_BREAST_DCEMRI.zip?download=1",
+            "package_link": "https://zenodo.org/records/10213112/files/00023.zip?download=1",
             "model_name": "30_net_G",
             "extension": ".pth",
             "image_size": [
