@@ -85,7 +85,7 @@ Documentation is available at [medigan.readthedocs.io](https://medigan.readthedo
 
 ### Generation example
 #### DCGAN 
-Create mammography masses with labels (malignant or benign) using a cDCGAN model.
+Create mammography masses with labels (malignant or benign) using a class-conditional DCGAN model.
 ```python
 # import medigan and initialize Generators
 from medigan import Generators
@@ -96,7 +96,9 @@ generators = Generators()
 generators.generate(model_id=8, num_samples=8, install_dependencies=True)
 ```
 ![sample](docs/source/_static/samples/c-dcgan/model8_samples.png)
-The generated top row samples are malignant and the bottom row samples benign masses (regions-of-interest of mammograms).
+
+The synthetic images in the top row show malignant masses (breast cancer) while the images in the bottom row show benign masses. 
+Given such images with class information, image classification models can be (pre-)trained.
 
 
 #### CYCLEGAN 
