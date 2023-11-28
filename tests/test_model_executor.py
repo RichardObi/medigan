@@ -261,7 +261,12 @@ class TestMediganExecutorMethods:
         data_loader = self.generators.get_as_torch_dataloader(
             model_id=model_id, num_samples=self.num_samples
         )
-        self.logger.debug(f"len(data_loader): {len(data_loader)}")
+        self.logger.debug(f"{model_id}: len(data_loader): {len(data_loader)}")
+
+        if len(data_loader) != self.num_samples:
+            logging.warning(f"{model_id}: The number of samples in the dataloader (={len(data_loader)}) is not equal the number of samples requested (={self.num_samples}). "
+                            f"Hint: Revise if the model's internal generate() function returned tuples as required in get_as_torch_dataloader().")
+
         #### Get the object at index 0 from the dataloader
         data_dict = next(iter(data_loader))
 
@@ -305,7 +310,7 @@ class TestMediganExecutorMethods:
     ):
         # check if the number of generated samples of model_id_1 is as expected.
         file_list = glob.glob(self.test_output_path + "/*")
-        self.logger.debug(f"{len(file_list)} == {self.num_samples} ?")
+        self.logger.debug(f"{model_id}: {len(file_list)} == {self.num_samples} ?")
         if num_samples is None:
             num_samples = self.num_samples
 
