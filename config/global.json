@@ -3251,7 +3251,7 @@
                 "pytorch-lightning==1.4.7",
                 "pandas",
                 "comet-ml",
-                "monai",
+                "monai<=1.0.1",
                 "grad-cam",
                 "matplotlib",
                 "monai[skimage]",
