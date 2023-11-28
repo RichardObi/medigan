@@ -952,7 +952,7 @@
     "00007_INPAINT_BRAIN_MRI": {
         "execution": {
             "package_name": "00007_INPAINT_BRAIN_MRI",
-            "package_link": "https://zenodo.org/record/7042217/files/00007_INPAINT_BRAIN_MRI.zip?download=1",
+            "package_link": "https://zenodo.org/records/10214677/files/00007_INPAINT_BRAIN_MRI.zip?download=1",
             "model_name": "inp_gen",
             "extension": ".pth",
             "image_size": [
