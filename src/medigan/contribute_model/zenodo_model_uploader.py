@@ -203,9 +203,9 @@ class ZenodoModelUploader(BaseModelUploader):
                 params=self.params,
             )
 
-        if not r.status_code == 200:
+        if not r.status_code == 200 and not r.status_code == 201:
             raise Exception(
-                f"{self.model_id}: Error ({r.status_code}!=200) during Zenodo ('{bucket_url}') upload (step 2: uploading model as zip file): {r.json()}"
+                f"{self.model_id}: Error ({r.status_code}!= any of (200, 201) ) during Zenodo ('{bucket_url}') upload (step 2: uploading model as zip file): {r.json()}"
             )
         return r
 
@@ -231,9 +231,9 @@ class ZenodoModelUploader(BaseModelUploader):
             data=json.dumps(data),
             headers=ZENODO_HEADERS,
         )
-        if not r.status_code == 200:
+        if not r.status_code == 200 and not r.status_code == 201:
             raise Exception(
-                f"{self.model_id}: Error ({r.status_code}!=200) during Zenodo ('{deposition_url}') upload (step 3: updating metadata): {r.json()}"
+                f"{self.model_id}: Error ({r.status_code}!= any of (200, 201) ) during Zenodo ('{deposition_url}') upload (step 3: updating metadata): {r.json()}"
             )
         return r
 

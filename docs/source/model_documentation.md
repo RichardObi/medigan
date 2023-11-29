@@ -235,6 +235,7 @@ PGGAN Model for Patch Generation of Polyps with Corresponding Segmentation Masks
 
 ```python
 # create samples with this model
+from medigan import Generators
 Generators().generate(
     model_id="00009_PGGAN_POLYP_PATCHES_W_MASKS",
     gpu_id=None, 
@@ -638,4 +639,35 @@ inputs= [
     "view: default=\"la\" help=",
     "subcat: default=\"2ch\", help="
 ]
+```
+
+# 00023_PIX2PIXHD_BREAST_DCEMRI
+
+Pix2Pix model for DCE-MRI slice generation from pre-contrast image input (Trained on Duke Breast MRI Dataset) \
+<sub> **Note:** A pix2pixHD mmodel that generates DCE-MRI axial slices based on checkpoint after 30 training epochs. 
+The pixel dimension of the generated images is 512x512. Several generated 2d slices can be merged together to create a 3D MRI volume with tumour tissue highlighted by synthetic contrast. 
+The uploaded ZIP file contains the files 30_net_G.pth (model weights), __init__.py (image generation method and utils), a requirements.txt, and further code below the /src folder for handling of model, data, and training utils. Sample input images are provided as an example for image generation. </sub>
+
+
+| Output type                    | Modality | Model type | Output size |  Base dataset   |           Output examples            |    `model_id`      |  Hosted on   |  Reference  |
+|--------------------------------|:--------:|:----------:|:-----------:|:------------:|:------------------------------------:|:------:|:------:|:------:|
+| DCE-MRI sequence 1 axial slice | DCE-MRI  | pix2pixHD  |   512x512   |     [Duke Dataset](https://sites.duke.edu/mazurowski/resources/breast-cancer-mri-dataset/)      | ![sample](_static/samples/00023.png) |  `00023_PIX2PIXHD_BREAST_DCEMRI`  | [Zenodo (10210944)](https://zenodo.org/doi/10.5281/zenodo.10210944)  | [Osuala et al (2023)](https://doi.org/10.48550/arXiv.2311.10879)  | 
+
+
+```python
+# create samples with this model
+from medigan import Generators
+Generators().generate(
+    model_id="00023_PIX2PIXHD_BREAST_DCEMRI",
+    input_path= "input/",
+    image_size=[512, 512],
+    gpu_id=0,
+)
+
+# model specific parameters
+inputs = [
+    "input_path: default=input/, help=the path to .png breast DCE-MRI images that are translated from pre-contrast to the first DCE post-contrast sequence. ",
+    "image_size: default=[512, 512], help=list with image height and width. ",
+    "gpu_id: default=0, help=the gpu to run the model on.",
+] 
 ```

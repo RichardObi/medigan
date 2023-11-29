@@ -276,7 +276,10 @@ class ModelExecutor:
                 self.serialised_model_file_path = f"{MODEL_FOLDER}/{self.model_id}/{self.model_name}{self.model_extension}"
             except Exception as e:
                 logging.error(
-                    f"{self.model_id}: Error while importing {self.package_name} from /{self.model_id}: {e}"
+                    f"{self.model_id}: Error occurred while trying to import "
+                    f"'{MODEL_FOLDER}.{self.model_id}.{self.package_name}'."
+                    f"Fallback import of '{MODEL_FOLDER}.{self.model_id}' also failed. "
+                    f"Please make sure the module '{MODEL_FOLDER}' is not imported from elsewhere in your syspath: {e}"
                 )
                 raise e
 
