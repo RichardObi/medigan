@@ -131,7 +131,7 @@ class Generator(BaseGenerator):
                 padding=1,
                 bias=self.bias,
             ),
-            nn.Tanh()
+            nn.Tanh(),
             # state size. (nc) x 128 x 128
         )
 
