@@ -1,6 +1,7 @@
 # File: .readthedocs.yaml
 
-version: 1
+# Required
+version: 2
 
 sphinx:
   configuration: docs/conf.py
