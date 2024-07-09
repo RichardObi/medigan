@@ -8,6 +8,7 @@ RadImageNet InceptionV3 weights (for medigan, updated link 11.07.2023): https://
 Usage:
     python fid.py dir1 dir2 
 """
+
 import argparse
 import os
 
